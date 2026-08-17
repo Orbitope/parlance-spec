@@ -1,0 +1,7 @@
+# 4.18 is the floor, not a preference: it added the `registry=` argument validate.py
+# uses, and deprecated the RefResolver that argument replaces.
+jsonschema>=4.18
+
+# Ships as a jsonschema dependency, but validate.py imports it directly, so it is
+# declared directly — relying on someone else's transitive dependency is not a promise.
+referencing>=0.30
