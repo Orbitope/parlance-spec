@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "LOC",
+      "contains": "sp_anything",
+      "severity": "error"
+    }
+  ]
+}

@@ -14,7 +14,13 @@
     "name": { "type": "string" },
     "description": { "type": "string" },
     "tags": { "$ref": "common.schema.json#/definitions/tags" },
-    "state": { "$ref": "common.schema.json#/definitions/gameState" }
+    "state": { "$ref": "common.schema.json#/definitions/gameState" },
+    "visitedDialogueIds": {
+      "type": "array",
+      "description": "Dialogues already seen when this baseline was captured. Host bookkeeping, not game state — the runtime asks for this set but SerializedGameState has no field for it — so it lives on the envelope. A route starting from this snapshot seeds its visited set from here, which is what keeps a spent one-shot spent. Sorted for stable diffs; omitted when empty.",
+      "items": { "$ref": "common.schema.json#/definitions/id" },
+      "uniqueItems": true
+    }
   },
   "required": ["schemaVersion", "id", "name", "state"],
   "additionalProperties": false

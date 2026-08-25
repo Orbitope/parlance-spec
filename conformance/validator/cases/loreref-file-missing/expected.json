@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "LORE",
+      "contains": "loreRef file 'lore/keeper.md' missing",
+      "severity": "error"
+    }
+  ]
+}

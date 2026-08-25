@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "QUEST",
+      "contains": "circular"
+    }
+  ],
+  "noErrors": true
+}

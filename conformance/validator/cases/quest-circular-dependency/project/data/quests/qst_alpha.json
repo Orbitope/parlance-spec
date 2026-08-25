@@ -1,0 +1,47 @@
+{
+  "availableWhen": {
+    "flag": "beta_done",
+    "type": "flag",
+    "value": true
+  },
+  "id": "qst_alpha",
+  "name": "Alpha",
+  "outcomes": [
+    {
+      "description": "Alpha is behind you.",
+      "id": "out_alpha",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "alpha_done",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "You finished alpha.",
+      "id": "stg_alpha",
+      "objectives": [
+        {
+          "id": "ob_alpha",
+          "text": "Finish alpha."
+        }
+      ],
+      "onComplete": [
+        {
+          "flag": "alpha_done",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "summary": "The alpha errand."
+}

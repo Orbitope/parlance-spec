@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "LOGIC",
+      "contains": "opposes itself",
+      "severity": "warning"
+    }
+  ]
+}

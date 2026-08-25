@@ -677,6 +677,50 @@ or transport. The serialized form:
 
 When deserializing older state that lacks `questStages`, default to `{}`.
 
+### Saves, snapshots and the visited set
+
+A save file and a snapshot are the same thing wearing different envelopes: an
+**envelope** carrying host bookkeeping, wrapped around a `state` that is exactly the
+serialized form above. That is deliberate — it is what lets a save written by the engine
+be read as an editor snapshot, and a snapshot be loaded as a save.
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "snap_after_the_gate",
+  "name": "Cleared the gate",
+  "state": { "...": "SerializedGameState, verbatim" },
+  "visitedDialogueIds": ["dlg_gate_arrival"]
+}
+```
+
+`visitedDialogueIds` is the one piece of bookkeeping the contract pins down, because the
+runtime **reads** it: discovery excludes a dialogue when `replayable !== true` and the
+dialogue is in the visited set (see `selectDialogue` and the ladder discovery pool). It is
+NOT part of `GameState` and must not be added to it — the state is what the story is,
+while the visited set is what the host has shown — so it rides on the envelope, next to
+the state, in both a save and a snapshot.
+
+Rules an engine port must honour:
+
+- **Sorted, and omitted entirely when empty**, like `questFired` — a save written before
+  the field existed stays valid and round-trips unchanged.
+- **A save that carries it must not lose it when it becomes a snapshot.** The set is not
+  recoverable from the state; dropped once, it is gone.
+- **A route with `startSnapshot` seeds its visited set from the snapshot's**, plus the
+  route's own entry dialogue. Without that seeding, a route starting from a
+  mid-playthrough baseline is offered content the player had already spent — it passes on
+  a path no player can walk, which is worse than failing.
+- **Forced offers ignore the visited set** (routing a character somewhere is an explicit
+  re-entry). Only discovery filters on it.
+
+The asymmetry between the three shapes is worth stating plainly, because it decides what
+tooling is even possible: a **route** is a path, a **save** is a position, a **snapshot**
+is a named baseline. A route can become a save exactly (walk it, keep the end state); a
+save can become a snapshot exactly (re-wrap it). A save can never become a route — the
+steps that produced a state are not recoverable from the state. What a save can become is
+a route's *starting point*, which is the useful half.
+
 ---
 
 ## Conformance test suite

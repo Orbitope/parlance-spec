@@ -1,0 +1,47 @@
+{
+  "availableWhen": {
+    "flag": "alpha_done",
+    "type": "flag",
+    "value": true
+  },
+  "id": "qst_beta",
+  "name": "Beta",
+  "outcomes": [
+    {
+      "description": "Beta is behind you.",
+      "id": "out_beta",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "beta_done",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "You finished beta.",
+      "id": "stg_beta",
+      "objectives": [
+        {
+          "id": "ob_beta",
+          "text": "Finish beta."
+        }
+      ],
+      "onComplete": [
+        {
+          "flag": "beta_done",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "summary": "The beta errand."
+}

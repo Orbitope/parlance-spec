@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "XP",
+      "contains": "should be positive",
+      "severity": "warning"
+    }
+  ]
+}

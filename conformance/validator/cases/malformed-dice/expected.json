@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "RULES",
+      "contains": "2x6",
+      "severity": "error"
+    }
+  ]
+}

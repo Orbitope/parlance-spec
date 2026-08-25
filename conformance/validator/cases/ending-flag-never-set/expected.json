@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "ENDING",
+      "contains": "burned_ledger",
+      "severity": "warning"
+    }
+  ]
+}

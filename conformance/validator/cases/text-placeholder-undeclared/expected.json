@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TEXT",
+      "contains": "player_name",
+      "severity": "error"
+    }
+  ]
+}

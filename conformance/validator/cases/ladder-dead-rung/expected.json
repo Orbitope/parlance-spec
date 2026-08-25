@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "LADDER",
+      "contains": "dead rungs",
+      "severity": "warning"
+    }
+  ]
+}

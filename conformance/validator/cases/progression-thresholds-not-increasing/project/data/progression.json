@@ -1,0 +1,10 @@
+{
+  "maxSkill": 5,
+  "pointsPerLevel": 1,
+  "startingSkills": {},
+  "xpThresholds": [
+    0,
+    100,
+    100
+  ]
+}

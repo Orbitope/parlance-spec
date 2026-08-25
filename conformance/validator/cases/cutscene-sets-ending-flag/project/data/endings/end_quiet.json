@@ -1,0 +1,10 @@
+{
+  "id": "end_quiet",
+  "name": "A Quiet Ending",
+  "summary": "You leave as you came.",
+  "unlockedBy": {
+    "flag": "tale_closed",
+    "type": "flag",
+    "value": true
+  }
+}

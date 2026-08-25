@@ -11,6 +11,35 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.10.0 — new capabilities (additive, nothing to migrate)
+
+Nothing breaks in this release. Your data loads unchanged, and a port pinned to
+`v0.9.0` stays correct until it takes the addition below.
+
+| Addition | Replaces the workaround of… |
+|---|---|
+| **`snapshot.visitedDialogueIds`** — optional array of dialogue ids, sorted, omitted when empty | Losing the visited set at every save→snapshot hop. The runtime has always taken a visited set (it is what hides a non-`replayable` dialogue once seen), but `SerializedGameState` has nowhere to keep one — deliberately, since it is what the host has *shown*, not what the story *is*. Snapshots captured mid-playthrough previously came back with the set empty, so a route starting from one was offered one-shots the player had already spent. |
+
+**If you write a route runner**, seed its visited set from the start snapshot's
+`visitedDialogueIds` — otherwise a route that begins from a captured baseline
+walks content the baseline's own playthrough had already consumed, and *passes*
+on a path no player can reach. The reference implementations do this
+(`routeRunner.ts`, `RouteRunner.cs`).
+
+**If you write saves**, the field is also the natural thing to put in your own
+save envelope, and the editor's save importer reads it from there. Everything
+else in your envelope stays yours: Parlance reports unrecognised envelope fields
+on import and drops them, rather than interpreting bookkeeping it has no model
+for.
+
+**One behaviour correction.** A route starting from a snapshot now inherits that
+snapshot's `texts` and `questFired` ledger, which the TypeScript runner was
+dropping. `RouteRunner.cs` was already correct, so this is only a fix if your
+port was written from the TypeScript source: a route whose baseline had already
+fired a once-only quest effect could fire it a second time.
+
+---
+
 ## 0.9.0 — de-game the contract
 
 One batched break, deliberately shipped together so a downstream project migrates once

@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "ENDING",
+      "contains": "end_told"
+    }
+  ],
+  "noErrors": true
+}

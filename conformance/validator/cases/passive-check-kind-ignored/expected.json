@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "CHECK",
+      "contains": "on a passive check is ignored",
+      "severity": "warning"
+    }
+  ]
+}

@@ -26,7 +26,7 @@ retroactively.** Concretely, during 0.x:
   added or removed, enum values may change, runtime semantics may be corrected.
 - **There is no deprecation window.** A wrong default gets fixed, not carried.
 - **There are no backports.** Fixes land on the current release only.
-- **Ports must pin an exact tag** (`v0.9.0`, never a range or a branch) and vendor the
+- **Ports must pin an exact tag** (`v0.10.0`, never a range or a branch) and vendor the
   conformance vectors at that tag — the mechanism described in
   [`INTEGRATION.md`](INTEGRATION.md). Moving the pin is a deliberate act with a
   re-run of your suite, not a dependency bump.
@@ -98,4 +98,4 @@ An audit of all 150 property names against the five languages ports are written 
 
 The contract version is the repository release tag (`vX.Y.Z`) — the same tag that
 versions the editor. The published spec repo mirrors those tags exactly, so
-"pinned to `v0.9.0`" is unambiguous across both repos.
+"pinned to `v0.10.0`" is unambiguous across both repos.

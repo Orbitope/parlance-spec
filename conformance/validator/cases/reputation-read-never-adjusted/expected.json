@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REP",
+      "contains": "never adjusted",
+      "severity": "warning"
+    }
+  ]
+}

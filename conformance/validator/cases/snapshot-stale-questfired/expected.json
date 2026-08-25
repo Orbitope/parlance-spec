@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "SNAP",
+      "contains": "questFired unknown quest 'qst_ghost'",
+      "severity": "error"
+    }
+  ]
+}

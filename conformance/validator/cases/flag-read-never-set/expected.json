@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "FLAG",
+      "contains": "saw_ledger",
+      "severity": "warning"
+    }
+  ]
+}

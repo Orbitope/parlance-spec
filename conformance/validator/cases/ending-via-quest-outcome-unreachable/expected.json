@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "ENDING",
+      "contains": "never_happens",
+      "severity": "warning"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "mustNot": [
+    {
+      "code": "XP"
+    }
+  ],
+  "noErrors": true
+}

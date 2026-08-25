@@ -1,0 +1,16 @@
+{
+  "id": "snap_mid",
+  "name": "Mid-run",
+  "schemaVersion": 1,
+  "state": {
+    "counters": {},
+    "flags": {},
+    "inventory": [],
+    "questFired": [
+      "qst_ghost/stage/stg_one"
+    ],
+    "questStages": {},
+    "reputation": {},
+    "skills": {}
+  }
+}

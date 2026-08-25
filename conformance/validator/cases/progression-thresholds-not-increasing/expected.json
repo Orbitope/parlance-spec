@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "PROG",
+      "contains": "strictly increasing",
+      "severity": "error"
+    }
+  ]
+}

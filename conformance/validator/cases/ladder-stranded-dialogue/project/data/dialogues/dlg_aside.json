@@ -1,0 +1,13 @@
+{
+  "entry": "n1",
+  "id": "dlg_aside",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "A line nothing can reach."
+    }
+  ],
+  "speakerId": "npc_keeper",
+  "title": "An Aside"
+}

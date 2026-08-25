@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "QUEST",
+      "contains": "circular dependency",
+      "severity": "error"
+    }
+  ]
+}

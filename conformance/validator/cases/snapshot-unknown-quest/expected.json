@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "SNAP",
+      "contains": "qst_ghost",
+      "severity": "error"
+    }
+  ]
+}

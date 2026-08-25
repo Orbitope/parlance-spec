@@ -1,0 +1,10 @@
+{
+  "body": "What the keeper told you, written down.",
+  "id": "cdx_keeper",
+  "name": "The Keeper's Account",
+  "unlockedBy": {
+    "flag": "tale_closed",
+    "type": "flag",
+    "value": true
+  }
+}

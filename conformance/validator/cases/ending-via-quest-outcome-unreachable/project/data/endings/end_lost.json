@@ -1,0 +1,10 @@
+{
+  "id": "end_lost",
+  "name": "Lost",
+  "summary": "It never came to pass.",
+  "unlockedBy": {
+    "outcome": "out_lost",
+    "quest": "qst_errand",
+    "type": "questOutcome"
+  }
+}

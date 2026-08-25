@@ -1,0 +1,60 @@
+{
+  "entry": "node_open",
+  "id": "dlg_meet",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "goto": "node_close",
+          "id": "ch_listen",
+          "text": "Listen."
+        }
+      ],
+      "id": "node_open",
+      "onEnter": [
+        {
+          "flag": "met_keeper",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "The keeper looks up."
+    },
+    {
+      "id": "node_close",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "flag": "heard_story",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "They tell you what they saw."
+    },
+    {
+      "choices": [
+        {
+          "goto": "node_island_b",
+          "id": "ch_x",
+          "text": "Onward."
+        }
+      ],
+      "id": "node_island_a",
+      "text": "An island."
+    },
+    {
+      "choices": [
+        {
+          "goto": "node_island_a",
+          "id": "ch_y",
+          "text": "Back."
+        }
+      ],
+      "id": "node_island_b",
+      "text": "The other half of the island."
+    }
+  ],
+  "speakerId": "npc_keeper",
+  "title": "Meeting the Keeper"
+}

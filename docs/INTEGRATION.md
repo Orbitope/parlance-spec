@@ -309,6 +309,78 @@ XP — simply never happen. See `RUNTIME_CONTRACT.md` § Quest resolution.
 
 ---
 
+## Saves: the loop between your engine and the editor
+
+Your engine writes saves. Parlance reads snapshots. They are the same shape on purpose —
+an envelope around a `SerializedGameState` — so the two can be traded back and forth
+instead of each being a dead end.
+
+**Write your save as an envelope.** Anything your host needs beside the state (where the
+player is standing, when the file was written, which of your own subsystems was in what
+mode) belongs on the envelope, not inside `state`. Parlance reads what it recognises,
+reports what it does not, and never rejects a save for carrying your own bookkeeping.
+
+```json
+{
+  "schemaVersion": 1,
+  "location": "loc_checkpoint",
+  "spawn": "sp_main",
+  "savedAtUtc": "2026-08-20T11:02:31Z",
+  "visitedDialogueIds": ["dlg_gatekeeper_intro"],
+  "state": { "...": "SerializedGameState" }
+}
+```
+
+**Carry `visitedDialogueIds`.** It is the one envelope field the runtime actually reads:
+discovery hides a non-`replayable` dialogue that is already in it. A save that omits it
+comes back as a player who has heard nothing. See `RUNTIME_CONTRACT.md` § Saves,
+snapshots and the visited set.
+
+**Import a save as a snapshot:**
+
+```bash
+parlance save import path/to/slot1.json --id snap_bug_41 --name "Bug 41 repro"
+```
+
+That writes `tests/snapshots/snap_bug_41.json`, canonically serialized, carrying the
+visited set. The editor does the same thing from the playtest panel's **Import save
+file…** button.
+
+An import is **refused when the save names content this project does not have** — an
+unregistered flag, an unknown item, a dialogue from another build. That rule mirrors the
+validator: each of those is a validation error on a snapshot, so importing anyway would
+write a fixture that fails validation the moment it lands. A save from a newer build
+imports cleanly in the checkout that has the content it refers to. What the validator
+does not check (a text variable, a relationship) comes back as a warning and imports
+fine.
+
+**Then start a route from it**, which is the point of the whole hop:
+
+```json
+{
+  "id": "rt_bug_41",
+  "dialogueId": "dlg_gatekeeper_intro",
+  "startSnapshot": "snap_bug_41",
+  "steps": [{ "choiceId": "ch_honest" }]
+}
+```
+
+```bash
+parlance route rt_bug_41
+```
+
+A bug found in play is now a file in the repo that fails CI until it is fixed, rather
+than twenty minutes of clicking that only one person knows how to repeat.
+
+**The reverse direction — route → save — is yours to implement**, and worth it: walk a
+route with your own runtime, take its end state, and write it as a save. "Open the game
+standing at the checkpoint having just been screened" becomes exact and repeatable. Carry
+the walk's visited set into that save, or the reopened game will offer content the walk
+already spent. What is *not* possible in any engine is save → route: a route is a path, a
+save is a position, and the steps that produced a state are not recoverable from it.
+
+---
+
 ## Quick start (TypeScript / Node)
 
 ```ts

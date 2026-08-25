@@ -1,0 +1,45 @@
+{
+  "availableWhen": {
+    "of": {
+      "flag": "took_a",
+      "type": "flag",
+      "value": true
+    },
+    "type": "not"
+  },
+  "id": "qst_path_b",
+  "name": "Path B",
+  "outcomes": [
+    {
+      "description": "You committed to path B.",
+      "id": "out_b",
+      "kind": "success"
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "Walk path B.",
+      "id": "stg_b",
+      "objectives": [
+        {
+          "id": "ob_b",
+          "text": "Commit to path B."
+        }
+      ],
+      "onComplete": [
+        {
+          "flag": "took_b",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "summary": "The B route."
+}

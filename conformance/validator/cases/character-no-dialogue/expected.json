@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "COVERAGE",
+      "contains": "npc_silent",
+      "severity": "warning"
+    }
+  ]
+}

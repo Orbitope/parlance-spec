@@ -1,0 +1,10 @@
+{
+  "id": "end_told",
+  "name": "The Story Told",
+  "summary": "You carry it with you.",
+  "unlockedBy": {
+    "outcome": "out_done",
+    "quest": "qst_errand",
+    "type": "questOutcome"
+  }
+}

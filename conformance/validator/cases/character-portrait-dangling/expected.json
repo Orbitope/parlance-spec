@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "PORT",
+      "contains": "por_ghost",
+      "severity": "error"
+    }
+  ]
+}

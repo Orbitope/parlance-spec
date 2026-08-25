@@ -106,7 +106,14 @@
         "ch_check",
         "ch_passive"
       ],
-      "onEnterEffectCount": 1
+      "onEnterEffectCount": 1,
+      "onEnterEffects": [
+        {
+          "type": "set_flag",
+          "flag": "visited_start",
+          "value": true
+        }
+      ]
     }
   },
   {
@@ -219,7 +226,14 @@
         "ch_check",
         "ch_passive"
       ],
-      "onEnterEffectCount": 1
+      "onEnterEffectCount": 1,
+      "onEnterEffects": [
+        {
+          "type": "set_flag",
+          "flag": "visited_start",
+          "value": true
+        }
+      ]
     }
   },
   {
@@ -332,7 +346,14 @@
         "ch_check",
         "ch_passive"
       ],
-      "onEnterEffectCount": 1
+      "onEnterEffectCount": 1,
+      "onEnterEffects": [
+        {
+          "type": "set_flag",
+          "flag": "visited_start",
+          "value": true
+        }
+      ]
     }
   },
   {
@@ -448,7 +469,14 @@
         "ch_check",
         "ch_passive"
       ],
-      "onEnterEffectCount": 1
+      "onEnterEffectCount": 1,
+      "onEnterEffects": [
+        {
+          "type": "set_flag",
+          "flag": "visited_start",
+          "value": true
+        }
+      ]
     }
   },
   {
@@ -497,7 +525,8 @@
       "visibleChoiceIds": [
         "ch_terminal"
       ],
-      "onEnterEffectCount": 0
+      "onEnterEffectCount": 0,
+      "onEnterEffects": []
     }
   },
   {
@@ -556,7 +585,8 @@
     },
     "expected": {
       "visibleChoiceIds": [],
-      "onEnterEffectCount": 0
+      "onEnterEffectCount": 0,
+      "onEnterEffects": []
     }
   },
   {
@@ -586,7 +616,8 @@
     },
     "expected": {
       "visibleChoiceIds": [],
-      "onEnterEffectCount": 0
+      "onEnterEffectCount": 0,
+      "onEnterEffects": []
     }
   },
   {
@@ -636,7 +667,19 @@
       "visibleChoiceIds": [
         "ch_go"
       ],
-      "onEnterEffectCount": 2
+      "onEnterEffectCount": 2,
+      "onEnterEffects": [
+        {
+          "type": "set_flag",
+          "flag": "arrived",
+          "value": true
+        },
+        {
+          "type": "adjust_counter",
+          "counter": "steps",
+          "delta": 1
+        }
+      ]
     }
   }
 ]

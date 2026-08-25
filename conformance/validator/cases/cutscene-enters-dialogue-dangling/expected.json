@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "CUT",
+      "contains": "dlg_ghost",
+      "severity": "error"
+    }
+  ]
+}

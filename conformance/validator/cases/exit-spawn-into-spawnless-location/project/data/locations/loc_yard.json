@@ -1,0 +1,22 @@
+{
+  "exits": [
+    {
+      "id": "ex_north",
+      "to": {
+        "location": "loc_hall",
+        "spawn": "sp_anything"
+      }
+    }
+  ],
+  "id": "loc_yard",
+  "name": "The Yard",
+  "spawns": [
+    {
+      "id": "sp_gate",
+      "isDefault": true
+    }
+  ],
+  "tags": [
+    "start"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "snap_start",
+  "name": "Start",
+  "schemaVersion": 1,
+  "state": {
+    "counters": {},
+    "flags": {},
+    "inventory": [],
+    "questStages": {
+      "qst_ghost": "stg_one"
+    },
+    "reputation": {},
+    "skills": {}
+  }
+}

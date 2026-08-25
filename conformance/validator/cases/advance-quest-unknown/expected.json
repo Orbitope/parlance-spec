@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "qst_ghost",
+      "severity": "error"
+    }
+  ]
+}

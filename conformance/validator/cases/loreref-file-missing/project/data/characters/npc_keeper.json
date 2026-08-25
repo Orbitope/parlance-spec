@@ -1,0 +1,13 @@
+{
+  "archetype": "keeper",
+  "dialogues": [
+    {
+      "dialogue": "dlg_meet"
+    }
+  ],
+  "id": "npc_keeper",
+  "loreRef": {
+    "file": "lore/keeper.md"
+  },
+  "name": "The Keeper"
+}

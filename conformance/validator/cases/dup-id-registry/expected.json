@@ -1,0 +1,12 @@
+{
+  "must": [
+    {
+      "code": "DUP",
+      "contains": "met_keeper",
+      "severity": "error"
+    }
+  ],
+  "validators": [
+    "python"
+  ]
+}

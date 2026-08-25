@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "ghost_flag",
+      "severity": "error"
+    }
+  ]
+}

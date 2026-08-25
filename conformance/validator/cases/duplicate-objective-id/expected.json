@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "OBJ",
+      "contains": "duplicate objective id",
+      "severity": "error"
+    }
+  ]
+}

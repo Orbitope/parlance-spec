@@ -1,0 +1,11 @@
+{
+  "mustNot": [
+    {
+      "code": "ENDING"
+    },
+    {
+      "code": "CODEX"
+    }
+  ],
+  "noErrors": true
+}

@@ -27,6 +27,19 @@ Counts below drift every time vectors are added, so treat them as indicative and
 | `resolve_quests.json` | `resolveQuests(state, project)` | 6 |
 | `rng.json` | mulberry32(seed) output stream — the seeded PRNG ports must reproduce exactly | 6 |
 
+### `validator/` — cases for the validator, not the runtime
+
+The JSON files above pin *runtime* behavior. `validator/cases/` pins the
+**validation rules** instead: each case is a small complete project with one
+seeded defect and an `expected.json` saying which issue codes must (and must
+not) be reported. They exist because this repo has two validators — the
+reference one in `tooling/validate.py` and the one inside the editor — and two
+implementations of one rule set drift silently: a rule that stops firing looks
+exactly like data with no defects.
+
+A port that ships its own validator can vendor these the same way, and check it
+agrees. See `validator/README.md` for the case format.
+
 `advance.json` is the one file with a failure case: some vectors carry `expectedError` (a substring
 the thrown error must contain) instead of `expected` — see Error cases below. Every other file is
 `expected` + deep-equality only.
@@ -147,11 +160,21 @@ carried through unchanged from the input state.
 
 ### stepDialogue
 ```json
-{ "expected": { "visibleChoiceIds": ["ch_goto", "ch_check"], "onEnterEffectCount": 1 } }
+{ "expected": {
+    "visibleChoiceIds": ["ch_goto", "ch_check"],
+    "onEnterEffectCount": 1,
+    "onEnterEffects": [{ "type": "set_flag", "flag": "visited_start", "value": true }]
+} }
 ```
 `visibleChoiceIds` is the ordered list of choice ids that pass `showIf` filtering.
-`onEnterEffectCount` is the count of effects in `node.onEnter` (they are returned but
-**not applied** — that is the caller's responsibility).
+`onEnterEffects` is `node.onEnter` in order — the effects are returned but **not
+applied**, which is the caller's responsibility.
+
+`onEnterEffectCount` is that list's length, kept for ports already checking it.
+**Check `onEnterEffects`, not the count.** The count alone is satisfied by
+returning the *choice's* effects instead of the node's, by returning them in
+reverse, or by returning the right number of nulls — all of which apply the
+wrong thing to the player's state while reporting conformance.
 
 ### chooseChoice
 ```json

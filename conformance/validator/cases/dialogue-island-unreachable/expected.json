@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REACH",
+      "contains": "unreachable",
+      "severity": "warning"
+    }
+  ]
+}

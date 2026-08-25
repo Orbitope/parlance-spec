@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "FLAG",
+      "contains": "player_named"
+    }
+  ],
+  "noErrors": true
+}

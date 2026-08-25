@@ -1,0 +1,10 @@
+{
+  "id": "end_ashes",
+  "name": "Ashes",
+  "summary": "Nothing is left to read.",
+  "unlockedBy": {
+    "flag": "burned_ledger",
+    "type": "flag",
+    "value": true
+  }
+}

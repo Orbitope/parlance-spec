@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "default does not match kind",
+      "severity": "error"
+    }
+  ]
+}

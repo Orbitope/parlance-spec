@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "FLOW",
+      "contains": "dead end",
+      "severity": "error"
+    }
+  ]
+}

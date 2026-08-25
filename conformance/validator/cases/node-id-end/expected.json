@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "FLOW",
+      "contains": "reserved",
+      "severity": "error"
+    }
+  ]
+}

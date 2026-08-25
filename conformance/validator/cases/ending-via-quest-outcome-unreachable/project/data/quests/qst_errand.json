@@ -1,0 +1,36 @@
+{
+  "id": "qst_errand",
+  "name": "A Small Errand",
+  "outcomes": [
+    {
+      "description": "The thing that never happens happened.",
+      "id": "out_lost",
+      "kind": "failure",
+      "reachedWhen": {
+        "flag": "never_happens",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "You listened.",
+      "id": "stg_listen",
+      "objectives": [
+        {
+          "id": "ob_listen",
+          "text": "Hear the keeper out."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "Hear the keeper out."
+}

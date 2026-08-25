@@ -1,0 +1,8 @@
+{
+  "asset": "cutscenes/recap",
+  "effectsOnComplete": [],
+  "entersDialogue": "dlg_ghost",
+  "id": "cs_recap",
+  "name": "Recap",
+  "skippable": true
+}

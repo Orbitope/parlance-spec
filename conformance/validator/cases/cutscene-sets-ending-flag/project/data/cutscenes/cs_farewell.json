@@ -1,0 +1,13 @@
+{
+  "asset": "cutscenes/farewell",
+  "effectsOnComplete": [
+    {
+      "flag": "tale_closed",
+      "type": "set_flag",
+      "value": true
+    }
+  ],
+  "id": "cs_farewell",
+  "name": "Farewell",
+  "skippable": true
+}

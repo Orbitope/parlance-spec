@@ -1,0 +1,13 @@
+{
+  "id": "loc_hall",
+  "name": "The Hall",
+  "spawns": [
+    {
+      "id": "sp_main",
+      "isDefault": true
+    }
+  ],
+  "tags": [
+    "start"
+  ]
+}

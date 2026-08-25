@@ -1,0 +1,12 @@
+{
+  "id": "fac_villagers",
+  "name": "Villagers",
+  "opposes": [
+    "fac_villagers"
+  ],
+  "reputationRange": {
+    "max": 10,
+    "min": -10
+  },
+  "summary": "The people who live here."
+}

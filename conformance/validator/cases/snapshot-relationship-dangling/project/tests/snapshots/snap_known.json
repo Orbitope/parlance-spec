@@ -1,0 +1,16 @@
+{
+  "id": "snap_known",
+  "name": "Known Locally",
+  "schemaVersion": 1,
+  "state": {
+    "counters": {},
+    "flags": {},
+    "inventory": [],
+    "questStages": {},
+    "relationships": {
+      "npc_ghost": 3
+    },
+    "reputation": {},
+    "skills": {}
+  }
+}

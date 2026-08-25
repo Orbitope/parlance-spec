@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REL",
+      "contains": "never adjusted",
+      "severity": "warning"
+    }
+  ]
+}

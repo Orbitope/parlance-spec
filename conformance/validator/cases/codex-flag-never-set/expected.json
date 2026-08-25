@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "CODEX",
+      "contains": "read_ledger",
+      "severity": "warning"
+    }
+  ]
+}

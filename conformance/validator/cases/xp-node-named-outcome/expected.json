@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "XP",
+      "contains": "outside a quest outcome",
+      "severity": "warning"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "body": "Columns of names, and one crossed out.",
+  "id": "cdx_ledger",
+  "name": "The Ledger",
+  "unlockedBy": {
+    "flag": "read_ledger",
+    "type": "flag",
+    "value": true
+  }
+}

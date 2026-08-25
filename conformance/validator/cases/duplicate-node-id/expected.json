@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "DUP",
+      "contains": "node_open",
+      "severity": "error"
+    }
+  ]
+}
