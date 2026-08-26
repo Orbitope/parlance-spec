@@ -10,9 +10,11 @@ conformance vectors at it.
 
 ## v0.12.0
 
-**No contract change, and nothing in this repo changed but this entry.**
+**No contract change.**
 
-`schema/`, `conformance/`, `validate/` and `docs/` are byte-identical to `v0.11.0`. A port
+`schema/`, `conformance/` and `validate/` are byte-identical to `v0.11.0`. In `docs/`,
+only `MIGRATIONS.md` (this release's entry) and `VERSIONING.md` (whose pinning example
+advances with every tag) differ — no runtime semantics, no schema, no vectors. A port
 pinned to `v0.11.0` needs no action: no re-vendoring, no suite re-run, nothing to read
 beyond this paragraph.
 
