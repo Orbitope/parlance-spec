@@ -4,8 +4,8 @@ Copyright (c) 2026 Matthew Burke
 Scope
 -----
 This license applies to the Parlance *specification surface* — the files that
-define the narrative data format and its runtime semantics, and the reference
-tools for checking conformance to them:
+define the narrative data format and its runtime semantics, the reference tools
+for checking conformance to them, and the editorial audits written against them:
 
   schema/                   the format definition (JSON Schema)
   tooling/conformance/      executable conformance vectors
@@ -16,10 +16,19 @@ tools for checking conformance to them:
   tooling/NAMING_STANDARDS.md
   tooling/VERSIONING.md
   tooling/MIGRATIONS.md
+  tooling/audits/          review-only editorial audits (Claude skills)
+  tooling/importers/       format importers, Yarn and Ink (Claude skills)
+  tooling/PUBLISHED_SKILLS.md  the index to those two bundles
 
 Copying these is the intent, not a leak. An engine port cannot be written
 without them, and "engine-agnostic" is not a checkable claim unless anyone may
-vendor the conformance vectors and run them.
+vendor the conformance vectors and run them. The audits are here on the same
+test: they are review-only skills a narrative team is meant to run, fork and
+adapt against their own project, which is not possible under a licence that
+withholds the right to modify. They read a project and report; they never write
+prose and never edit `data/`. The importers are here on the same reasoning:
+conversion is not authorship, every string they emit came from the source file
+byte for byte, and a project in an unusual dialect needs them forked.
 
 Everything else in this repository is licensed separately and is NOT covered by
 this document — in particular the editor (`editor/`), which is governed by

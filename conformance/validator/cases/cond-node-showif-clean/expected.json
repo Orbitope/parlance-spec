@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "COND",
+      "contains": "node_aside"
+    }
+  ],
+  "noErrors": true
+}

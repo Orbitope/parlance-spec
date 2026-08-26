@@ -1,0 +1,159 @@
+{
+  "entry": "n_landing_1",
+  "id": "dlg_ferry_landing",
+  "nodes": [
+    {
+      "id": "n_landing_1",
+      "next": "n_landing_2",
+      "speakerId": "char_ferryman",
+      "text": "The last boat went out at the bell, and the bell was an hour ago."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_landing_3",
+          "id": "c_ask_what_the_fare",
+          "text": "Ask what the fare would have been"
+        },
+        {
+          "effects": [
+            {
+              "flag": "asked_about_road",
+              "type": "set_flag",
+              "value": true
+            },
+            {
+              "counter": "patience",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_landing_4",
+          "id": "c_ask_about_the_long",
+          "text": "Ask about the long way round"
+        },
+        {
+          "goto": "n_weather_note_1",
+          "id": "c_say_nothing_at_all",
+          "text": "Say nothing at all"
+        }
+      ],
+      "id": "n_landing_2",
+      "speakerId": "char_ferryman",
+      "text": "You can wait for the morning, or you can walk the long way round."
+    },
+    {
+      "id": "n_landing_3",
+      "next": "n_weather_note_1",
+      "speakerId": "char_ferryman",
+      "text": "Two coins, and a third when the water is high."
+    },
+    {
+      "id": "n_landing_4",
+      "next": "n_weather_note_1",
+      "speakerId": "char_ferryman",
+      "text": "Nine miles of mud, and a gate at the end of it that is also shut."
+    },
+    {
+      "id": "n_weather_note_1",
+      "next": "n_after_1",
+      "speakerId": "char_ferryman",
+      "text": "The water came up all afternoon and has not gone down."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_after_2",
+          "id": "c_ask_whether_the_mud",
+          "showIf": {
+            "flag": "asked_about_road",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Ask whether the mud is passable"
+        },
+        {
+          "effects": [
+            {
+              "flag": "paid_the_fare",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_after_3",
+          "id": "c_offer_the_fare_anyway",
+          "text": "Offer the fare anyway"
+        }
+      ],
+      "id": "n_after_1",
+      "speakerId": "char_ferryman",
+      "text": "You are still standing on my landing."
+    },
+    {
+      "id": "n_after_2",
+      "next": "n_bench_1",
+      "speakerId": "char_ferryman",
+      "text": "It is passable. That is not the same as advisable."
+    },
+    {
+      "id": "n_after_3",
+      "next": "n_bench_1",
+      "speakerId": "char_ferryman",
+      "text": "I will take it. I will still not row you across."
+    },
+    {
+      "id": "n_bench_1",
+      "next": "n_bench_2",
+      "text": "The bench under the lamp is dry, which is the most that can be said for it."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_bench_3",
+          "id": "c_wait_for_the_morning",
+          "text": "Wait for the morning"
+        }
+      ],
+      "id": "n_bench_2",
+      "speakerId": "char_ferryman",
+      "text": "Suit yourself. I am going in."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_bench_4",
+          "id": "c_sleep",
+          "text": "Sleep"
+        },
+        {
+          "goto": "n_bench_5",
+          "id": "c_stay_awake",
+          "text": "Stay awake"
+        }
+      ],
+      "id": "n_bench_3",
+      "text": "The ferryman goes in, and the door does not open again."
+    },
+    {
+      "id": "n_bench_4",
+      "next": "n_morning_1",
+      "text": "You sleep badly and wake before the light."
+    },
+    {
+      "id": "n_bench_5",
+      "next": "n_morning_1",
+      "text": "You watch the water until the sky goes grey."
+    },
+    {
+      "id": "n_morning_1",
+      "isEnd": true,
+      "text": "The boat comes back at first light with somebody else's cargo in it."
+    }
+  ],
+  "replayable": false,
+  "tags": [
+    "story: Ferry Landing",
+    "scene: dusk"
+  ],
+  "title": "Ferry Landing"
+}

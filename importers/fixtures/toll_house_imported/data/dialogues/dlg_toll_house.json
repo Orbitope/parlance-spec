@@ -1,0 +1,97 @@
+{
+  "entry": "n_start",
+  "id": "dlg_toll_house",
+  "nodes": [
+    {
+      "id": "n_start",
+      "next": "n_start2",
+      "text": "You are late on the road, and the gate is shut until light."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "flag": "asked_gate",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_gate",
+          "id": "c_gate",
+          "text": "Ask why the gate shuts at all"
+        },
+        {
+          "goto": "n_fire",
+          "id": "c_fire",
+          "text": "Ask about the fire"
+        },
+        {
+          "effects": [
+            {
+              "flag": "stayed_quiet",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_bench",
+          "id": "c_quiet",
+          "text": "Say nothing and sit"
+        }
+      ],
+      "id": "n_start2",
+      "text": "I can offer a bench and a fire, and nothing better."
+    },
+    {
+      "id": "n_gate",
+      "next": "n_bench",
+      "text": "Because the ford runs high, and the ford has taken people."
+    },
+    {
+      "id": "n_fire",
+      "next": "n_bench",
+      "text": "It is a fire. It has no history worth the telling."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "flag": "took_bread",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_take",
+          "id": "c_take",
+          "text": "Take the bread"
+        },
+        {
+          "goto": "n_refuse",
+          "id": "c_refuse",
+          "text": "Refuse it"
+        }
+      ],
+      "id": "n_bench",
+      "text": "There is bread, if you want it. It is yesterday's."
+    },
+    {
+      "id": "n_take",
+      "next": "n_end",
+      "text": "Good. It goes stale either way."
+    },
+    {
+      "id": "n_refuse",
+      "next": "n_end",
+      "text": "Suit yourself."
+    },
+    {
+      "id": "n_end",
+      "isEnd": true,
+      "text": "The fire settles. Outside, the ford keeps going in the dark."
+    }
+  ],
+  "replayable": false,
+  "speakerId": "char_keeper",
+  "title": "Toll House"
+}

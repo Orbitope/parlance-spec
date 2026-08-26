@@ -135,7 +135,7 @@
           },
           {
             "type": "object",
-            "description": "Walk N consecutive next-advances (choiceless, N2) from the current node — collapses a long ambient/narration run into one step instead of one synthetic-choice step per beat. Fails if the current node has no 'next' at any hop.",
+            "description": "Walk N consecutive next-advances (choiceless, N2) from the current node — collapses a long ambient/narration run into one step instead of one synthetic-choice step per beat. Fails if the current node has no 'next' at any hop. One hop means one SHOWN beat: nodes whose showIf fails are skipped inside a hop and do not count toward N, so on state-dependent paths the same N can cross different numbers of authored nodes.",
             "properties": {
               "advance": {
                 "type": "integer",

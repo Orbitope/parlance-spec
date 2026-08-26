@@ -1,0 +1,37 @@
+title: Start
+tags: chapter1
+---
+// The traveller arrives at the toll house after dark.
+Keeper: You are late on the road, and the gate is shut until light.
+Keeper: I can offer a bench and a fire, and nothing better.
+-> Ask why the gate shuts at all
+    <<set $asked_gate to true>>
+    Keeper: Because the ford runs high, and the ford has taken people.
+    <<jump Bench>>
+-> Ask about the fire
+    Keeper: It is a fire. It has no history worth the telling.
+    <<jump Bench>>
+-> Say nothing and sit
+    <<set $stayed_quiet to true>>
+    <<jump Bench>>
+===
+
+title: Bench
+---
+Keeper: There is bread, if you want it. It is yesterday's.
+<<if $asked_gate>>
+Keeper: You asked about the ford. Most people ask about the fire.
+<<endif>>
+-> Take the bread
+    <<set $took_bread to true>>
+    Keeper: Good. It goes stale either way.
+    <<jump End>>
+-> Refuse it
+    Keeper: Suit yourself.
+    <<jump End>>
+===
+
+title: End
+---
+The fire settles. Outside, the ford keeps going in the dark.
+===

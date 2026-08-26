@@ -1,0 +1,22 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "Ink VAR asked_about_road",
+      "id": "asked_about_road",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR paid_the_fare",
+      "id": "paid_the_fare",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR patience",
+      "id": "patience",
+      "kind": "counter"
+    }
+  ]
+}

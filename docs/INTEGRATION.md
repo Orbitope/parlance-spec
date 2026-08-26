@@ -116,6 +116,7 @@ import {
   applyEffect,
   applyEffects,
   resolveCheck,
+  resolveNode,
   stepDialogue,
   chooseChoice,
   advanceNode,
@@ -202,11 +203,34 @@ type CheckResult = {
 };
 ```
 
+### `resolveNode(dialogue, nodeId, state, project) → DialogueNode`
+
+Walk past nodes whose **`showIf`** fails, following `next`, and return the first node that
+is actually shown. A `DialogueNode` may carry a display gate, and **a skipped node is
+inert**: its text is not shown, its `onEnter` effects do **not** fire, and it produces no
+transcript entry. A skipped node did not happen.
+
+Call it at **every arrival at a node** — the dialogue's `entry`, a `next` advance, a choice
+`goto`, and a check's `onSuccess`/`onFailure`. A runtime that resolves at some but not all
+of those renders conditionally-hidden text at the rest, with no error of any kind. That is
+the failure mode `MIGRATIONS.md` warns about for this field, and it is silent.
+
+**Resolve once per arrival, against the state on arrival, before applying `onEnter` — then
+never again for that arrival.** A node that has been shown stays shown; re-resolving after
+its own effects have run can return a different node and mix one node's text with another's
+choices. The full ordering is the "arrival sequence" in `RUNTIME_CONTRACT.md`, and it is
+worth reading before writing this call.
+
+**Throws** on a ring of conditional nodes, on a skipped node with no `next`, and on a
+dangling `next` anywhere in the chain. All three are states the validator's `COND` rules
+reject, so they indicate unvalidated data rather than a case to handle.
+
 ### `stepDialogue(dialogue, nodeId, state, project) → StepResult`
 
-Get the current node and filter `node.choices` by `showIf` conditions. Returns
-`onEnterEffects` but does **not** apply them — call `applyEffects(onEnterEffects, state,
-project)` on first arrival (not on replay).
+**Resolves** the node (see `resolveNode` — the returned node may not be the one whose id you
+passed, so read the id off the result), then filters `node.choices` by `showIf` conditions.
+Returns `onEnterEffects` but does **not** apply them — call `applyEffects(onEnterEffects,
+state, project)` on first arrival (not on replay).
 
 ```ts
 type StepResult = { node: DialogueNode; visibleChoices: Choice[]; onEnterEffects: Effect[] };
@@ -215,7 +239,9 @@ type StepResult = { node: DialogueNode; visibleChoices: Choice[]; onEnterEffects
 ### `chooseChoice(dialogue, nodeId, choiceId, state, project, rng?) → ChoiceOutcome`
 
 Resolve a player's choice: apply `choice.effects`, resolve the check (active checks only),
-return the next node id and updated state. Passive checks follow `choice.goto` without
+return the next node id and updated state. **`nextNodeId` is not resolved** — unlike
+`advanceNode`'s, it is the requested target, which may be a node that will be skipped. Pass
+it through `resolveNode` before recording it anywhere (transcript, save, route log). Passive checks follow `choice.goto` without
 rolling. Terminal choices (no `goto`, no `check`) return `nextNodeId: null`.
 
 ```ts
@@ -226,15 +252,17 @@ type ChoiceOutcome = {
 };
 ```
 
-### `advanceNode(dialogue, nodeId, state) → AdvanceOutcome`
+### `advanceNode(dialogue, nodeId, state, project) → AdvanceOutcome`
 
 Resolve a node's `next` pointer — the choiceless counterpart of `chooseChoice`, for a
 listen-only beat (ambient chatter, narration) that advances with no player choice. Unlike
 `chooseChoice`, no effects are applied and no check is resolved (`next` carries neither);
 `newState` always equals the input `state`. **Throws** if the node has no `next`, or if
 `next` targets a node absent from the dialogue — call it only on a node your validator/UI
-has already confirmed declares `next`. Does not chase further `next` pointers: one call is
-exactly one hop.
+has already confirmed declares `next`. The returned id is **post-skip**: `next`'s target is
+resolved, so it is the node the player will actually see. Does not chase further `next`
+pointers: one call reveals exactly one *shown* beat — walking past inert skipped nodes is
+resolution, not chasing. Takes `project` because a node gate may read quest state.
 
 ```ts
 type AdvanceOutcome = { nextNodeId: string; newState: GameState };

@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "code": "COND",
+      "contains": "no 'next'",
+      "severity": "error"
+    },
+    {
+      "code": "COND",
+      "contains": "'isEnd'",
+      "severity": "error"
+    }
+  ]
+}

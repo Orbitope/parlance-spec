@@ -40,6 +40,10 @@
             "items": { "$ref": "common.schema.json#/definitions/effect" },
             "description": "effects applied when this node is reached"
           },
+          "showIf": {
+            "$ref": "common.schema.json#/definitions/condition",
+            "description": "Optional gate on this node's DISPLAY. When it fails the node is skipped and resolution continues at 'next': its text is not shown and its onEnter effects DO NOT fire. Requires 'next'; mutually exclusive with 'choices' and 'isEnd', which confines this to interstitial narration and makes skipping unambiguous. A 'next' chain must terminate at a node with no showIf."
+          },
           "isEnd": { "type": "boolean", "description": "true if this node ends the conversation" },
           "next": {
             "$ref": "common.schema.json#/definitions/id",

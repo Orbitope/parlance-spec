@@ -44,6 +44,14 @@ DICE_RE = re.compile(r"^(\d+)d(\d+)$")
 DEFAULT_DICE = (1, 20)
 
 
+# Whitespace class shared with editor/core/src/validator.ts. Explicit rather than
+# .strip()/.trim(), which differ on U+FEFF, U+0085 and U+001C-1F.
+_WS = "\t\n\x0b\x0c\r\x1c\x1d\x1e\x1f \x85\xa0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
+
+
+def _WS_STRIP(t):
+    return t.strip(_WS)
+
 def parse_dice(notation):
     """Parse "NdM" → (n, m). Raises ValueError with the same messages dice.ts
     throws, so both validators report identically."""
@@ -589,6 +597,10 @@ class ProjectValidator:
                 # it and round-trips wrong.
                 if n["id"] == "end":
                     self.err("FLOW", f"{w}: node id 'end' is reserved (it is the dialogue-script text-mode end sentinel)")
+                # A node showIf is a condition like any other: REF-check it, and register
+                # it as a reader so FLAG/REP/REL hygiene does not call a gate flag dead.
+                if "showIf" in n:
+                    self.walk_condition(n["showIf"], w)
                 for e in n.get("onEnter", []):
                     self.walk_effect(e, w)
                 if n.get("speakerId"):
@@ -725,6 +737,76 @@ class ProjectValidator:
                     self.err("FLOW", f"{w0}: 'next' cycle involving node '{cur}'")
                 for nid in chain:
                     chain_state[nid] = "done"
+
+    def check_node_conditions(self):
+        """COND — DialogueNode.showIf.
+
+        A conditional node is for interstitial narration: a line that may or may
+        not appear between two other beats. The constraints below are what make
+        skipping unambiguous at runtime, so the runtime is entitled to assume
+        them and throws if they do not hold — which is only safe because they
+        are all statically checkable here.
+        """
+        for did, (d, _p) in sorted(self.dialogues.items()):
+            if not self.valid("dialogue", did):
+                continue
+            nodes = {n["id"]: n for n in d.get("nodes", [])}
+            conditional = {nid for nid, n in nodes.items() if n.get("showIf")}
+            for nid in sorted(conditional):
+                n = nodes[nid]
+                w = f"dialogue '{did}' node '{nid}'"
+                if not n.get("next"):
+                    self.err("COND", f"{w}: has showIf but no 'next' — there is nowhere to go "
+                                     f"when the condition fails")
+                if n.get("choices"):
+                    self.err("COND", f"{w}: has showIf together with 'choices' — a conditional "
+                                     f"node is interstitial narration; gate the choices instead")
+                if n.get("isEnd"):
+                    self.err("COND", f"{w}: has showIf together with 'isEnd' — a dialogue's "
+                                     f"termination must not be conditional")
+                if n.get("onEnter"):
+                    self.warn("COND", f"{w}: conditional node carries onEnter effects — they do "
+                                      f"NOT fire when it is skipped (advisory)")
+                # Same character class as the TypeScript side on purpose: JS
+                # .trim() and Python .strip() do NOT agree (BOM, NEL, the C1
+                # separators each fall one way only), and a silent split here is
+                # exactly the drift the two-validator rule exists to prevent.
+                if not _WS_STRIP(str(n.get("text", ""))):
+                    self.err("COND", f"{w}: showIf on a node with empty text — that is a "
+                                     f"conditional effects block, not conditional narration; "
+                                     f"gate the effects' consumers, or give the node a line")
+
+            # A cycle made only of conditional nodes can never be escaped: every
+            # node in it can fail its gate, and `next` leads back into the ring.
+            # Each conditional node has at most one outgoing `next`, so this is a
+            # functional graph and one colored walk finds every ring in O(nodes).
+            # Reported once per ring, not once per entry point.
+            #
+            # This is deliberately the ONLY dialogue-level rule. Two shipped here
+            # briefly and were removed as provable dead weight (see the spec's §5
+            # note): "a next chain must end unconditionally" is a theorem — its
+            # every violation already fires the per-node no-next error, a REF
+            # dangling-next error, or this cycle error — and "every node is
+            # conditional" cannot occur without a ring, so that warning could
+            # never fire without an error beside it.
+            color = {}          # nid -> 1 walking, 2 done
+            for start_id in sorted(conditional):
+                if color.get(start_id):
+                    continue
+                path = []
+                cur = start_id
+                while cur in conditional and color.get(cur) is None:
+                    color[cur] = 1
+                    path.append(cur)
+                    nxt = nodes[cur].get("next")
+                    cur = nxt if nxt in nodes else None
+                if cur in conditional and color.get(cur) == 1:
+                    ring = path[path.index(cur):]
+                    self.err("COND", f"dialogue '{did}': cycle among conditional nodes "
+                                     f"({' -> '.join(ring + [cur])}) — if every gate fails, "
+                                     f"resolution cannot escape it")
+                for nid in path:
+                    color[nid] = 2
 
     def check_coverage(self):
         # A character "has dialogue" if they speak one OR a ladder rung presents
@@ -1522,6 +1604,7 @@ class ProjectValidator:
         self.check_variables()
         self.check_characters_portraits_factions()
         self.check_dialogues()
+        self.check_node_conditions()
         self.check_coverage()
         self.check_quests()
         # Cutscenes BEFORE endings/codex: their effectsOnComplete are flag

@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "COND",
+      "contains": "empty text",
+      "severity": "error"
+    }
+  ]
+}

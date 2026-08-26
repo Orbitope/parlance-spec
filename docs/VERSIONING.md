@@ -26,7 +26,7 @@ retroactively.** Concretely, during 0.x:
   added or removed, enum values may change, runtime semantics may be corrected.
 - **There is no deprecation window.** A wrong default gets fixed, not carried.
 - **There are no backports.** Fixes land on the current release only.
-- **Ports must pin an exact tag** (`v0.10.0`, never a range or a branch) and vendor the
+- **Ports must pin an exact tag** (`v0.11.0`, never a range or a branch) and vendor the
   conformance vectors at that tag — the mechanism described in
   [`INTEGRATION.md`](INTEGRATION.md). Moving the pin is a deliberate act with a
   re-run of your suite, not a dependency bump.
@@ -35,6 +35,18 @@ This is a deliberate trade, not neglect. The format currently carries modelling
 inherited from its first project (see "Known contract debt" below), and fixing that is
 cheap now and expensive after 1.0. Freezing early would mean carrying someone else's
 game vocabulary forever.
+
+### A gap worth knowing about: 0.6.0 – 0.8.0
+
+Those three tags exist in the Parlance repo and are valid points to pin the
+*contract* to, but they shipped **no binaries and no release notes** — their
+release builds failed, and the failures were never chased because the versions were
+superseded within days. There is nothing to recover and nothing missing from the
+spec: the schema and conformance vectors at those tags are exactly what they say.
+Recorded here so the absence reads as history rather than as a broken publish.
+
+Contract publication to [`parlance-spec`](https://github.com/orbitope/parlance-spec)
+begins at `v0.9.0`.
 
 Every breaking change ships with a migration note in the release; the conformance
 vectors are the ground truth for what actually changed.
@@ -68,6 +80,20 @@ than no list at all.
 An audit of all 150 property names against the five languages ports are written in
 (TypeScript, Python, C#, Java, GDScript) found only the two above; the rest are clear.
 
+## Releases you cannot skip
+
+Most additive releases are safe to ignore: a port pinned below them renders identically
+until it takes the new capability up. A small class is not, and it gets its own register
+here rather than a slot in the debt list above, because it is not debt Parlance owes —
+it is a hazard the *consumer* carries until they move their pin.
+
+| Release | Addition | Why skipping it is not safe |
+|---|---|---|
+| 0.11.0 | `DialogueNode.showIf` | Additive to the schema, but it changes playback for data that uses it: a runtime without the skip walk renders conditionally-hidden text with no error of any kind. A port that reads "additive" and skips the release is silently wrong, not merely behind. Detection recipe and mitigations in `MIGRATIONS.md`. |
+
+The general defence is strict deserialization: a port that rejects unknown fields turns
+every future member of this class into a load error instead of silent wrong output.
+
 ## Reaching 1.0
 
 1.0 is earned, not scheduled. All of the following must hold:
@@ -79,9 +105,14 @@ An audit of all 150 property names against the five languages ports are written 
 - [ ] **At least one independent engine port passing the full conformance suite**, built
       by someone reading only the published spec.
 - [ ] **Two consecutive minor releases with no breaking contract change** — evidence the
-      shape has settled.
+      shape has settled. Breaking counts **consumer** breaks, not only data breaks: a
+      release listed under "Releases you cannot skip" resets this counter exactly as a
+      schema break would.
 - [ ] **Every conformance file has a runner** in at least two implementations, so
-      "passing" means the same thing twice.
+      "passing" means the same thing twice — and **every contract behaviour has a
+      vector**. The gap between those two is how `showIf` briefly shipped with docs
+      pointing at vectors that did not exist: every file had a runner, and the new
+      behaviour had no file.
 
 ## After 1.0
 
@@ -92,7 +123,10 @@ An audit of all 150 property names against the five languages ports are written 
   support, with security and correctness fixes backported for a stated period. No line
   is LTS until it is announced as such, in writing, with dates.
 - **Additive-only minors:** new optional fields and new effect/condition types may land
-  in a minor; existing data stays valid.
+  in a minor; existing data stays valid. **Additive here means additive-and-ignorable.**
+  A field that changes playback for data that uses it — the `DialogueNode.showIf` class,
+  see "Releases you cannot skip" — is breaking for consumers whatever the schema says:
+  post-1.0 it takes the major-version path with a deprecation window, not a minor.
 
 ## Version numbers you will see
 

@@ -19,9 +19,9 @@ Counts below drift every time vectors are added, so treat them as indicative and
 | `evaluate.json` | `evaluate(condition, state, project)` | 53 |
 | `apply_effect.json` | `applyEffect(effect, state, project)` | 27 |
 | `resolve_check.json` | `resolveCheck(check, state, rng, defaultDice?, criticals?)` | 18 |
-| `step_dialogue.json` | `stepDialogue(dialogue, nodeId, state, project)` | 8 |
+| `step_dialogue.json` | `stepDialogue(dialogue, nodeId, state, project)` | 11 |
 | `choose_choice.json` | `chooseChoice(dialogue, nodeId, choiceId, state, project, rng)` | 9 |
-| `advance.json` | `advanceNode(dialogue, nodeId, state)` | 9 |
+| `advance.json` | `advanceNode(dialogue, nodeId, state, project)` | 12 |
 | `resolveCharacterDialogue.json` | `resolveCharacterDialogue(state, character, project)` | 6 |
 | `progression.json` | `levelForXp` / `pointsEarned` / `availablePoints` / `investSkillPoint` / `recomputeSkills` | 13 |
 | `resolve_quests.json` | `resolveQuests(state, project)` | 6 |
@@ -40,9 +40,11 @@ exactly like data with no defects.
 A port that ships its own validator can vendor these the same way, and check it
 agrees. See `validator/README.md` for the case format.
 
-`advance.json` is the one file with a failure case: some vectors carry `expectedError` (a substring
-the thrown error must contain) instead of `expected` — see Error cases below. Every other file is
-`expected` + deep-equality only.
+Any runtime file may carry failure cases: a vector with `expectedError` (a substring
+the thrown error's message must contain) instead of `expected` means the call must
+throw. `advance.json` carries them for a missing `next` and for a ring of conditional
+nodes whose gates all fail — both validator-guaranteed impossibilities, thrown rather
+than absorbed because reaching them means the data never passed validation.
 
 ## Vector format
 
@@ -161,11 +163,19 @@ carried through unchanged from the input state.
 ### stepDialogue
 ```json
 { "expected": {
+    "nodeId": "n_real",
     "visibleChoiceIds": ["ch_goto", "ch_check"],
     "onEnterEffectCount": 1,
     "onEnterEffects": [{ "type": "set_flag", "flag": "visited_start", "value": true }]
 } }
 ```
+`nodeId` is the **resolved** node's id — `stepDialogue` walks past nodes whose own
+`showIf` fails (see `resolveNode` in `RUNTIME_CONTRACT.md`), so the node returned may not
+be the one requested. **Check it when present**, by the same reasoning as the effects note
+below: without it, a runtime that never implements the skip walk still passes every vector
+whose skipped node carries no `onEnter` — the *typical* gated narration line, since a
+conditional node is choiceless by construction. Older vectors omit the field.
+
 `visibleChoiceIds` is the ordered list of choice ids that pass `showIf` filtering.
 `onEnterEffects` is `node.onEnter` in order — the effects are returned but **not
 applied**, which is the caller's responsibility.
@@ -198,8 +208,10 @@ Resolves `node.next` — the choiceless counterpart of `chooseChoice`, for liste
 **no effects are applied and no check is resolved** — `next` carries neither — so
 `newState` always equals the input `state`, byte-for-byte, even when the TARGET node has
 `onEnter` effects: those are the caller's responsibility on arrival, exactly as with
-`stepDialogue`'s `onEnterEffects` / a `goto` arrival, never `advanceNode`'s own job. Does
-not chase further `next` pointers — one call resolves exactly one hop.
+`stepDialogue`'s `onEnterEffects` / a `goto` arrival, never `advanceNode`'s own job. The
+returned `nextNodeId` is **post-skip**: the target is resolved through any failing node
+`showIf` gates, so it names the node the player will actually see. One call still reveals
+exactly one *shown* beat — skipped nodes are inert, not beats.
 
 **Error cases.** A vector with `expectedError` instead of `expected` means the call must
 throw; `expectedError` is a substring the thrown error's message must contain. This is the

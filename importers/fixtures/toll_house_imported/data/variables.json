@@ -1,0 +1,22 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "Yarn $asked_gate",
+      "id": "asked_gate",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Yarn $stayed_quiet",
+      "id": "stayed_quiet",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Yarn $took_bread",
+      "id": "took_bread",
+      "kind": "flag"
+    }
+  ]
+}

@@ -11,10 +11,92 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
-## 0.10.0 — new capabilities (additive, nothing to migrate)
+## 0.11.0 — conditional narration (NOT safe to skip)
 
-Nothing breaks in this release. Your data loads unchanged, and a port pinned to
-`v0.9.0` stays correct until it takes the addition below.
+**Unreleased as of this writing — `v0.10.0` is the newest tag, and this entry describes
+what the `v0.11.0` tag will contain.** It carries one change, `DialogueNode.showIf`, which
+is **additive to the schema but forward-incompatible for consumers**. It is deliberately
+kept apart from the `goto`/`default` reserved-word rename, which moves to 0.12.0: that
+change is mechanical and touches every conformance vector, this one is semantic and needs
+its own conformance attention — and a port whose suite goes red after a combined release
+could not tell which change broke it.
+
+### `DialogueNode.showIf` — conditional narration
+
+**Additive to the schema. NOT safe for an unimplementing runtime to ignore.**
+
+Every existing project loads unchanged and stays valid, so there is nothing to migrate in
+your data. The hazard runs the other way: a runtime pinned below `v0.11.0` that is handed a
+project *using* the new field will show conditionally-hidden text unconditionally, with no
+parse error and no warning. Silent wrong output, not a crash.
+
+That inverts the usual reading of "additive". Do not treat this the way you treated
+`snapshot.visitedDialogueIds` below.
+
+| Addition | Replaces the workaround of… |
+|---|---|
+| **`DialogueNode.showIf`** — the same condition type `choice.showIf` already uses | Having no way to express a line of narration that appears only in some world states. There was no workaround: wrapping the line in a choice fabricates a decision the player never made, and a node advances by `next` (one fixed target) or by a player choice, so nothing could branch on state without asking the player something. |
+
+**Am I exposed right now?** Run this against any project your pinned runtime consumes —
+a plain grep is useless here, since `"showIf"` hits every gated choice:
+
+```bash
+python3 - <<'EOF'
+import json, glob
+for p in sorted(glob.glob("data/dialogues/*.json")):
+    d = json.load(open(p))
+    gated = [n["id"] for n in d.get("nodes", []) if "showIf" in n]
+    if gated:
+        print(f"{d['id']}: node-level showIf on {', '.join(gated)}")
+EOF
+```
+
+No output = no exposure: your pinned runtime is rendering this project correctly today,
+and you can schedule the pin move on your own terms. Any output = every listed node is
+being shown unconditionally by a pre-0.11.0 runtime, right now.
+
+**If you implement a runtime**, add the resolve step from
+[`RUNTIME_CONTRACT.md`](RUNTIME_CONTRACT.md) — `resolveNode` — and route every arrival
+through it: `entry`, `next`, a choice `goto`, and a check's `onSuccess`/`onFailure`. The one
+rule that is easy to miss: **a skipped node is inert, and its `onEnter` effects DO NOT
+fire.** Take the conformance vectors at this tag; `step_dialogue.json` and `advance.json`
+cover a two-skip chain, a conditional `entry`, a skipped node whose effects must not fire,
+the resolved id an advance must return, and the conditional-ring throw — and the
+`stepDialogue` expected shape now asserts the **resolved node id**, so a runtime that
+never skips cannot pass by accident.
+
+**If your writers and your engine move independently** — the usual studio shape — the
+invariant to hold is: *data must not acquire node `showIf` before the engine implements
+the skip walk.* The cheap enforcement is a CI gate on the data side using the probe above,
+failing the build while the recorded engine pin is below this release.
+
+**If your port deserializes strictly**, you get the crash you want for free: configure the
+deserializer to reject unknown fields (e.g. .NET's `JsonUnmappedMemberHandling.Disallow`)
+and an unimplemented contract addition surfaces as a load error instead of silent wrong
+output. This is the single cheapest mitigation available to a pinned consumer, and it
+converts every future addition of this class from a lie into a loud failure.
+
+**If you author data**, a node carrying `showIf` must have `next`, and must not have
+`choices` or `isEnd` — the validator's new `COND` rules enforce it. That constraint keeps
+the feature to interstitial narration, which is what makes skipping unambiguous. An
+empty-text gated node is rejected outright: that is a conditional effects block, not
+narration. In the editor's Text view the gate rides as a `~ showIf: <condition>` line
+under the node header.
+
+**If you already validate**, `COND` is a **new issue code, and it carries errors** — a
+pipeline or dashboard that maps codes to severities needs the row (the 0.9.0 `TASK` →
+`QUEST` note set the precedent). A project with no node-level `showIf` sees no new
+findings at all. The one advisory: a conditional node carrying `onEnter` warns, because
+those effects silently do not fire when the node is skipped.
+
+---
+
+## 0.10.0 — visited-set snapshots
+
+**Released** (tagged 2026-08-24). Safe to ignore: your data loads unchanged, and a port
+pinned to `v0.9.0` renders it identically until it takes the field up.
+
+### `snapshot.visitedDialogueIds` — additive, nothing to migrate
 
 | Addition | Replaces the workaround of… |
 |---|---|

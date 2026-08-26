@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "COND",
+      "contains": "cycle among conditional nodes",
+      "severity": "error"
+    }
+  ]
+}

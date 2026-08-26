@@ -835,6 +835,86 @@ def case_xp_node_named_outcome(p: dict) -> None:
     p["data/quests/qst_errand.json"] = _errand_quest()
 
 
+
+# ---------------------------------------------------------------------------
+# COND — conditional narration (tooling/NODE_CONDITIONS_SPEC.md)
+# ---------------------------------------------------------------------------
+
+def _cond_gate() -> dict:
+    return {"flag": "met_keeper", "type": "flag", "value": True}
+
+
+def case_cond_node_showif_clean(p: dict) -> None:
+    """A LEGAL conditional node: gated, has next, no choices, no isEnd.
+
+    The positive case matters as much as the seeded defects. A rule that fires on
+    correct data is worse than one that never fires, because it trains authors to
+    ignore the code.
+    """
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"].insert(1, {
+        "id": "node_aside",
+        "showIf": _cond_gate(),
+        "text": "You have been here before, and they know it.",
+        "next": "node_close",
+    })
+    dlg["nodes"][0]["choices"][0]["goto"] = "node_aside"
+
+
+def case_cond_showif_without_next(p: dict) -> None:
+    """showIf with nowhere to go when the gate fails."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"][1]["showIf"] = _cond_gate()      # node_close: isEnd, no next
+
+
+def case_cond_showif_with_choices(p: dict) -> None:
+    """showIf on a node that offers choices — not interstitial narration."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"][0]["showIf"] = _cond_gate()      # node_open carries choices
+    dlg["nodes"][0]["next"] = "node_close"
+
+
+def case_cond_empty_text(p: dict) -> None:
+    """A gated node with no words — a conditional effects BLOCK.
+
+    `text` is required but unconstrained, so "" is legal; with showIf and
+    onEnter it becomes `if (cond) { effects }`, the construct the spec's §10
+    names as a non-goal. Rejected as an error so it never becomes an idiom.
+    """
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"].insert(1, {
+        "id": "node_silent",
+        "showIf": _cond_gate(),
+        "text": "",
+        "next": "node_close",
+        "onEnter": [{"flag": "heard_story", "type": "set_flag", "value": True}],
+    })
+    dlg["nodes"][0]["choices"][0]["goto"] = "node_silent"
+
+
+def case_cond_cycle(p: dict) -> None:
+    """Two gated nodes pointing at each other — resolution cannot escape."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"].insert(1, {"id": "node_a", "showIf": _cond_gate(),
+                            "text": "Round.", "next": "node_b"})
+    dlg["nodes"].insert(2, {"id": "node_b", "showIf": _cond_gate(),
+                            "text": "And round.", "next": "node_a"})
+    dlg["nodes"][0]["choices"][0]["goto"] = "node_a"
+
+
+def case_cond_effects_advisory(p: dict) -> None:
+    """A gated node carrying onEnter — the effects silently do not fire."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"].insert(1, {
+        "id": "node_aside",
+        "showIf": _cond_gate(),
+        "text": "They almost say something.",
+        "next": "node_close",
+        "onEnter": [{"flag": "heard_story", "type": "set_flag", "value": True}],
+    })
+    dlg["nodes"][0]["choices"][0]["goto"] = "node_aside"
+
+
 CASE_BUILDERS = {
     "clean-minimal": (case_clean_minimal, {"noErrors": True}),
     "passive-goto-dangling": (
@@ -1029,6 +1109,38 @@ CASE_BUILDERS = {
     "xp-node-named-outcome": (
         case_xp_node_named_outcome,
         {"must": [{"code": "XP", "contains": "outside a quest outcome", "severity": "warning"}]},
+    ),
+
+    # -- COND: conditional narration (tooling/NODE_CONDITIONS_SPEC.md) -------
+    "cond-node-showif-clean": (
+        case_cond_node_showif_clean,
+        {"noErrors": True, "mustNot": [{"code": "COND", "contains": "node_aside"}]},
+    ),
+    "cond-showif-without-next": (
+        case_cond_showif_without_next,
+        # The seeder gates node_close, which is BOTH next-less and isEnd — so this
+        # one case pins two rules. Both assertions matter: an ablation run found
+        # the isEnd rule could be deleted with every case still green.
+        {"must": [
+            {"code": "COND", "contains": "no 'next'", "severity": "error"},
+            {"code": "COND", "contains": "'isEnd'", "severity": "error"},
+        ]},
+    ),
+    "cond-showif-with-choices": (
+        case_cond_showif_with_choices,
+        {"must": [{"code": "COND", "contains": "'choices'", "severity": "error"}]},
+    ),
+    "cond-empty-text": (
+        case_cond_empty_text,
+        {"must": [{"code": "COND", "contains": "empty text", "severity": "error"}]},
+    ),
+    "cond-cycle": (
+        case_cond_cycle,
+        {"must": [{"code": "COND", "contains": "cycle among conditional nodes", "severity": "error"}]},
+    ),
+    "cond-effects-advisory": (
+        case_cond_effects_advisory,
+        {"must": [{"code": "COND", "contains": "do NOT fire", "severity": "warning"}]},
     ),
 }
 

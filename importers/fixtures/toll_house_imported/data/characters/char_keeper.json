@@ -1,0 +1,9 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_toll_house"
+    }
+  ],
+  "id": "char_keeper",
+  "name": "Keeper"
+}

@@ -149,12 +149,74 @@ Inject a seeded RNG for deterministic tests. See `tooling/conformance/resolve_ch
 
 ---
 
+## resolveNode(dialogue, nodeId, state, project): DialogueNode
+
+Conditional narration: a `DialogueNode` may carry `showIf`. **Every arrival at a node**
+resolves through it before anything is presented — not just the arrival that starts a
+dialogue. There are exactly four arrival sites, and a runtime that resolves at some but
+not all of them renders hidden text at the rest:
+
+1. the dialogue's `entry` node,
+2. a `next` advance,
+3. a choice's `goto`,
+4. a check's `onSuccess` / `onFailure`.
+
+1. Locate the node by the current id; **throw** if not found.
+2. If it has no `showIf`, or `evaluate(node.showIf, state, project)` is true, return it.
+3. Otherwise the node is **skipped**: set the current id to `node.next` and repeat.
+4. **Throw** on a repeated id (a ring of conditional nodes), or if a skipped node has no
+   `next`.
+
+**A skipped node is inert.** Its text is not shown, its `onEnter` effects **DO NOT fire**,
+it produces no transcript entry, and neither its speaker nor its portrait is resolved. A
+skipped node did not happen. This is the single
+most likely place for a port to diverge, so the conformance vectors cover it directly.
+
+The two throws are validator-guaranteed impossibilities, not runtime policy: `COND` makes
+a node carrying `showIf` require `next`, forbids it alongside `choices` or `isEnd`, and
+rejects both a `next` chain ending at a conditional node and a cycle made only of
+conditional nodes. The runtime may therefore assume termination; if it does not hold, the
+data never passed validation and silence would hide that.
+
+### The arrival sequence — resolve once, and only once
+
+`resolveNode` describes the walk. This describes when to run it, and it is the part a port
+is most likely to get wrong, because both obvious readings of the function list below are
+incorrect. On every arrival, in this order:
+
+1. **Resolve**, against the state as it is on arrival — **before** any `onEnter` is applied.
+2. **Apply** the resolved node's `onEnter` effects (and any quest resolution they trigger).
+3. **Present** against the post-`onEnter` state: filter `choices` by their `showIf`, and
+   interpolate the node text and the visible choice text.
+4. **Never resolve again.** Not to re-render, not after effects, not on a state change while
+   the player stands on the node.
+
+Step 4 is the invariant: **a node that has been shown stays shown.** A node whose own
+`onEnter` flips its own `showIf` would otherwise vanish after the player had already read
+it, and the second resolve can return a *different* node — so the caller applies effects
+belonging to a node the player never saw, and presents one node's text beside another
+node's choices.
+
+The consequence for live state changes mid-scene: a runtime that lets state change while a
+node is displayed (a skill investment, an inventory change) may re-filter the **choices**
+against the new state, but must **not** re-resolve the node. Re-filtering is presentation;
+re-resolving is a second, different answer to a question already answered.
+
+`stepDialogue` below performs steps 1 and 3 together against a single state, which is
+correct only when no effects are applied between them. A caller that applies `onEnter`
+between the two needs a presentation-only entry point that takes an already-resolved node,
+so that step 3 can use post-effect state without re-running step 1.
+
 ## stepDialogue(dialogue, nodeId, state, project): StepResult
 
-1. Locate the `DialogueNode` by `nodeId`; throw if not found.
+1. **Resolve** the node via `resolveNode` above; throw if not found.
 2. Filter `node.choices` to those where `!choice.showIf || evaluate(choice.showIf, state, project)`.
 3. Interpolate `node.text` and each visible choice's `text` (see "Text interpolation").
 4. Return `{ node, visibleChoices, onEnterEffects: node.onEnter ?? [] }`.
+
+**The node returned may not be the node whose id was requested.** When the requested node
+is skipped, the resolved one is returned instead — so a caller tracking "where the player
+is" must read the id off the returned node rather than reusing the id it passed in.
 
 **The returned node and choices are copies when — and only when — a placeholder was
 actually substituted.** The authored entity objects are never mutated; when a string
@@ -176,12 +238,21 @@ when to apply them (on first arrival; not on replay). Call `applyEffects(onEnter
 Passive checks (`mode: "passive"`) are treated as a plain `goto` — no roll, just the reveal
 effect. They never produce a `checkResult` in the return value.
 
+**Which id to record.** `chooseChoice.nextNodeId` is an *intermediate*: it is the requested
+target, not necessarily the node that will be shown. `advanceNode` returns an already-resolved
+id; `chooseChoice` does not. The only id a consumer may record anywhere — transcript, save,
+route log, telemetry — is the **resolved** one, so a `goto` target must be resolved before it
+is written down. Resolving an already-resolved id against unchanged state is idempotent, so
+resolving defensively is always safe.
+
 `ChoiceOutcome` carries no player-facing strings, so there is nothing to interpolate here —
-text reaches the UI through `stepDialogue`, which does interpolate.
+text reaches the UI through `stepDialogue`, which does interpolate. For the same reason
+`chooseChoice` does **not** resolve conditional nodes: its `nextNodeId` is resolved by the
+next `stepDialogue`. Keeping presentation logic out of it is deliberate.
 
 ---
 
-## advanceNode(dialogue, nodeId, state): AdvanceOutcome
+## advanceNode(dialogue, nodeId, state, project): AdvanceOutcome
 
 Resolves `DialogueNode.next` (N2) — the choiceless counterpart of `chooseChoice`, for
 listen-only beats (ambient chatter, narration) that advance with no player choice.
@@ -193,7 +264,12 @@ listen-only beats (ambient chatter, narration) that advance with no player choic
    failure mode instead of a `Problem`/result-object encoding — see the conformance suite's
    `expectedError` convention for `advance.json`.
 3. Locate `next`'s target node in the same dialogue; **throw** if it doesn't exist.
-4. Return `{ nextNodeId: target.id, newState: state }` — unchanged.
+   Guarding only this first hop is not enough: step 4 walks further, so a **dangling `next`
+   deeper in a skip chain** throws from inside the walk. Every function that calls
+   `resolveNode` inherits all of its failure modes.
+4. **Resolve** the target via `resolveNode`, so the id returned is the node the player will
+   actually see rather than one about to be skipped.
+5. Return `{ nextNodeId: resolved.id, newState: state }` — state unchanged.
 
 **No effects are applied and no check is resolved.** `next` carries neither (unlike a choice,
 which may carry both) — effects live on the TARGET's `onEnter`, exactly as they do for a
@@ -204,8 +280,11 @@ This is what makes an advance-arrival and a goto-arrival at the same node produc
 state — the single most important property this function has, and the one the conformance
 suite's parity vectors exist to lock down.
 
-**Does not chase further `next` pointers.** One call resolves exactly one hop; a chain of N
-`next`-linked nodes takes N calls. Every beat stays individually revealable, skippable,
+**Does not chase further `next` pointers.** One call reveals exactly one *shown* beat; a
+chain of N `next`-linked nodes that are all shown takes N calls. Skipped nodes are not
+beats — step 4 walks past as many as the gates require, because an inert node is not
+separately revealable, savable, or rewindable. The distinction matters: resolution is not
+chasing. Every beat stays individually revealable, skippable,
 savable, and rewindable — a runtime that auto-chased would collapse a whole ambient run into
 one uninterruptible jump and make mid-run rewind meaningless.
 
@@ -225,6 +304,11 @@ implements) but is worth knowing about for one reason: because its RNG stream is
 `steps.length` (`rngForStep(seed, stepIndex)`), inserting an advance step shifts every
 downstream roll's index. Adding a `next` chain into NEW content is fine; adding one into the
 MIDDLE of existing content that has recorded routes/goldens renumbers their rolls.
+Conditional narration widens that hazard: a skipped node produces **no step**, so the step
+count — and every roll index after it — is now a function of world state, not only of the
+path taken. Adding a `showIf` to an existing node renumbers the dice for every check after
+it on the paths where the gate fails, and leaves them unchanged where it passes. Recorded
+goldens over content with gated nodes are pinned to one side of every gate they cross.
 
 ---
 

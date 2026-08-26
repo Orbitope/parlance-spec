@@ -1,15 +1,14 @@
 [
   {
-    "fn": "advanceNode",
     "description": "advances to the node's next target; state unchanged (advanceNode applies nothing itself)",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_start",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_start",
-          "text": "Start.",
-          "next": "node_end"
+          "next": "node_end",
+          "text": "Start."
         },
         {
           "id": "node_end",
@@ -18,143 +17,143 @@
         }
       ]
     },
-    "nodeId": "node_start",
-    "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
-      "counters": {},
-      "inventory": [],
-      "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
     "expected": {
-      "nextNodeId": "node_end",
       "newState": {
-        "flags": {},
-        "reputation": {},
-        "skills": {},
         "counters": {},
+        "flags": {},
         "inventory": [],
         "questStages": {},
-        "xp": 0,
-        "skillPointsSpent": {}
-      }
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_end"
+    },
+    "fn": "advanceNode",
+    "nodeId": "node_start",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     }
   },
   {
-    "fn": "advanceNode",
-    "description": "target's onEnter is NOT applied by advanceNode itself \u2014 newState is unchanged even though node_end has onEnter effects; the caller (playSession.buildArrivalStep) applies them on arrival, identically to a goto arrival",
+    "description": "target's onEnter is NOT applied by advanceNode itself — newState is unchanged even though node_end has onEnter effects; the caller (playSession.buildArrivalStep) applies them on arrival, identically to a goto arrival",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_start",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_start",
-          "text": "Start.",
-          "next": "node_end"
+          "next": "node_end",
+          "text": "Start."
         },
         {
           "id": "node_end",
           "isEnd": true,
-          "text": "End.",
           "onEnter": [
             {
-              "type": "set_flag",
               "flag": "arrived",
+              "type": "set_flag",
               "value": true
             }
-          ]
+          ],
+          "text": "End."
         }
       ]
     },
-    "nodeId": "node_start",
-    "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
-      "counters": {},
-      "inventory": [],
-      "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
     "expected": {
-      "nextNodeId": "node_end",
       "newState": {
-        "flags": {},
-        "reputation": {},
-        "skills": {},
         "counters": {},
+        "flags": {},
         "inventory": [],
         "questStages": {},
-        "xp": 0,
-        "skillPointsSpent": {}
-      }
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_end"
+    },
+    "fn": "advanceNode",
+    "nodeId": "node_start",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     }
   },
   {
-    "fn": "advanceNode",
-    "description": "advances into a node that itself has choices \u2014 advanceNode only resolves the pointer, it doesn't care what the target looks like",
+    "description": "advances into a node that itself has choices — advanceNode only resolves the pointer, it doesn't care what the target looks like",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_start",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_start",
-          "text": "Start.",
-          "next": "node_choice"
+          "next": "node_choice",
+          "text": "Start."
         },
         {
-          "id": "node_choice",
-          "text": "Choose.",
           "choices": [
             {
+              "goto": "node_start",
               "id": "c",
-              "text": "go",
-              "goto": "node_start"
+              "text": "go"
             }
-          ]
+          ],
+          "id": "node_choice",
+          "text": "Choose."
         }
       ]
     },
-    "nodeId": "node_start",
-    "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
-      "counters": {},
-      "inventory": [],
-      "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
     "expected": {
-      "nextNodeId": "node_choice",
       "newState": {
-        "flags": {},
-        "reputation": {},
-        "skills": {},
         "counters": {},
+        "flags": {},
         "inventory": [],
         "questStages": {},
-        "xp": 0,
-        "skillPointsSpent": {}
-      }
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_choice"
+    },
+    "fn": "advanceNode",
+    "nodeId": "node_start",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     }
   },
   {
-    "fn": "advanceNode",
     "description": "advances into a node with isEnd:true",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_start",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_start",
-          "text": "Start.",
-          "next": "node_end"
+          "next": "node_end",
+          "text": "Start."
         },
         {
           "id": "node_end",
@@ -163,47 +162,47 @@
         }
       ]
     },
+    "expected": {
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_end"
+    },
+    "fn": "advanceNode",
     "nodeId": "node_start",
     "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
       "counters": {},
+      "flags": {},
       "inventory": [],
       "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
-    "expected": {
-      "nextNodeId": "node_end",
-      "newState": {
-        "flags": {},
-        "reputation": {},
-        "skills": {},
-        "counters": {},
-        "inventory": [],
-        "questStages": {},
-        "xp": 0,
-        "skillPointsSpent": {}
-      }
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     }
   },
   {
-    "fn": "advanceNode",
     "description": "3-node next chain, hop 1 of 3: node_a -> node_b (one call = one step, D3)",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_a",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_a",
-          "text": "Beat one.",
-          "next": "node_b"
+          "next": "node_b",
+          "text": "Beat one."
         },
         {
           "id": "node_b",
-          "text": "Beat two.",
-          "next": "node_c"
+          "next": "node_c",
+          "text": "Beat two."
         },
         {
           "id": "node_c",
@@ -212,47 +211,47 @@
         }
       ]
     },
+    "expected": {
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_b"
+    },
+    "fn": "advanceNode",
     "nodeId": "node_a",
     "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
       "counters": {},
+      "flags": {},
       "inventory": [],
       "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
-    "expected": {
-      "nextNodeId": "node_b",
-      "newState": {
-        "flags": {},
-        "reputation": {},
-        "skills": {},
-        "counters": {},
-        "inventory": [],
-        "questStages": {},
-        "xp": 0,
-        "skillPointsSpent": {}
-      }
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     }
   },
   {
-    "fn": "advanceNode",
     "description": "3-node next chain, hop 2 of 3: node_b -> node_c",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_a",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_a",
-          "text": "Beat one.",
-          "next": "node_b"
+          "next": "node_b",
+          "text": "Beat one."
         },
         {
           "id": "node_b",
-          "text": "Beat two.",
-          "next": "node_c"
+          "next": "node_c",
+          "text": "Beat two."
         },
         {
           "id": "node_c",
@@ -261,47 +260,47 @@
         }
       ]
     },
-    "nodeId": "node_b",
-    "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
-      "counters": {},
-      "inventory": [],
-      "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
     "expected": {
-      "nextNodeId": "node_c",
       "newState": {
-        "flags": {},
-        "reputation": {},
-        "skills": {},
         "counters": {},
+        "flags": {},
         "inventory": [],
         "questStages": {},
-        "xp": 0,
-        "skillPointsSpent": {}
-      }
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_c"
+    },
+    "fn": "advanceNode",
+    "nodeId": "node_b",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     }
   },
   {
-    "fn": "advanceNode",
-    "description": "3-node next chain, past the end: node_c is the chain's terminal (no next) \u2014 advanceNode never auto-chases, so calling it a third time here is the error case, not a hop",
+    "description": "3-node next chain, past the end: node_c is the chain's terminal (no next) — advanceNode never auto-chases, so calling it a third time here is the error case, not a hop",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_a",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_a",
-          "text": "Beat one.",
-          "next": "node_b"
+          "next": "node_b",
+          "text": "Beat one."
         },
         {
           "id": "node_b",
-          "text": "Beat two.",
-          "next": "node_c"
+          "next": "node_c",
+          "text": "Beat two."
         },
         {
           "id": "node_c",
@@ -310,25 +309,25 @@
         }
       ]
     },
+    "expectedError": "no 'next'",
+    "fn": "advanceNode",
     "nodeId": "node_c",
     "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
       "counters": {},
+      "flags": {},
       "inventory": [],
       "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
-    "expectedError": "no 'next'"
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
   },
   {
-    "fn": "advanceNode",
     "description": "throws when the node has no 'next' to advance from",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_start",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_start",
@@ -337,44 +336,257 @@
         }
       ]
     },
+    "expectedError": "no 'next'",
+    "fn": "advanceNode",
     "nodeId": "node_start",
     "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
       "counters": {},
+      "flags": {},
       "inventory": [],
       "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
-    },
-    "expectedError": "no 'next'"
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
   },
   {
-    "fn": "advanceNode",
     "description": "throws when next targets a node id that does not exist in this dialogue",
     "dialogue": {
-      "id": "dlg_conformance",
       "entry": "node_start",
+      "id": "dlg_conformance",
       "nodes": [
         {
           "id": "node_start",
-          "text": "Start.",
-          "next": "node_missing"
+          "next": "node_missing",
+          "text": "Start."
         }
       ]
     },
+    "expectedError": "does not exist",
+    "fn": "advanceNode",
     "nodeId": "node_start",
     "state": {
-      "flags": {},
-      "reputation": {},
-      "skills": {},
       "counters": {},
+      "flags": {},
       "inventory": [],
       "questStages": {},
-      "xp": 0,
-      "skillPointsSpent": {}
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
+  },
+  {
+    "description": "advance where the next node's gate PASSES: one hop, no skip",
+    "dialogue": {
+      "entry": "n_hidden",
+      "id": "dlg_skip",
+      "nodes": [
+        {
+          "id": "n_hidden",
+          "next": "n_mid",
+          "onEnter": [
+            {
+              "flag": "ghost",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "showIf": {
+            "flag": "cooperated",
+            "type": "flag",
+            "value": true
+          },
+          "text": "SECRET: gated line."
+        },
+        {
+          "id": "n_mid",
+          "next": "n_real",
+          "showIf": {
+            "flag": "cooperated",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Second gated line."
+        },
+        {
+          "choices": [
+            {
+              "goto": "n_hidden",
+              "id": "c_go",
+              "text": "Go."
+            }
+          ],
+          "id": "n_real",
+          "onEnter": [
+            {
+              "flag": "arrived",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "text": "Shown line."
+        }
+      ]
     },
-    "expectedError": "does not exist"
+    "expected": {
+      "newState": {
+        "counters": {},
+        "flags": {
+          "cooperated": true
+        },
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "n_mid"
+    },
+    "fn": "advanceNode",
+    "nodeId": "n_hidden",
+    "project": null,
+    "state": {
+      "counters": {},
+      "flags": {
+        "cooperated": true
+      },
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
+  },
+  {
+    "description": "advance where the next node's gate FAILS: the skip walk crosses it and returns the node the player will see",
+    "dialogue": {
+      "entry": "n_hidden",
+      "id": "dlg_skip",
+      "nodes": [
+        {
+          "id": "n_hidden",
+          "next": "n_mid",
+          "onEnter": [
+            {
+              "flag": "ghost",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "showIf": {
+            "flag": "cooperated",
+            "type": "flag",
+            "value": true
+          },
+          "text": "SECRET: gated line."
+        },
+        {
+          "id": "n_mid",
+          "next": "n_real",
+          "showIf": {
+            "flag": "cooperated",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Second gated line."
+        },
+        {
+          "choices": [
+            {
+              "goto": "n_hidden",
+              "id": "c_go",
+              "text": "Go."
+            }
+          ],
+          "id": "n_real",
+          "onEnter": [
+            {
+              "flag": "arrived",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "text": "Shown line."
+        }
+      ]
+    },
+    "expected": {
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "n_real"
+    },
+    "fn": "advanceNode",
+    "nodeId": "n_hidden",
+    "project": null,
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
+  },
+  {
+    "description": "advance into a ring of conditional nodes whose gates all fail: throws — COND-invalid data, resolution cannot escape",
+    "dialogue": {
+      "entry": "n_a",
+      "id": "dlg_ring",
+      "nodes": [
+        {
+          "id": "n_a",
+          "next": "n_b",
+          "text": "Start."
+        },
+        {
+          "id": "n_b",
+          "next": "n_c",
+          "showIf": {
+            "flag": "cooperated",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Gated."
+        },
+        {
+          "id": "n_c",
+          "next": "n_b",
+          "showIf": {
+            "flag": "cooperated",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Also gated."
+        }
+      ]
+    },
+    "expectedError": "Cycle among conditional nodes",
+    "fn": "advanceNode",
+    "nodeId": "n_a",
+    "project": null,
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
   }
 ]

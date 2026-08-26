@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "COND",
+      "contains": "do NOT fire",
+      "severity": "warning"
+    }
+  ]
+}

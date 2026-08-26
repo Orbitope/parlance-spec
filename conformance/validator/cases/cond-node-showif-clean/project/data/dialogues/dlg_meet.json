@@ -1,0 +1,48 @@
+{
+  "entry": "node_open",
+  "id": "dlg_meet",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "goto": "node_aside",
+          "id": "ch_listen",
+          "text": "Listen."
+        }
+      ],
+      "id": "node_open",
+      "onEnter": [
+        {
+          "flag": "met_keeper",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "The keeper looks up."
+    },
+    {
+      "id": "node_aside",
+      "next": "node_close",
+      "showIf": {
+        "flag": "met_keeper",
+        "type": "flag",
+        "value": true
+      },
+      "text": "You have been here before, and they know it."
+    },
+    {
+      "id": "node_close",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "flag": "heard_story",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "They tell you what they saw."
+    }
+  ],
+  "speakerId": "npc_keeper",
+  "title": "Meeting the Keeper"
+}

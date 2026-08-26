@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "COND",
+      "contains": "'choices'",
+      "severity": "error"
+    }
+  ]
+}
