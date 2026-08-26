@@ -11,6 +11,39 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.12.0 — no contract change
+
+Nothing in the contract moved. `schema/`, `tooling/conformance/`, `tooling/validate.py`
+and `RUNTIME_CONTRACT.md` are byte-identical to `v0.11.0`, and **a port pinned to
+`v0.11.0` needs no action of any kind** — not a re-run of its suite, not a re-vendor of
+the vectors.
+
+Nothing in the *publish set* moved either, beyond the two documents that record the
+release: the spec repo's `v0.12.0` differs from `v0.11.0` only in `PUBLICATION.json`,
+this file, and `VERSIONING.md` (whose pinning example moves with every tag). No schema,
+no vectors, no runtime semantics. The tag exists so that a port tracking editor releases
+has an exact tag to pin, per `INTEGRATION.md` — it is a lockstep marker, not a change.
+
+The release is entirely editor-side, and it is a durability release rather than a feature
+one. What it fixes are ways the editor could lose or corrupt an author's work:
+
+| | |
+|---|---|
+| **Corruption** | One write path, with a temp filename unique per write. A fixed `<target>.tmp` meant two writers shared one buffer and published a blend of both — reachable in normal use, since the editor host and the MCP server are separate processes on one project. |
+| **Lost updates** | The array registries (`skills.json`, `variables.json`, `items.json`, `portraits.json`) rewrite the whole file to change one entry, so concurrent saves silently dropped entities. Read-modify-write is now behind a cross-process lock. |
+| **A crash that took the host down** | `validate()` is now total: malformed data reports as an issue instead of throwing. |
+| **A lock race** | Absent is no longer treated as stale, and stealing a lock verifies identity first. |
+| **Serializer** | A `__proto__` key is no longer silently dropped. |
+| **WebSocket** | A broadcast survives one dead socket instead of failing the batch. |
+
+The desktop app also gains quit-on-close, session restore, and real File/Edit/View/Window
+menus.
+
+If you author with Parlance, none of this needs anything from you — it is the failure
+modes getting closed, not a change in how anything is written.
+
+---
+
 ## 0.11.0 — conditional narration (NOT safe to skip)
 
 **Unreleased as of this writing — `v0.10.0` is the newest tag, and this entry describes

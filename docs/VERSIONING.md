@@ -26,7 +26,7 @@ retroactively.** Concretely, during 0.x:
   added or removed, enum values may change, runtime semantics may be corrected.
 - **There is no deprecation window.** A wrong default gets fixed, not carried.
 - **There are no backports.** Fixes land on the current release only.
-- **Ports must pin an exact tag** (`v0.11.0`, never a range or a branch) and vendor the
+- **Ports must pin an exact tag** (`v0.12.0`, never a range or a branch) and vendor the
   conformance vectors at that tag — the mechanism described in
   [`INTEGRATION.md`](INTEGRATION.md). Moving the pin is a deliberate act with a
   re-run of your suite, not a dependency bump.
