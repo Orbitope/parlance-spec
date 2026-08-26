@@ -8,6 +8,23 @@ Pre-1.0, breaking changes land in minor releases with no deprecation window —
 see [`docs/VERSIONING.md`](docs/VERSIONING.md). Pin an exact tag and vendor the
 conformance vectors at it.
 
+## v0.12.0
+
+**No contract change, and nothing in this repo changed but this entry.**
+
+`schema/`, `conformance/`, `validate/` and `docs/` are byte-identical to `v0.11.0`. A port
+pinned to `v0.11.0` needs no action: no re-vendoring, no suite re-run, nothing to read
+beyond this paragraph.
+
+The tag exists so that a port tracking upstream releases has an exact tag to pin, as
+[`docs/INTEGRATION.md`](docs/INTEGRATION.md) requires. It is a lockstep marker, not a
+change.
+
+Upstream, 0.12.0 is a durability release for the editor application — one write path with
+per-write temp names, a cross-process lock on registry read-modify-writes, a total
+`validate()`, and desktop session restore. None of it touches the format, which is why
+none of it is here.
+
 ## v0.11.0
 
 **Additive to the schema, and NOT safe for an unimplementing runtime to ignore.**
