@@ -1,0 +1,38 @@
+{
+  "entry": "n_episode1_sms5b",
+  "id": "dlg_episode1_sms5b",
+  "nodes": [
+    {
+      "id": "n_episode1_sms5b",
+      "next": "n_episode1_sms5b_2",
+      "speakerId": "char_hakim",
+      "text": "Salut. Je suis désolé de ne pas avoir répondu plus tôt, mais ce n'est pas facile en ce moment, comme tu peux t'en douter."
+    },
+    {
+      "id": "n_episode1_sms5b_2",
+      "next": "n_episode1_sms5b_3",
+      "speakerId": "char_hakim",
+      "text": "Avec ce qui se passe autour de la vidéo, je me suis mis en retrait des réseaux sociaux."
+    },
+    {
+      "id": "n_episode1_sms5b_3",
+      "next": "n_episode1_sms5b_4",
+      "speakerId": "char_hakim",
+      "text": "J'en ai besoin."
+    },
+    {
+      "id": "n_episode1_sms5b_4",
+      "next": "n_episode1_sms5b_5",
+      "speakerId": "char_hakim",
+      "text": "Mais je voulais te remercier pour ton soutien, c'est précieux."
+    },
+    {
+      "id": "n_episode1_sms5b_5",
+      "isEnd": true,
+      "speakerId": "char_hakim",
+      "text": "Laisse-moi encore un peu de temps. Je t'expliquerai tout très bientôt."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms5b"
+}

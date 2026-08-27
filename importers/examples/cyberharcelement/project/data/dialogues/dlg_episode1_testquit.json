@@ -1,0 +1,19 @@
+{
+  "entry": "n_episode1_testquit",
+  "id": "dlg_episode1_testquit",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "id": "c_episode1_quit",
+          "text": "Quit"
+        }
+      ],
+      "id": "n_episode1_testquit",
+      "isEnd": true,
+      "text": "Time to quit"
+    }
+  ],
+  "replayable": false,
+  "title": "TestQuit"
+}

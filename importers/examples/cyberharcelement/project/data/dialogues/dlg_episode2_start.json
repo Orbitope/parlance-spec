@@ -1,0 +1,1394 @@
+{
+  "entry": "n_episode2_start",
+  "id": "dlg_episode2_start",
+  "nodes": [
+    {
+      "id": "n_episode2_start",
+      "next": "n_episode2_start_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_start_2",
+      "next": "n_episode2_start_3",
+      "text": "Comme tous les mercredis après-midi, avec tes amis de handball, tu t'entraînes pour la prochaine compétition."
+    },
+    {
+      "id": "n_episode2_start_3",
+      "next": "n_episode2_gymnasium",
+      "text": "Liam, ton ami d’enfance, est l’un des meilleurs joueurs mais aujourd’hui il a fait pas mal d'erreurs."
+    },
+    {
+      "id": "n_episode2_gymnasium",
+      "next": "n_episode2_gymnasium_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_gymnasium_2",
+      "next": "n_episode2_gymnasium_3",
+      "speakerId": "char_you",
+      "text": "On s’est encore bien amusés aujourd’hui."
+    },
+    {
+      "id": "n_episode2_gymnasium_3",
+      "next": "n_episode2_gymnasium_4",
+      "speakerId": "char_liam",
+      "text": "Oui, c’est vrai…"
+    },
+    {
+      "id": "n_episode2_gymnasium_4",
+      "next": "n_episode2_gymnasium_5",
+      "speakerId": "char_you",
+      "text": "J’espère qu’on est prêts pour le match de la semaine prochaine."
+    },
+    {
+      "id": "n_episode2_gymnasium_5",
+      "next": "n_episode2_gymnasium_6",
+      "speakerId": "char_you",
+      "text": "L’équipe d’en face ne nous fera pas de cadeaux…"
+    },
+    {
+      "id": "n_episode2_gymnasium_6",
+      "next": "n_episode2_gymnasium_7",
+      "speakerId": "char_liam",
+      "text": "C’est clair…"
+    },
+    {
+      "id": "n_episode2_gymnasium_7",
+      "next": "n_episode2_gymnasium_8",
+      "speakerId": "char_you",
+      "text": "Qu'est-ce que t’as ? Tu dis rien."
+    },
+    {
+      "id": "n_episode2_gymnasium_8",
+      "next": "n_episode2_gymnasium_9",
+      "speakerId": "char_you",
+      "text": "Depuis 3 ans qu’on joue ensemble c’est la première fois que t’es pas en train de motiver notre équipe ou dire qu’on va écraser ceux d’en face."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            },
+            {
+              "flag": "knowaboutgradeexcuse",
+              "type": "set_flag",
+              "value": true
+            },
+            {
+              "flag": "askedliam",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_episode2_gymnasium_10",
+          "id": "c_episode2_quelque_chose_ne_va",
+          "text": "Quelque chose ne va pas ?"
+        },
+        {
+          "goto": "n_episode2_gymnasium_13",
+          "id": "c_episode2_ne_rien_dire",
+          "text": "Ne rien dire"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            },
+            {
+              "flag": "askedliam",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_episode2_gymnasium_14",
+          "id": "c_episode2_c_est_quoi_le",
+          "text": "C’est quoi le problème ? Faudrait que tu réagisses !"
+        }
+      ],
+      "id": "n_episode2_gymnasium_9",
+      "speakerId": "char_liam",
+      "text": "..."
+    },
+    {
+      "id": "n_episode2_gymnasium_10",
+      "next": "n_episode2_gymnasium_11",
+      "speakerId": "char_you",
+      "text": "Quelque chose ne va pas ?"
+    },
+    {
+      "id": "n_episode2_gymnasium_11",
+      "next": "n_episode2_gymnasium_12",
+      "speakerId": "char_liam",
+      "text": "Non ça va t’inquiète, j’ai juste des mauvaises notes en ce moment et ça me préoccupe."
+    },
+    {
+      "id": "n_episode2_gymnasium_12",
+      "next": "n_episode2_gymnasium_16",
+      "speakerId": "char_liam",
+      "text": "J’ai pas envie de décevoir mes parents."
+    },
+    {
+      "id": "n_episode2_gymnasium_13",
+      "next": "n_episode2_gymnasium_16",
+      "speakerId": "char_you",
+      "text": "(Bizarre quand même)"
+    },
+    {
+      "id": "n_episode2_gymnasium_14",
+      "next": "n_episode2_gymnasium_15",
+      "speakerId": "char_you",
+      "text": "C’est quoi le problème ? Faudrait que tu réagisses !"
+    },
+    {
+      "id": "n_episode2_gymnasium_15",
+      "next": "n_episode2_gymnasium_16",
+      "speakerId": "char_liam",
+      "text": "Il se passe rien je te dis, pourquoi t’insistes comme ça ? T’es lourd !"
+    },
+    {
+      "id": "n_episode2_gymnasium_16",
+      "next": "n_episode2_gymnasium_17",
+      "speakerId": "char_entraineur",
+      "text": "Ah vous êtes encore là ! Super !"
+    },
+    {
+      "id": "n_episode2_gymnasium_17",
+      "next": "n_episode2_gymnasium_18",
+      "speakerId": "char_entraineur",
+      "text": "Je viens de vous envoyer les infos sur le match de la semaine prochaine !"
+    },
+    {
+      "id": "n_episode2_gymnasium_18",
+      "next": "n_episode2_gymnasium2",
+      "speakerId": "char_entraineur",
+      "text": "Vous devriez recevoir la notification… Maintenant !"
+    },
+    {
+      "id": "n_episode2_gymnasium2",
+      "next": "n_episode2_backfromgymnasium",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_backfromgymnasium",
+      "next": "n_episode2_bedroom2",
+      "text": "Le lendemain, tu retrouves ton ami Bryan chez toi pour jouer..."
+    },
+    {
+      "id": "n_episode2_bedroom2",
+      "next": "n_episode2_bedroom2_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            },
+            {
+              "flag": "talkedtobryanaboutliam",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_episode2_bedroom2_3",
+          "id": "c_episode2_r_pondre_et_parler",
+          "text": "Répondre et parler de Liam"
+        },
+        {
+          "goto": "n_episode2_bedroom2_7",
+          "id": "c_episode2_r_pondre_sans_parler",
+          "text": "Répondre sans parler de Liam"
+        }
+      ],
+      "id": "n_episode2_bedroom2_2",
+      "speakerId": "char_bryan",
+      "text": "Alors, ton équipe est prête pour remporter le prochain match ?"
+    },
+    {
+      "id": "n_episode2_bedroom2_3",
+      "next": "n_episode2_bedroom2_4",
+      "speakerId": "char_you",
+      "text": "Pas certain. Liam n’était pas comme d’habitude."
+    },
+    {
+      "id": "n_episode2_bedroom2_4",
+      "next": "n_episode2_bedroom2_5",
+      "showIf": {
+        "flag": "askedliam",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "J’ai bien tenté de lui demander pourquoi mais il est resté évasif."
+    },
+    {
+      "id": "n_episode2_bedroom2_5",
+      "next": "n_episode2_bedroom2_6",
+      "speakerId": "char_you",
+      "text": "Tu sais quelque chose toi ?"
+    },
+    {
+      "id": "n_episode2_bedroom2_6",
+      "next": "n_episode2_bedroom2_9",
+      "speakerId": "char_bryan",
+      "text": "Non, pas d’info. Je t’en aurais parlé, sinon."
+    },
+    {
+      "id": "n_episode2_bedroom2_7",
+      "next": "n_episode2_bedroom2_8",
+      "speakerId": "char_you",
+      "text": "On n’est jamais sûrs de rien mais c’était une bonne séance."
+    },
+    {
+      "id": "n_episode2_bedroom2_8",
+      "next": "n_episode2_bedroom2_9",
+      "speakerId": "char_bryan",
+      "text": "Yes, tant mieux alors ! Je suis content pour vous."
+    },
+    {
+      "id": "n_episode2_bedroom2_9",
+      "next": "n_episode2_act2",
+      "speakerId": "char_narrator",
+      "text": "Suite"
+    },
+    {
+      "id": "n_episode2_act2",
+      "next": "n_episode2_act2_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_act2_2",
+      "next": "n_episode2_act2_3",
+      "text": "Le mercredi suivant."
+    },
+    {
+      "id": "n_episode2_act2_3",
+      "next": "n_episode2_act2_4",
+      "text": "En dépit de tous vos efforts, ton équipe a perdu le match."
+    },
+    {
+      "id": "n_episode2_act2_4",
+      "next": "n_episode2_gymnasium3",
+      "text": "Liam n’était pas à son top niveau, il avait l’air absent."
+    },
+    {
+      "id": "n_episode2_gymnasium3",
+      "next": "n_episode2_gymnasium3_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_gymnasium3_2",
+      "next": "n_episode2_gymnasium3_3",
+      "speakerId": "char_liam",
+      "text": "Bon on fera mieux la prochaine fois, on va dire qu’ils ont gagné sur un coup de chance..."
+    },
+    {
+      "id": "n_episode2_gymnasium3_3",
+      "next": "n_episode2_gymnasium3_4",
+      "speakerId": "char_you",
+      "text": "Oui c’est sûr on s’est bien battus mais ça n'a pas suffi, je suis deg..."
+    },
+    {
+      "id": "n_episode2_gymnasium3_4",
+      "next": "n_episode2_gymnasium3_5",
+      "speakerId": "char_liam",
+      "text": "C’est surtout toi qui as tout donné..."
+    },
+    {
+      "id": "n_episode2_gymnasium3_5",
+      "next": "n_episode2_gymnasium3_6",
+      "speakerId": "char_you",
+      "text": "Je veux pas en rajouter mais, comme la semaine dernière, t’avais l’air absent..."
+    },
+    {
+      "id": "n_episode2_gymnasium3_6",
+      "next": "n_episode2_gymnasium3_7",
+      "speakerId": "char_liam",
+      "text": "Écoute, j’ai pas grand chose à ajouter."
+    },
+    {
+      "id": "n_episode2_gymnasium3_7",
+      "next": "n_episode2_gymnasium3_8",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_liam",
+      "text": "Je t’ai déjà dit que c'est à cause de mon bulletin."
+    },
+    {
+      "id": "n_episode2_gymnasium3_8",
+      "next": "n_episode2_gymnasium3_9",
+      "speakerId": "char_liam",
+      "text": "Sinon tout va bien, c’est bon..."
+    },
+    {
+      "id": "n_episode2_gymnasium3_9",
+      "next": "n_episode2_gymnasium3_10",
+      "speakerId": "char_you",
+      "text": "Mouais… Ça se passe bien avec ta copine ?"
+    },
+    {
+      "id": "n_episode2_gymnasium3_10",
+      "next": "n_episode2_gymnasium4",
+      "speakerId": "char_liam",
+      "text": "... Je ne prends même pas la peine de répondre..."
+    },
+    {
+      "id": "n_episode2_gymnasium4",
+      "next": "n_episode2_gymnasium5",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_gymnasium5",
+      "next": "n_episode2_gymnasium5_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "flag": "askedliam",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_episode2_gymnasium5_3",
+          "id": "c_episode2_poser_une_question_directe",
+          "text": "Poser une question directe"
+        },
+        {
+          "goto": "n_episode2_gymnasium5_5",
+          "id": "c_episode2_ne_rien_dire_2",
+          "text": "Ne rien dire"
+        }
+      ],
+      "id": "n_episode2_gymnasium5_2",
+      "speakerId": "char_you",
+      "text": "(J’ai pas rêvé ! Plus de 50 notifs TikTok ?! C’est quoi ce délire ?)"
+    },
+    {
+      "id": "n_episode2_gymnasium5_3",
+      "next": "n_episode2_gymnasium5_4",
+      "speakerId": "char_you",
+      "text": "T’as plein de notifs en ce moment on dirait… Qu’est ce qui se passe ?"
+    },
+    {
+      "id": "n_episode2_gymnasium5_4",
+      "next": "n_episode2_gymnasium5_6",
+      "speakerId": "char_liam",
+      "text": "T’inquiètes, c’est rien. C’est juste le groupe de ma classe, ils parlent beaucoup. Surtout en ce moment."
+    },
+    {
+      "id": "n_episode2_gymnasium5_5",
+      "next": "n_episode2_gymnasium5_6",
+      "speakerId": "char_you",
+      "text": "..."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode2_gymnasium5_7",
+          "id": "c_episode2_intrigu_tu_d_cides",
+          "text": "Intrigué, tu décides de jeter un coup d'oeil.#position:1550,950"
+        }
+      ],
+      "id": "n_episode2_gymnasium5_6",
+      "speakerId": "char_narrator",
+      "text": "Peu après, Liam part aux toilettes en laissant son téléphone et reçoit une nouvelle notification."
+    },
+    {
+      "id": "n_episode2_gymnasium5_7",
+      "next": "n_episode2_gymnasium5_8",
+      "text": "Ne connaissant pas le code, tu ne peux pas voir le détail des notifications.#position:1550,950"
+    },
+    {
+      "id": "n_episode2_gymnasium5_8",
+      "next": "n_episode2_gymnasium5_9",
+      "text": "Mais tu remarques que les notifications concernent des identifications dans des publications.#position:1550,950"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            },
+            {
+              "flag": "askedliam",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_episode2_gymnasium5_10",
+          "id": "c_episode2_demander_si_tu_peux",
+          "text": "Demander si tu peux prendre une photo de son écran"
+        },
+        {
+          "goto": "n_episode2_gymnasium5_13",
+          "id": "c_episode2_ne_rien_dire_3",
+          "text": "Ne rien dire"
+        }
+      ],
+      "id": "n_episode2_gymnasium5_9",
+      "speakerId": "char_narrator",
+      "text": "Liam revient des toilettes."
+    },
+    {
+      "id": "n_episode2_gymnasium5_10",
+      "next": "n_episode2_gymnasium5_11",
+      "speakerId": "char_you",
+      "text": "Vraiment, Liam, j’ai vu que ton téléphone a encore des nouvelles notifs."
+    },
+    {
+      "id": "n_episode2_gymnasium5_11",
+      "next": "n_episode2_gymnasium5_12",
+      "speakerId": "char_you",
+      "text": "Ça te dérange si je prends en photo ton écran ? On sait jamais, ça peut servir..."
+    },
+    {
+      "id": "n_episode2_gymnasium5_12",
+      "next": "n_episode2_gymnasium5_13",
+      "speakerId": "char_liam",
+      "text": "...Ok, vas y si tu veux..."
+    },
+    {
+      "id": "n_episode2_gymnasium5_13",
+      "next": "n_episode2_backfromgymnasium2",
+      "speakerId": "char_narrator",
+      "text": "Rentrer chez toi."
+    },
+    {
+      "id": "n_episode2_backfromgymnasium2",
+      "next": "n_episode2_backfromgymnasium2_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_backfromgymnasium2_2",
+      "next": "n_episode2_bedroom3",
+      "text": "De retour chez toi, tu reçois un SMS de la mère de Liam."
+    },
+    {
+      "id": "n_episode2_bedroom3",
+      "next": "n_episode2_bedroom4",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_bedroom4",
+      "next": "n_episode2_school1",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_school1",
+      "next": "n_episode2_school1_2",
+      "speakerId": "char_narrator",
+      "text": "Devant le collège, comme à l’accoutumée, des groupes discutent avant le début des cours."
+    },
+    {
+      "id": "n_episode2_school1_2",
+      "next": "n_episode2_school1_3",
+      "speakerId": "char_narrator",
+      "text": "Une conversation retient ton attention car elle semble parler de Liam."
+    },
+    {
+      "id": "n_episode2_school1_3",
+      "next": "n_episode2_school1_4",
+      "speakerId": "char_students",
+      "text": "Il a beau avoir une copine, il tente sa chance ailleurs et il prend quand même des râteaux."
+    },
+    {
+      "id": "n_episode2_school1_4",
+      "next": "n_episode2_school1_5",
+      "speakerId": "char_students",
+      "text": "Ça craint ! Surtout sa lettre. Il mérite qu’on lui mette la honte."
+    },
+    {
+      "id": "n_episode2_school1_5",
+      "next": "n_episode2_school1_6",
+      "speakerId": "char_students",
+      "text": "De plus en plus de personnes partagent le \\#clubdesrecalés. C’est efficace pour ça."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode2_school1_10",
+          "id": "c_episode2_ne_rien_faire",
+          "text": "Ne rien faire"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_school1_7",
+          "id": "c_episode2_prendre_en_note_la",
+          "text": "Prendre en note la conversation sur un carnet"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_school1_8",
+          "id": "c_episode2_intervenir_dans_la_conversation",
+          "text": "Intervenir dans la conversation"
+        }
+      ],
+      "id": "n_episode2_school1_6",
+      "speakerId": "char_students",
+      "text": "Ouais mais bon, ça va peut-être un peu trop loin..."
+    },
+    {
+      "id": "n_episode2_school1_7",
+      "next": "n_episode2_school1_10",
+      "speakerId": "char_you",
+      "text": "(Je ferais bien de noter cette conversation elle pourrait servir de preuve.)"
+    },
+    {
+      "id": "n_episode2_school1_8",
+      "next": "n_episode2_school1_9",
+      "speakerId": "char_you",
+      "text": "On est d’accord ça va beaucoup trop loin, il faut arrêter tout ça !"
+    },
+    {
+      "id": "n_episode2_school1_9",
+      "next": "n_episode2_school1_10",
+      "speakerId": "char_students",
+      "text": "Personne t’a demandé ton avis ! Toi aussi tu vas finir dans le club des recalés !"
+    },
+    {
+      "id": "n_episode2_school1_10",
+      "next": "n_episode2_act3",
+      "speakerId": "char_narrator",
+      "text": "Suite"
+    },
+    {
+      "id": "n_episode2_act3",
+      "next": "n_episode2_gymnasium6",
+      "text": "Une semaine s’est écoulée. Liam semble de plus en plus préoccupé."
+    },
+    {
+      "id": "n_episode2_gymnasium6",
+      "next": "n_episode2_gymnasium6_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_gymnasium6_2",
+      "next": "n_episode2_gymnasium6_3",
+      "speakerId": "char_you",
+      "text": "Salut Liam."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode2_gymnasium6_4",
+          "id": "c_episode2_ne_rien_dire_4",
+          "text": "Ne rien dire."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_gymnasium6_8",
+          "id": "c_episode2_je_suis_au_courant",
+          "text": "Je suis au courant de ce qui t’arrive. C’est grave, on devrait en parler."
+        }
+      ],
+      "id": "n_episode2_gymnasium6_3",
+      "speakerId": "char_liam",
+      "text": "Salut..."
+    },
+    {
+      "id": "n_episode2_gymnasium6_4",
+      "next": "n_episode2_gymnasium6_5",
+      "speakerId": "char_liam",
+      "text": "..."
+    },
+    {
+      "id": "n_episode2_gymnasium6_5",
+      "next": "n_episode2_gymnasium6_6",
+      "speakerId": "char_liam",
+      "text": "...Tu es au courant hein... ?"
+    },
+    {
+      "id": "n_episode2_gymnasium6_6",
+      "next": "n_episode2_gymnasium6_7",
+      "speakerId": "char_you",
+      "text": "..."
+    },
+    {
+      "id": "n_episode2_gymnasium6_7",
+      "next": "n_episode2_gymnasium6_10",
+      "speakerId": "char_liam",
+      "text": "J'ai besoin de t'en parler de toute façon. Je ne peux plus porter ça seul..."
+    },
+    {
+      "id": "n_episode2_gymnasium6_8",
+      "next": "n_episode2_gymnasium6_9",
+      "speakerId": "char_you",
+      "text": "Je suis au courant de ce qui t’arrive. C’est grave, on devrait en parler. Ça a commencé comment ?"
+    },
+    {
+      "id": "n_episode2_gymnasium6_9",
+      "next": "n_episode2_gymnasium6_10",
+      "speakerId": "char_liam",
+      "text": "Tu as raison... Je ne peux plus porter ça seul..."
+    },
+    {
+      "id": "n_episode2_gymnasium6_10",
+      "next": "n_episode2_gymnasium6_11",
+      "speakerId": "char_liam",
+      "text": "Les moqueries ont commencé dans le cercle des potes à cause d’une photo de Ben et moi prise dans les vestiaires de la piscine, et avec pour légende « Le nouveau couple de la classe »."
+    },
+    {
+      "id": "n_episode2_gymnasium6_11",
+      "next": "n_episode2_gymnasium6_12",
+      "speakerId": "char_liam",
+      "text": "Depuis, c’est l’enfer !"
+    },
+    {
+      "id": "n_episode2_gymnasium6_12",
+      "next": "n_episode2_gymnasium6_13",
+      "speakerId": "char_you",
+      "text": "Mais ... C’est vrai que tu as essayé de l’embrasser ?"
+    },
+    {
+      "id": "n_episode2_gymnasium6_13",
+      "next": "n_episode2_gymnasium6_14",
+      "speakerId": "char_liam",
+      "text": "Pour commencer, non !"
+    },
+    {
+      "id": "n_episode2_gymnasium6_14",
+      "next": "n_episode2_gymnasium6_15",
+      "speakerId": "char_liam",
+      "text": "C’est lui qui a inventé tout ça pour se protéger en rejetant la faute sur moi."
+    },
+    {
+      "id": "n_episode2_gymnasium6_15",
+      "next": "n_episode2_gymnasium6_16",
+      "speakerId": "char_liam",
+      "text": "Il a même rédigé une fausse lettre lui étant destinée comme quoi je lui faisais une déclaration d’amour."
+    },
+    {
+      "id": "n_episode2_gymnasium6_16",
+      "next": "n_episode2_gymnasium6_17",
+      "speakerId": "char_you",
+      "text": "Mais comment ça s'est retrouvé sur internet ?"
+    },
+    {
+      "id": "n_episode2_gymnasium6_17",
+      "next": "n_episode2_gymnasium6_18",
+      "speakerId": "char_liam",
+      "text": "C’est MJ qui l’a postée sur le groupe snap de la classe… En moins de 2h, ça a fait le tour du collège."
+    },
+    {
+      "id": "n_episode2_gymnasium6_18",
+      "next": "n_episode2_gymnasium6_19",
+      "speakerId": "char_you",
+      "text": "Faut pas te laisser faire, faut en parler ! Je pense que tu peux même porter plainte."
+    },
+    {
+      "id": "n_episode2_gymnasium6_19",
+      "next": "n_episode2_gymnasium6_20",
+      "speakerId": "char_you",
+      "text": "C’est interdit de harceler !"
+    },
+    {
+      "id": "n_episode2_gymnasium6_20",
+      "next": "n_episode2_gymnasium6_21",
+      "speakerId": "char_liam",
+      "text": "C’est vrai que j’y avais pas pensé, mais ça peut être une solution."
+    },
+    {
+      "id": "n_episode2_gymnasium6_21",
+      "next": "n_episode2_gymnasium6_22",
+      "speakerId": "char_liam",
+      "text": "Je suis tellement pris dans tous ces problèmes que j’ai même pas pensé aux solutions."
+    },
+    {
+      "id": "n_episode2_gymnasium6_22",
+      "next": "n_episode2_gymnasium6_23",
+      "speakerId": "char_liam",
+      "text": "Merci pour ton soutien, ça aide."
+    },
+    {
+      "id": "n_episode2_gymnasium6_23",
+      "next": "n_episode2_gymnasium6_24",
+      "speakerId": "char_liam",
+      "text": "Tiens, regarde la lettre."
+    },
+    {
+      "id": "n_episode2_gymnasium6_24",
+      "next": "n_episode2_gymnasium6_25",
+      "speakerId": "char_narrator",
+      "text": "La lettre que Liam est censé avoir envoyée n’est pas très longue et te semble manquer de sincérité."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_gymnasium6_26",
+          "id": "c_episode2_les_gens_vont_probablement",
+          "text": "Les gens vont probablement réaliser que c’est du fake"
+        },
+        {
+          "goto": "n_episode2_gymnasium6_33",
+          "id": "c_episode2_on_dirait_pas_ton",
+          "text": "On dirait pas ton écriture (Mais on peut pas être sûrs)"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_gymnasium6_36",
+          "id": "c_episode2_franchement_on_peut_pas",
+          "text": "Franchement, on peut pas savoir si tu l’as écrite ou pas cette lettre"
+        }
+      ],
+      "id": "n_episode2_gymnasium6_25",
+      "speakerId": "char_narrator",
+      "text": "De plus, tu ne reconnais pas son écriture."
+    },
+    {
+      "id": "n_episode2_gymnasium6_26",
+      "next": "n_episode2_gymnasium6_27",
+      "speakerId": "char_you",
+      "text": "Ça craint que cette lettre circule sur les réseaux."
+    },
+    {
+      "id": "n_episode2_gymnasium6_27",
+      "next": "n_episode2_gymnasium6_28",
+      "speakerId": "char_you",
+      "text": "Si des personnes y croient, d’autres vont probablement réaliser que c’est du fake."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode2_gymnasium6_29",
+          "id": "c_episode2_tu_devrais_signaler_la",
+          "text": "Tu devrais signaler la publication."
+        },
+        {
+          "goto": "n_episode2_gymnasium6_30",
+          "id": "c_episode2_tu_devrais_prendre_une",
+          "text": "Tu devrais prendre une capture d'écran pour servir de preuve"
+        }
+      ],
+      "id": "n_episode2_gymnasium6_28",
+      "speakerId": "char_you",
+      "text": "C’est même pas ton écriture !"
+    },
+    {
+      "id": "n_episode2_gymnasium6_29",
+      "next": "n_episode2_gymnasium6_31",
+      "speakerId": "char_you",
+      "text": "Tu devrais signaler la publication."
+    },
+    {
+      "id": "n_episode2_gymnasium6_30",
+      "next": "n_episode2_gymnasium6_31",
+      "speakerId": "char_you",
+      "text": "Tu devrais prendre une capture d'écran pour servir de preuve."
+    },
+    {
+      "id": "n_episode2_gymnasium6_31",
+      "next": "n_episode2_gymnasium6_32",
+      "speakerId": "char_liam",
+      "text": "T'as raison, merci."
+    },
+    {
+      "id": "n_episode2_gymnasium6_32",
+      "next": "n_episode2_gymnasium6_40",
+      "speakerId": "char_liam",
+      "text": "Mais en attendant, à cause de tout ça, je reçois chaque jour des dizaines de messages de harcèlement anonymes."
+    },
+    {
+      "id": "n_episode2_gymnasium6_33",
+      "next": "n_episode2_gymnasium6_34",
+      "speakerId": "char_you",
+      "text": "On dirait pas ton écriture."
+    },
+    {
+      "id": "n_episode2_gymnasium6_34",
+      "next": "n_episode2_gymnasium6_35",
+      "speakerId": "char_you",
+      "text": "(Mais on peut pas être sûrs, la lettre est peut être vraie quand même.)"
+    },
+    {
+      "id": "n_episode2_gymnasium6_35",
+      "next": "n_episode2_gymnasium6_40",
+      "speakerId": "char_liam",
+      "text": "En attendant, à cause de tout ça, je reçois chaque jour des dizaines de messages de harcèlement anonymes."
+    },
+    {
+      "id": "n_episode2_gymnasium6_36",
+      "next": "n_episode2_gymnasium6_37",
+      "speakerId": "char_you",
+      "text": "Franchement, on peut pas savoir si tu l’as écrite ou pas cette lettre."
+    },
+    {
+      "id": "n_episode2_gymnasium6_37",
+      "next": "n_episode2_gymnasium6_38",
+      "speakerId": "char_liam",
+      "text": "Tu penses m’aider là ???"
+    },
+    {
+      "id": "n_episode2_gymnasium6_38",
+      "next": "n_episode2_gymnasium6_39",
+      "speakerId": "char_you",
+      "text": "..."
+    },
+    {
+      "id": "n_episode2_gymnasium6_39",
+      "next": "n_episode2_gymnasium6_40",
+      "speakerId": "char_liam",
+      "text": "En attendant, à cause de tout ça, je reçois chaque jour des dizaines de messages de harcèlement anonymes."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_gymnasium6_41",
+          "id": "c_episode2_m_me_si_ce",
+          "text": "Même si ce sont des messages anonymes, tu devrais faire des captures d’écran."
+        },
+        {
+          "goto": "n_episode2_gymnasium6_44",
+          "id": "c_episode2_bon_tu_verras_a",
+          "text": "Bon, tu verras ça va passer tout seul cette histoire."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_gymnasium6_45",
+          "id": "c_episode2_tu_devrais_les_envoyer",
+          "text": "Tu devrais les envoyer balader ! Tu vas pas te laisser faire !?"
+        }
+      ],
+      "id": "n_episode2_gymnasium6_40",
+      "speakerId": "char_liam",
+      "text": "Je suis fatigué, à bout."
+    },
+    {
+      "id": "n_episode2_gymnasium6_41",
+      "next": "n_episode2_gymnasium6_42",
+      "speakerId": "char_you",
+      "text": "Même si ce sont des messages anonymes, tu devrais faire des captures d’écran."
+    },
+    {
+      "id": "n_episode2_gymnasium6_42",
+      "next": "n_episode2_gymnasium6_43",
+      "speakerId": "char_you",
+      "text": "Ça prouverait au moins que tu es harcelé. C’est bien de garder une trace je pense."
+    },
+    {
+      "id": "n_episode2_gymnasium6_43",
+      "next": "n_episode2_gymnasium6_47",
+      "speakerId": "char_you",
+      "text": "Et tu peux les enregistrer sur l’application 3018 !"
+    },
+    {
+      "id": "n_episode2_gymnasium6_44",
+      "next": "n_episode2_gymnasium6_47",
+      "speakerId": "char_you",
+      "text": "Bon, tu verras ça va passer tout seul cette histoire."
+    },
+    {
+      "id": "n_episode2_gymnasium6_45",
+      "next": "n_episode2_gymnasium6_46",
+      "speakerId": "char_you",
+      "text": "Tu devrais les envoyer bouler ! Tu vas pas te laisser faire !?"
+    },
+    {
+      "id": "n_episode2_gymnasium6_46",
+      "next": "n_episode2_gymnasium6_47",
+      "speakerId": "char_liam",
+      "text": "Ouais, t’as raison ! Je vais faire ça !"
+    },
+    {
+      "id": "n_episode2_gymnasium6_47",
+      "next": "n_episode2_preoutside1",
+      "speakerId": "char_narrator",
+      "text": "Suite"
+    },
+    {
+      "id": "n_episode2_preoutside1",
+      "next": "n_episode2_preoutside1_2",
+      "text": "Le lendemain matin tu aperçois MJ devant le collège."
+    },
+    {
+      "id": "n_episode2_preoutside1_2",
+      "next": "n_episode2_preoutside1_3",
+      "text": "D’après Liam, elle contribue à propager la rumeur le concernant."
+    },
+    {
+      "id": "n_episode2_preoutside1_3",
+      "next": "n_episode2_outside1",
+      "text": "Tu vas la voir."
+    },
+    {
+      "id": "n_episode2_outside1",
+      "next": "n_episode2_outside1_2",
+      "speakerId": "char_you",
+      "text": "Hello, j’aimerais te parler. Tu as un instant ?"
+    },
+    {
+      "id": "n_episode2_outside1_2",
+      "next": "n_episode2_outside1_3",
+      "speakerId": "char_mj",
+      "text": "Tu veux quoi ?!"
+    },
+    {
+      "id": "n_episode2_outside1_3",
+      "next": "n_episode2_outside1_4",
+      "speakerId": "char_you",
+      "text": "Je sais que tu as diffusé sur les réseaux sociaux que Liam aurait essayé d’embrasser Ben et qu’il lui aurait écrit une lettre d’amour..."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_outside1_5",
+          "id": "c_episode2_a_m_amuse_bien",
+          "text": "Ça m'amuse bien ! Continue en vrai !"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_outside1_7",
+          "id": "c_episode2_c_est_vraiment_m",
+          "text": "C’est vraiment méchant de ta part."
+        }
+      ],
+      "id": "n_episode2_outside1_4",
+      "speakerId": "char_mj",
+      "text": "Ouais et alors ? Je trouve ça chelou ! Et même dérangeant."
+    },
+    {
+      "id": "n_episode2_outside1_5",
+      "next": "n_episode2_outside1_6",
+      "speakerId": "char_you",
+      "text": "Ça m'amuse bien ! Continue en vrai !"
+    },
+    {
+      "id": "n_episode2_outside1_6",
+      "next": "n_episode2_outside1_18",
+      "speakerId": "char_mj",
+      "text": "Compte sur moi là dessus ! Je vais pas les lâcher ! Haha !"
+    },
+    {
+      "id": "n_episode2_outside1_7",
+      "next": "n_episode2_outside1_8",
+      "speakerId": "char_you",
+      "text": "C’est vraiment méchant de ta part. Et même si c’était vrai, être attiré par un garçon n’est pas un crime !!!"
+    },
+    {
+      "id": "n_episode2_outside1_8",
+      "next": "n_episode2_outside1_9",
+      "speakerId": "char_you",
+      "text": "T’as pas honte de dire ça ?!"
+    },
+    {
+      "id": "n_episode2_outside1_9",
+      "next": "n_episode2_outside1_10",
+      "speakerId": "char_you",
+      "text": "Mais surtout, j’ai vu la lettre et elle me semble fausse. C’est même pas l’écriture de Liam !"
+    },
+    {
+      "id": "n_episode2_outside1_10",
+      "next": "n_episode2_outside1_11",
+      "speakerId": "char_mj",
+      "text": "Pourquoi tu prends sa défense ?"
+    },
+    {
+      "id": "n_episode2_outside1_11",
+      "next": "n_episode2_outside1_12",
+      "speakerId": "char_you",
+      "text": "Parce que c’est mon pote et que je me mets à sa place. C’est horrible de vivre ça. Tu y as pensé ?"
+    },
+    {
+      "id": "n_episode2_outside1_12",
+      "next": "n_episode2_outside1_13",
+      "speakerId": "char_you",
+      "text": "Par dessus tout, harceler quelqu’un est interdit et puni par la loi."
+    },
+    {
+      "id": "n_episode2_outside1_13",
+      "next": "n_episode2_outside1_14",
+      "speakerId": "char_you",
+      "text": "Tu te rends compte que toi et tes parents risquez d’avoir des problèmes ?"
+    },
+    {
+      "id": "n_episode2_outside1_14",
+      "next": "n_episode2_outside1_15",
+      "speakerId": "char_mj",
+      "text": "Sérieux ?! Je savais pas..."
+    },
+    {
+      "id": "n_episode2_outside1_15",
+      "next": "n_episode2_outside1_16",
+      "speakerId": "char_you",
+      "text": "Oui, c’est sérieux ! Faut vraiment que t'arrêtes !"
+    },
+    {
+      "id": "n_episode2_outside1_16",
+      "next": "n_episode2_outside1_17",
+      "speakerId": "char_you",
+      "text": "C’est autant dans l’intérêt de Liam que du tien et celui de ta famille."
+    },
+    {
+      "id": "n_episode2_outside1_17",
+      "next": "n_episode2_outside1_18",
+      "speakerId": "char_mj",
+      "text": "Merci de me faire réaliser tout ça. J’arrête, promis !"
+    },
+    {
+      "id": "n_episode2_outside1_18",
+      "next": "n_episode2_prereunion",
+      "speakerId": "char_narrator",
+      "text": "Suite"
+    },
+    {
+      "id": "n_episode2_prereunion",
+      "next": "n_episode2_prereunion_2",
+      "text": "Plusieurs jours se sont écoulés depuis ton échange avec Liam et MinJeong."
+    },
+    {
+      "id": "n_episode2_prereunion_2",
+      "next": "n_episode2_prereunion_3",
+      "text": "Loin de se calmer, la rumeur se propage."
+    },
+    {
+      "id": "n_episode2_prereunion_3",
+      "next": "n_episode2_reunion",
+      "text": "Au point que ton collège a décidé d’organiser une réunion d’information au sujet du cyberharcèlement."
+    },
+    {
+      "id": "n_episode2_reunion",
+      "next": "n_episode2_reunion_2",
+      "speakerId": "char_cpe",
+      "text": "N'oubliez pas que ce soir se tient la réunion sur le cyberharcèlement."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode2_reunion_3",
+          "id": "c_episode2_se_rendre_la_r",
+          "text": "Se rendre à la réunion."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_reunion_6",
+          "id": "c_episode2_rentrer_chez_toi",
+          "text": "Rentrer chez toi."
+        }
+      ],
+      "id": "n_episode2_reunion_2",
+      "speakerId": "char_cpe",
+      "text": "Elle n'est pas obligatoire mais elle n'en est pas moins importante !"
+    },
+    {
+      "id": "n_episode2_reunion_3",
+      "next": "n_episode2_reunion_4",
+      "speakerId": "char_narrator",
+      "text": "Tu te rends à la réunion."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_postreunion",
+          "id": "c_episode2_envoyer_un_sms_liam",
+          "text": "Envoyer un SMS à Liam."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_reunion_5",
+          "id": "c_episode2_liam_peut_tr_s",
+          "text": "Liam peut très bien se débrouiller tout seul."
+        }
+      ],
+      "id": "n_episode2_reunion_4",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "quelques jours plus tard, 18h15",
+          "variable": "time"
+        }
+      ],
+      "speakerId": "char_narrator",
+      "text": "En sortant de celle-ci, tu te demandes si tu ne devrais pas en parler à Liam."
+    },
+    {
+      "id": "n_episode2_reunion_5",
+      "next": "n_episode2_actfinal",
+      "speakerId": "char_narrator",
+      "text": "Rentrer chez toi."
+    },
+    {
+      "id": "n_episode2_reunion_6",
+      "next": "n_episode2_actfinal",
+      "speakerId": "char_narrator",
+      "text": "Tu rentres chez toi."
+    },
+    {
+      "id": "n_episode2_postreunion",
+      "next": "n_episode2_actfinal",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode2_actfinal",
+      "next": "n_episode2_badending",
+      "text": "Quelques semaines ont passé. Tu as invité Liam et Bryan à regarder la rediffusion d’un match chez toi."
+    },
+    {
+      "id": "n_episode2_goodorneutralending",
+      "next": "n_episode2_goodorneutralending_2",
+      "speakerId": "char_you",
+      "text": "Au fait, désolé de revenir sur ça mais c’est important. Ça va mieux ? Il y a du nouveau ?"
+    },
+    {
+      "id": "n_episode2_goodorneutralending_2",
+      "next": "n_episode2_goodorneutralending_3",
+      "speakerId": "char_liam",
+      "text": "Après une histoire aussi sordide, c’est dur d’aller mieux."
+    },
+    {
+      "id": "n_episode2_goodorneutralending_3",
+      "next": "n_episode2_goodorneutralending_4",
+      "speakerId": "char_bryan",
+      "text": "Comment ça ? C’est-à-dire ?"
+    },
+    {
+      "id": "n_episode2_goodorneutralending_4",
+      "next": "n_episode2_goodorneutralending_5",
+      "speakerId": "char_liam",
+      "text": "J’ai perdu quasiment tous mes amis, mon pote d’enfance et même la fille dont j'étais amoureux…"
+    },
+    {
+      "id": "n_episode2_goodorneutralending_5",
+      "next": "n_episode2_goodorneutralending_6",
+      "speakerId": "char_bryan",
+      "text": "Ouais, pas très bien j’imagine…"
+    },
+    {
+      "id": "n_episode2_goodorneutralending_6",
+      "next": "n_episode2_goodorneutralending_7",
+      "speakerId": "char_liam",
+      "text": "Pas très bien non."
+    },
+    {
+      "id": "n_episode2_goodorneutralending_7",
+      "next": "n_episode2_goodorneutralending_8",
+      "speakerId": "char_liam",
+      "text": "J’en ai encore pour des mois pour qu’on ne m’associe plus au \\#clubdesrecalés."
+    },
+    {
+      "id": "n_episode2_goodorneutralending_8",
+      "next": "n_episode2_goodorneutralending_9",
+      "speakerId": "char_liam",
+      "text": "Et peut-être des années pour qu’on me trouve de nouveau “cool”."
+    },
+    {
+      "id": "n_episode2_goodorneutralending_9",
+      "next": "n_episode2_goodorneutralending_10",
+      "speakerId": "char_you",
+      "text": "Ok, c’était un peu maladroit. Mais tout n’est pas noir, si ?"
+    },
+    {
+      "id": "n_episode2_goodorneutralending_10",
+      "next": "n_episode2_goodorneutralending_11",
+      "speakerId": "char_liam",
+      "text": "Tu peux apporter toutes les preuves que tu veux, quand une rumeur s’installe, c’est presque impossible à faire oublier."
+    },
+    {
+      "id": "n_episode2_goodorneutralending_11",
+      "next": "n_episode2_goodending",
+      "speakerId": "char_liam",
+      "text": "Mais franchement ? ..."
+    },
+    {
+      "id": "n_episode2_goodending",
+      "next": "n_episode2_goodending_2",
+      "speakerId": "char_liam",
+      "text": "... Tout n’est pas noir comme tu dis. J’ai beaucoup souffert, mais c’est en train de changer."
+    },
+    {
+      "id": "n_episode2_goodending_2",
+      "next": "n_episode2_goodending_3",
+      "speakerId": "char_liam",
+      "text": "Le plus dur, c’était de passer à autre chose."
+    },
+    {
+      "id": "n_episode2_goodending_3",
+      "next": "n_episode2_goodending_4",
+      "speakerId": "char_liam",
+      "text": "Et votre soutien m’a beaucoup aidé."
+    },
+    {
+      "id": "n_episode2_goodending_4",
+      "next": "n_episode2_goodending_5",
+      "speakerId": "char_liam",
+      "text": "Dans mon malheur j’ai aussi pu rencontrer d’autres personnes qui sont dans le même cas que moi."
+    },
+    {
+      "id": "n_episode2_goodending_5",
+      "next": "n_episode2_goodending_6",
+      "speakerId": "char_liam",
+      "text": "J’ai de la haine pour les gens qui font vivre ça aux autres. C’est cruel et stupide."
+    },
+    {
+      "id": "n_episode2_goodending_6",
+      "next": "n_episode2_goodending_7",
+      "speakerId": "char_liam",
+      "text": "En tout cas, c’est vraiment rassurant de savoir que quand ça nous arrive on peut compter sur son entourage, des gens au collège et des associations pour nous aider."
+    },
+    {
+      "id": "n_episode2_goodending_7",
+      "next": "n_episode2_goodending_8",
+      "speakerId": "char_liam",
+      "text": "D’ailleurs, on m’a conseillé d’aller porter plainte à la police. Mes parents m’accompagnent demain au commissariat."
+    },
+    {
+      "id": "n_episode2_goodending_8",
+      "next": "n_episode2_goodending_9",
+      "speakerId": "char_liam",
+      "text": "Merci les amis d'être là pour moi en tout cas."
+    },
+    {
+      "id": "n_episode2_goodending_9",
+      "isEnd": true,
+      "speakerId": "char_narrator",
+      "text": "Fin"
+    },
+    {
+      "id": "n_episode2_neutralending",
+      "next": "n_episode2_neutralending_2",
+      "speakerId": "char_liam",
+      "text": "... Y’a des jours avec et des jours sans, ça continue de m’écoeurer de penser à tout ce que j’ai perdu pour une simple photo mal interprétée et toute l’escalade de haine que j’ai subi derrière ..."
+    },
+    {
+      "id": "n_episode2_neutralending_2",
+      "next": "n_episode2_neutralending_3",
+      "speakerId": "char_liam",
+      "text": "Et j’ose même pas imaginer la violence et la douleur pour les autres personnes qui se font harceler ..."
+    },
+    {
+      "id": "n_episode2_neutralending_3",
+      "next": "n_episode2_neutralending_4",
+      "speakerId": "char_liam",
+      "text": "Enfin bref, on verra si les harceleurs se calment enfin et me laissent tranquille."
+    },
+    {
+      "id": "n_episode2_neutralending_4",
+      "next": "n_episode2_neutralending_5",
+      "speakerId": "char_liam",
+      "text": "En attendant, on m’a conseillé d’aller au commissariat pour exposer mon affaire et porter plainte. Mes parents m’accompagnent demain au commissariat."
+    },
+    {
+      "id": "n_episode2_neutralending_5",
+      "next": "n_episode2_neutralending_6",
+      "speakerId": "char_liam",
+      "text": "Merci d’être encore là pour moi les amis."
+    },
+    {
+      "id": "n_episode2_neutralending_6",
+      "isEnd": true,
+      "speakerId": "char_narrator",
+      "text": "Fin"
+    },
+    {
+      "id": "n_episode2_badending",
+      "next": "n_episode2_badending_2",
+      "speakerId": "char_narrator",
+      "text": "Au final tes amis ne sont pas venus..."
+    },
+    {
+      "id": "n_episode2_badending_2",
+      "next": "n_episode2_badending2",
+      "speakerId": "char_narrator",
+      "text": "Tu te demande pourquoi... et decides de prendre des nouvelles de Liam."
+    },
+    {
+      "id": "n_episode2_badending2",
+      "isEnd": true,
+      "text": "SKIP"
+    }
+  ],
+  "replayable": false,
+  "title": "Start"
+}

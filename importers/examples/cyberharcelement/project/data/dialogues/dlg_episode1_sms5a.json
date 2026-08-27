@@ -1,0 +1,44 @@
+{
+  "entry": "n_episode1_sms5a",
+  "id": "dlg_episode1_sms5a",
+  "nodes": [
+    {
+      "id": "n_episode1_sms5a",
+      "next": "n_episode1_sms5a_2",
+      "speakerId": "char_hakim",
+      "text": "Je me décide à t'écrire, parce que là, c'en est trop !"
+    },
+    {
+      "id": "n_episode1_sms5a_2",
+      "next": "n_episode1_sms5a_3",
+      "speakerId": "char_hakim",
+      "text": "Sans être des amis proches, je pensais que tu étais du genre à respecter les autres. On se marrait bien quand on jouait ensemble aux jeux vidéos..."
+    },
+    {
+      "id": "n_episode1_sms5a_3",
+      "next": "n_episode1_sms5a_4",
+      "speakerId": "char_hakim",
+      "text": "Mais c'est tout le contraire. Tu filmes, tu partages, tu mets le \\# qui va bien pour être certain que ce soit vu par un maximum de personnes."
+    },
+    {
+      "id": "n_episode1_sms5a_4",
+      "next": "n_episode1_sms5a_5",
+      "speakerId": "char_hakim",
+      "text": "Est-ce que tu imagines une seconde ce que ça peut faire ? Par tes actions, tu m'as blessé. Je n'avais vraiment pas besoin de ça en ce moment."
+    },
+    {
+      "id": "n_episode1_sms5a_5",
+      "next": "n_episode1_sms5a_6",
+      "speakerId": "char_hakim",
+      "text": "Tu t'en doutes, je ne reviendrai pas au collège. Tu peux effacer mon numéro."
+    },
+    {
+      "id": "n_episode1_sms5a_6",
+      "isEnd": true,
+      "speakerId": "char_hakim",
+      "text": "Pour ma part, je ne souhaite plus te parler. Adieu !"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms5a"
+}

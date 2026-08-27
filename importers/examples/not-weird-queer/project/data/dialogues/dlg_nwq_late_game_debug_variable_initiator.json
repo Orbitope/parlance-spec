@@ -1,0 +1,292 @@
+{
+  "entry": "n_nwq_late_game_debug_variable_initiator",
+  "id": "dlg_nwq_late_game_debug_variable_initiator",
+  "nodes": [
+    {
+      "id": "n_nwq_late_game_debug_variable_initiator",
+      "next": "n_nwq_late_game_debug_variable_initiator_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_late_game_debug_variable_initiator_2",
+      "next": "n_nwq_late_game_debug_variable_initiator_3",
+      "text": "<!-- Certain variables need to exist when running in debug, even without going through the \"character creator\" and certain other prerequisite pages. -->"
+    },
+    {
+      "id": "n_nwq_late_game_debug_variable_initiator_3",
+      "next": "n_nwq_late_game_debug_variable_initiator_4",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Connells",
+          "variable": "name"
+        },
+        {
+          "type": "set_text",
+          "value": "Jessica",
+          "variable": "deadname"
+        },
+        {
+          "type": "set_text",
+          "value": "Caleb",
+          "variable": "ally"
+        },
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "complete",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "type": "set_text",
+          "value": "Science fiction",
+          "variable": "book"
+        },
+        {
+          "flag": "share",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "female",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "she",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "misref"
+        },
+        {
+          "type": "set_text",
+          "value": "Connells",
+          "variable": "name"
+        },
+        {
+          "type": "set_text",
+          "value": "Jessica",
+          "variable": "deadname"
+        },
+        {
+          "type": "set_text",
+          "value": "Caleb",
+          "variable": "ally"
+        },
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "complete",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "type": "set_text",
+          "value": "Science fiction",
+          "variable": "book"
+        },
+        {
+          "flag": "share",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "female",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "she",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "misref"
+        }
+      ],
+      "text": "Select day:"
+    },
+    {
+      "id": "n_nwq_late_game_debug_variable_initiator_4",
+      "next": "n_nwq_late_game_debug_variable_initiator_5",
+      "text": "| Select part:"
+    },
+    {
+      "id": "n_nwq_late_game_debug_variable_initiator_5",
+      "next": "n_nwq_late_game_debug_variable_initiator_6",
+      "text": "| Select outfit:"
+    },
+    {
+      "id": "n_nwq_late_game_debug_variable_initiator_6",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": false
+        }
+      ],
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "Late-game debug variable initiator"
+}

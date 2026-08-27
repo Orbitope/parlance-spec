@@ -1,0 +1,67 @@
+{
+  "entry": "n_nwq_lunch_day_5",
+  "id": "dlg_nwq_lunch_day_5",
+  "nodes": [
+    {
+      "id": "n_nwq_lunch_day_5",
+      "next": "n_nwq_lunch_day_5_2",
+      "text": "$name hangs out with $ally during the lunch period."
+    },
+    {
+      "id": "n_nwq_lunch_day_5_2",
+      "next": "n_nwq_lunch_day_5_3",
+      "onEnter": [
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_lunch_day_5_3",
+      "next": "n_nwq_lunch_day_5_4",
+      "showIf": {
+        "flag": "talk",
+        "type": "flag",
+        "value": true
+      },
+      "text": "<br />$name: \"Hey, thanks for understanding.\" <br />$ally: \"Of course. You're my friend, $name. That's what friends are for.\" <br /><br />$ally called $name by the correct name. $name had no idea it'd feel this good to be validated."
+    },
+    {
+      "id": "n_nwq_lunch_day_5_4",
+      "next": "n_nwq_lunch_day_5_5",
+      "onEnter": [
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "showIf": {
+        "flag": "talk",
+        "type": "flag",
+        "value": false
+      },
+      "text": "They debate whether tacos or pizza is the superior midnight snack."
+    },
+    {
+      "id": "n_nwq_lunch_day_5_5",
+      "isEnd": true,
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "Lunch day 5"
+}

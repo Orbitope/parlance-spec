@@ -1,0 +1,48 @@
+{
+  "entry": "n_nwq_debug_footer",
+  "id": "dlg_nwq_debug_footer",
+  "nodes": [
+    {
+      "id": "n_nwq_debug_footer",
+      "next": "n_nwq_debug_footer_2",
+      "text": "----"
+    },
+    {
+      "id": "n_nwq_debug_footer_2",
+      "next": "n_nwq_debug_footer_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_debug_footer_3",
+      "next": "n_nwq_debug_footer_4",
+      "text": "bus:"
+    },
+    {
+      "id": "n_nwq_debug_footer_4",
+      "next": "n_nwq_debug_footer_5",
+      "text": "| club:"
+    },
+    {
+      "id": "n_nwq_debug_footer_5",
+      "next": "n_nwq_debug_footer_6",
+      "text": "| talk:"
+    },
+    {
+      "id": "n_nwq_debug_footer_6",
+      "next": "n_nwq_debug_footer_7",
+      "text": "| happy: $lasthappy <br />"
+    },
+    {
+      "id": "n_nwq_debug_footer_7",
+      "next": "n_nwq_debug_footer_8",
+      "text": "complete:"
+    },
+    {
+      "id": "n_nwq_debug_footer_8",
+      "isEnd": true,
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "Debug footer"
+}

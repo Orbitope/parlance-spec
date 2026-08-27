@@ -1,0 +1,104 @@
+{
+  "entry": "n_episode2_chat1",
+  "id": "dlg_episode2_chat1",
+  "nodes": [
+    {
+      "id": "n_episode2_chat1",
+      "next": "n_episode2_chat1_2",
+      "speakerId": "char_you",
+      "text": "Dites, vous avez des infos au sujet du \\#clubdesrecalés ?"
+    },
+    {
+      "id": "n_episode2_chat1_2",
+      "next": "n_episode2_chat1_3",
+      "speakerId": "char_hakim",
+      "text": "Non, c’est quoi au juste ?"
+    },
+    {
+      "id": "n_episode2_chat1_3",
+      "next": "n_episode2_chat1_4",
+      "speakerId": "char_ryan",
+      "text": "C’est un challenge sur TikTok."
+    },
+    {
+      "id": "n_episode2_chat1_4",
+      "next": "n_episode2_chat1_5",
+      "speakerId": "char_ryan",
+      "text": "Il s’agit de se moquer de ceux qui ont avoué leurs sentiments pour quelqu’un."
+    },
+    {
+      "id": "n_episode2_chat1_5",
+      "next": "n_episode2_chat1_6",
+      "speakerId": "char_ryan",
+      "text": "Tu peux le faire avec des vidéos où tu refoules la personne en direct, ou bien montrer leurs lettres d’amour !"
+    },
+    {
+      "id": "n_episode2_chat1_6",
+      "next": "n_episode2_chat1_7",
+      "speakerId": "char_bryan",
+      "text": "Mais c’est nul ! C’est quoi le but ?"
+    },
+    {
+      "id": "n_episode2_chat1_7",
+      "next": "n_episode2_chat1_8",
+      "speakerId": "char_mj",
+      "text": "Leur faire honte pour qu’ils arrêtent ;-)"
+    },
+    {
+      "id": "n_episode2_chat1_8",
+      "next": "n_episode2_chat1_9",
+      "speakerId": "char_tao",
+      "text": "Haha ! Ça peut être drôle !"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_chat1_10",
+          "id": "c_episode2_c_est_vraiment_pas",
+          "text": "C’est vraiment pas sympa de faire ça."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_chat1_11",
+          "id": "c_episode2_faut_voir_a_d",
+          "text": "Faut voir, ça dépend."
+        },
+        {
+          "id": "c_episode2_ne_rien_dire_5",
+          "text": "Ne rien dire"
+        }
+      ],
+      "id": "n_episode2_chat1_9",
+      "isEnd": true,
+      "speakerId": "char_nabil",
+      "text": "Drôle ? Je crois pas, non !"
+    },
+    {
+      "id": "n_episode2_chat1_10",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "C’est vraiment pas sympa de faire ça."
+    },
+    {
+      "id": "n_episode2_chat1_11",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Faut voir, ça dépend."
+    }
+  ],
+  "replayable": false,
+  "title": "Chat1"
+}

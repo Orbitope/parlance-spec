@@ -1,0 +1,32 @@
+{
+  "entry": "n_episode1_chat4",
+  "id": "dlg_episode1_chat4",
+  "nodes": [
+    {
+      "id": "n_episode1_chat4",
+      "next": "n_episode1_chat4_2",
+      "speakerId": "char_sophie",
+      "text": "Ce genre de vidéo me révolte ! Comment peut-on faire ça à quelqu’un ?"
+    },
+    {
+      "id": "n_episode1_chat4_2",
+      "next": "n_episode1_chat4_3",
+      "speakerId": "char_clem",
+      "text": "C’est pas cool du tout, en effet !"
+    },
+    {
+      "id": "n_episode1_chat4_3",
+      "next": "n_episode1_chat4_4",
+      "speakerId": "char_ryan",
+      "text": "C’est bon ! C'est pas un drame non plus…"
+    },
+    {
+      "id": "n_episode1_chat4_4",
+      "isEnd": true,
+      "speakerId": "char_nabil",
+      "text": "Bah si ! Ça se voit que c’est pas toi qui subis !"
+    }
+  ],
+  "replayable": false,
+  "title": "Chat4"
+}

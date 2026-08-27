@@ -1,0 +1,12 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode1_start"
+    },
+    {
+      "dialogue": "dlg_episode2_start"
+    }
+  ],
+  "id": "char_cpe",
+  "name": "CPE"
+}

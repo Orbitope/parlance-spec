@@ -33,7 +33,7 @@
           "text": "Ask about the long way round"
         },
         {
-          "goto": "n_weather_note_1",
+          "goto": "n_after_1",
           "id": "c_say_nothing_at_all",
           "text": "Say nothing at all"
         }
@@ -44,26 +44,37 @@
     },
     {
       "id": "n_landing_3",
-      "next": "n_weather_note_1",
+      "next": "n_after_1",
       "speakerId": "char_ferryman",
       "text": "Two coins, and a third when the water is high."
     },
     {
       "id": "n_landing_4",
-      "next": "n_weather_note_1",
+      "next": "n_after_1",
       "speakerId": "char_ferryman",
       "text": "Nine miles of mud, and a gate at the end of it that is also shut."
     },
     {
+      "id": "n_after_1",
+      "next": "n_weather_note_1",
+      "showIf": {
+        "flag": "paid_the_fare",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_ferryman",
+      "text": "Your coin is in my hand and the boat is still gone."
+    },
+    {
       "id": "n_weather_note_1",
-      "next": "n_after_1",
+      "next": "n_after_2",
       "speakerId": "char_ferryman",
       "text": "The water came up all afternoon and has not gone down."
     },
     {
       "choices": [
         {
-          "goto": "n_after_2",
+          "goto": "n_after_3",
           "id": "c_ask_whether_the_mud",
           "showIf": {
             "flag": "asked_about_road",
@@ -80,23 +91,23 @@
               "value": true
             }
           ],
-          "goto": "n_after_3",
+          "goto": "n_after_4",
           "id": "c_offer_the_fare_anyway",
           "text": "Offer the fare anyway"
         }
       ],
-      "id": "n_after_1",
+      "id": "n_after_2",
       "speakerId": "char_ferryman",
       "text": "You are still standing on my landing."
     },
     {
-      "id": "n_after_2",
+      "id": "n_after_3",
       "next": "n_bench_1",
       "speakerId": "char_ferryman",
       "text": "It is passable. That is not the same as advisable."
     },
     {
-      "id": "n_after_3",
+      "id": "n_after_4",
       "next": "n_bench_1",
       "speakerId": "char_ferryman",
       "text": "I will take it. I will still not row you across."
@@ -146,6 +157,31 @@
     },
     {
       "id": "n_morning_1",
+      "next": "n_morning_2",
+      "showIf": {
+        "counter": "patience",
+        "op": ">",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "The night was long and you counted the hours of it."
+    },
+    {
+      "id": "n_morning_2",
+      "next": "n_morning_3",
+      "showIf": {
+        "of": {
+          "counter": "patience",
+          "op": ">",
+          "type": "counter",
+          "value": 0
+        },
+        "type": "not"
+      },
+      "text": "The night passed the way nights pass."
+    },
+    {
+      "id": "n_morning_3",
       "isEnd": true,
       "text": "The boat comes back at first light with somebody else's cargo in it."
     }

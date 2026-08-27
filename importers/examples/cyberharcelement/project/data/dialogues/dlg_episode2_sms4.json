@@ -1,0 +1,145 @@
+{
+  "entry": "n_episode2_sms4",
+  "id": "dlg_episode2_sms4",
+  "nodes": [
+    {
+      "id": "n_episode2_sms4",
+      "next": "n_episode2_sms4_2",
+      "speakerId": "char_bryan",
+      "text": "Salut, ça va ?"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_sms4_3",
+          "id": "c_episode2_r_sumer_ce_qui",
+          "text": "Résumer ce qui s’est passé"
+        },
+        {
+          "goto": "n_episode2_sms4_17",
+          "id": "c_episode2_finir_la_discussion",
+          "text": "Finir la discussion"
+        }
+      ],
+      "id": "n_episode2_sms4_2",
+      "speakerId": "char_bryan",
+      "text": "Alors le match ? Vous avez gagné ?!"
+    },
+    {
+      "id": "n_episode2_sms4_3",
+      "next": "n_episode2_sms4_4",
+      "speakerId": "char_you",
+      "text": "Salut ! Ça va oui, merci ! Pour le match, on l’a perdu donc on est pas trop contents."
+    },
+    {
+      "id": "n_episode2_sms4_4",
+      "next": "n_episode2_sms4_5",
+      "speakerId": "char_you",
+      "text": "Liam n’était vraiment pas au top."
+    },
+    {
+      "id": "n_episode2_sms4_5",
+      "next": "n_episode2_sms4_6",
+      "speakerId": "char_bryan",
+      "text": "Ah mince, dommage pour le match."
+    },
+    {
+      "id": "n_episode2_sms4_6",
+      "next": "n_episode2_sms4_7",
+      "showIf": {
+        "flag": "talkedtobryanaboutliam",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_bryan",
+      "text": "Ouais je vois que ça n'a pas trop changé..."
+    },
+    {
+      "id": "n_episode2_sms4_7",
+      "next": "n_episode2_sms4_8",
+      "speakerId": "char_bryan",
+      "text": "Tu sais pourquoi ?"
+    },
+    {
+      "id": "n_episode2_sms4_8",
+      "next": "n_episode2_sms4_9",
+      "speakerId": "char_you",
+      "text": "Je pense qu’il est harcelé sur les réseaux..."
+    },
+    {
+      "id": "n_episode2_sms4_9",
+      "next": "n_episode2_sms4_10",
+      "speakerId": "char_bryan",
+      "text": "Sérieux ??! Qu’est-ce qui te fait dire ça ?"
+    },
+    {
+      "id": "n_episode2_sms4_10",
+      "next": "n_episode2_sms4_11",
+      "speakerId": "char_you",
+      "text": "Après l'entraînement la dernière fois, j’ai vu son tel : il avait plein de notifs d’identification."
+    },
+    {
+      "id": "n_episode2_sms4_11",
+      "next": "n_episode2_sms4_12",
+      "speakerId": "char_you",
+      "text": "Il a l’air d'être mal par rapport à ça. Même sa mère s’en est rendu compte."
+    },
+    {
+      "id": "n_episode2_sms4_12",
+      "next": "n_episode2_sms4_13",
+      "speakerId": "char_bryan",
+      "text": "Ah ouais chaud... Et tu sais pourquoi il serait harcelé ?"
+    },
+    {
+      "id": "n_episode2_sms4_13",
+      "next": "n_episode2_sms4_14",
+      "speakerId": "char_you",
+      "text": "Non, aucune idée. Et je ne sais pas trop quoi faire..."
+    },
+    {
+      "id": "n_episode2_sms4_14",
+      "next": "n_episode2_sms4_15",
+      "speakerId": "char_bryan",
+      "text": "Déjà, faut pas le laisser seul dans cette galère."
+    },
+    {
+      "id": "n_episode2_sms4_15",
+      "next": "n_episode2_sms4_16",
+      "speakerId": "char_you",
+      "text": "J’ai bien tenté de le faire parler mais il a juste parlé de ses résultats scolaires."
+    },
+    {
+      "id": "n_episode2_sms4_16",
+      "isEnd": true,
+      "speakerId": "char_bryan",
+      "text": "Ça doit pas être facile. Mais tu pourrais l’aider à réaliser qu’il est harcelé. C’est grave ! Il peut peut-être en parler à l'entraineur ou à la police."
+    },
+    {
+      "id": "n_episode2_sms4_17",
+      "next": "n_episode2_sms4_18",
+      "speakerId": "char_you",
+      "text": "Salut ! Ouais ouais ça va merci !"
+    },
+    {
+      "id": "n_episode2_sms4_18",
+      "next": "n_episode2_sms4_19",
+      "speakerId": "char_you",
+      "text": "On a perdu..."
+    },
+    {
+      "id": "n_episode2_sms4_19",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Pardon, je suis K.O, on se parle plus tard ?"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms4"
+}

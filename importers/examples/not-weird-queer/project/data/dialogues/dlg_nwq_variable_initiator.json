@@ -1,0 +1,23 @@
+{
+  "entry": "n_nwq_variable_initiator",
+  "id": "dlg_nwq_variable_initiator",
+  "nodes": [
+    {
+      "id": "n_nwq_variable_initiator",
+      "next": "n_nwq_variable_initiator_2",
+      "text": "<!-- Moved main variable initialization to this seperate page to make the \"start\" page more readable."
+    },
+    {
+      "id": "n_nwq_variable_initiator_2",
+      "next": "n_nwq_variable_initiator_3",
+      "text": "For comments, see documentation"
+    },
+    {
+      "id": "n_nwq_variable_initiator_3",
+      "isEnd": true,
+      "text": "-->"
+    }
+  ],
+  "replayable": false,
+  "title": "Variable initiator"
+}

@@ -1,0 +1,33 @@
+{
+  "entry": "n_episode1_email4",
+  "id": "dlg_episode1_email4",
+  "nodes": [
+    {
+      "id": "n_episode1_email4",
+      "next": "n_episode1_email4_2",
+      "text": "Madame, Monsieur,"
+    },
+    {
+      "id": "n_episode1_email4_2",
+      "next": "n_episode1_email4_3",
+      "text": "La vidéo que vous avez postée a été signalée par plusieurs utilisateurs pour contenu choquant."
+    },
+    {
+      "id": "n_episode1_email4_3",
+      "next": "n_episode1_email4_4",
+      "text": "Après vérification, cette vidéo entrait en violation avec la politique d'utilisation de notre service. Nous l'avons donc retirée."
+    },
+    {
+      "id": "n_episode1_email4_4",
+      "next": "n_episode1_email4_5",
+      "text": "Nous sommes aussi dans l'obligation de vous bannir de notre réseau social et d'effacer votre compte."
+    },
+    {
+      "id": "n_episode1_email4_5",
+      "isEnd": true,
+      "text": "Cordialement"
+    }
+  ],
+  "replayable": false,
+  "title": "Email4"
+}

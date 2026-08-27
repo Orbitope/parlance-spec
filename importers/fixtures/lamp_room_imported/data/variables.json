@@ -1,0 +1,16 @@
+{
+  "variables": [
+    {
+      "default": 2,
+      "description": "Harlowe $ coins",
+      "id": "coins",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ lamp",
+      "id": "lamp",
+      "kind": "flag"
+    }
+  ]
+}

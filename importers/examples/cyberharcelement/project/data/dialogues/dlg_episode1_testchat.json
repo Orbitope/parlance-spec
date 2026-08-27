@@ -1,0 +1,13 @@
+{
+  "entry": "n_episode1_testchat",
+  "id": "dlg_episode1_testchat",
+  "nodes": [
+    {
+      "id": "n_episode1_testchat",
+      "isEnd": true,
+      "text": "asdf"
+    }
+  ],
+  "replayable": false,
+  "title": "TestChat"
+}

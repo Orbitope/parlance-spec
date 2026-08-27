@@ -1,0 +1,33 @@
+{
+  "entry": "n_episode1_email3",
+  "id": "dlg_episode1_email3",
+  "nodes": [
+    {
+      "id": "n_episode1_email3",
+      "next": "n_episode1_email3_2",
+      "text": "Madame, monsieur, bonsoir,"
+    },
+    {
+      "id": "n_episode1_email3_2",
+      "next": "n_episode1_email3_3",
+      "text": "Je tenais à remercier votre enfant pour son témoignage de ce matin."
+    },
+    {
+      "id": "n_episode1_email3_3",
+      "next": "n_episode1_email3_4",
+      "text": "Grâce à ce témoignage, nous avons une vision plus claire de ce qui se passe au collège. Les auteurs ont été identifiés et des sanctions vont être prises rapidement, non seulement contre eux, mais aussi contre celles et ceux qui relayeront ce genre de vidéo. Ce n'est pas de gaîté de cœur que nous allons prendre ces mesures, mais il faut absolument que cela cesse au plus vite."
+    },
+    {
+      "id": "n_episode1_email3_4",
+      "next": "n_episode1_email3_5",
+      "text": "Très bonne soirée à vous,"
+    },
+    {
+      "id": "n_episode1_email3_5",
+      "isEnd": true,
+      "text": "M Douraud, CPE."
+    }
+  ],
+  "replayable": false,
+  "title": "Email3"
+}

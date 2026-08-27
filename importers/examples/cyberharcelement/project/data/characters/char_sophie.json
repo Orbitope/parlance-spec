@@ -1,0 +1,27 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode1_chat1"
+    },
+    {
+      "dialogue": "dlg_episode1_sms1"
+    },
+    {
+      "dialogue": "dlg_episode1_chat2"
+    },
+    {
+      "dialogue": "dlg_episode1_chat4"
+    },
+    {
+      "dialogue": "dlg_episode1_sms4a"
+    },
+    {
+      "dialogue": "dlg_episode1_sms5d"
+    },
+    {
+      "dialogue": "dlg_episode1_testchatmessage"
+    }
+  ],
+  "id": "char_sophie",
+  "name": "Sophie"
+}

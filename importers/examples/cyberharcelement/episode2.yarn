@@ -1,0 +1,689 @@
+title: Start
+type: title
+---
+SKIP
+
+<<declare $time = "">>
+<<declare $bg = "">>
+<<declare $score = 0>>
+<<declare $askedLiam = false>>
+<<declare $knowAboutGradeExcuse = false>>
+<<declare $talkedToBryanAboutLiam = false>>
+<<setIconVisibility proof false>>
+
+
+Comme tous les mercredis après-midi, avec tes amis de handball, tu t'entraînes pour la prochaine compétition.
+Liam, ton ami d’enfance, est l’un des meilleurs joueurs mais aujourd’hui il a fait pas mal d'erreurs.
+
+<<jump Gymnasium>>
+===
+title: Gymnasium
+bg: gymnasium
+time: Mercredi 15 Novembre, 18h30
+---
+SKIP
+<<addForegroundImage gymnasium-bench 1340 757 -1>>
+
+You: On s’est encore bien amusés aujourd’hui.
+Liam: Oui, c’est vrai…
+You: J’espère qu’on est prêts pour le match de la semaine prochaine. 
+You: L’équipe d’en face ne nous fera pas de cadeaux…  
+Liam: C’est clair…
+You: Qu'est-ce que t’as ? Tu dis rien. 
+You: Depuis 3 ans qu’on joue ensemble c’est la première fois que t’es pas en train de motiver notre équipe ou dire qu’on va écraser ceux d’en face.
+Liam: ...
+// Choice 1
+-> Quelque chose ne va pas ?
+    <<set $score = $score + 1>>
+    << set $knowAboutGradeExcuse to true>>
+    << set $askedLiam to true>>
+    You: Quelque chose ne va pas ?
+    Liam: Non ça va t’inquiète, j’ai juste des mauvaises notes en ce moment et ça me préoccupe. 
+    Liam: J’ai pas envie de décevoir mes parents.
+-> Ne rien dire
+    You: (Bizarre quand même)
+-> C’est quoi le problème ? Faudrait que tu réagisses !
+    <<set $score = $score - 1>>
+    << set $askedLiam to true>>
+    You: C’est quoi le problème ? Faudrait que tu réagisses !
+    Liam: Il se passe rien je te dis, pourquoi t’insistes comme ça ? T’es lourd !
+Entraineur: Ah vous êtes encore là ! Super ! 
+Entraineur: Je viens de vous envoyer les infos sur le match de la semaine prochaine ! 
+Entraineur: Vous devriez recevoir la notification… Maintenant !
+
+<<jump Gymnasium2>>
+
+===
+title: Gymnasium2
+time: Mercredi 15 Novembre, 18h30
+allowIcons: true
+
+---
+SKIP
+<<addNodeOption Sms1>>
+<<if visited("Sms1")>>
+Narrator: Tu remercies ton entraineur. Puis tu te prépares à rentrer, comme après chaque fin d’entraînement, avec la mère de Liam.
+<<clearCharacter>>
+<<clearDialog>>
+<<clearForegroundImage gymnasium-bench>>
+<<jump BackFromGymnasium >>
+<<endif>>
+
+===
+title: Sms1
+type: sms
+from: Entraineur
+---
+Entraineur: Match à domicile. Mercredi 22 Novembre. Rendez-vous au gymnase à l'heure habituelle.
+
+===
+title: BackFromGymnasium
+type : title
+---
+Le lendemain, tu retrouves ton ami Bryan chez toi pour jouer...
+<<jump Bedroom2>>
+===
+title: Bedroom2
+bg: bedroom
+time: Jeudi 16 Novembre, 18h00
+---
+SKIP
+
+// Choice 2
+Bryan: Alors, ton équipe est prête pour remporter le prochain match ?
+-> Répondre et parler de Liam 
+    <<set $score = $score + 1>>
+    <<set $talkedToBryanAboutLiam to true>>
+    You: Pas certain. Liam n’était pas comme d’habitude. 
+    <<if $askedLiam>>
+    You: J’ai bien tenté de lui demander pourquoi mais il est resté évasif. 
+    <<endif>>
+    You: Tu sais quelque chose toi ?
+    Bryan: Non, pas d’info. Je t’en aurais parlé, sinon.
+-> Répondre sans parler de Liam 
+    You: On n’est jamais sûrs de rien mais c’était une bonne séance.
+    Bryan: Yes, tant mieux alors ! Je suis content pour vous.
+Narrator: Suite    
+<<jump Act2>>
+===
+title: Act2
+type: title
+---
+SKIP
+
+Le mercredi suivant.
+En dépit de tous vos efforts, ton équipe a perdu le match.
+Liam n’était pas à son top niveau, il avait l’air absent.
+
+<<jump Gymnasium3>>
+
+===
+title: Gymnasium3
+bg: gymnasium
+time: Mercredi 22 novembre, 18h30
+allowIcons: true
+---
+SKIP
+<<addForegroundImage gymnasium-bench 1340 757 -1>>
+
+Liam: Bon on fera mieux la prochaine fois, on va dire qu’ils ont gagné sur un coup de chance...
+You: Oui c’est sûr on s’est bien battus mais ça n'a pas suffi, je suis deg...
+Liam: C’est surtout toi qui as tout donné...
+You: Je veux pas en rajouter mais, comme la semaine dernière, t’avais l’air absent...
+Liam: Écoute, j’ai pas grand chose à ajouter. 
+<<if $knowAboutGradeExcuse>>
+Liam: Je t’ai déjà dit que c'est à cause de mon bulletin. 
+<<endif>>
+Liam: Sinon tout va bien, c’est bon...
+You: Mouais… Ça se passe bien avec ta copine ?
+Liam: ... Je ne prends même pas la peine de répondre...
+
+<<jump Gymnasium4>>
+===
+title: Gymnasium4
+bg: gymnasium
+time: Mercredi 22 novembre, 18h30
+allowIcons: true
+---
+SKIP
+<<addNodeOption Sms2>>
+
+<<if visited("Sms2")>>
+Narrator: Alors que Liam a son téléphone dans les mains, tu aperçois qu'il a de nombreuses notifications.
+<<jump Gymnasium5 >>
+<<endif>>
+
+===
+title: Sms2
+type: sms
+from: Maman de Liam
+---
+[character name="Maman de Liam"][/character]Je suis arrivée. Je vous attends sur le parking.
+===
+title: Gymnasium5
+bg: gymnasium
+time: Mercredi 22 novembre, 18h30
+---
+SKIP
+
+You: (J’ai pas rêvé ! Plus de 50 notifs TikTok ?! C’est quoi ce délire ?)
+// Choice 3
+-> Poser une question directe
+    << set $askedLiam to true>>
+    You: T’as plein de notifs en ce moment on dirait… Qu’est ce qui se passe ?
+    Liam: T’inquiètes, c’est rien. C’est juste le groupe de ma classe, ils parlent beaucoup. Surtout en ce moment.
+-> Ne rien dire
+    You: ...
+<<clearCharacter>>
+Narrator: Peu après, Liam part aux toilettes en laissant son téléphone et reçoit une nouvelle notification.
+<<addForegroundImage gymnasium-bench-phone 1340 757 -1>>
+<<clearForegroundImage gymnasium-bench>>
+-> Intrigué, tu décides de jeter un coup d'oeil.#position:1550,950 #discover:Regarder
+    Ne connaissant pas le code, tu ne peux pas voir le détail des notifications.#position:1550,950
+    Mais tu remarques que les notifications concernent des identifications dans des publications.#position:1550,950
+Narrator: Liam revient des toilettes.
+<<clearFloatingSpeechBubbles>>
+<<setCharacter Liam >>
+<<addForegroundImage gymnasium-bench 1340 757 -1>>
+<<clearForegroundImage gymnasium-bench-phone>>
+
+// Choice 4
+-> Demander si tu peux prendre une photo de son écran
+    <<set $score = $score + 1>>
+    << set $askedLiam to true>>
+    You: Vraiment, Liam, j’ai vu que ton téléphone a encore des nouvelles notifs. 
+    You: Ça te dérange si je prends en photo ton écran ? On sait jamais, ça peut servir...
+    Liam: ...Ok, vas y si tu veux...
+-> Ne rien dire
+Narrator: Rentrer chez toi.
+<<clearForegroundImage gymnasium-bench>>
+<<jump BackFromGymnasium2>>
+===
+title: BackFromGymnasium2
+type: title
+---
+SKIP
+
+De retour chez toi, tu reçois un SMS de la mère de Liam.
+<<jump Bedroom3>>
+===
+title: Bedroom3
+bg: bedroom
+time: Mercredi 22 novembre, 19h30
+allowIcons: true
+---
+SKIP
+
+<<addNodeOption Sms3>>
+<<addNodeOption Sms4>>
+
+<<if visited("Sms3") && visited("Sms4") >>
+    Narrator: Tu reçois un message d'Alex, un ami en commun avec Liam.
+    <<clearNarrator>>
+    <<jump Bedroom4>>
+<<endif>>
+===
+title: Sms3
+type: sms
+from: Maman de Liam
+---
+[character name="Maman de Liam"][/character]Re-bonsoir.
+[character name="Maman de Liam"][/character]Je suis désolée de te déranger, mais je te contacte pour une raison assez particulière. 
+[character name="Maman de Liam"][/character]As-tu remarqué un changement de comportement chez Liam ? Il est assez bizarre ces temps-ci, je ne le reconnais plus. 
+[character name="Maman de Liam"][/character]Il semble se refermer sur lui-même, il s’isole de plus en plus et je n'arrive pas à lui faire dire pourquoi. 
+[character name="Maman de Liam"][/character]Il me répond que tout va bien. Mais je suis sa mère et je vois très bien que ça ne va pas. 
+[character name="Maman de Liam"][/character]Si tu sais quelque chose, je t’en prie, dis le moi. Ça me rend triste de le voir comme ça.
+[character name="Maman de Liam"][/character]Encore désolée du dérangement, bonne soirée et à bientôt.
+// Choice 5
+->Expliquer que tu as aussi remarqué son changement de comportement
+    <<set $score = $score + 1>>
+    You: Bonsoir. Oui, j’ai remarqué moi aussi. 
+    <<if $askedLiam>>
+    You: Je lui en ai parlé dès que j’ai trouvé ça bizarre.
+    <<endif>>
+    [character name="Maman de Liam"][/character] Je vois, et alors? Il t’a donné une explication ?
+    ->Parler des résultats scolaires  <<if $knowAboutGradeExcuse>>
+        <<set $score = $score + 1>>
+        You: Il a dit que c’était à cause de ses résultats scolaires, et seulement ça. Il a insisté là-dessus.
+        [character name="Maman de Liam"][/character]Je vois. Pourtant, nous ne lui mettons aucune pression. Je crains que ce ne soit la conséquence, et non la raison...
+        You: Je comprends. Il m’a dit qu’il se mettait la pression pour ne pas vous décevoir. Mais ok, je vais voir comment je peux l’aider.
+        [character name="Maman de Liam"][/character]Merci beaucoup ! Bonne soirée à la semaine prochaine !
+    ->Ne pas donner de détails
+        You: Non, pas spécialement.
+        [character name="Maman de Liam"][/character]D’accord. Merci de m’avoir répondu. Bonne soirée à toi et à la semaine prochaine.
+        You: Merci, toi aussi à la prochaine.
+->Rassurer la mère de Liam
+    You: Oui j’ai vu et je lui en ai parlé, mais ne t'en fais pas, c’est sûrement passager. Il a l’air tracassé mais il va bien !
+    [character name="Maman de Liam"][/character]J’espère que tu as raison. Merci pour ta réponse ! Bonne soirée et à la semaine prochaine.
+    You: Merci, toi aussi à la prochaine.
+->Éviter de répondre
+    <<set $score = $score - 1>>
+    You: Bonsoir. Malheureusement non, je n’ai rien remarqué de particulier. Excuse-moi de ne pas pouvoir t’aider.
+    [character name="Maman de Liam"][/character]Ah… Merci quand même.
+===
+title: Sms4
+type: sms
+from: Bryan
+---
+// Choice 6
+Bryan: Salut, ça va ? 
+Bryan: Alors le match ? Vous avez gagné ?! 
+<<if $talkedToBryanAboutLiam>>
+Bryan: Comment allait Liam cette semaine ?
+<<endif>>
+-> Résumer ce qui s’est passé
+    <<set $score = $score + 1>>
+    You: Salut ! Ça va oui, merci ! Pour le match, on l’a perdu donc on est pas trop contents. 
+    You: Liam n’était vraiment pas au top.
+    Bryan: Ah mince, dommage pour le match. 
+    <<if $talkedToBryanAboutLiam>>
+    Bryan: Ouais je vois que ça n'a pas trop changé... 
+    <<endif>>
+    Bryan: Tu sais pourquoi ?
+    You: Je pense qu’il est harcelé sur les réseaux...
+    Bryan: Sérieux ??! Qu’est-ce qui te fait dire ça ?
+    You: Après l'entraînement la dernière fois, j’ai vu son tel : il avait plein de notifs d’identification. 
+    You: Il a l’air d'être mal par rapport à ça. Même sa mère s’en est rendu compte.
+    Bryan: Ah ouais chaud... Et tu sais pourquoi il serait harcelé ?
+    You: Non, aucune idée. Et je ne sais pas trop quoi faire...
+    Bryan: Déjà, faut pas le laisser seul dans cette galère.
+    You: J’ai bien tenté de le faire parler mais il a juste parlé de ses résultats scolaires.
+    Bryan: Ça doit pas être facile. Mais tu pourrais l’aider à réaliser qu’il est harcelé. C’est grave ! Il peut peut-être en parler à l'entraineur ou à la police.
+-> Finir la discussion
+    You: Salut ! Ouais ouais ça va merci ! 
+    You: On a perdu... 
+    You: Pardon, je suis K.O, on se parle plus tard ?
+===
+title: Bedroom4
+bg: bedroom
+time: Mercredi 22 novembre, 20h30
+allowIcons: true
+---
+
+SKIP
+
+<<addNodeOption Sms5>>
+
+<<if visited("Sms5") && visited("Chat1")>>
+    Narrator: Suite.
+    <<jump School1 >>
+<<endif>>
+
+
+===
+
+title: Sms5
+type: sms
+from: Alex
+---
+Alex: Salut, ça va ?
+You: Hey ! Ça va et toi ? Ça fait longtemps !
+Alex: Super ! Oui ça fait trop longtemps ! D’ailleurs ça te tente de faire une sortie samedi dans l’aprem ?
+You: Carrément ! Je proposerai à Liam aussi, ça sera mieux à trois, qu’est-ce que t’en dis ?
+Alex: Ah ouais... Euh... En fait, j’aimerais autant éviter qu’on me voie avec lui pour être honnête. Je savais pas que tu traînais encore avec lui...
+You: Ah bon mais pourquoi ça ? On fait toujours du handball ensemble donc on est toujours soudés ! On est une équipe.
+Alex: Ah ouais, j’avais oublié. Mais si j’étais toi j’éviterais de traîner avec lui en public.
+You: Mais c’est quoi le problème à la fin ?!
+Alex: Bah... Tu sais bien, il a essayé d’embrasser son pote Ben. Il s’est fait recaler mais ça reste dégueu !
+// Choice 7
+-> Et est-ce que tu as des preuves ?
+    <<set $score = $score + 1 >>
+    You: Et est-ce tu as des preuves de tout ça avant de t’emballer dans des rumeurs et théories folles ?
+    Alex: Dans tous les cas, il y a une lettre d’amour que Liam a écrite à Ben qui circule !
+-> Euh, ok...
+    You: Euh, ok… Je sais pas trop quoi faire de cette info...
+    Alex: J’te mets au courant, c’est tout. Tu peux pas faire comme si tu savais pas maintenant !
+-> Non sérieux ?! Envoie plus d’infos !
+    <<set $score = $score - 1 >>
+    You: Non sérieux ?! Envoie plus d’infos !
+    Alex: Alors, maintenant la moitié du collège est au courant. Y’a même une lettre d’amour qui circule sur Insta ! 
+    Alex: Sérieux, c’est trop la honte d’écrire une lettre d’amour ! Ah ah !
+Alex: ... Et en plus, on peut voir des vidéos challenge sur TikTok pour rejeter celles et ceux qui tentent un truc. Quelqu’un a même inventé le \#clubdesrecalés. Attends, je t’en partage une. #image:screenshot2
+<<addNodeOption Chat1>>
+// Choice 8
+-> Mouais, donc toi tu trouves ça marrant ?
+    <<set $score = $score + 1 >>
+    You: Mouais, donc toi tu trouves ça marrant ? Je ne comprends pas ce qui est drôle. C’est même méchant de faire tourner des vidéos comme ça !
+    Alex: Oh ça va ! Le ridicule ne tue pas.
+-> 😑 
+    You: 😑
+-> Trop bien ! J’adore !
+    <<set $score = $score - 1 >>
+    You: Trop bien ! J’adore !
+
+===
+title: Chat1
+type: chat
+---
+// Choice 9
+You: Dites, vous avez des infos au sujet du \#clubdesrecalés ?
+Hakim: Non, c’est quoi au juste ?
+Ryan: C’est un challenge sur TikTok. 
+Ryan: Il s’agit de se moquer de ceux qui ont avoué leurs sentiments pour quelqu’un. 
+Ryan: Tu peux le faire avec des vidéos où tu refoules la personne en direct, ou bien montrer leurs lettres d’amour !
+Bryan: Mais c’est nul ! C’est quoi le but ?
+MJ: Leur faire honte pour qu’ils arrêtent ;-)
+Tao: Haha ! Ça peut être drôle !
+Nabil: Drôle ? Je crois pas, non !
+-> C’est vraiment pas sympa de faire ça.
+    <<set $score = $score +1>>
+    You: C’est vraiment pas sympa de faire ça.
+-> Faut voir, ça dépend.
+    <<set $score = $score - 1>>
+    You: Faut voir, ça dépend.
+-> Ne rien dire
+===
+title: School1
+bg: school 
+time: Jeudi 23 Novembre, 08H10
+---
+<<addForegroundImage student-group-1 300 440>> 
+Narrator: Devant le collège, comme à l’accoutumée, des groupes discutent avant le début des cours. 
+Narrator: Une conversation retient ton attention car elle semble parler de Liam.
+// Choice 10
+Students: Il a beau avoir une copine, il tente sa chance ailleurs et il prend quand même des râteaux. 
+Students: Ça craint ! Surtout sa lettre. Il mérite qu’on lui mette la honte. 
+Students: De plus en plus de personnes partagent le \#clubdesrecalés. C’est efficace pour ça. 
+Students: Ouais mais bon, ça va peut-être un peu trop loin... 
+
+-> Ne rien faire
+-> Prendre en note la conversation sur un carnet
+    <<set $score = $score + 1 >>
+    You: (Je ferais bien de noter cette conversation elle pourrait servir de preuve.)
+-> Intervenir dans la conversation
+    <<set $score = $score + 1 >>
+    You: On est d’accord ça va beaucoup trop loin, il faut arrêter tout ça ! 
+    <<clearCharacter>>
+    Students: Personne t’a demandé ton avis ! Toi aussi tu vas finir dans le club des recalés ! 
+Narrator: Suite
+<<jump Act3>>
+===
+title: Act3
+type: title
+---
+Une semaine s’est écoulée. Liam semble de plus en plus préoccupé.
+<<jump Gymnasium6>>
+===
+title: Gymnasium6
+bg: gymnasium
+time: Mercredi 29 novembre, 18h30
+---
+SKIP
+<<addForegroundImage gymnasium-bench 1340 757 -1>>
+You: Salut Liam.
+Liam: Salut...
+// Choice 11
+-> Ne rien dire.
+    Liam: ...
+    Liam: ...Tu es au courant hein... ?
+    You: ...
+    Liam: J'ai besoin de t'en parler de toute façon. Je ne peux plus porter ça seul...
+-> Je suis au courant de ce qui t’arrive. C’est grave, on devrait en parler.
+    <<set $score = $score + 1>>
+    You: Je suis au courant de ce qui t’arrive. C’est grave, on devrait en parler. Ça a commencé comment ?
+    Liam: Tu as raison... Je ne peux plus porter ça seul...
+Liam: Les moqueries ont commencé dans le cercle des potes à cause d’une photo de Ben et moi prise dans les vestiaires de la piscine, et avec pour légende « Le nouveau couple de la classe ».
+Liam: Depuis, c’est l’enfer !
+You: Mais ... C’est vrai que tu as essayé de l’embrasser ?
+Liam: Pour commencer, non !
+Liam: C’est lui qui a inventé tout ça pour se protéger en rejetant la faute sur moi. 
+Liam: Il a même rédigé une fausse lettre lui étant destinée comme quoi je lui faisais une déclaration d’amour.
+You: Mais comment ça s'est retrouvé sur internet ?
+Liam: C’est MJ qui l’a postée sur le groupe snap de la classe… En moins de 2h, ça a fait le tour du collège.
+You: Faut pas te laisser faire, faut en parler ! Je pense que tu peux même porter plainte.
+You: C’est interdit de harceler !
+Liam: C’est vrai que j’y avais pas pensé, mais ça peut être une solution. 
+Liam: Je suis tellement pris dans tous ces problèmes que j’ai même pas pensé aux solutions.
+Liam: Merci pour ton soutien, ça aide.
+Liam: Tiens, regarde la lettre.
+
+// Choice 12
+Narrator: La lettre que Liam est censé avoir envoyée n’est pas très longue et te semble manquer de sincérité. 
+Narrator: De plus, tu ne reconnais pas son écriture.
+-> Les gens vont probablement réaliser que c’est du fake
+    <<set $score = $score + 1 >>
+    You: Ça craint que cette lettre circule sur les réseaux. 
+    You: Si des personnes y croient, d’autres vont probablement réaliser que c’est du fake. 
+    You: C’est même pas ton écriture !
+    -> Tu devrais signaler la publication.
+        You: Tu devrais signaler la publication.
+    -> Tu devrais prendre une capture d'écran pour servir de preuve
+        You: Tu devrais prendre une capture d'écran pour servir de preuve.
+    Liam: T'as raison, merci.
+    Liam: Mais en attendant, à cause de tout ça, je reçois chaque jour des dizaines de messages de harcèlement anonymes.
+-> On dirait pas ton écriture (Mais on peut pas être sûrs)
+    You: On dirait pas ton écriture.
+    You: (Mais on peut pas être sûrs, la lettre est peut être vraie quand même.)
+    Liam: En attendant, à cause de tout ça, je reçois chaque jour des dizaines de messages de harcèlement anonymes.
+-> Franchement, on peut pas savoir si tu l’as écrite ou pas cette lettre
+    <<set $score = $score - 1 >>
+    You: Franchement, on peut pas savoir si tu l’as écrite ou pas cette lettre.
+    Liam: Tu penses m’aider là ???
+    You: ...
+    Liam: En attendant, à cause de tout ça, je reçois chaque jour des dizaines de messages de harcèlement anonymes. 
+Liam: Je suis fatigué, à bout.
+// Choice 13 does not exist anymore
+// Choice 14
+-> Même si ce sont des messages anonymes, tu devrais faire des captures d’écran.
+    <<set $score = $score + 1 >>
+    You: Même si ce sont des messages anonymes, tu devrais faire des captures d’écran. 
+    You: Ça prouverait au moins que tu es harcelé. C’est bien de garder une trace je pense. 
+    You: Et tu peux les enregistrer sur l’application 3018 !
+-> Bon, tu verras ça va passer tout seul cette histoire.
+    You: Bon, tu verras ça va passer tout seul cette histoire.
+-> Tu devrais les envoyer balader ! Tu vas pas te laisser faire !?
+    <<set $score = $score - 1 >>
+    You: Tu devrais les envoyer bouler ! Tu vas pas te laisser faire !?
+    Liam: Ouais, t’as raison ! Je vais faire ça !
+Narrator: Suite
+<<clearForegroundImage gymnasium-bench>>
+<<clearDialog>>
+<<clearCharacter>>
+<<jump PreOutside1>>
+===
+title: PreOutside1
+type: title
+---
+Le lendemain matin tu aperçois MJ devant le collège.
+D’après Liam, elle contribue à propager la rumeur le concernant.
+Tu vas la voir.
+<<jump Outside1>>
+===
+title: Outside1
+bg: school
+time: Jeudi 30 Novembre, 08h45
+---
+//Choice 15
+You: Hello, j’aimerais te parler. Tu as un instant ?
+MJ: Tu veux quoi ?! 
+You: Je sais que tu as diffusé sur les réseaux sociaux que Liam aurait essayé d’embrasser Ben et qu’il lui aurait écrit une lettre d’amour...
+MJ: Ouais et alors ? Je trouve ça chelou ! Et même dérangeant. #mood:evil
+-> Ça m'amuse bien ! Continue en vrai !
+    <<set $score = $score - 1>>
+    <<setCharacter MJ >>
+    You: Ça m'amuse bien ! Continue en vrai !
+    MJ: Compte sur moi là dessus ! Je vais pas les lâcher ! Haha !
+-> C’est vraiment méchant de ta part.
+    <<set $score = $score + 1>>
+    You: C’est vraiment méchant de ta part. Et même si c’était vrai, être attiré par un garçon n’est pas un crime !!! 
+    You: T’as pas honte de dire ça ?!
+    You: Mais surtout, j’ai vu la lettre et elle me semble fausse. C’est même pas l’écriture de Liam !
+    MJ: Pourquoi tu prends sa défense ? #mood:evil
+    You: Parce que c’est mon pote et que je me mets à sa place. C’est horrible de vivre ça. Tu y as pensé ? 
+    You: Par dessus tout, harceler quelqu’un est interdit et puni par la loi. 
+    You: Tu te rends compte que toi et tes parents risquez d’avoir des problèmes ?
+    MJ: Sérieux ?! Je savais pas...
+    You: Oui, c’est sérieux ! Faut vraiment que t'arrêtes ! 
+    You: C’est autant dans l’intérêt de Liam que du tien et celui de ta famille.
+    MJ: Merci de me faire réaliser tout ça. J’arrête, promis ! 
+Narrator: Suite
+<<clearDialog>>
+<<clearCharacter>>
+<<jump PreReunion>>
+===
+title: PreReunion
+type: title
+---
+Plusieurs jours se sont écoulés depuis ton échange avec Liam et MinJeong. 
+Loin de se calmer, la rumeur se propage.
+Au point que ton collège a décidé d’organiser une réunion d’information au sujet du cyberharcèlement.
+<<jump Reunion>>
+===
+title: Reunion
+bg: class
+time: quelques jours plus tard, 17h
+---
+//Choice 16
+CPE: N'oubliez pas que ce soir se tient la réunion sur le cyberharcèlement.
+CPE: Elle n'est pas obligatoire mais elle n'en est pas moins importante !
+-> Se rendre à la réunion.
+    Narrator: Tu te rends à la réunion.
+    <<set $time to "quelques jours plus tard, 18h15" >>
+    <<clearDialog>>
+    <<clearCharacter>>
+    Narrator: En sortant de celle-ci, tu te demandes si tu ne devrais pas en parler à Liam.
+    -> Envoyer un SMS à Liam.
+        <<set $score = $score + 1>>
+        <<jump PostReunion>>
+    -> Liam peut très bien se débrouiller tout seul.
+        <<set $score = $score - 1>>
+        Narrator: Rentrer chez toi.
+        <<jump ActFinal>>
+-> Rentrer chez toi.
+    <<set $score = $score - 1>>
+    Narrator: Tu rentres chez toi.
+    <<jump ActFinal>>
+===
+title: PostReunion
+bg: bedroom
+time: quelques jours plus tard, 18h15
+allowIcons: true
+---
+SKIP
+<<addNodeOption Sms6>>
+<<if visited("Sms6")>>
+    Narrator: Suite
+    <<jump ActFinal>>
+<<endif>>
+===
+title: Sms6
+type: sms
+from: Liam
+---
+// Choice 17
+You: Salut Liam. Aujourd’hui, on a eu une réunion sur le cyberharcèlement au collège. 
+You: On nous a rappelé qu’il existe une association qui s’appelle E-enfance. 
+You: Elle donne des ressources et des conseils pour les victimes, les proches et les témoins de cyberharcèlement. 
+You: Ils ont même un numéro d’appel si tu veux discuter avec eux. C’est le 3018, avec une application sur le téléphone aussi. 
+You: Et comme ce que tu vis c’est clairement du cyberharcèlement, je me suis dit que tu pouvais peut-être les contacter pour te faire aider, non ?
+Liam: C’est cool de ta part, je vais regarder ça ! Merci !
+===
+title: ActFinal
+type: title
+---
+Quelques semaines ont passé. Tu as invité Liam et Bryan à regarder la rediffusion d’un match chez toi.
+
+// Score max : 14
+// Score minimum : -8
+// Score moyen mathématiques : ≈ 2.5
+
+<<if ($score < 2 )>>
+    <<jump BadEnding>>
+<<else>>
+    <<jump GoodOrNeutralEnding>>
+<<endif>>
+
+===
+title: GoodOrNeutralEnding
+bg: bedroom
+---
+You: Au fait, désolé de revenir sur ça mais c’est important. Ça va mieux ? Il y a du nouveau ?
+Liam: Après une histoire aussi sordide, c’est dur d’aller mieux.
+Bryan: Comment ça ? C’est-à-dire ?
+Liam: J’ai perdu quasiment tous mes amis, mon pote d’enfance et même la fille dont j'étais amoureux…
+Bryan: Ouais, pas très bien j’imagine…
+Liam: Pas très bien non. 
+Liam: J’en ai encore pour des mois pour qu’on ne m’associe plus au \#clubdesrecalés.
+Liam: Et peut-être des années pour qu’on me trouve de nouveau “cool”.
+You: Ok, c’était un peu maladroit. Mais tout n’est pas noir, si ?
+Liam: Tu peux apporter toutes les preuves que tu veux, quand une rumeur s’installe, c’est presque impossible à faire oublier.
+Liam: Mais franchement ? ...
+
+<<if $score > 8 >>
+    <<jump GoodEnding>>
+<<else>>
+    <<jump NeutralEnding>>
+<<endif>>
+===
+title: GoodEnding
+bg: bedroom
+---
+Liam: ... Tout n’est pas noir comme tu dis. J’ai beaucoup souffert, mais c’est en train de changer. 
+Liam: Le plus dur, c’était de passer à autre chose. 
+Liam: Et votre soutien m’a beaucoup aidé.
+Liam: Dans mon malheur j’ai aussi pu rencontrer d’autres personnes qui sont dans le même cas que moi.
+Liam: J’ai de la haine pour les gens qui font vivre ça aux autres. C’est cruel et stupide.
+Liam: En tout cas, c’est vraiment rassurant de savoir que quand ça nous arrive on peut compter sur son entourage, des gens au collège et des associations pour nous aider.
+Liam: D’ailleurs, on m’a conseillé d’aller porter plainte à la police. Mes parents m’accompagnent demain au commissariat.
+Liam: Merci les amis d'être là pour moi en tout cas.
+Narrator: Fin
+<<quit>>
+===
+title: NeutralEnding
+bg : bedroom
+---
+Liam: ... Y’a des jours avec et des jours sans, ça continue de m’écoeurer de penser à tout ce que j’ai perdu pour une simple photo mal interprétée et toute l’escalade de haine que j’ai subi derrière ... 
+Liam: Et j’ose même pas imaginer la violence et la douleur pour les autres personnes qui se font harceler ... 
+Liam: Enfin bref, on verra si les harceleurs se calment enfin et me laissent tranquille.
+Liam: En attendant, on m’a conseillé d’aller au commissariat pour exposer mon affaire et porter plainte. Mes parents m’accompagnent demain au commissariat.
+Liam: Merci d’être encore là pour moi les amis.
+Narrator: Fin
+<<quit>>
+===
+title: BadEnding
+bg: bedroom
+---
+Narrator: Au final tes amis ne sont pas venus...
+Narrator: Tu te demande pourquoi... et decides de prendre des nouvelles de Liam.
+
+<<jump BadEnding2>>
+===
+title: BadEnding2
+bg: bedroom
+allowIcons: true
+---
+SKIP
+
+<<clearNarrator>>
+
+<<addNodeOption BadEndingSms>>
+
+<<if visited("BadEndingSms")>>
+    Narrator: Fin
+    <<quit>>
+<<endif>>
+===
+title: BadEndingSms
+type: sms
+from: Liam
+---
+You: Salut ! Comment tu vas ?
+You: C’est dommage qu’on n’ait pas pu se retrouver aujourd’hui, au final.
+You: Je voulais aussi savoir comment ça évolue cette histoire avec Ben. Du nouveau ?
+Liam: Je ne vais pas trop bien si tu veux la vérité. J’ai perdu mes amis, mon pote d’enfance et la fille dont j’étais amoureux …
+You: Effectivement, ça doit pas être facile.
+Liam: Non, et puis j’en ai encore pour des mois pour qu’on ne m’associe plus au \#clubdesrecalés.
+Liam: Et sûrement des années pour qu’on me trouve de nouveau “cool” ...
+You: Non mais t’inquiète pas, les gens vont oublier à force.
+Liam: Pas sûr, tu sais, quand une rumeur s’installe, tu peux apporter toutes les preuves que tu veux, c’est presque impossible à faire oublier …
+Liam: Surtout que c’est sur internet, autant dire presque IMPOSSIBLE à faire disparaître.
+Liam: Désolé si tu me trouves pessimiste mais franchement … Je suis à bout là ! Ça fait des mois que ça dure maintenant. 
+Liam: Ça fait tellement longtemps que je me rappelle même à peine comment c’était avant …
+Liam: J’ai l’impression que tout le monde me regarde avec pitié ou moquerie. Je me sens tellement seul face à tout ça.
+Liam: Il ne me reste que ma famille et encore, personne ne semble vraiment comprendre ce qui se passe.
+Liam: Parce que pour le reste des gens, j’ai l’impression que ceux qui veulent m’aider sont les premiers à rire de mon malheur en mon absence.
+Liam: Comme toi par exemple. Je trouve ça osé de m’envoyer un message alors que ce qui m’arrive te fais bien rire.
+Liam: On m’a conseillé de porter plainte auprès de la police. Je vais au commissariat avec mes parents demain matin.
+Liam: Je sais pas encore a quel point ils vont te déclarer coupable dans tout ça. 
+Liam: Mais comme tu n’as pas aidé à ce que les choses se calment, saches que je vais parler de toi. Je préfère te prévenir.
+===

@@ -1,0 +1,271 @@
+{
+  "entry": "n_nwq_english_class_day_8",
+  "id": "dlg_nwq_english_class_day_8",
+  "nodes": [
+    {
+      "id": "n_nwq_english_class_day_8",
+      "next": "n_nwq_english_class_day_8_2",
+      "text": "In English class, $name's teacher gets fed up that only one $misnoun is answering all the questions, so he decides to pick on a $noun next. $name know the answer. What should $sbj do?"
+    },
+    {
+      "id": "n_nwq_english_class_day_8_2",
+      "next": "n_nwq_english_class_day_8_3",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_english_class_day_8_3",
+      "next": "n_nwq_english_class_day_8_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_english_class_day_8_4",
+      "next": "n_nwq_english_class_day_8_5",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_english_class_day_8_5",
+      "next": "n_nwq_english_class_day_8_6",
+      "text": "."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_answer_english_question",
+          "id": "c_nwq_raise_pos_hand_2",
+          "text": "Raise $pos hand"
+        },
+        {
+          "goto": "n_nwq_not_english_question",
+          "id": "c_nwq_do_nothing_4",
+          "text": "Do nothing"
+        }
+      ],
+      "id": "n_nwq_english_class_day_8_6",
+      "text": "$ally is not in $name's English class, so $sbj's not there to help."
+    },
+    {
+      "id": "n_nwq_lunch_day_8",
+      "next": "n_nwq_lunch_day_8_2",
+      "text": "During lunch, some asshole hits on $name creepily, thinking $sbj's a $misnoun. $name tells $obj that $sbj isn't interested and asks the asshole if $sbj knew that $name's a $noun. $ally defends $name against $obj, telling creep to piss off."
+    },
+    {
+      "id": "n_nwq_lunch_day_8_2",
+      "next": "n_nwq_lunch_day_8_3",
+      "text": "$name"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_reacting_to_the_creeper",
+          "id": "c_nwq_shakes_pos_head",
+          "text": "shakes $pos head"
+        }
+      ],
+      "id": "n_nwq_lunch_day_8_3",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_answer_english_question",
+      "next": "n_nwq_answer_english_question_2",
+      "text": "Mr. Francis frowns at $name. \"$deadname, I'm only picking on $noun&#96;s&#96;, so you can put your hand down.\""
+    },
+    {
+      "id": "n_nwq_answer_english_question_2",
+      "next": "n_nwq_answer_english_question_3",
+      "text": "$name takes a deep breath. \"Well, I am a $noun, and I know the answer.\""
+    },
+    {
+      "id": "n_nwq_answer_english_question_3",
+      "next": "n_nwq_answer_english_question_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_answer_english_question_4",
+      "next": "n_nwq_answer_english_question_5",
+      "onEnter": [
+        {
+          "counter": "action",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "action",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_after_answer_english_question",
+          "id": "c_nwq_talk_to_ally_after",
+          "text": "Talk to $ally after class"
+        }
+      ],
+      "id": "n_nwq_answer_english_question_5",
+      "text": "Of course, $name answers the question correctly."
+    },
+    {
+      "id": "n_nwq_not_english_question",
+      "next": "n_nwq_not_english_question_2",
+      "text": "Mr. Francis calls on three different $noun&#96;s&#96; before one of them answers the question correctly. $name knew the answer, so $sbj feels bad that $sbj just let it go so easily."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_after_not_english_question",
+          "id": "c_nwq_talk_to_ally_after_2",
+          "text": "Talk to $ally after class"
+        }
+      ],
+      "id": "n_nwq_not_english_question_2",
+      "text": "//I should probably stand up for myself next time.//"
+    },
+    {
+      "id": "n_nwq_after_answer_english_question",
+      "next": "n_nwq_after_answer_english_question_2",
+      "text": "$name meets up with $ally after English class and tells $obj what happened."
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_2",
+      "next": "n_nwq_after_answer_english_question_3",
+      "text": "$ally: \"Yeah, that Mr. Francis guy is a dick. I'm sorry you have to put up with him.\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_3",
+      "next": "n_nwq_after_answer_english_question_4",
+      "text": "$name: \"Well, he let me answer"
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_4",
+      "next": "n_nwq_after_answer_english_question_5",
+      "text": "so it was okay in the end.\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_5",
+      "next": "n_nwq_after_answer_english_question_6",
+      "text": "$ally: \"That was really brave of you to stand up to him.\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_6",
+      "next": "n_nwq_after_answer_english_question_7",
+      "text": "$name frowns for a moment. \"Yeah, I guess it was. It was a little scary, but in the end, I'm glad that I did it. It feels nice to stand up for myself.\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_7",
+      "next": "n_nwq_after_answer_english_question_8",
+      "text": "$ally: \"Yeah. It is.\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_8",
+      "next": "n_nwq_after_answer_english_question_9",
+      "text": "$name: \"Hey, $ally. Thanks.\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_9",
+      "next": "n_nwq_after_answer_english_question_10",
+      "text": "$ally: \"Thanks? For what?\""
+    },
+    {
+      "id": "n_nwq_after_answer_english_question_10",
+      "next": "n_nwq_after_answer_english_question_11",
+      "text": "$name: \"For believing in me.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_8",
+          "id": "c_nwq_go_to_lunch_with",
+          "text": "Go to lunch with $ally"
+        }
+      ],
+      "id": "n_nwq_after_answer_english_question_11",
+      "text": "$ally: \"Of course. Thanks for being my friend, too.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question",
+      "next": "n_nwq_after_not_english_question_2",
+      "text": "$name meets up with $ally after English class and tells $obj what happened."
+    },
+    {
+      "id": "n_nwq_after_not_english_question_2",
+      "next": "n_nwq_after_not_english_question_3",
+      "text": "$ally: \"That Mr. Francis guy is a dick. I'm sorry you have to put up with him.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_3",
+      "next": "n_nwq_after_not_english_question_4",
+      "text": "$name: \"Yeah. He's really scary. I'm not sure what would've happened if I had actually tried to answer his question.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_4",
+      "next": "n_nwq_after_not_english_question_5",
+      "text": "$ally: \"I guess you'll never know if you never try.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_5",
+      "next": "n_nwq_after_not_english_question_6",
+      "text": "$name: \"I guess so. Maybe next time, I'll take the chance.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_6",
+      "next": "n_nwq_after_not_english_question_7",
+      "text": "$ally smiles. \"Well, only if you're comfortable, $name.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_7",
+      "next": "n_nwq_after_not_english_question_8",
+      "text": "$name: \"Hey, $ally. Thanks.\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_8",
+      "next": "n_nwq_after_not_english_question_9",
+      "text": "$ally: \"Thanks? For what?\""
+    },
+    {
+      "id": "n_nwq_after_not_english_question_9",
+      "next": "n_nwq_after_not_english_question_10",
+      "text": "$name: \"For believing in me.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_8",
+          "id": "c_nwq_go_to_lunch_7",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_after_not_english_question_10",
+      "text": "$ally: \"Of course. Thanks for being my friend, too.\""
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper",
+      "next": "n_nwq_reacting_to_the_creeper_2",
+      "text": "$name: \"Is it just me, or was that"
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper_2",
+      "next": "n_nwq_reacting_to_the_creeper_3",
+      "text": "kind of an asshole?\""
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper_3",
+      "next": "n_nwq_reacting_to_the_creeper_4",
+      "text": "$ally: \"I'd say so. If $sbj was really interested, $sbj wouldn't have been so rude after you told $obj that you're a $noun.\""
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper_4",
+      "next": "n_nwq_reacting_to_the_creeper_5",
+      "text": "$name: \"Yeah, $sbj's not worth my time if $sbj's so disrespectful.\""
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper_5",
+      "isEnd": true,
+      "text": "Even though the weirdo ended up leaving $name alone, $sbj still shivers slightly at the memory."
+    }
+  ],
+  "replayable": false,
+  "title": "English class day 8"
+}

@@ -1,0 +1,43 @@
+:: StoryTitle
+Lamp Room
+
+
+:: StoryData
+{
+  "ifid": "3F1E7A20-4C55-4B4E-9F2E-0C1D6B8A5E31",
+  "format": "Harlowe",
+  "format-version": "3.3.9",
+  "start": "Landing"
+}
+
+
+:: Landing
+(set: $lamp to false)
+(set: $coins to 2)
+The stair ends at a door nobody has painted this century.
+[[Try the handle|Handle]]
+
+
+:: Handle
+(set: $lamp to true)
+The handle turns, which is more than you expected.
+(if: $coins >= 2)[
+You still have the fare in your pocket, for whatever that is worth now.
+](else:)[
+Your pockets are empty and the night is not over.
+]
+(text-style:"underline")[The room beyond is dark.]
+[[Go in|Inside]]
+[[Turn back|Landing]]
+
+
+:: Inside
+(track: 'doorClose', 'play')
+Somebody has left a lamp burning on the sill.
+(if: $lamp)[The handle is still warm in your hand.]
+(if: $name is "")[
+Nobody has asked your name yet.
+[[Say nothing|Inside]]
+]
+(print: $coins) coins, and nothing to spend them on.
+The window looks out on the ford, which is still going.

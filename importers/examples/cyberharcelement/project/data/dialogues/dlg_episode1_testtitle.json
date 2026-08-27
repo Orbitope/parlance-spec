@@ -1,0 +1,23 @@
+{
+  "entry": "n_episode1_testtitle",
+  "id": "dlg_episode1_testtitle",
+  "nodes": [
+    {
+      "id": "n_episode1_testtitle",
+      "next": "n_episode1_testtitle_2",
+      "text": "here is line 1"
+    },
+    {
+      "id": "n_episode1_testtitle_2",
+      "next": "n_episode1_testtitle_3",
+      "text": "here is line 2"
+    },
+    {
+      "id": "n_episode1_testtitle_3",
+      "isEnd": true,
+      "text": "here is line 3"
+    }
+  ],
+  "replayable": false,
+  "title": "TestTitle"
+}

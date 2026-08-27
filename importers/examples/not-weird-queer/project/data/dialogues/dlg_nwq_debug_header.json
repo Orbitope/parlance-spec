@@ -1,0 +1,40 @@
+{
+  "entry": "n_nwq_debug_header",
+  "id": "dlg_nwq_debug_header",
+  "nodes": [
+    {
+      "id": "n_nwq_debug_header",
+      "next": "n_nwq_debug_header_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_debug_header_2",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "sidebar",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "sidebar",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "Debug header"
+}

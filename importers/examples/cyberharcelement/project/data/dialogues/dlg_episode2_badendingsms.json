@@ -1,0 +1,122 @@
+{
+  "entry": "n_episode2_badendingsms",
+  "id": "dlg_episode2_badendingsms",
+  "nodes": [
+    {
+      "id": "n_episode2_badendingsms",
+      "next": "n_episode2_badendingsms_2",
+      "speakerId": "char_you",
+      "text": "Salut ! Comment tu vas ?"
+    },
+    {
+      "id": "n_episode2_badendingsms_2",
+      "next": "n_episode2_badendingsms_3",
+      "speakerId": "char_you",
+      "text": "C’est dommage qu’on n’ait pas pu se retrouver aujourd’hui, au final."
+    },
+    {
+      "id": "n_episode2_badendingsms_3",
+      "next": "n_episode2_badendingsms_4",
+      "speakerId": "char_you",
+      "text": "Je voulais aussi savoir comment ça évolue cette histoire avec Ben. Du nouveau ?"
+    },
+    {
+      "id": "n_episode2_badendingsms_4",
+      "next": "n_episode2_badendingsms_5",
+      "speakerId": "char_liam",
+      "text": "Je ne vais pas trop bien si tu veux la vérité. J’ai perdu mes amis, mon pote d’enfance et la fille dont j’étais amoureux …"
+    },
+    {
+      "id": "n_episode2_badendingsms_5",
+      "next": "n_episode2_badendingsms_6",
+      "speakerId": "char_you",
+      "text": "Effectivement, ça doit pas être facile."
+    },
+    {
+      "id": "n_episode2_badendingsms_6",
+      "next": "n_episode2_badendingsms_7",
+      "speakerId": "char_liam",
+      "text": "Non, et puis j’en ai encore pour des mois pour qu’on ne m’associe plus au \\#clubdesrecalés."
+    },
+    {
+      "id": "n_episode2_badendingsms_7",
+      "next": "n_episode2_badendingsms_8",
+      "speakerId": "char_liam",
+      "text": "Et sûrement des années pour qu’on me trouve de nouveau “cool” ..."
+    },
+    {
+      "id": "n_episode2_badendingsms_8",
+      "next": "n_episode2_badendingsms_9",
+      "speakerId": "char_you",
+      "text": "Non mais t’inquiète pas, les gens vont oublier à force."
+    },
+    {
+      "id": "n_episode2_badendingsms_9",
+      "next": "n_episode2_badendingsms_10",
+      "speakerId": "char_liam",
+      "text": "Pas sûr, tu sais, quand une rumeur s’installe, tu peux apporter toutes les preuves que tu veux, c’est presque impossible à faire oublier …"
+    },
+    {
+      "id": "n_episode2_badendingsms_10",
+      "next": "n_episode2_badendingsms_11",
+      "speakerId": "char_liam",
+      "text": "Surtout que c’est sur internet, autant dire presque IMPOSSIBLE à faire disparaître."
+    },
+    {
+      "id": "n_episode2_badendingsms_11",
+      "next": "n_episode2_badendingsms_12",
+      "speakerId": "char_liam",
+      "text": "Désolé si tu me trouves pessimiste mais franchement … Je suis à bout là ! Ça fait des mois que ça dure maintenant."
+    },
+    {
+      "id": "n_episode2_badendingsms_12",
+      "next": "n_episode2_badendingsms_13",
+      "speakerId": "char_liam",
+      "text": "Ça fait tellement longtemps que je me rappelle même à peine comment c’était avant …"
+    },
+    {
+      "id": "n_episode2_badendingsms_13",
+      "next": "n_episode2_badendingsms_14",
+      "speakerId": "char_liam",
+      "text": "J’ai l’impression que tout le monde me regarde avec pitié ou moquerie. Je me sens tellement seul face à tout ça."
+    },
+    {
+      "id": "n_episode2_badendingsms_14",
+      "next": "n_episode2_badendingsms_15",
+      "speakerId": "char_liam",
+      "text": "Il ne me reste que ma famille et encore, personne ne semble vraiment comprendre ce qui se passe."
+    },
+    {
+      "id": "n_episode2_badendingsms_15",
+      "next": "n_episode2_badendingsms_16",
+      "speakerId": "char_liam",
+      "text": "Parce que pour le reste des gens, j’ai l’impression que ceux qui veulent m’aider sont les premiers à rire de mon malheur en mon absence."
+    },
+    {
+      "id": "n_episode2_badendingsms_16",
+      "next": "n_episode2_badendingsms_17",
+      "speakerId": "char_liam",
+      "text": "Comme toi par exemple. Je trouve ça osé de m’envoyer un message alors que ce qui m’arrive te fais bien rire."
+    },
+    {
+      "id": "n_episode2_badendingsms_17",
+      "next": "n_episode2_badendingsms_18",
+      "speakerId": "char_liam",
+      "text": "On m’a conseillé de porter plainte auprès de la police. Je vais au commissariat avec mes parents demain matin."
+    },
+    {
+      "id": "n_episode2_badendingsms_18",
+      "next": "n_episode2_badendingsms_19",
+      "speakerId": "char_liam",
+      "text": "Je sais pas encore a quel point ils vont te déclarer coupable dans tout ça."
+    },
+    {
+      "id": "n_episode2_badendingsms_19",
+      "isEnd": true,
+      "speakerId": "char_liam",
+      "text": "Mais comme tu n’as pas aidé à ce que les choses se calment, saches que je vais parler de toi. Je préfère te prévenir."
+    }
+  ],
+  "replayable": false,
+  "title": "BadEndingSms"
+}

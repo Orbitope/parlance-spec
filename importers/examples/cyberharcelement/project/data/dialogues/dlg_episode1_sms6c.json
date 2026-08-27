@@ -1,0 +1,68 @@
+{
+  "entry": "n_episode1_sms6c",
+  "id": "dlg_episode1_sms6c",
+  "nodes": [
+    {
+      "id": "n_episode1_sms6c",
+      "next": "n_episode1_sms6c_2",
+      "speakerId": "char_hakim",
+      "text": "Salut, je prends enfin le temps de t'écrire."
+    },
+    {
+      "id": "n_episode1_sms6c_2",
+      "next": "n_episode1_sms6c_3",
+      "speakerId": "char_hakim",
+      "text": "Tout d’abord, même si tu as eu quelques mots sympas pour moi, tu n'as pas été clean sur toute la ligne..."
+    },
+    {
+      "id": "n_episode1_sms6c_3",
+      "next": "n_episode1_sms6c_4",
+      "speakerId": "char_hakim",
+      "text": "Je m’en rendais pas trop compte sur le moment mais certains de tes actes ne m’ont pas vraiment aidé à aller mieux."
+    },
+    {
+      "id": "n_episode1_sms6c_4",
+      "next": "n_episode1_sms6c_5",
+      "speakerId": "char_hakim",
+      "text": "J'ai heureusement fini par ouvrir les yeux et j'ai pu mettre des mots sur ce que je vivais. Ça m’a beaucoup aidé à avancer mais aussi à redevenir sociable."
+    },
+    {
+      "id": "n_episode1_sms6c_5",
+      "next": "n_episode1_sms6c_6",
+      "speakerId": "char_hakim",
+      "text": "J’avais commencé à m’enfermer dans une bulle où j’avais peur de tous les autres, je n’avais plus confiance en rien ni personne. Grâce à la plainte, aux preuves et aux témoignages, les moqueries ont beaucoup diminué."
+    },
+    {
+      "id": "n_episode1_sms6c_6",
+      "next": "n_episode1_sms6c_7",
+      "speakerId": "char_hakim",
+      "text": "Je ne suis plus identifié dans des commentaires ou publications gênants. La vidéo continue de tourner sur quelques comptes. Mais globalement ça s’est bien calmé."
+    },
+    {
+      "id": "n_episode1_sms6c_7",
+      "next": "n_episode1_sms6c_8",
+      "speakerId": "char_you",
+      "text": "Je ne pensais pas mal agir… Tu te fais aider au moins ?"
+    },
+    {
+      "id": "n_episode1_sms6c_8",
+      "next": "n_episode1_sms6c_9",
+      "speakerId": "char_hakim",
+      "text": "Je vois un psy depuis quelques temps. Ça va m’aider à passer au-dessus de tout ça, à digérer toute cette affaire."
+    },
+    {
+      "id": "n_episode1_sms6c_9",
+      "next": "n_episode1_sms6c_10",
+      "speakerId": "char_you",
+      "text": "Bien ! Et comment ça se passe dans ton nouveau collège ?"
+    },
+    {
+      "id": "n_episode1_sms6c_10",
+      "isEnd": true,
+      "speakerId": "char_hakim",
+      "text": "Plutôt mieux que dans l’ancien. Mais j’ai encore du mal avec les relations. D’ailleurs, je pense qu'il est préférable de tourner la page te concernant. Je ne t'en veux pas spécialement, mais je pense que c'est mieux ainsi."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms6c"
+}

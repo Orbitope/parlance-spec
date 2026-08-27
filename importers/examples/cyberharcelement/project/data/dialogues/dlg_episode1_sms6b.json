@@ -1,0 +1,50 @@
+{
+  "entry": "n_episode1_sms6b",
+  "id": "dlg_episode1_sms6b",
+  "nodes": [
+    {
+      "id": "n_episode1_sms6b",
+      "next": "n_episode1_sms6b_2",
+      "speakerId": "char_hakim",
+      "text": "Bonsoir,"
+    },
+    {
+      "id": "n_episode1_sms6b_2",
+      "next": "n_episode1_sms6b_3",
+      "speakerId": "char_hakim",
+      "text": "Je suis la maman de Hakim. Je me permets de t'écrire car il nous a parlé quelques fois de toi et de vos parties de jeux vidéo. Ayant trouvé ton numéro dans son téléphone, je suppose que vous devez être amis ?"
+    },
+    {
+      "id": "n_episode1_sms6b_3",
+      "next": "n_episode1_sms6b_4",
+      "speakerId": "char_hakim",
+      "text": "Je souhaite donc donner des nouvelles de Hakim : Comme tu le sais sans doute, il a fait l'objet de harcèlement et de moqueries. Comme il ne nous en parlait pas, nous ne nous sommes pas immédiatement inquiétés. Nous aurions dû..."
+    },
+    {
+      "id": "n_episode1_sms6b_4",
+      "next": "n_episode1_sms6b_5",
+      "speakerId": "char_hakim",
+      "text": "Quand son père et moi avons compris à quel point c'était grave, c'était un peu tard. Même si la plainte a été déposée et qu'elle a eu son effet, Hakim n'était toujours pas bien."
+    },
+    {
+      "id": "n_episode1_sms6b_5",
+      "next": "n_episode1_sms6b_6",
+      "speakerId": "char_hakim",
+      "text": "Pour être concise et respecter la vie privée de Hakim, je dirais simplement que son état s'est empiré, et qu'il a dû être hospitalisé quelques semaines."
+    },
+    {
+      "id": "n_episode1_sms6b_6",
+      "next": "n_episode1_sms6b_7",
+      "speakerId": "char_hakim",
+      "text": "Tu vois, je t'écris car Hakim n'a toujours pas la force de le faire, même à ses amis. Merci de m'avoir lue."
+    },
+    {
+      "id": "n_episode1_sms6b_7",
+      "isEnd": true,
+      "speakerId": "char_hakim",
+      "text": "Au revoir."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms6b"
+}

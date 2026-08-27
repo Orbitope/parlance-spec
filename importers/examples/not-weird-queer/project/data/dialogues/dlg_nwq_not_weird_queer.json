@@ -1,0 +1,2632 @@
+{
+  "entry": "n_nwq_not_weird_queer",
+  "id": "dlg_nwq_not_weird_queer",
+  "nodes": [
+    {
+      "id": "n_nwq_start",
+      "next": "n_nwq_start_2",
+      "text": "What are your pronouns?"
+    },
+    {
+      "id": "n_nwq_start_2",
+      "next": "n_nwq_start_3",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_start_3",
+      "next": "n_nwq_start_4",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_male",
+          "id": "c_nwq_he_him",
+          "text": "he/him"
+        },
+        {
+          "goto": "n_nwq_female",
+          "id": "c_nwq_she_her",
+          "text": "she/her"
+        },
+        {
+          "goto": "n_nwq_nonbinary",
+          "id": "c_nwq_they_them",
+          "showIf": {
+            "flag": "whategg",
+            "type": "flag",
+            "value": true
+          },
+          "text": "they/them"
+        },
+        {
+          "goto": "n_nwq_custom_pronouns",
+          "id": "c_nwq_custom",
+          "showIf": {
+            "flag": "whategg",
+            "type": "flag",
+            "value": true
+          },
+          "text": "custom"
+        }
+      ],
+      "id": "n_nwq_start_4",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_male",
+      "next": "n_nwq_male_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_male_2",
+      "next": "n_nwq_male_3",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "female",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "she",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "misref"
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "female",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "she",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "misref"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_male_3",
+      "next": "n_nwq_male_4",
+      "text": "What is your name?"
+    },
+    {
+      "id": "n_nwq_male_4",
+      "next": "n_nwq_male_5",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_male_5",
+      "next": "n_nwq_male_6",
+      "text": "["
+    },
+    {
+      "id": "n_nwq_male_6",
+      "next": "n_nwq_male_7",
+      "text": "]<name-prompt|"
+    },
+    {
+      "id": "n_nwq_male_7",
+      "isEnd": true,
+      "text": "$ally: \"I already picked that name, silly.\""
+    },
+    {
+      "id": "n_nwq_female",
+      "next": "n_nwq_female_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_female_2",
+      "next": "n_nwq_female_3",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "male",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "he",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "misref"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "male",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "he",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "misref"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_female_3",
+      "next": "n_nwq_female_4",
+      "text": "What is your name?"
+    },
+    {
+      "id": "n_nwq_female_4",
+      "next": "n_nwq_female_5",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_female_5",
+      "next": "n_nwq_female_6",
+      "text": "["
+    },
+    {
+      "id": "n_nwq_female_6",
+      "next": "n_nwq_female_7",
+      "text": "]<name-prompt|"
+    },
+    {
+      "id": "n_nwq_female_7",
+      "isEnd": true,
+      "text": "$ally: \"I already picked that name, silly.\""
+    },
+    {
+      "id": "n_nwq_morning_day_2",
+      "next": "n_nwq_morning_day_2_2",
+      "text": "Tomorrow morning rolls around."
+    },
+    {
+      "id": "n_nwq_morning_day_2_2",
+      "next": "n_nwq_morning_day_2_3",
+      "text": "$name wakes up with $self self-esteem points and a blank slate of happiness points."
+    },
+    {
+      "id": "n_nwq_morning_day_2_3",
+      "next": "n_nwq_morning_day_2_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_morning_day_2_4",
+      "next": "n_nwq_morning_day_2_5",
+      "text": "$dummy["
+    },
+    {
+      "id": "n_nwq_morning_day_2_5",
+      "next": "n_nwq_morning_day_2_6",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "$name had way overslept again. Hastily, $sbj threw on a"
+    },
+    {
+      "id": "n_nwq_morning_day_2_6",
+      "next": "n_nwq_morning_day_2_7",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "outfit and combed through $pos unruly hair. While rushing through the door, $pos mom chides $obj about oversleeping all the time."
+    },
+    {
+      "id": "n_nwq_morning_day_2_7",
+      "next": "n_nwq_morning_day_2_8",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name was awake before $pos alarm rang so $sbj had time to make $obj&#96;self&#96; breakfast without being late for the bus.  $name picked a vaguely"
+    },
+    {
+      "id": "n_nwq_morning_day_2_8",
+      "next": "n_nwq_morning_day_2_9",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "outfit and made a sandwich for lunch."
+    },
+    {
+      "id": "n_nwq_morning_day_2_9",
+      "next": "n_nwq_morning_day_2_10",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name hit snooze on $pos alarm clock twice before jumping out of bed. $name picked a gender-neutral outfit and made it out the door on time, but only because $sbj skipped breakfast."
+    },
+    {
+      "id": "n_nwq_morning_day_2_10",
+      "next": "n_nwq_morning_day_2_11",
+      "text": "]"
+    },
+    {
+      "id": "n_nwq_morning_day_2_11",
+      "next": "n_nwq_morning_day_2_12",
+      "text": "}"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_catch_the_bus_part_1",
+          "id": "c_nwq_go_catch_the_bus",
+          "text": "Go catch the bus"
+        }
+      ],
+      "id": "n_nwq_morning_day_2_12",
+      "text": "$dummy[Of course, $pos mom called $obj $deadname again. Even though it's annoying, $name isn't really sure that there's anything $sbj can do about it. ]"
+    },
+    {
+      "id": "n_nwq_not_weird_queer",
+      "next": "n_nwq_not_weird_queer_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Welcome!",
+          "variable": "name"
+        },
+        {
+          "type": "set_text",
+          "value": "Welcome!",
+          "variable": "name"
+        }
+      ],
+      "text": "''Not Weird. Queer''"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_start",
+          "id": "c_nwq_start",
+          "text": "Start"
+        }
+      ],
+      "id": "n_nwq_not_weird_queer_2",
+      "text": "^^(a working title)^^"
+    },
+    {
+      "id": "n_nwq_debug",
+      "next": "n_nwq_debug_2",
+      "text": "''Welcome"
+    },
+    {
+      "id": "n_nwq_debug_2",
+      "next": "n_nwq_debug_3",
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": true
+      },
+      "text": "back"
+    },
+    {
+      "id": "n_nwq_debug_3",
+      "next": "n_nwq_debug_4",
+      "text": "to the debug page!''"
+    },
+    {
+      "id": "n_nwq_debug_4",
+      "next": "n_nwq_debug_5",
+      "text": "^^Good on ya for exploring everything... hehe^^"
+    },
+    {
+      "id": "n_nwq_debug_5",
+      "next": "n_nwq_debug_6",
+      "text": "Character info:"
+    },
+    {
+      "id": "n_nwq_debug_6",
+      "next": "n_nwq_debug_7",
+      "text": "* name: $name"
+    },
+    {
+      "id": "n_nwq_debug_7",
+      "next": "n_nwq_debug_8",
+      "text": "* gender: $gender"
+    },
+    {
+      "id": "n_nwq_debug_8",
+      "next": "n_nwq_debug_9",
+      "text": "* pronouns: $sbj/$obj/$pos/$robj"
+    },
+    {
+      "id": "n_nwq_debug_9",
+      "next": "n_nwq_debug_10",
+      "text": "Character stats:"
+    },
+    {
+      "id": "n_nwq_debug_10",
+      "next": "n_nwq_debug_11",
+      "text": "* happiness score: $happy"
+    },
+    {
+      "id": "n_nwq_debug_11",
+      "next": "n_nwq_debug_12",
+      "text": "* self-esteem score: $self"
+    },
+    {
+      "id": "n_nwq_debug_12",
+      "next": "n_nwq_debug_13",
+      "text": "* previous day's happiness: $lasthappy"
+    },
+    {
+      "id": "n_nwq_debug_13",
+      "next": "n_nwq_debug_14",
+      "text": "* action points: $action"
+    },
+    {
+      "id": "n_nwq_debug_14",
+      "next": "n_nwq_debug_15",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_debug_15",
+      "next": "n_nwq_debug_16",
+      "text": "Events:"
+    },
+    {
+      "id": "n_nwq_debug_16",
+      "next": "n_nwq_debug_17",
+      "text": "* absolute day: $loop (part $part)"
+    },
+    {
+      "id": "n_nwq_debug_17",
+      "next": "n_nwq_debug_18",
+      "text": "* deaths:"
+    },
+    {
+      "id": "n_nwq_debug_18",
+      "next": "n_nwq_debug_19",
+      "text": "* met $ally:"
+    },
+    {
+      "id": "n_nwq_debug_19",
+      "next": "n_nwq_debug_20",
+      "text": "** rode on the bus with $ally today:"
+    },
+    {
+      "id": "n_nwq_debug_20",
+      "next": "n_nwq_debug_21",
+      "text": "** invited $ally to the book club:"
+    },
+    {
+      "id": "n_nwq_debug_21",
+      "next": "n_nwq_debug_22",
+      "text": "** made friends with $ally:"
+    },
+    {
+      "id": "n_nwq_debug_22",
+      "next": "n_nwq_debug_23",
+      "text": "* today's outfit: $outfit"
+    },
+    {
+      "id": "n_nwq_debug_23",
+      "next": "n_nwq_debug_24",
+      "text": "* shared with book club:"
+    },
+    {
+      "id": "n_nwq_debug_24",
+      "next": "n_nwq_debug_25",
+      "showIf": {
+        "flag": "complete",
+        "type": "flag",
+        "value": true
+      },
+      "text": "* completed the happy ending"
+    },
+    {
+      "id": "n_nwq_debug_25",
+      "next": "n_nwq_debug_26",
+      "onEnter": [
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "sidebar",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "sidebar",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "Hard restart"
+    },
+    {
+      "id": "n_nwq_debug_26",
+      "next": "n_nwq_debug_27",
+      "text": "&#96;(&#96;caution: resets your game and returns you to the start page)"
+    },
+    {
+      "id": "n_nwq_debug_27",
+      "isEnd": true,
+      "text": "<!-- grab last page in history -->"
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1",
+      "next": "n_nwq_catch_the_bus_part_1_2",
+      "text": "$name walks to the bus stop and gets on the next bus. There are three open seats left."
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_2",
+      "next": "n_nwq_catch_the_bus_part_1_3",
+      "showIf": {
+        "of": [
+          {
+            "counter": "ryan",
+            "op": "==",
+            "type": "counter",
+            "value": 0
+          },
+          {
+            "counter": "day",
+            "op": ">",
+            "type": "counter",
+            "value": 2
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name sits at an empty seat and"
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_3",
+      "next": "n_nwq_catch_the_bus_part_1_4",
+      "showIf": {
+        "of": [
+          {
+            "counter": "ryan",
+            "op": "==",
+            "type": "counter",
+            "value": 0
+          },
+          {
+            "counter": "day",
+            "op": ">",
+            "type": "counter",
+            "value": 2
+          }
+        ],
+        "type": "all"
+      },
+      "text": "."
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_4",
+      "next": "n_nwq_catch_the_bus_part_1_5",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_5",
+      "next": "n_nwq_catch_the_bus_part_1_6",
+      "showIf": {
+        "of": {
+          "of": [
+            {
+              "counter": "ryan",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            {
+              "counter": "day",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            }
+          ],
+          "type": "all"
+        },
+        "type": "not"
+      },
+      "text": "<ul><li>$sbj sits"
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_6",
+      "next": "n_nwq_catch_the_bus_part_1_7",
+      "showIf": {
+        "of": {
+          "of": [
+            {
+              "counter": "ryan",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            {
+              "counter": "day",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            }
+          ],
+          "type": "all"
+        },
+        "type": "not"
+      },
+      "text": "</li><li>$sbj sits"
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_7",
+      "next": "n_nwq_catch_the_bus_part_1_8",
+      "showIf": {
+        "of": {
+          "of": [
+            {
+              "counter": "ryan",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            {
+              "counter": "day",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            }
+          ],
+          "type": "all"
+        },
+        "type": "not"
+      },
+      "text": "</li><li>$sbj sits"
+    },
+    {
+      "id": "n_nwq_catch_the_bus_part_1_8",
+      "next": "n_nwq_catch_the_bus_part_1_9",
+      "showIf": {
+        "of": {
+          "of": [
+            {
+              "counter": "ryan",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            {
+              "counter": "day",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            }
+          ],
+          "type": "all"
+        },
+        "type": "not"
+      },
+      "text": "</li></ul>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_on_the_bus_with_ryan",
+          "id": "c_nwq_pos_classmate_ally_sits",
+          "showIf": {
+            "of": [
+              {
+                "counter": "ryan",
+                "op": "==",
+                "type": "counter",
+                "value": 0
+              },
+              {
+                "counter": "day",
+                "op": ">",
+                "type": "counter",
+                "value": 2
+              }
+            ],
+            "type": "all"
+          },
+          "text": "$pos classmate $ally sits next to $obj"
+        },
+        {
+          "goto": "n_nwq_on_the_bus_with_a_stranger",
+          "id": "c_nwq_next_to_a_stranger",
+          "showIf": {
+            "of": {
+              "of": [
+                {
+                  "counter": "ryan",
+                  "op": "==",
+                  "type": "counter",
+                  "value": 0
+                },
+                {
+                  "counter": "day",
+                  "op": ">",
+                  "type": "counter",
+                  "value": 2
+                }
+              ],
+              "type": "all"
+            },
+            "type": "not"
+          },
+          "text": "next to a stranger"
+        },
+        {
+          "goto": "n_nwq_on_the_bus_alone",
+          "id": "c_nwq_alone",
+          "showIf": {
+            "of": {
+              "of": [
+                {
+                  "counter": "ryan",
+                  "op": "==",
+                  "type": "counter",
+                  "value": 0
+                },
+                {
+                  "counter": "day",
+                  "op": ">",
+                  "type": "counter",
+                  "value": 2
+                }
+              ],
+              "type": "all"
+            },
+            "type": "not"
+          },
+          "text": "alone"
+        }
+      ],
+      "id": "n_nwq_catch_the_bus_part_1_9",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan",
+      "next": "n_nwq_on_the_bus_with_ryan_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_2",
+      "next": "n_nwq_on_the_bus_with_ryan_3",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "$name sits with $pos"
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_3",
+      "next": "n_nwq_on_the_bus_with_ryan_4",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 0
+      },
+      "text": ", $ally."
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_4",
+      "next": "n_nwq_on_the_bus_with_ryan_5",
+      "showIf": {
+        "of": [
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          },
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 2
+          }
+        ],
+        "type": "all"
+      },
+      "text": "."
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_5",
+      "next": "n_nwq_on_the_bus_with_ryan_6",
+      "showIf": {
+        "of": [
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          },
+          {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "They make small talk on the way to school."
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_6",
+      "next": "n_nwq_on_the_bus_with_ryan_7",
+      "showIf": {
+        "of": {
+          "counter": "ryan",
+          "op": ">",
+          "type": "counter",
+          "value": 0
+        },
+        "type": "not"
+      },
+      "text": "$name's classmate $ally sits next to $obj. $name makes some kind of conversation with $ally. Since $ally thinks $name's name is \"$deadname,\" $sbj thinks $name's is a $misnoun and $name doesn't bother to correct $obj. $ally seems like a cool person otherwise."
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_7",
+      "next": "n_nwq_on_the_bus_with_ryan_8",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_ryan_8",
+      "next": "n_nwq_on_the_bus_with_ryan_9",
+      "text": "It's nice to"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_arrive_at_school_part_1",
+          "id": "c_nwq_arrive_at_school",
+          "text": "Arrive at school"
+        }
+      ],
+      "id": "n_nwq_on_the_bus_with_ryan_9",
+      "text": "on the bus."
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_a_stranger",
+      "next": "n_nwq_on_the_bus_with_a_stranger_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_on_the_bus_with_a_stranger_2",
+      "next": "n_nwq_on_the_bus_with_a_stranger_3",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "$name decides not to bother $ally with $pos problems today."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_arrive_at_school_part_1",
+          "id": "c_nwq_arrive_at_school_2",
+          "text": "Arrive at school"
+        }
+      ],
+      "id": "n_nwq_on_the_bus_with_a_stranger_3",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_on_the_bus_alone",
+      "next": "n_nwq_on_the_bus_alone_2",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "$name decided not to bother $ally with $pos problems today."
+    },
+    {
+      "id": "n_nwq_on_the_bus_alone_2",
+      "next": "n_nwq_on_the_bus_alone_3",
+      "text": "$name stares out the window as $sbj thinks about $pos"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_arrive_at_school_part_1",
+          "id": "c_nwq_arrive_at_school_3",
+          "text": "Arrive at school"
+        }
+      ],
+      "id": "n_nwq_on_the_bus_alone_3",
+      "text": "homework."
+    },
+    {
+      "id": "n_nwq_arrive_at_school_part_1",
+      "next": "n_nwq_arrive_at_school_part_1_2",
+      "text": "As $name walks up to $pos middle school"
+    },
+    {
+      "id": "n_nwq_arrive_at_school_part_1_2",
+      "next": "n_nwq_arrive_at_school_part_1_3",
+      "showIf": {
+        "flag": "bus",
+        "type": "flag",
+        "value": true
+      },
+      "text": "$ally"
+    },
+    {
+      "id": "n_nwq_arrive_at_school_part_1_3",
+      "isEnd": true,
+      "text": ", $sbj"
+    },
+    {
+      "id": "n_nwq_restart",
+      "next": "n_nwq_restart_2",
+      "onEnter": [
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": false
+        }
+      ],
+      "text": "''Not Weird. Queer''"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_part_1_opening",
+          "id": "c_nwq_try_again",
+          "showIf": {
+            "counter": "deaths",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          },
+          "text": "Try again"
+        },
+        {
+          "goto": "n_nwq_start",
+          "id": "c_nwq_start_2",
+          "showIf": {
+            "of": [
+              {
+                "of": {
+                  "counter": "deaths",
+                  "op": ">",
+                  "type": "counter",
+                  "value": 0
+                },
+                "type": "not"
+              },
+              {
+                "flag": "complete",
+                "type": "flag",
+                "value": true
+              }
+            ],
+            "type": "all"
+          },
+          "text": "Start"
+        }
+      ],
+      "id": "n_nwq_restart_2",
+      "text": "^^(a working title)^^"
+    },
+    {
+      "id": "n_nwq_morning_day_3",
+      "next": "n_nwq_morning_day_3_2",
+      "text": "Tomorrow morning rolls around."
+    },
+    {
+      "id": "n_nwq_morning_day_3_2",
+      "next": "n_nwq_morning_day_3_3",
+      "text": "$name wakes up with $self self-esteem points and a blank slate of happiness points."
+    },
+    {
+      "id": "n_nwq_morning_day_3_3",
+      "next": "n_nwq_morning_day_3_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_morning_day_3_4",
+      "next": "n_nwq_morning_day_3_5",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "$name had way overslept again. Hastily, $sbj threw on a"
+    },
+    {
+      "id": "n_nwq_morning_day_3_5",
+      "next": "n_nwq_morning_day_3_6",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "outfit and combed through $pos unruly hair. While rushing through the door, $pos mom chides $obj about oversleeping all the time."
+    },
+    {
+      "id": "n_nwq_morning_day_3_6",
+      "next": "n_nwq_morning_day_3_7",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name was awake before $pos alarm rang so $sbj had time to make $obj&#96;self&#96; breakfast without being late for the bus.  $name picked a vaguely"
+    },
+    {
+      "id": "n_nwq_morning_day_3_7",
+      "next": "n_nwq_morning_day_3_8",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "outfit and made a sandwich for lunch."
+    },
+    {
+      "id": "n_nwq_morning_day_3_8",
+      "next": "n_nwq_morning_day_3_9",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name hit snooze on $pos alarm clock twice before jumping out of bed. $name picked a gender-neutral outfit and made it out the door on time, but only because $sbj skipped breakfast."
+    },
+    {
+      "id": "n_nwq_morning_day_3_9",
+      "next": "n_nwq_morning_day_3_10",
+      "text": "}"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_catch_the_bus_part_1",
+          "id": "c_nwq_go_catch_the_bus_2",
+          "text": "Go catch the bus"
+        }
+      ],
+      "id": "n_nwq_morning_day_3_10",
+      "text": "Of course, $pos mom called $obj $deadname again. Even though it's annoying, $name isn't really sure that there's anything $sbj can do about it."
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_2",
+      "text": "For the special player who played this special game:"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_2",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_3",
+      "text": "Thank you for making it through this game"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_3",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_4",
+      "showIf": {
+        "flag": "complete",
+        "type": "flag",
+        "value": true
+      },
+      "text": "again"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_4",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_5",
+      "text": ".  No, seriously.  I know it's very alpha (version"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_5",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_6",
+      "text": "), but it means a lot to me that you took the time to click through the options, read through all the dialogue,"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_6",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_7",
+      "showIf": {
+        "counter": "deaths",
+        "op": ">",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "persevered to get $name to a better place,"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_7",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_8",
+      "text": "and deal with all my nasty bugs and grammar problems."
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_8",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_9",
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": true
+      },
+      "text": "You've even stumbled upon the"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_9",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_10",
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": true
+      },
+      "text": "mode somehow. Good on ya ;)"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_10",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_11",
+      "text": "I hope you enjoyed playing $game as much as I enjoyed making it. $name also thanks you eternally for helping $obj get through $pos journey. You completed $pos adventure with $self self-esteem points over $day days. Hopefully, through this adventure, we've all learned a little more about ourselves and the people around us."
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_11",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_12",
+      "text": "With hope,"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_12",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_13",
+      "text": "Cmd Jake Max"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_13",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_14",
+      "text": "----"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_14",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_15",
+      "text": "Your feedback is important (this game is alpha-af). Consider filling out a <a href= \"https://forms.gle/mc2JKRCaoz9jvtki9\" target=\"_blank\" rel=\"noopener noreferrer\">brief survey</a>."
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_15",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_16",
+      "onEnter": [
+        {
+          "flag": "complete",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "complete",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_16",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_17",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "",
+          "variable": "history"
+        },
+        {
+          "type": "set_text",
+          "value": "",
+          "variable": "history"
+        }
+      ],
+      "text": "<script src=”jquery-3.3.1.min.js”></script>"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_17",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_18",
+      "text": "<script>"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_18",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_19",
+      "text": "var sendData = JSON.stringify({"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_19",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_20",
+      "text": "\"version\": harlowe.State.variables['version'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_20",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_21",
+      "text": "\"name\": harlowe.State.variables['name'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_21",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_22",
+      "text": "\"gender\": harlowe.State.variables['gender'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_22",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_23",
+      "text": "\"day\": harlowe.State.variables['day'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_23",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_24",
+      "text": "\"self\": harlowe.State.variables['self'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_24",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_25",
+      "text": "\"action\": harlowe.State.variables['action'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_25",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_26",
+      "text": "\"deaths\": harlowe.State.variables['deaths'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_26",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_27",
+      "text": "\"book\": harlowe.State.variables['book'],"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_27",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_28",
+      "text": "\"history\": harlowe.State.variables['history']"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_28",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_29",
+      "text": "});"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_29",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_30",
+      "text": "$.ajax({"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_30",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_31",
+      "text": "url:\"https://script.google.com/a/kaosys.org/macros/s/AKfycbwO27PFFGCetKOTVcKKO63AsMCAlpOhvDaHPl8Zxg/exec\","
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_31",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_32",
+      "text": "method:\"POST\","
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_32",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_33",
+      "text": "dataType: \"json\","
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_33",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_34",
+      "text": "data: sendData"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_34",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_35",
+      "text": "}).done(function() {});"
+    },
+    {
+      "id": "n_nwq_thank_you_for_playing_alpha_af_35",
+      "next": "n_nwq_thank_you_for_playing_alpha_af_36",
+      "text": "</script>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_debug",
+          "id": "c_nwq_alpha_af",
+          "text": "alpha-af!"
+        },
+        {
+          "goto": "n_nwq_debug",
+          "id": "c_nwq_debug",
+          "showIf": {
+            "flag": "whategg",
+            "type": "flag",
+            "value": true
+          },
+          "text": "debug"
+        },
+        {
+          "goto": "n_nwq_restart",
+          "id": "c_nwq_play_again",
+          "text": "Play again"
+        }
+      ],
+      "id": "n_nwq_thank_you_for_playing_alpha_af_36",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_ui_header",
+      "next": "n_nwq_ui_header_2",
+      "text": "^^"
+    },
+    {
+      "id": "n_nwq_ui_header_2",
+      "next": "n_nwq_ui_header_3",
+      "text": "|"
+    },
+    {
+      "id": "n_nwq_ui_header_3",
+      "next": "n_nwq_ui_header_4",
+      "text": "$name"
+    },
+    {
+      "id": "n_nwq_ui_header_4",
+      "next": "n_nwq_ui_header_5",
+      "text": "| Days: $day (Part $part day $loop)^^"
+    },
+    {
+      "id": "n_nwq_ui_header_5",
+      "next": "n_nwq_ui_header_6",
+      "text": "----"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_debug",
+          "id": "c_nwq_game",
+          "text": "$game"
+        }
+      ],
+      "id": "n_nwq_ui_header_6",
+      "text": "<!-- Made a nice, neat, formatted header page to make the header nicer, neater, and most importantly, uniform across all pages. -->"
+    },
+    {
+      "id": "n_nwq_morning_day_4",
+      "next": "n_nwq_morning_day_4_2",
+      "text": "Tomorrow morning rolls around."
+    },
+    {
+      "id": "n_nwq_morning_day_4_2",
+      "next": "n_nwq_morning_day_4_3",
+      "text": "$name wakes up with $self self-esteem points and a blank slate of happiness points."
+    },
+    {
+      "id": "n_nwq_morning_day_4_3",
+      "next": "n_nwq_morning_day_4_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_morning_day_4_4",
+      "next": "n_nwq_morning_day_4_5",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "$name had way overslept again. Hastily, $sbj threw on a"
+    },
+    {
+      "id": "n_nwq_morning_day_4_5",
+      "next": "n_nwq_morning_day_4_6",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "outfit and combed through $pos unruly hair. While rushing through the door, $pos mom chided $obj about oversleeping all the time."
+    },
+    {
+      "id": "n_nwq_morning_day_4_6",
+      "next": "n_nwq_morning_day_4_7",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name was awake before $pos alarm rang so $sbj had time to make $obj&#96;self&#96; breakfast without being late for the bus.  $name picked a vaguely"
+    },
+    {
+      "id": "n_nwq_morning_day_4_7",
+      "next": "n_nwq_morning_day_4_8",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "outfit and made a sandwich for lunch."
+    },
+    {
+      "id": "n_nwq_morning_day_4_8",
+      "next": "n_nwq_morning_day_4_9",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name hit snooze on $pos alarm clock twice before jumping out of bed. $name picked a gender-neutral outfit and made it out the door on time, but only because $sbj skipped breakfast."
+    },
+    {
+      "id": "n_nwq_morning_day_4_9",
+      "next": "n_nwq_morning_day_4_10",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_morning_day_4_10",
+      "next": "n_nwq_morning_day_4_11",
+      "text": "As $name is leaving, $pos mom calls out to $obj, \"Have a good day, $deadname!\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_catch_the_bus_part_1",
+          "id": "c_nwq_go_catch_the_bus_3",
+          "text": "Go catch the bus"
+        }
+      ],
+      "id": "n_nwq_morning_day_4_11",
+      "text": "\"Thanks,\" $name mumbles. $name really doesn't like the name \"$deadname.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_morning_day_1",
+          "id": "c_nwq_discovery",
+          "text": "Discovery"
+        }
+      ],
+      "id": "n_nwq_part_1_opening",
+      "onEnter": [
+        {
+          "counter": "day",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "day",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "Part 1:"
+    },
+    {
+      "id": "n_nwq_morning_day_5",
+      "next": "n_nwq_morning_day_5_2",
+      "text": "Tomorrow morning rolls around."
+    },
+    {
+      "id": "n_nwq_morning_day_5_2",
+      "next": "n_nwq_morning_day_5_3",
+      "text": "$name wakes up with $self self-esteem points and a blank slate of happiness points."
+    },
+    {
+      "id": "n_nwq_morning_day_5_3",
+      "next": "n_nwq_morning_day_5_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_morning_day_5_4",
+      "next": "n_nwq_morning_day_5_5",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "$name had way overslept again. Hastily, $sbj threw on a"
+    },
+    {
+      "id": "n_nwq_morning_day_5_5",
+      "next": "n_nwq_morning_day_5_6",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "outfit and combed through $pos unruly hair. While rushing through the door, $pos mom chided $obj about oversleeping all the time."
+    },
+    {
+      "id": "n_nwq_morning_day_5_6",
+      "next": "n_nwq_morning_day_5_7",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name was awake before $pos alarm rang so $sbj had time to make $obj&#96;self&#96; breakfast without being late for the bus.  $name picked a vaguely"
+    },
+    {
+      "id": "n_nwq_morning_day_5_7",
+      "next": "n_nwq_morning_day_5_8",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "outfit and made a sandwich for lunch."
+    },
+    {
+      "id": "n_nwq_morning_day_5_8",
+      "next": "n_nwq_morning_day_5_9",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$name hit snooze on $pos alarm clock twice before jumping out of bed. $name picked a gender-neutral outfit and made it out the door on time, but only because $sbj skipped breakfast."
+    },
+    {
+      "id": "n_nwq_morning_day_5_9",
+      "next": "n_nwq_morning_day_5_10",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_morning_day_5_10",
+      "next": "n_nwq_morning_day_5_11",
+      "text": "$name's mom: \"$deadname, honey, you have everything you need?\""
+    },
+    {
+      "id": "n_nwq_morning_day_5_11",
+      "next": "n_nwq_morning_day_5_12",
+      "text": "$name sighs. \"Yes, Mom. Love you.\""
+    },
+    {
+      "id": "n_nwq_morning_day_5_12",
+      "next": "n_nwq_morning_day_5_13",
+      "text": "$name's mom: \"Love you, too. Have a good day!\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_catch_the_bus_part_1",
+          "id": "c_nwq_go_catch_the_bus_4",
+          "text": "Go catch the bus"
+        }
+      ],
+      "id": "n_nwq_morning_day_5_13",
+      "text": "$name really wishes $pos mom didn't have to call $obj //that// name."
+    },
+    {
+      "id": "n_nwq_morning_day_1",
+      "next": "n_nwq_morning_day_1_2",
+      "text": "$name finally wakes up after $pos alarm rings for the fourth time. $name quickly throws on a vaguely"
+    },
+    {
+      "id": "n_nwq_morning_day_1_2",
+      "next": "n_nwq_morning_day_1_3",
+      "text": "outfit and rushes to the kitchen to grab some breakfast, inevitably running into $pos mom."
+    },
+    {
+      "id": "n_nwq_morning_day_1_3",
+      "next": "n_nwq_morning_day_1_4",
+      "text": "$name's mom: \"$deadname, if you don't hurry up, you're going to be late, again.\""
+    },
+    {
+      "id": "n_nwq_morning_day_1_4",
+      "next": "n_nwq_morning_day_1_5",
+      "text": "$name cringes at the mention of //that// name. \"Okay, Mom. I'm going. Love you.\""
+    },
+    {
+      "id": "n_nwq_morning_day_1_5",
+      "next": "n_nwq_morning_day_1_6",
+      "text": "$name's mom: \"Love you, too. Have a good day!\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_catch_the_bus_day_1",
+          "id": "c_nwq_go_catch_the_bus_9",
+          "text": "Go catch the bus"
+        }
+      ],
+      "id": "n_nwq_morning_day_1_6",
+      "text": "$name doesn't like being referred to as $deadname, but that's the name $sbj was given. With a heavy sigh, $name grabs $pos backpack and jumps out the door."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_on_the_bus_alone_day_1",
+          "id": "c_nwq_on_the_bus_alone",
+          "text": "On the bus alone day 1"
+        }
+      ],
+      "id": "n_nwq_catch_the_bus_day_1",
+      "text": "$name walks to the bus stop and gets on the next bus. There are three open seats left. $name is shy so $sbj sits alone."
+    },
+    {
+      "id": "n_nwq_on_the_bus_alone_day_1",
+      "next": "n_nwq_on_the_bus_alone_day_1_2",
+      "text": "$name sees $pos classmate $ally sitting a few rows away and wonders if $sbj would have liked company. Before $sbj gains the courage to sit with $ally, the bus doors close and it's too late for $name to get up and switch seats."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_arrive_at_school_day_1",
+          "id": "c_nwq_arrive_at_school_4",
+          "text": "Arrive at school"
+        }
+      ],
+      "id": "n_nwq_on_the_bus_alone_day_1_2",
+      "text": "//It's fine. I// chose //to be lonely today, that's all.// But $sbj almost wishes that $sbj hadn't."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_history_class_day_1",
+          "id": "c_nwq_go_to_history_class",
+          "text": "Go to history class"
+        }
+      ],
+      "id": "n_nwq_arrive_at_school_day_1",
+      "text": "$name arrives at school, wearing $pos jacket around $pos waist. The morning is surprisingly warm compared to last week. Spring must be on its way."
+    },
+    {
+      "id": "n_nwq_history_class_day_1",
+      "next": "n_nwq_history_class_day_1_2",
+      "text": "$dummy[$name goes to history class and doodles in $pos notebook.]"
+    },
+    {
+      "id": "n_nwq_history_class_day_1_2",
+      "next": "n_nwq_history_class_day_1_3",
+      "text": "While the class is working on some classwork, one of $name's classmates comes up and picks on"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_get_bullied",
+          "id": "c_nwq_the_way_sbj_acts",
+          "text": "the way $sbj acts"
+        }
+      ],
+      "id": "n_nwq_history_class_day_1_3",
+      "text": "."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_avoid_attention",
+          "id": "c_nwq_avoid_attention",
+          "text": "Avoid attention"
+        }
+      ],
+      "id": "n_nwq_lunch_day_1",
+      "text": "$name eats $pos sandwich alone at lunch, watching the other kids laugh and talk. Any moment, one of them could refocus their attention at laughing at $obj. Lunch is a stressful ordeal."
+    },
+    {
+      "id": "n_nwq_art_class_day_1",
+      "next": "n_nwq_art_class_day_1_2",
+      "text": "Today, in art class, $name's class is finishing up their self-portraits. Since $sbj had already finished $robj last class, $sbj is writing in $pos notebook. A few other kids are also finished."
+    },
+    {
+      "id": "n_nwq_art_class_day_1_2",
+      "next": "n_nwq_art_class_day_1_3",
+      "text": "$name isn't sure if $sbj wants to"
+    },
+    {
+      "id": "n_nwq_art_class_day_1_3",
+      "next": "n_nwq_art_class_day_1_4",
+      "text": "to one of them or"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_talk_to_art_classmate",
+          "id": "c_nwq_talk",
+          "text": "talk"
+        },
+        {
+          "goto": "n_nwq_not_talk_to_art_classmate",
+          "id": "c_nwq_not",
+          "text": "not"
+        }
+      ],
+      "id": "n_nwq_art_class_day_1_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_get_bullied",
+      "next": "n_nwq_get_bullied_2",
+      "text": "$dummy[$name gets bullied for how $sbj acts. $name's not very good at pretending to be a $misnoun.]"
+    },
+    {
+      "id": "n_nwq_get_bullied_2",
+      "next": "n_nwq_get_bullied_3",
+      "text": "Thankfully, it's soon"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_1",
+          "id": "c_nwq_lunch_time",
+          "text": "lunch time"
+        }
+      ],
+      "id": "n_nwq_get_bullied_3",
+      "text": "."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_write_in_notebook",
+          "id": "c_nwq_return_to_notebook",
+          "text": "Return to notebook"
+        }
+      ],
+      "id": "n_nwq_talk_to_art_classmate",
+      "text": "$name tries to talk to $pos classmate, Sophia. They make strained small-talk. $name wishes $sbj could express $obj&#96;self&#96; better."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_write_in_notebook",
+          "id": "c_nwq_return_to_notebook_2",
+          "text": "Return to notebook"
+        }
+      ],
+      "id": "n_nwq_not_talk_to_art_classmate",
+      "text": "$name feels shy and decides not to bother $pos classmates. $name wishes $sbj could express $obj&#96;self&#96; better."
+    },
+    {
+      "id": "n_nwq_avoid_attention",
+      "next": "n_nwq_avoid_attention_2",
+      "text": "Despite doing $pos best, some older classmates at the end of the lunch table notices $name sitting all by $obj&#96;self&#96;."
+    },
+    {
+      "id": "n_nwq_avoid_attention_2",
+      "next": "n_nwq_avoid_attention_3",
+      "text": "Classmate 1: \"Hey, look at that weirdo over there.\""
+    },
+    {
+      "id": "n_nwq_avoid_attention_3",
+      "next": "n_nwq_avoid_attention_4",
+      "text": "Classmate 2: \"What kinda $misnoun dresses like that?\""
+    },
+    {
+      "id": "n_nwq_avoid_attention_4",
+      "next": "n_nwq_avoid_attention_5",
+      "text": "Classmate 3: \"Gotta be"
+    },
+    {
+      "id": "n_nwq_avoid_attention_5",
+      "next": "n_nwq_avoid_attention_6",
+      "text": "or something."
+    },
+    {
+      "id": "n_nwq_avoid_attention_6",
+      "next": "n_nwq_avoid_attention_7",
+      "text": "Classmate 1: \"Haha, definitely.\""
+    },
+    {
+      "id": "n_nwq_avoid_attention_7",
+      "next": "n_nwq_avoid_attention_8",
+      "text": "Even though $name's not quite done with $pos sandwich, $sbj gets up and finishes $pos lunch on the field. At least the next class is one $name enjoys,"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_art_class_day_1",
+          "id": "c_nwq_art",
+          "text": "art"
+        }
+      ],
+      "id": "n_nwq_avoid_attention_8",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_write_in_notebook",
+      "next": "n_nwq_write_in_notebook_2",
+      "text": "$name loves to write short stories and poems. It's the only way $sbj can really express $obj&#96;self&#96;. $name likes writing so much, $sbj joined the middle school book club. Though $sbj doesn't know anyone in the book club, $name enjoys the oportunity to write and listen to the others stories."
+    },
+    {
+      "id": "n_nwq_write_in_notebook_2",
+      "next": "n_nwq_write_in_notebook_3",
+      "text": "Head to the"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_day_1",
+          "id": "c_nwq_afterschool_book_club",
+          "text": "afterschool book club"
+        }
+      ],
+      "id": "n_nwq_write_in_notebook_3",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_book_club_day_1",
+      "next": "n_nwq_book_club_day_1_2",
+      "text": "$name goes to the afterschool book club. As soon as $sbj sits down, $sbj starts writing."
+    },
+    {
+      "id": "n_nwq_book_club_day_1_2",
+      "next": "n_nwq_book_club_day_1_3",
+      "text": "Today, $sbj is writing a poem about the struggle of looking like a $misnoun when $sbj hates most"
+    },
+    {
+      "id": "n_nwq_book_club_day_1_3",
+      "next": "n_nwq_book_club_day_1_4",
+      "text": "things through the metaphor of film written in a language no one understands. It's a really personal piece, and $name is really proud of how it turned out."
+    },
+    {
+      "id": "n_nwq_book_club_day_1_4",
+      "next": "n_nwq_book_club_day_1_5",
+      "text": "Soon, it is time for everyone to"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_story_sharing_day_1",
+          "id": "c_nwq_share_their_pieces_of",
+          "text": "share their pieces of writing"
+        }
+      ],
+      "id": "n_nwq_book_club_day_1_5",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_story_sharing_day_1",
+      "next": "n_nwq_story_sharing_day_1_2",
+      "text": "Every day, the book club president asks if there are any volunteers. The same few kids who always share immediately volunteer."
+    },
+    {
+      "id": "n_nwq_story_sharing_day_1_2",
+      "next": "n_nwq_story_sharing_day_1_3",
+      "text": "$name listens as the other club members, mostly kids older than $obj, share their fun, wacky stories and freeform poetry. $name usually doesn't share, but $sbj wishes $sbj had the courage to. After every person who shares, all the club members polietly snap their fingers in encouragement. $name always snaps along, wondering if $sbj should go next, but $sbj rarely gains the courage to."
+    },
+    {
+      "id": "n_nwq_story_sharing_day_1_3",
+      "next": "n_nwq_story_sharing_day_1_4",
+      "text": "Soon, it's time to"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_go_home_day_1",
+          "id": "c_nwq_go_home_10",
+          "text": "go home"
+        }
+      ],
+      "id": "n_nwq_story_sharing_day_1_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_go_home_day_1",
+      "next": "n_nwq_go_home_day_1_2",
+      "text": "After book club, $name walks home by $obj&#96;self&#96;. During the colder months, sometimes $sbj'd have to skip $pos book club meetings in order to catch the bus home, especially when it rained, but since the weather's been nice, $name had decided it was worth going to book club."
+    },
+    {
+      "id": "n_nwq_go_home_day_1_2",
+      "next": "n_nwq_go_home_day_1_3",
+      "text": "The day was a rough one, but nothing $sbj hasn't seen before."
+    },
+    {
+      "id": "n_nwq_go_home_day_1_3",
+      "next": "n_nwq_go_home_day_1_4",
+      "text": "$name is ready to start a"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_morning_day_2",
+          "id": "c_nwq_new_day_2",
+          "text": "new day"
+        }
+      ],
+      "id": "n_nwq_go_home_day_1_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_nonbinary",
+      "next": "n_nwq_nonbinary_2",
+      "text": "$nonbinary"
+    },
+    {
+      "id": "n_nwq_nonbinary_2",
+      "next": "n_nwq_nonbinary_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_nonbinary_3",
+      "next": "n_nwq_nonbinary_4",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "kid",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "them",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "their",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "theirs",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "themself",
+          "variable": "ref"
+        },
+        {
+          "type": "set_text",
+          "value": "kid",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "them",
+          "variable": "obj"
+        },
+        {
+          "type": "set_text",
+          "value": "their",
+          "variable": "pos"
+        },
+        {
+          "type": "set_text",
+          "value": "theirs",
+          "variable": "robj"
+        },
+        {
+          "type": "set_text",
+          "value": "themself",
+          "variable": "ref"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_nonbinary_4",
+      "next": "n_nwq_nonbinary_5",
+      "text": "Pick a sex assigned at birth:"
+    },
+    {
+      "id": "n_nwq_nonbinary_5",
+      "next": "n_nwq_nonbinary_6",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_nonbinary_6",
+      "next": "n_nwq_nonbinary_7",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_nonbinary_femme",
+          "id": "c_nwq_male",
+          "text": "Male"
+        },
+        {
+          "goto": "n_nwq_nonbinary_masc",
+          "id": "c_nwq_female",
+          "text": "Female"
+        }
+      ],
+      "id": "n_nwq_nonbinary_7",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_nonbinary_femme",
+      "next": "n_nwq_nonbinary_femme_2",
+      "text": "{"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_welcome",
+          "id": "c_nwq_okay",
+          "text": "Okay"
+        }
+      ],
+      "id": "n_nwq_nonbinary_femme_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "male",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "he",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "misref"
+        },
+        {
+          "type": "set_text",
+          "value": "male",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "boy",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "he",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "him",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "his",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "himself",
+          "variable": "misref"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_nonbinary_masc",
+      "next": "n_nwq_nonbinary_masc_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_nonbinary_masc_2",
+      "next": "n_nwq_nonbinary_masc_3",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "female",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "she",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "misref"
+        },
+        {
+          "type": "set_text",
+          "value": "female",
+          "variable": "misgender"
+        },
+        {
+          "type": "set_text",
+          "value": "girl",
+          "variable": "misnoun"
+        },
+        {
+          "type": "set_text",
+          "value": "she",
+          "variable": "missbj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "misobj"
+        },
+        {
+          "type": "set_text",
+          "value": "her",
+          "variable": "mispos"
+        },
+        {
+          "type": "set_text",
+          "value": "hers",
+          "variable": "misrobj"
+        },
+        {
+          "type": "set_text",
+          "value": "herself",
+          "variable": "misref"
+        }
+      ],
+      "text": "["
+    },
+    {
+      "id": "n_nwq_nonbinary_masc_3",
+      "next": "n_nwq_nonbinary_masc_4",
+      "text": "]<name-prompt|"
+    },
+    {
+      "id": "n_nwq_nonbinary_masc_4",
+      "isEnd": true,
+      "text": "$ally: \"I already picked that name, silly.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_part_1_opening",
+          "id": "c_nwq_play",
+          "text": "Play!"
+        }
+      ],
+      "id": "n_nwq_welcome",
+      "text": "''Welcome, $name!''"
+    },
+    {
+      "id": "n_nwq_custom_pronouns",
+      "next": "n_nwq_custom_pronouns_2",
+      "text": "$nonbinary"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_2",
+      "next": "n_nwq_custom_pronouns_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_3",
+      "next": "n_nwq_custom_pronouns_4",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "kid",
+          "variable": "noun"
+        },
+        {
+          "type": "set_text",
+          "value": "kid",
+          "variable": "noun"
+        }
+      ],
+      "text": "}Customize your pronouns!"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_4",
+      "next": "n_nwq_custom_pronouns_5",
+      "text": "subject pronoun (//They// went to the store.):"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_5",
+      "next": "n_nwq_custom_pronouns_6",
+      "text": "object pronoun (I'l give it to //them//.):"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_6",
+      "next": "n_nwq_custom_pronouns_7",
+      "text": "possessive determiner pronoun (I like //their// style.):"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_7",
+      "next": "n_nwq_custom_pronouns_8",
+      "text": "possessive pronoun (Oh, that's //theirs//.):"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_8",
+      "next": "n_nwq_custom_pronouns_9",
+      "text": "reflexive pronoun (They made it for //themself//.):"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_9",
+      "next": "n_nwq_custom_pronouns_10",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_10",
+      "next": "n_nwq_custom_pronouns_11",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_11",
+      "next": "n_nwq_custom_pronouns_12",
+      "text": "Now pick a sex assigned at birth:"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_12",
+      "next": "n_nwq_custom_pronouns_13",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_custom_pronouns_13",
+      "next": "n_nwq_custom_pronouns_14",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_nonbinary_femme",
+          "id": "c_nwq_male_2",
+          "text": "Male"
+        },
+        {
+          "goto": "n_nwq_nonbinary_masc",
+          "id": "c_nwq_female_2",
+          "text": "Female"
+        }
+      ],
+      "id": "n_nwq_custom_pronouns_14",
+      "text": "*"
+    }
+  ],
+  "replayable": false,
+  "title": "Not Weird. Queer"
+}

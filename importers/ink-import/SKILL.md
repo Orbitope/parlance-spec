@@ -49,6 +49,12 @@ items in order with their weave level, speakers, gates, effects, diverts, and th
 gather each choice falls into. `manifest.json` is the contract the check verifies
 against — every line and option in the source, plus the declared rewrites.
 
+Two fields there are answers, not raw material. `variableKinds` is each variable's
+Parlance kind as DERIVED from its `VAR` declaration and the assignments the story
+makes — register the variables that way rather than deciding yourself. And a unit's
+`showIf` is its guard, already translated into a Parlance condition with the branch
+negations worked out; copy it onto the node or choice verbatim.
+
 Read `ir.unmapped` first. It lists Ink constructs with no Parlance equivalent, and
 it is the spine of your final report.
 
@@ -88,7 +94,8 @@ crosses into what is clearly a different scene entered by its own gate.
 | a gather `-` | not a node of its own: it is the `next` target the bodies above it converge on |
 | a gather with text (`- text`) | an ordinary node, and the convergence point |
 | `* {flag} text` | `choice.showIf` |
-| `{flag: line}` around a **line** | **no mapping** — see below |
+| `{flag: line}` around a **line** | one node + `node.showIf` |
+| `{ cond:` … `- else:` … `}` blocks | one node + `showIf` per line; the else branch gets the NEGATED condition |
 | `~ v = true` | `effects: [{type: set_flag, …}]` on the choice whose body holds it |
 | `~ v = v + 1`, `~ v++`, `~ v += 2` | `adjust_counter` — a numeric variable is a counter, not a flag |
 | `~ v = "…"` | `set_text`, with the variable registered `kind: "text"` |
@@ -136,34 +143,34 @@ that is a question for the author, not a naming opportunity.
 **Never fill an optional field.** `summary`, `description`, `dialogueStyle`,
 `archetype` and friends stay absent. The author writes them or they stay empty.
 
-#### The one that will tempt you
+#### Conditional narration, and the one that will tempt you
 
-Ink guards any line with `{condition: …}`, inline or as a multi-line block. This
-importer does not map those guards onto a Parlance node, so a conditional narration
-line has no mapping **it** can make.
+Ink guards any line with `{condition: …}`, inline or as a multi-line block, and
+`parse_ink.py` maps those onto `node.showIf` — **it has already done the work**. Read
+`unit.showIf` in the manifest and write it onto the node. Do not re-derive the
+condition from the source yourself, and in particular do not write the guard onto an
+`else` branch:
 
-Do **not** wrap it in a choice to make it fit. That fabricates a decision the player
-never made and puts a phantom entry in their history. `parse_ink.py` already marks
-these `unmappable`, `check.py` reports them as declared loss without blocking
-convergence, and your job is to carry them into the final report so the author can
-decide. Expect a downstream validator warning too — dropping the line often orphans
-the flag it read, which surfaces as `[FLAG] … set but never read`. That warning is a
-true signal, not noise.
+> An `else` branch carries the NEGATION of every branch above it. Ink writes the
+> alternative without restating the condition, so the tempting mapping gives both
+> branches the same guard — and then the player reads two lines where the author wrote
+> one. No line is missing and none is invented.
 
-**Status note.** Parlance 0.11.0 added `DialogueNode.showIf`, so the target for this
-now exists — what is missing is the mapping, not the field. It is deliberately still
-declared loss: an `else` branch written without restating its condition must map to the
-NEGATED guard, and getting that wrong shows both branches together whenever the guard
-holds. Nothing is lost and nothing is invented, so no content check can catch it.
-`IMPORTERS.md` carries the checklist.
+`check.py` compares the conditions in the output against the manifest and reports
+`condition_mismatch` when they disagree, in either direction. It is the only defect
+class the string comparison cannot see, which is why it is checked rather than trusted.
 
-Node-level `showIf` shipped in 0.11.0; when this importer takes it up, guarded
-narration becomes a real mapping rather than declared loss, and the `unmappable`
-reason above is wrong. `IMPORTERS.md` carries the checklist for that change,
-including the trap in it: an `else` branch must be mapped to the NEGATED condition,
-because both formats write the alternative without restating it and giving both
-branches the same guard duplicates the narration — a defect no content check can see,
-since nothing is lost and nothing is invented.
+A guarded node needs `next`, and may carry neither `choices` nor `isEnd`
+(validator rule `COND`) — a conditional node is interstitial narration.
+
+What is still declared loss is narrower, and the parser says which each time: a guard
+on a variable whose kind the source never reveals, a read count, a `LIST`, a
+comparison between two variables, and a line whose guard would have to sit on the node
+hosting a choice list. For those, do **not** wrap the line in a choice to make it fit —
+that fabricates a decision the player never made and puts a phantom entry in their
+history. Carry them into the report so the author can decide. Expect a downstream
+validator warning too: dropping the line often orphans the flag it read, which
+surfaces as `[FLAG] … set but never read`. That warning is a true signal, not noise.
 
 ### What does NOT map
 
@@ -172,7 +179,10 @@ carry it into the report with its source line.
 
 | Ink | Why Parlance cannot carry it |
 |---|---|
-| conditional narration `{v: line}`, `{ v:` … `}` | `DialogueNode.showIf` exists as of 0.11.0, but this importer does not map guards onto it yet — see the note above |
+| a guard on a variable the source never assigns | its Parlance kind (flag / counter / text) cannot be derived, and reading an untyped name as a flag would change when the line shows |
+| a guard comparing two variables, or containing arithmetic | a condition compares one registered variable against a literal |
+| a guard on a text variable | there is no text-valued condition in the vocabulary |
+| conditional narration immediately before a choice list | the line would have to host those choices, and a node may not carry `showIf` and `choices` together (`COND`) |
 | variable text `{a\|b\|c}`, cycles `{&…}`, shuffles `{~…}`, once `{!…}` | a node holds one authored string, chosen by the author, not by visit count |
 | read counts as conditions `{knot > 1}` | there is no visit counter in the condition vocabulary, and importing the choice ungated would change when the player may take it |
 | tunnels `-> knot ->` and returns `->->` | `goto` does not return. Faithful **only** where the tunnel has a single call site and can be inlined; with two call sites the return target is genuinely ambiguous and the author has to choose |
@@ -270,7 +280,9 @@ that looks like a success, which is why `check.py` refuses to let it happen.
 `../fixtures/ferry_landing.ink` and `../fixtures/ferry_landing_imported/` are a small
 story and the project a faithful import of it produces. The story deliberately
 contains a tunnel, a thread, a `LIST`, an `EXTERNAL`, a `CONST`, glue, a line tag,
-variable text, a read-count gate and both forms of conditional narration, so the
+variable text, a read-count gate and both forms of conditional narration — the inline
+`{cond: text}` and a `{ cond: … - else: … }` block whose two branches must map to a
+guard and its negation — so the
 declared-loss path is exercised rather than assumed.
 
 ```bash
@@ -278,7 +290,7 @@ python3 lib/parse_ink.py ../fixtures/ferry_landing.ink --emit manifest > /tmp/m.
 python3 lib/check.py --root ../fixtures/ferry_landing_imported --manifest /tmp/m.json --reset
 ```
 
-That prints `STOP converged` with seven entries under `missing_declared` and none
+That prints `STOP converged` with four entries under `missing_declared` and none
 under `missing_unexplained`. Delete a line from a copy of the project and it returns
 `CONTINUE` naming the string; reword one and it returns `STOP invented` naming the
 string and the node it landed in.

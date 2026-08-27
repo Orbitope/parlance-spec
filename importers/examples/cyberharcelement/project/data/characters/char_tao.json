@@ -1,0 +1,12 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode1_chat1"
+    },
+    {
+      "dialogue": "dlg_episode2_chat1"
+    }
+  ],
+  "id": "char_tao",
+  "name": "Tao"
+}

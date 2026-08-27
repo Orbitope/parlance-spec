@@ -1,0 +1,70 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "Yarn $ askedLiam",
+      "id": "askedliam",
+      "kind": "flag"
+    },
+    {
+      "default": "",
+      "description": "Yarn $ bg",
+      "id": "bg",
+      "kind": "text"
+    },
+    {
+      "default": false,
+      "description": "Yarn $ didShareBad",
+      "id": "didsharebad",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Yarn $ didShareGood",
+      "id": "didsharegood",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Yarn $ didShowBackpackVideo",
+      "id": "didshowbackpackvideo",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Yarn $ didWriteHakim",
+      "id": "didwritehakim",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Yarn $ knowAboutGradeExcuse",
+      "id": "knowaboutgradeexcuse",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Yarn $ listenedConversations",
+      "id": "listenedconversations",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Yarn $ score",
+      "id": "score",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Yarn $ talkedToBryanAboutLiam",
+      "id": "talkedtobryanaboutliam",
+      "kind": "flag"
+    },
+    {
+      "default": "",
+      "description": "Yarn $ time",
+      "id": "time",
+      "kind": "text"
+    }
+  ]
+}

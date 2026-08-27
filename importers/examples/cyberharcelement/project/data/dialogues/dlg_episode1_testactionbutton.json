@@ -1,0 +1,30 @@
+{
+  "entry": "n_episode1_testactionbutton",
+  "id": "dlg_episode1_testactionbutton",
+  "nodes": [
+    {
+      "id": "n_episode1_testactionbutton",
+      "next": "n_episode1_testactionbutton_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_testactionbutton2",
+          "id": "c_episode1_here_we_are",
+          "text": "Here we are"
+        }
+      ],
+      "id": "n_episode1_testactionbutton_2",
+      "speakerId": "char_narrator",
+      "text": "Watch out, here comes an action button"
+    },
+    {
+      "id": "n_episode1_testactionbutton2",
+      "isEnd": true,
+      "text": "You did it!"
+    }
+  ],
+  "replayable": false,
+  "title": "TestActionButton"
+}

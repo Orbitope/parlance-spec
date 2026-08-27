@@ -1,0 +1,35 @@
+{
+  "entry": "n_nwq_hist",
+  "id": "dlg_nwq_hist",
+  "nodes": [
+    {
+      "id": "n_nwq_hist",
+      "next": "n_nwq_hist_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_hist_2",
+      "next": "n_nwq_hist_3",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "",
+          "variable": "allnames"
+        },
+        {
+          "type": "set_text",
+          "value": "",
+          "variable": "allnames"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_hist_3",
+      "isEnd": true,
+      "text": "You've visited: $allNames"
+    }
+  ],
+  "replayable": false,
+  "title": "Hist"
+}

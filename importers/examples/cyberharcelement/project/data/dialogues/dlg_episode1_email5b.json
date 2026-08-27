@@ -1,0 +1,33 @@
+{
+  "entry": "n_episode1_email5b",
+  "id": "dlg_episode1_email5b",
+  "nodes": [
+    {
+      "id": "n_episode1_email5b",
+      "next": "n_episode1_email5b_2",
+      "text": "Bonjour Monsieur Douraud,"
+    },
+    {
+      "id": "n_episode1_email5b_2",
+      "next": "n_episode1_email5b_3",
+      "text": "Je souhaite vous rencontrer pour prendre conseil au sujet de ce qui se passe avec Hakim."
+    },
+    {
+      "id": "n_episode1_email5b_3",
+      "next": "n_episode1_email5b_4",
+      "text": "Il me semble détenir quelques preuves qui pourraient être utiles mais je ne sais pas si elles sont utilisables, je ne veux pas faire d’erreur. De plus, ceux qui harcèlent Hakim commencent à me menacer aussi."
+    },
+    {
+      "id": "n_episode1_email5b_4",
+      "next": "n_episode1_email5b_5",
+      "text": "Je précise que Sophie et sa cousine ayant un témoignage à fournir m'accompagneront. En effet, elle était dans le même centre que Hakim durant les vacances."
+    },
+    {
+      "id": "n_episode1_email5b_5",
+      "isEnd": true,
+      "text": "Bonne journée."
+    }
+  ],
+  "replayable": false,
+  "title": "Email5b"
+}

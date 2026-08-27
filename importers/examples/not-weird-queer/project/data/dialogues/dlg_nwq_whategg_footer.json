@@ -1,0 +1,18 @@
+{
+  "entry": "n_nwq_whategg_footer",
+  "id": "dlg_nwq_whategg_footer",
+  "nodes": [
+    {
+      "id": "n_nwq_whategg_footer",
+      "next": "n_nwq_whategg_footer_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_whategg_footer_2",
+      "isEnd": true,
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "whategg footer"
+}

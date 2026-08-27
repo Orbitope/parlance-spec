@@ -1,0 +1,13 @@
+{
+  "entry": "n_episode2_sms2",
+  "id": "dlg_episode2_sms2",
+  "nodes": [
+    {
+      "id": "n_episode2_sms2",
+      "isEnd": true,
+      "text": "[character name=\"Maman de Liam\"][/character]Je suis arrivée. Je vous attends sur le parking."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms2"
+}

@@ -33,5 +33,10 @@ Keeper: You asked about the ford. Most people ask about the fire.
 
 title: End
 ---
+<<if $took_bread>>
+The bread is gone before the fire is.
+<<else>>
+The bread sits where he left it.
+<<endif>>
 The fire settles. Outside, the ford keeps going in the dark.
 ===

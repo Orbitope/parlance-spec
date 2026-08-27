@@ -1,0 +1,434 @@
+{
+  "entry": "n_nwq_afternoon_day_6",
+  "id": "dlg_nwq_afternoon_day_6",
+  "nodes": [
+    {
+      "id": "n_nwq_afternoon_day_6",
+      "next": "n_nwq_afternoon_day_6_2",
+      "text": "It's Saturday afternoon."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_head_to_the_park",
+          "id": "c_nwq_head_to_the_park",
+          "text": "Head to the park"
+        }
+      ],
+      "id": "n_nwq_afternoon_day_6_2",
+      "text": "After a morning of lounging in bed and watching Cartoon Network, it's time to go hang out at the park with $ally."
+    },
+    {
+      "id": "n_nwq_head_to_the_park",
+      "next": "n_nwq_head_to_the_park_2",
+      "text": "$name meets $ally at the park. They start talking about reading and books."
+    },
+    {
+      "id": "n_nwq_head_to_the_park_2",
+      "next": "n_nwq_head_to_the_park_3",
+      "text": "$name: \"Um, what kind of books do you like to read?\""
+    },
+    {
+      "id": "n_nwq_head_to_the_park_3",
+      "next": "n_nwq_head_to_the_park_4",
+      "text": "$ally: \"Me? Oh, I like all kinds of books. I love how stories allow you to gain new experiences and new perspectives that you wouldn't otherwise.\""
+    },
+    {
+      "id": "n_nwq_head_to_the_park_4",
+      "next": "n_nwq_head_to_the_park_5",
+      "text": "$name nods. \"Yeah. That is really cool.\""
+    },
+    {
+      "id": "n_nwq_head_to_the_park_5",
+      "next": "n_nwq_head_to_the_park_6",
+      "text": "$ally: \"What kind of books do you like to read?\""
+    },
+    {
+      "id": "n_nwq_head_to_the_park_6",
+      "next": "n_nwq_head_to_the_park_7",
+      "text": "$name: \""
+    },
+    {
+      "id": "n_nwq_head_to_the_park_7",
+      "next": "n_nwq_head_to_the_park_8",
+      "text": ".\""
+    },
+    {
+      "id": "n_nwq_head_to_the_park_8",
+      "next": "n_nwq_head_to_the_park_9",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_head_to_the_park_9",
+      "next": "n_nwq_head_to_the_park_10",
+      "text": "$ally:"
+    },
+    {
+      "id": "n_nwq_head_to_the_park_10",
+      "next": "n_nwq_head_to_the_park_11",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_head_to_the_park_11",
+      "next": "n_nwq_head_to_the_park_12",
+      "text": "$name smiles at the thought. \""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_talk_about_writing",
+          "id": "c_nwq_yeah",
+          "text": "Yeah"
+        }
+      ],
+      "id": "n_nwq_head_to_the_park_12",
+      "text": ".\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing",
+      "next": "n_nwq_talk_about_writing_2",
+      "text": "$ally laughs. \"Hey, what're you smiling about?\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_2",
+      "next": "n_nwq_talk_about_writing_3",
+      "text": "$name: \"It's just nice to find someone who enjoys books, too.\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_3",
+      "next": "n_nwq_talk_about_writing_4",
+      "text": "$ally: \"Yeah. That is nice.\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_4",
+      "next": "n_nwq_talk_about_writing_5",
+      "text": "$name: \"It was my love of reading that led me to join the book club.\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_5",
+      "next": "n_nwq_talk_about_writing_6",
+      "text": "$ally: \"Oh, cool! Do you like to write"
+    },
+    {
+      "id": "n_nwq_talk_about_writing_6",
+      "next": "n_nwq_talk_about_writing_7",
+      "text": "outside of the club?\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_7",
+      "next": "n_nwq_talk_about_writing_8",
+      "text": "$name: \""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_8",
+      "next": "n_nwq_talk_about_writing_9",
+      "text": "eah, I do. It's a really rewarding experience, expressing myself on paper.\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_9",
+      "next": "n_nwq_talk_about_writing_10",
+      "text": "$ally: \"Yeah. Writing is really fun. I'd love to read some of your other stories sometime.\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_10",
+      "next": "n_nwq_talk_about_writing_11",
+      "text": "$name: \"Haha. Maybe.\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_11",
+      "next": "n_nwq_talk_about_writing_12",
+      "text": "$ally: \"Hey, have you thought about other ways of expressing yourself?\""
+    },
+    {
+      "id": "n_nwq_talk_about_writing_12",
+      "next": "n_nwq_talk_about_writing_13",
+      "text": "$name: \"Other ways?"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_other_ways_of_expression",
+          "id": "c_nwq_like_art",
+          "text": "Like art"
+        }
+      ],
+      "id": "n_nwq_talk_about_writing_13",
+      "text": "?\""
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression",
+      "next": "n_nwq_other_ways_of_expression_2",
+      "text": "$ally: \"Writing is art, silly.\""
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression_2",
+      "next": "n_nwq_other_ways_of_expression_3",
+      "text": "$name: \"Yeah, I guess it is.\""
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression_3",
+      "next": "n_nwq_other_ways_of_expression_4",
+      "text": "$ally: \"I notice that sometimes, you dress like a $misnoun, but other days, you dress more gender-neutral. Why don't you try dressing like a $noun?\""
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression_4",
+      "next": "n_nwq_other_ways_of_expression_5",
+      "text": "$name gestures to $pos vaguely"
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression_5",
+      "next": "n_nwq_other_ways_of_expression_6",
+      "text": "outfit. \"I dress like a $noun sometimes.\""
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression_6",
+      "next": "n_nwq_other_ways_of_expression_7",
+      "text": "$ally points to $name's jacket. \"That's only"
+    },
+    {
+      "id": "n_nwq_other_ways_of_expression_7",
+      "isEnd": true,
+      "text": ".\""
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5",
+      "next": "n_nwq_story_sharing_day_5_2",
+      "text": "The book club president asks if there are any volunteers."
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_2",
+      "next": "n_nwq_story_sharing_day_5_3",
+      "text": "$ally: \"You going to share today?\""
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_3",
+      "next": "n_nwq_story_sharing_day_5_4",
+      "text": "$name: \"I don't know. Maybe.\""
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_4",
+      "next": "n_nwq_story_sharing_day_5_5",
+      "text": "$ally: \"Oh, come on. Your stuff is awesome!"
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_5",
+      "next": "n_nwq_story_sharing_day_5_6",
+      "text": "$name: \"Okay. I'll present.\""
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_6",
+      "next": "n_nwq_story_sharing_day_5_7",
+      "text": "$ally: \"I mean, I don't want to force you or anything…\""
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_7",
+      "next": "n_nwq_story_sharing_day_5_8",
+      "text": "$name looks down at $pos story."
+    },
+    {
+      "id": "n_nwq_story_sharing_day_5_8",
+      "next": "n_nwq_story_sharing_day_5_9",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_share_your_story_after_talk",
+          "id": "c_nwq_share_pos_story",
+          "text": "Share $pos story"
+        },
+        {
+          "goto": "n_nwq_not_share_your_story_after_talk",
+          "id": "c_nwq_do_nothing_8",
+          "text": "Do nothing"
+        }
+      ],
+      "id": "n_nwq_story_sharing_day_5_9",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_share_your_story_after_talk",
+      "next": "n_nwq_share_your_story_after_talk_2",
+      "text": "$name shares $pos story and the other club members snap enthusiastically."
+    },
+    {
+      "id": "n_nwq_share_your_story_after_talk_2",
+      "next": "n_nwq_share_your_story_after_talk_3",
+      "text": "$ally: \"Told you they'd love it.\""
+    },
+    {
+      "id": "n_nwq_share_your_story_after_talk_3",
+      "next": "n_nwq_share_your_story_after_talk_4",
+      "text": "$name: \"Haha. Whatever.\""
+    },
+    {
+      "id": "n_nwq_share_your_story_after_talk_4",
+      "next": "n_nwq_share_your_story_after_talk_5",
+      "text": "$ally: \"Why won't you just believe me, $name?\""
+    },
+    {
+      "id": "n_nwq_share_your_story_after_talk_5",
+      "next": "n_nwq_share_your_story_after_talk_6",
+      "text": "$name: \"Shh, the next kid's reading!\""
+    },
+    {
+      "id": "n_nwq_share_your_story_after_talk_6",
+      "next": "n_nwq_share_your_story_after_talk_7",
+      "text": "$name and $ally watch the other club members present their writing. All too soon, it's time to"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_go_home_day_5",
+          "id": "c_nwq_go_home_11",
+          "text": "go home"
+        }
+      ],
+      "id": "n_nwq_share_your_story_after_talk_7",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_not_share_your_story_after_talk",
+      "next": "n_nwq_not_share_your_story_after_talk_2",
+      "text": "$ally asks $name what $sbj wrote, so $name shares $pos story with just $ally."
+    },
+    {
+      "id": "n_nwq_not_share_your_story_after_talk_2",
+      "next": "n_nwq_not_share_your_story_after_talk_3",
+      "text": "$ally: \"Hey, that was really good.\""
+    },
+    {
+      "id": "n_nwq_not_share_your_story_after_talk_3",
+      "next": "n_nwq_not_share_your_story_after_talk_4",
+      "text": "$name: \"You think so?\""
+    },
+    {
+      "id": "n_nwq_not_share_your_story_after_talk_4",
+      "next": "n_nwq_not_share_your_story_after_talk_5",
+      "text": "$ally: \"Of course! Still, you don't have to share your writing if you don't want to. I mean, sharing isn't for everyone.\""
+    },
+    {
+      "id": "n_nwq_not_share_your_story_after_talk_5",
+      "next": "n_nwq_not_share_your_story_after_talk_6",
+      "text": "$name: \"No, I'll probably share next time.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_go_home_day_5",
+          "id": "c_nwq_go_home_12",
+          "text": "Go home"
+        }
+      ],
+      "id": "n_nwq_not_share_your_story_after_talk_6",
+      "text": "$ally: \"Really? I think they'll love it.\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5",
+      "next": "n_nwq_go_home_day_5_2",
+      "text": "$ally stops $name before they part ways for the day."
+    },
+    {
+      "id": "n_nwq_go_home_day_5_2",
+      "next": "n_nwq_go_home_day_5_3",
+      "text": "$ally: \"Hey, $name. Want to hang out this weekend?\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5_3",
+      "next": "n_nwq_go_home_day_5_4",
+      "text": "$name: \"Yeah, that sounds fun.\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5_4",
+      "next": "n_nwq_go_home_day_5_5",
+      "text": "$ally: \"Saturday afternoon at the park?\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5_5",
+      "next": "n_nwq_go_home_day_5_6",
+      "text": "$name: \"Okay.\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5_6",
+      "next": "n_nwq_go_home_day_5_7",
+      "text": "$ally: \"Sounds good. See you then!\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5_7",
+      "next": "n_nwq_go_home_day_5_8",
+      "text": "It's really cool to hear $ally call $obj \"$name\" instead of \"$deadname.\""
+    },
+    {
+      "id": "n_nwq_go_home_day_5_8",
+      "next": "n_nwq_go_home_day_5_9",
+      "onEnter": [
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "That day went surprisingly well. $name is feeling hopeful for tomorrow."
+    },
+    {
+      "id": "n_nwq_go_home_day_5_9",
+      "next": "n_nwq_go_home_day_5_10",
+      "text": "$name is ready to start"
+    },
+    {
+      "id": "n_nwq_go_home_day_5_10",
+      "next": "n_nwq_go_home_day_5_11",
+      "text": ". {"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_afternoon_day_6",
+          "id": "c_nwq_pos_weekend_2",
+          "text": "$pos weekend"
+        }
+      ],
+      "id": "n_nwq_go_home_day_5_11",
+      "onEnter": [
+        {
+          "counter": "self",
+          "delta": -1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "self",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "counter": "self",
+          "delta": -1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "self",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        }
+      ],
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "Afternoon day 6"
+}

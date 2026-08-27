@@ -1,0 +1,172 @@
+{
+  "variables": [
+    {
+      "default": 0,
+      "description": "Ink VAR BUCKET",
+      "id": "bucket",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR CHESS",
+      "id": "chess",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR CROSSWORD",
+      "id": "crossword",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR DEBUG",
+      "id": "debug",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR NONE",
+      "id": "none",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR SHOE",
+      "id": "shoe",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR STRAIGHT",
+      "id": "straight",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR admitblackmail",
+      "id": "admitblackmail",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR drugged",
+      "id": "drugged",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR evasive",
+      "id": "evasive",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR forceful",
+      "id": "forceful",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR framedhooper",
+      "id": "framedhooper",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR gotcomponent",
+      "id": "gotcomponent",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR hooperClueType",
+      "id": "hoopercluetype",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR hooperConfessed",
+      "id": "hooperconfessed",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR hooper_mentioned",
+      "id": "hooper_mentioned",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR longgrasshooperframe",
+      "id": "longgrasshooperframe",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR losttemper",
+      "id": "losttemper",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR muddyshoes",
+      "id": "muddyshoes",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR notraitor",
+      "id": "notraitor",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR piecereturned",
+      "id": "piecereturned",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR putcomponentintent",
+      "id": "putcomponentintent",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR revealedhooperasculprit",
+      "id": "revealedhooperasculprit",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR smashedglass",
+      "id": "smashedglass",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR smashingWindowItem",
+      "id": "smashingwindowitem",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR teacup",
+      "id": "teacup",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Ink VAR throwncomponentaway",
+      "id": "throwncomponentaway",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Ink VAR x",
+      "id": "x",
+      "kind": "counter"
+    }
+  ]
+}

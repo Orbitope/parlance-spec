@@ -1,0 +1,104 @@
+{
+  "entry": "n_episode1_chat2",
+  "id": "dlg_episode1_chat2",
+  "nodes": [
+    {
+      "id": "n_episode1_chat2",
+      "next": "n_episode1_chat2_2",
+      "speakerId": "char_clem",
+      "text": "C'était bizarre l'intervention du CPE ce matin, non ?"
+    },
+    {
+      "id": "n_episode1_chat2_2",
+      "next": "n_episode1_chat2_3",
+      "speakerId": "char_sophie",
+      "text": "Pas tant que ça ! Du harcèlement, il y en a partout. Dans le collège y compris 😔"
+    },
+    {
+      "id": "n_episode1_chat2_3",
+      "next": "n_episode1_chat2_4",
+      "speakerId": "char_nabil",
+      "text": "Tu sais quelque chose, Sophie ?"
+    },
+    {
+      "id": "n_episode1_chat2_4",
+      "next": "n_episode1_chat2_5",
+      "speakerId": "char_sophie",
+      "text": "Je ne suis sûre de rien."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_chat2_6",
+          "id": "c_episode1_faire_un_screenshot_de",
+          "text": "Faire un screenshot de la conversation"
+        },
+        {
+          "goto": "n_episode1_chat2_6",
+          "id": "c_episode1_ne_rien_faire_4",
+          "text": "Ne rien faire"
+        }
+      ],
+      "id": "n_episode1_chat2_5",
+      "speakerId": "char_ryan",
+      "text": "Si c'est ça du cyberharcèlement, il n'y pas de quoi en faire un drame ! \\#fragile"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_chat2_7",
+          "id": "c_episode1_t_es_s_rieux",
+          "text": "T'es sérieux ?"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_chat2_9",
+          "id": "c_episode1_franchement_elle_est_plut",
+          "text": "Franchement, elle est plutôt drôle, cette vidéo !"
+        }
+      ],
+      "id": "n_episode1_chat2_6",
+      "speakerId": "char_ryan",
+      "text": "🤣"
+    },
+    {
+      "id": "n_episode1_chat2_7",
+      "next": "n_episode1_chat2_8",
+      "speakerId": "char_you",
+      "text": "T'es sérieux ?"
+    },
+    {
+      "id": "n_episode1_chat2_8",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "T'aimerais qu'on fasse ça avec toi ?"
+    },
+    {
+      "id": "n_episode1_chat2_9",
+      "next": "n_episode1_chat2_10",
+      "speakerId": "char_you",
+      "text": "Franchement, elle est plutôt drôle, cette vidéo !"
+    },
+    {
+      "id": "n_episode1_chat2_10",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Merci pour le partage, frère !"
+    }
+  ],
+  "replayable": false,
+  "title": "Chat2"
+}

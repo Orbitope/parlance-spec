@@ -1,0 +1,114 @@
+{
+  "entry": "n_lamp_landing",
+  "id": "dlg_lamp_landing",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "goto": "n_lamp_handle",
+          "id": "c_lamp_try_the_handle",
+          "text": "Try the handle"
+        }
+      ],
+      "id": "n_lamp_landing",
+      "onEnter": [
+        {
+          "flag": "lamp",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "flag": "lamp",
+          "type": "set_flag",
+          "value": false
+        }
+      ],
+      "text": "The stair ends at a door nobody has painted this century."
+    },
+    {
+      "id": "n_lamp_handle",
+      "next": "n_lamp_handle_2",
+      "onEnter": [
+        {
+          "flag": "lamp",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "lamp",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "The handle turns, which is more than you expected."
+    },
+    {
+      "id": "n_lamp_handle_2",
+      "next": "n_lamp_handle_3",
+      "showIf": {
+        "counter": "coins",
+        "op": ">=",
+        "type": "counter",
+        "value": 2
+      },
+      "text": "You still have the fare in your pocket, for whatever that is worth now."
+    },
+    {
+      "id": "n_lamp_handle_3",
+      "next": "n_lamp_handle_4",
+      "showIf": {
+        "of": {
+          "counter": "coins",
+          "op": ">=",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "text": "Your pockets are empty and the night is not over."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_lamp_inside",
+          "id": "c_lamp_go_in",
+          "text": "Go in"
+        },
+        {
+          "goto": "n_lamp_landing",
+          "id": "c_lamp_turn_back",
+          "text": "Turn back"
+        }
+      ],
+      "id": "n_lamp_handle_4",
+      "text": "The room beyond is dark."
+    },
+    {
+      "id": "n_lamp_inside",
+      "next": "n_lamp_inside_2",
+      "text": "Somebody has left a lamp burning on the sill."
+    },
+    {
+      "id": "n_lamp_inside_2",
+      "next": "n_lamp_inside_3",
+      "showIf": {
+        "flag": "lamp",
+        "type": "flag",
+        "value": true
+      },
+      "text": "The handle is still warm in your hand."
+    },
+    {
+      "id": "n_lamp_inside_3",
+      "next": "n_lamp_inside_4",
+      "text": "coins, and nothing to spend them on."
+    },
+    {
+      "id": "n_lamp_inside_4",
+      "isEnd": true,
+      "text": "The window looks out on the ford, which is still going."
+    }
+  ],
+  "replayable": false,
+  "title": "Landing"
+}

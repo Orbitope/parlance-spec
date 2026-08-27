@@ -1,0 +1,34 @@
+{
+  "entry": "n_episode1_email1",
+  "id": "dlg_episode1_email1",
+  "nodes": [
+    {
+      "id": "n_episode1_email1",
+      "next": "n_episode1_email1_2",
+      "text": "Chers parents d'élèves, chers élèves,"
+    },
+    {
+      "id": "n_episode1_email1_2",
+      "next": "n_episode1_email1_3",
+      "speakerId": "char_je_vous_informe_que_je_passerai_ce_jour_dans_chaque_classe_afin_de_vous_donner_quelques_recommandations_sur_un_sujet_particuli_rement_sensible",
+      "text": "celui du cyberharcèlement."
+    },
+    {
+      "id": "n_episode1_email1_3",
+      "next": "n_episode1_email1_4",
+      "text": "Veuillez faire attention à bien arriver à l'heure en salle de classe afin que vous ne manquiez aucune information."
+    },
+    {
+      "id": "n_episode1_email1_4",
+      "next": "n_episode1_email1_5",
+      "text": "Bien cordialement,"
+    },
+    {
+      "id": "n_episode1_email1_5",
+      "isEnd": true,
+      "text": "M Douraud, CPE"
+    }
+  ],
+  "replayable": false,
+  "title": "Email1"
+}

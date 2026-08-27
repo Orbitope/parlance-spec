@@ -1,0 +1,56 @@
+{
+  "entry": "n_episode1_chat1",
+  "id": "dlg_episode1_chat1",
+  "nodes": [
+    {
+      "id": "n_episode1_chat1",
+      "next": "n_episode1_chat1_2",
+      "speakerId": "char_clem",
+      "text": "qq'1 sait s'il va y avoir une interro en math ? Pas sûre d'avoir révisé le bon chapitre 😭"
+    },
+    {
+      "id": "n_episode1_chat1_2",
+      "next": "n_episode1_chat1_3",
+      "speakerId": "char_nabil",
+      "text": "Avec ce prof, c'est possible ! Il a dit qu'il fallait réviser les fractions 😉 de rien, c'est gratuit 😊"
+    },
+    {
+      "id": "n_episode1_chat1_3",
+      "next": "n_episode1_chat1_4",
+      "speakerId": "char_clem",
+      "text": "Naaaan ! J'me suis gourée de chapitre ! 😅"
+    },
+    {
+      "id": "n_episode1_chat1_4",
+      "next": "n_episode1_chat1_5",
+      "speakerId": "char_tao",
+      "text": "Vous avez lu le mail du CPE ? Pourquoi il va nous parler de ça ???"
+    },
+    {
+      "id": "n_episode1_chat1_5",
+      "next": "n_episode1_chat1_6",
+      "speakerId": "char_sophie",
+      "text": "Parce que ça existe le cyberharcèlement, Sherlock 😉"
+    },
+    {
+      "id": "n_episode1_chat1_6",
+      "next": "n_episode1_chat1_7",
+      "speakerId": "char_sophie",
+      "text": "Vous avez des news de Hakim ? Ça fait 3 semaines qu'il est absent 😔"
+    },
+    {
+      "id": "n_episode1_chat1_7",
+      "next": "n_episode1_chat1_8",
+      "speakerId": "char_ryan",
+      "text": "Il est de nature « fragile »... C'est pour ça !"
+    },
+    {
+      "id": "n_episode1_chat1_8",
+      "isEnd": true,
+      "speakerId": "char_sophie",
+      "text": "Mais LOL !"
+    }
+  ],
+  "replayable": false,
+  "title": "Chat1"
+}

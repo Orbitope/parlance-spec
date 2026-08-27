@@ -1,0 +1,14 @@
+{
+  "entry": "n_episode2_sms1",
+  "id": "dlg_episode2_sms1",
+  "nodes": [
+    {
+      "id": "n_episode2_sms1",
+      "isEnd": true,
+      "speakerId": "char_entraineur",
+      "text": "Match à domicile. Mercredi 22 Novembre. Rendez-vous au gymnase à l'heure habituelle."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms1"
+}

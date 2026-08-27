@@ -1,0 +1,27 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode1_sms5a"
+    },
+    {
+      "dialogue": "dlg_episode1_sms5b"
+    },
+    {
+      "dialogue": "dlg_episode1_sms5c"
+    },
+    {
+      "dialogue": "dlg_episode1_sms6a"
+    },
+    {
+      "dialogue": "dlg_episode1_sms6b"
+    },
+    {
+      "dialogue": "dlg_episode1_sms6c"
+    },
+    {
+      "dialogue": "dlg_episode2_chat1"
+    }
+  ],
+  "id": "char_hakim",
+  "name": "Hakim"
+}

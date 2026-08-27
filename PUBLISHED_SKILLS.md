@@ -11,6 +11,8 @@ your own project is the point, and a licence that withholds that makes them usel
   is not yet true.
 - **[`importers/`](importers/IMPORTERS.md)** — format migration. They move a story you
   already wrote out of another tool and into Parlance, then verify nothing was lost.
+  [`importers/examples/`](importers/examples/README.md) holds three real migrations
+  — one per format — each with the author's original file beside the result.
 
 They are optional and separate. Nothing here is part of the editor, and nothing here
 is installed with it. Take one skill, take all of them, take none.
@@ -29,6 +31,10 @@ This is enforced, not promised:
 - Every importer's output is checked against the source string by string. A paraphrase
   — the most tempting failure, because it looks like tidying — halts the import and
   is never retried, because a further pass cannot un-invent a line.
+
+You can run that check on the worked examples yourself; one command per example,
+in each one's `REPORT.md`. It is there so this page's promise is a property you
+can verify rather than a claim you have to take on trust.
 
 The second rule follows from the first: **loss is declared, never silent.** Both tools
 report what they could not do. An audit that cannot judge without inventing the intent
@@ -62,5 +68,10 @@ self-contained: no shared state, no configuration, no network calls, no telemetr
 
 These read the Parlance data contract — `dialogues`, `characters`, `quests`,
 `locations`, `variables`, and the condition/effect vocabulary. They target contract
-**0.9.x**. After a contract bump, re-check them: a renamed field will usually reduce a
+**0.12.x**. After a contract bump, re-check them: a renamed field will usually reduce a
 tool to finding nothing, which looks exactly like a clean project.
+
+That is not a formality. This line said **0.9.x** for three releases after the fact,
+across the one bump that mattered to the importers — `DialogueNode.showIf` in 0.11.0,
+which turned a whole class of declared loss into a mapping. Move it with the contract,
+not with the next person who notices.

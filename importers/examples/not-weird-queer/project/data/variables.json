@@ -1,0 +1,256 @@
+{
+  "variables": [
+    {
+      "default": 0,
+      "description": "Harlowe $ action",
+      "id": "action",
+      "kind": "counter"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ allNames",
+      "id": "allnames",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ ally",
+      "id": "ally",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ alpha_afEnding",
+      "id": "alpha_afending",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ badEnding",
+      "id": "badending",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ book",
+      "id": "book",
+      "kind": "text"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ bus",
+      "id": "bus",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ club",
+      "id": "club",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ complete",
+      "id": "complete",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Harlowe $ day",
+      "id": "day",
+      "kind": "counter"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ deadname",
+      "id": "deadname",
+      "kind": "text"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ death",
+      "id": "death",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Harlowe $ deaths",
+      "id": "deaths",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ defbio",
+      "id": "defbio",
+      "kind": "flag"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ dirtyhacker",
+      "id": "dirtyhacker",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ game",
+      "id": "game",
+      "kind": "text"
+    },
+    {
+      "default": 0,
+      "description": "Harlowe $ happy",
+      "id": "happy",
+      "kind": "counter"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ history",
+      "id": "history",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ mathbud",
+      "id": "mathbud",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ misgender",
+      "id": "misgender",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ misnoun",
+      "id": "misnoun",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ misobj",
+      "id": "misobj",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ mispos",
+      "id": "mispos",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ misref",
+      "id": "misref",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ misrobj",
+      "id": "misrobj",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ missbj",
+      "id": "missbj",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ name",
+      "id": "name",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ nonbinary",
+      "id": "nonbinary",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ noun",
+      "id": "noun",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ obj",
+      "id": "obj",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ outfit",
+      "id": "outfit",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ popkid",
+      "id": "popkid",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ pos",
+      "id": "pos",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ ref",
+      "id": "ref",
+      "kind": "text"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ robj",
+      "id": "robj",
+      "kind": "text"
+    },
+    {
+      "default": 0,
+      "description": "Harlowe $ ryan",
+      "id": "ryan",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Harlowe $ self",
+      "id": "self",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ share",
+      "id": "share",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ sidebar",
+      "id": "sidebar",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ talk",
+      "id": "talk",
+      "kind": "flag"
+    },
+    {
+      "default": "",
+      "description": "Harlowe $ version",
+      "id": "version",
+      "kind": "text"
+    },
+    {
+      "default": false,
+      "description": "Harlowe $ whategg",
+      "id": "whategg",
+      "kind": "flag"
+    }
+  ]
+}

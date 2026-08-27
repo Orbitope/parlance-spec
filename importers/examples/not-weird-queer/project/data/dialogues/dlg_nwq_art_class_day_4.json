@@ -1,0 +1,94 @@
+{
+  "entry": "n_nwq_art_class_day_4",
+  "id": "dlg_nwq_art_class_day_4",
+  "nodes": [
+    {
+      "id": "n_nwq_art_class_day_4",
+      "next": "n_nwq_art_class_day_4_2",
+      "text": "$name goes to $pos art class with $ally. Today, the class is"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_2",
+      "next": "n_nwq_art_class_day_4_3",
+      "showIf": {
+        "counter": "day",
+        "op": "==",
+        "type": "counter",
+        "value": 4
+      },
+      "text": "working on"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_3",
+      "next": "n_nwq_art_class_day_4_4",
+      "showIf": {
+        "of": {
+          "counter": "day",
+          "op": "==",
+          "type": "counter",
+          "value": 4
+        },
+        "type": "not"
+      },
+      "text": "finishing up"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_4",
+      "next": "n_nwq_art_class_day_4_5",
+      "text": "their paper-mâché sculptures."
+    },
+    {
+      "id": "n_nwq_art_class_day_4_5",
+      "next": "n_nwq_art_class_day_4_6",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_6",
+      "next": "n_nwq_art_class_day_4_7",
+      "text": "$name's sculpture is a stylized depiction of pain,"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_7",
+      "next": "n_nwq_art_class_day_4_8",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_8",
+      "next": "n_nwq_art_class_day_4_9",
+      "text": "\"I like how your sculpture's turning out,\" $ally tells $name."
+    },
+    {
+      "id": "n_nwq_art_class_day_4_9",
+      "next": "n_nwq_art_class_day_4_10",
+      "text": "$name: \"Huh?\""
+    },
+    {
+      "id": "n_nwq_art_class_day_4_10",
+      "next": "n_nwq_art_class_day_4_11",
+      "text": "$ally: \"I like how the colors and shapes come together to express this deep,"
+    },
+    {
+      "id": "n_nwq_art_class_day_4_11",
+      "next": "n_nwq_art_class_day_4_12",
+      "text": "pain.\""
+    },
+    {
+      "id": "n_nwq_art_class_day_4_12",
+      "next": "n_nwq_art_class_day_4_13",
+      "text": "$name: \"Thanks.\""
+    },
+    {
+      "choices": [
+        {
+          "id": "c_nwq_ally_s_sculpture",
+          "text": "$ally's sculpture"
+        }
+      ],
+      "id": "n_nwq_art_class_day_4_13",
+      "isEnd": true,
+      "text": "$name looks at"
+    }
+  ],
+  "replayable": false,
+  "title": "Art class day 4"
+}

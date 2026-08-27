@@ -1,0 +1,12 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode2_start"
+    },
+    {
+      "dialogue": "dlg_episode2_sms1"
+    }
+  ],
+  "id": "char_entraineur",
+  "name": "Entraineur"
+}

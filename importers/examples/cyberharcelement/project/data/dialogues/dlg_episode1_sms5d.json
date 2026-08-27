@@ -1,0 +1,32 @@
+{
+  "entry": "n_episode1_sms5d",
+  "id": "dlg_episode1_sms5d",
+  "nodes": [
+    {
+      "id": "n_episode1_sms5d",
+      "next": "n_episode1_sms5d_2",
+      "speakerId": "char_sophie",
+      "text": "Ma cousine est d'accord pour témoigner en faveur de Hakim."
+    },
+    {
+      "id": "n_episode1_sms5d_2",
+      "next": "n_episode1_sms5d_3",
+      "speakerId": "char_sophie",
+      "text": "Le plus simple serait de rencontrer le CPE pour savoir quoi faire exactement."
+    },
+    {
+      "id": "n_episode1_sms5d_3",
+      "next": "n_episode1_sms5d_4",
+      "speakerId": "char_sophie",
+      "text": "Tu viens avec nous et tu te charges de prendre rdv ?"
+    },
+    {
+      "id": "n_episode1_sms5d_4",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Ok, ça marche"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms5d"
+}

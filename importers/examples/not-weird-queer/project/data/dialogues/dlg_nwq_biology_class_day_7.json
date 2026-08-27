@@ -1,0 +1,272 @@
+{
+  "entry": "n_nwq_biology_class_day_7",
+  "id": "dlg_nwq_biology_class_day_7",
+  "nodes": [
+    {
+      "id": "n_nwq_biology_class_day_7",
+      "next": "n_nwq_biology_class_day_7_2",
+      "text": "$name and $ally head to biology class. Mr. Kinsey announces that today, to finish off flower anatomy, the class will be starting group projects."
+    },
+    {
+      "id": "n_nwq_biology_class_day_7_2",
+      "next": "n_nwq_biology_class_day_7_3",
+      "text": "$name groans. Group projects are the worst. $name and $ally form a team of 3 with their classmate $bioteam."
+    },
+    {
+      "id": "n_nwq_biology_class_day_7_3",
+      "next": "n_nwq_biology_class_day_7_4",
+      "text": "Start on the"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_biology_group_project",
+          "id": "c_nwq_group_project",
+          "text": "group project"
+        }
+      ],
+      "id": "n_nwq_biology_class_day_7_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_biology_group_project",
+      "next": "n_nwq_biology_group_project_2",
+      "text": "The three are working on"
+    },
+    {
+      "id": "n_nwq_biology_group_project_2",
+      "next": "n_nwq_biology_group_project_3",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_biology_group_project_3",
+      "next": "n_nwq_biology_group_project_4",
+      "text": "$ally addresses $name by $pos correct pronouns and $bioteam gets confused. What should $name do?"
+    },
+    {
+      "id": "n_nwq_biology_group_project_4",
+      "next": "n_nwq_biology_group_project_5",
+      "text": "* Explain to $bioteam that $name uses"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_defend_gender_biology",
+          "id": "c_nwq_sbj_obj_pronouns",
+          "text": "$sbj/$obj pronouns"
+        },
+        {
+          "id": "c_nwq_not_to_worry_about",
+          "text": "not to worry about it"
+        }
+      ],
+      "id": "n_nwq_biology_group_project_5",
+      "isEnd": true,
+      "text": "* Tell $bioteam"
+    },
+    {
+      "id": "n_nwq_defend_gender_biology",
+      "next": "n_nwq_defend_gender_biology_2",
+      "text": "$name explains to $bioteam that $sbj prefers $sbj/$obj pronouns."
+    },
+    {
+      "id": "n_nwq_defend_gender_biology_2",
+      "next": "n_nwq_defend_gender_biology_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_defend_gender_biology_3",
+      "next": "n_nwq_defend_gender_biology_4",
+      "onEnter": [
+        {
+          "counter": "action",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "action",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_defend_gender_biology_4",
+      "next": "n_nwq_defend_gender_biology_5",
+      "text": "After class, $ally apologizes to $name for"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_ryan_apologizes_biology",
+          "id": "c_nwq_putting_obj_on_the",
+          "text": "putting $obj on the spot"
+        }
+      ],
+      "id": "n_nwq_defend_gender_biology_5",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_don_39_t_defend_gender_biology",
+      "next": "n_nwq_don_39_t_defend_gender_biology_2",
+      "text": "$name feels awkward about it, so $sbj decides not to explain anything to $bioteam."
+    },
+    {
+      "id": "n_nwq_don_39_t_defend_gender_biology_2",
+      "next": "n_nwq_don_39_t_defend_gender_biology_3",
+      "text": "$name: \"Oh, don't worry about it, $bioteam.\""
+    },
+    {
+      "id": "n_nwq_don_39_t_defend_gender_biology_3",
+      "next": "n_nwq_don_39_t_defend_gender_biology_4",
+      "text": "$bioteam frowns but doesn't say anything more. $ally almost seems disapointed, but $name can't tell if $sbj's imagining it."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_ryan_apologizes_biology",
+          "id": "c_nwq_putting_obj_on_the_2",
+          "text": "putting $obj on the spot"
+        }
+      ],
+      "id": "n_nwq_don_39_t_defend_gender_biology_4",
+      "text": "Regardless, the three work on their poster. After class, $ally apologizes to $name for"
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology",
+      "next": "n_nwq_ryan_apologizes_biology_2",
+      "text": "$ally pulls $name aside before they have to get to their next class."
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_2",
+      "next": "n_nwq_ryan_apologizes_biology_3",
+      "text": "$ally: \"Hey, $name, I'm sorry about putting you on the spot there.\""
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_3",
+      "next": "n_nwq_ryan_apologizes_biology_4",
+      "text": "$name: \"It wasn't your fault, $ally. It's nice of you to apologize, though.\""
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_4",
+      "next": "n_nwq_ryan_apologizes_biology_5",
+      "text": "$ally: \"Well, it just doesn't feel right to expose you like that. I'll try to remember next time.\""
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_5",
+      "next": "n_nwq_ryan_apologizes_biology_6",
+      "text": "$name: \"I mean,"
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_6",
+      "next": "n_nwq_ryan_apologizes_biology_7",
+      "showIf": {
+        "flag": "defbio",
+        "type": "flag",
+        "value": false
+      },
+      "text": "I was just nervous just now, but"
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_7",
+      "next": "n_nwq_ryan_apologizes_biology_8",
+      "text": "I should be acting more like myself, right? If I'm not afraid to be a $noun, then you won't have to watch yourself.\""
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_8",
+      "next": "n_nwq_ryan_apologizes_biology_9",
+      "text": "$ally: \"Well, you should do it on your terms. Anyway, see you at lunch!\""
+    },
+    {
+      "id": "n_nwq_ryan_apologizes_biology_9",
+      "next": "n_nwq_ryan_apologizes_biology_10",
+      "text": "$name says goodbye to $ally and heads to"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_history_class_day_7",
+          "id": "c_nwq_pos_next_class",
+          "text": "$pos next class"
+        }
+      ],
+      "id": "n_nwq_ryan_apologizes_biology_10",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_history_class_day_7",
+      "next": "n_nwq_history_class_day_7_2",
+      "text": "Today in history class, Mr. Coulter is"
+    },
+    {
+      "id": "n_nwq_history_class_day_7_2",
+      "next": "n_nwq_history_class_day_7_3",
+      "text": ". $name writes a poem about"
+    },
+    {
+      "id": "n_nwq_history_class_day_7_3",
+      "next": "n_nwq_history_class_day_7_4",
+      "text": "in $pos notebook."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_7",
+          "id": "c_nwq_go_to_lunch_6",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_history_class_day_7_4",
+      "text": "//History is// so //boring//."
+    },
+    {
+      "id": "n_nwq_lunch_day_7",
+      "next": "n_nwq_lunch_day_7_2",
+      "text": "$name hangs out with $ally at lunch. $ally takes a bite of $pos cafeteria sloppy joe and $name hesitantly decides to ask $obj a question."
+    },
+    {
+      "id": "n_nwq_lunch_day_7_2",
+      "next": "n_nwq_lunch_day_7_3",
+      "text": "$name: \"Hey, $ally. Why did you, um, want to be my friend?\""
+    },
+    {
+      "id": "n_nwq_lunch_day_7_3",
+      "next": "n_nwq_lunch_day_7_4",
+      "text": "$ally looks down at $pos messy sandwich. \"When I moved here, I left everything behind,\" $sbj said. \"Sure, the kids at my old school were pricks, but I had friends, too. I didn't have anything here.\""
+    },
+    {
+      "id": "n_nwq_lunch_day_7_4",
+      "next": "n_nwq_lunch_day_7_5",
+      "text": "$name: \"Oh.\""
+    },
+    {
+      "id": "n_nwq_lunch_day_7_5",
+      "next": "n_nwq_lunch_day_7_6",
+      "text": "$ally: \"But then I saw you on the bus, the quiet kid from art class with those deep, introspective sculptures. You reminded me of my old friends. I thought if I could just get you to talk to me, you'd see that I was an interesting person. Then maybe I wouldn't be so lonely anymore.\""
+    },
+    {
+      "id": "n_nwq_lunch_day_7_6",
+      "next": "n_nwq_lunch_day_7_7",
+      "text": "$name: \"You are an interesting person, $ally.\""
+    },
+    {
+      "id": "n_nwq_lunch_day_7_7",
+      "next": "n_nwq_lunch_day_7_8",
+      "text": "$ally"
+    },
+    {
+      "choices": [
+        {
+          "id": "c_nwq_smiles",
+          "text": "smiles"
+        }
+      ],
+      "id": "n_nwq_lunch_day_7_8",
+      "isEnd": true,
+      "text": "."
+    }
+  ],
+  "replayable": false,
+  "title": "Biology class day 7"
+}

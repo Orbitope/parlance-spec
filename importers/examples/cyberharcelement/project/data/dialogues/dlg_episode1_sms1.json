@@ -1,0 +1,56 @@
+{
+  "entry": "n_episode1_sms1",
+  "id": "dlg_episode1_sms1",
+  "nodes": [
+    {
+      "id": "n_episode1_sms1",
+      "next": "n_episode1_sms1_2",
+      "speakerId": "char_sophie",
+      "text": "Salut !"
+    },
+    {
+      "id": "n_episode1_sms1_2",
+      "next": "n_episode1_sms1_3",
+      "speakerId": "char_sophie",
+      "text": "Je n'ai pas de nouvelles de Hakim. Tu sais ce qu'il devient ? Je m'inquiète un peu."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_sms1_4",
+          "id": "c_episode1_non_mais_je_lui",
+          "text": "Non, mais je lui écrirai ce soir"
+        },
+        {
+          "goto": "n_episode1_sms1_5",
+          "id": "c_episode1_non_je_n_avais",
+          "text": "Non, je n'avais pas remarqué son absence"
+        }
+      ],
+      "id": "n_episode1_sms1_3",
+      "speakerId": "char_sophie",
+      "text": "A tout'"
+    },
+    {
+      "id": "n_episode1_sms1_4",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Hi ! Non, pas d'info non plus. Je lui écrirai ce soir. J'te dis si j'ai du nouveau. See you"
+    },
+    {
+      "id": "n_episode1_sms1_5",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Hi ! Non, pas d'info. J'avais pas spécialement remarqué son absence d'ailleurs... See you"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms1"
+}

@@ -1,0 +1,79 @@
+{
+  "entry": "n_episode1_sms4a",
+  "id": "dlg_episode1_sms4a",
+  "nodes": [
+    {
+      "id": "n_episode1_sms4a",
+      "next": "n_episode1_sms4a_2",
+      "speakerId": "char_sophie",
+      "text": "Salut, je t'écris parce que j'ai appris quelque chose :"
+    },
+    {
+      "id": "n_episode1_sms4a_2",
+      "next": "n_episode1_sms4a_3",
+      "speakerId": "char_sophie",
+      "text": "Tu te souviens de ma cousine Yasmine ?"
+    },
+    {
+      "id": "n_episode1_sms4a_3",
+      "next": "n_episode1_sms4a_4",
+      "speakerId": "char_sophie",
+      "text": "Elle était en 3ème C l’année dernière."
+    },
+    {
+      "id": "n_episode1_sms4a_4",
+      "next": "n_episode1_sms4a_5",
+      "speakerId": "char_sophie",
+      "text": "Elle a fait la même colo que Hakim durant les dernières vacances. Elle savait qu'un garçon s'était fait malmener."
+    },
+    {
+      "id": "n_episode1_sms4a_5",
+      "next": "n_episode1_sms4a_6",
+      "speakerId": "char_sophie",
+      "text": "Je te passe les détails mais c'est bien lui sur la vidéo... Je m’en doutais, mais là, c'est confirmé."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_sms4a_7",
+          "id": "c_episode1_elle_pourrait_t_moigner",
+          "text": "Elle pourrait témoigner"
+        },
+        {
+          "goto": "n_episode1_sms4a_10",
+          "id": "c_episode1_elle_est_assez_grande",
+          "text": "Elle est assez grande pour savoir quoi faire."
+        }
+      ],
+      "id": "n_episode1_sms4a_6",
+      "speakerId": "char_sophie",
+      "text": "Je comprends qu'il se sente mal... Il faut qu'on l'aide..."
+    },
+    {
+      "id": "n_episode1_sms4a_7",
+      "next": "n_episode1_sms4a_8",
+      "speakerId": "char_you",
+      "text": "Tu penses que ta cousine pourrait témoigner ?"
+    },
+    {
+      "id": "n_episode1_sms4a_8",
+      "next": "n_episode1_sms4a_9",
+      "speakerId": "char_sophie",
+      "text": "Très bonne idée !"
+    },
+    {
+      "id": "n_episode1_sms4a_9",
+      "isEnd": true,
+      "speakerId": "char_sophie",
+      "text": "Je vais même lui dire que je peux l'accompagner !"
+    },
+    {
+      "id": "n_episode1_sms4a_10",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Elle est assez grande pour savoir quoi faire."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms4a"
+}

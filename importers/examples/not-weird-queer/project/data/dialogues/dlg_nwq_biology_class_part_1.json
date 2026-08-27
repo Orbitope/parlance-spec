@@ -1,0 +1,2187 @@
+{
+  "entry": "n_nwq_biology_class_part_1",
+  "id": "dlg_nwq_biology_class_part_1",
+  "nodes": [
+    {
+      "id": "n_nwq_biology_class_part_1",
+      "next": "n_nwq_biology_class_part_1_2",
+      "text": "$name goes to $pos biology class.  The teacher, Mr. Kinsey, is"
+    },
+    {
+      "id": "n_nwq_biology_class_part_1_2",
+      "next": "n_nwq_biology_class_part_1_3",
+      "text": "lecturing about parts of flowers."
+    },
+    {
+      "id": "n_nwq_biology_class_part_1_3",
+      "next": "n_nwq_biology_class_part_1_4",
+      "text": "//Flower genders are weird…//"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_flower_biology_question",
+          "id": "c_nwq_sigh",
+          "text": "Sigh"
+        }
+      ],
+      "id": "n_nwq_biology_class_part_1_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_flower_biology_question",
+      "next": "n_nwq_flower_biology_question_2",
+      "text": "Mr. Kinsey asks a question about flower"
+    },
+    {
+      "id": "n_nwq_flower_biology_question_2",
+      "next": "n_nwq_flower_biology_question_3",
+      "text": ". $name knows the answer to the question. What should $sbj do?"
+    },
+    {
+      "id": "n_nwq_flower_biology_question_3",
+      "next": "n_nwq_flower_biology_question_4",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_flower_biology_question_4",
+      "next": "n_nwq_flower_biology_question_5",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_answer_flower_question",
+          "id": "c_nwq_raise_pos_hand",
+          "text": "raise $pos hand"
+        },
+        {
+          "goto": "n_nwq_not_flower_question",
+          "id": "c_nwq_do_nothing",
+          "text": "do nothing"
+        }
+      ],
+      "id": "n_nwq_flower_biology_question_5",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_answer_flower_question",
+      "next": "n_nwq_answer_flower_question_2",
+      "text": "Mr. Kinsey picks on $name, calling $pos \"$deadname.\"  $name cringes when the teacher calls $obj that name but $sbj doesn't bother to complain."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_2",
+          "id": "c_nwq_go_to_lunch",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_answer_flower_question_2",
+      "text": "answers the question correctly and zones out for the rest of the class period."
+    },
+    {
+      "id": "n_nwq_whispers_to_ryan",
+      "next": "n_nwq_whispers_to_ryan_2",
+      "text": "$name whispers to"
+    },
+    {
+      "id": "n_nwq_whispers_to_ryan_2",
+      "next": "n_nwq_whispers_to_ryan_3",
+      "showIf": {
+        "counter": "ryan",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "$pos classmate"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_2",
+          "id": "c_nwq_go_to_lunch_2",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_whispers_to_ryan_3",
+      "text": "$ally about how it's weird that flowers can be both genders at the same time."
+    },
+    {
+      "id": "n_nwq_lunch_day_2",
+      "next": "n_nwq_lunch_day_2_2",
+      "text": "It’s lunch now. $name sits down at a table and starts eating the sandwich $pos mom made for $obj. Someone sitting at the other end of the table looks at $obj sideways."
+    },
+    {
+      "id": "n_nwq_lunch_day_2_2",
+      "next": "n_nwq_lunch_day_2_3",
+      "text": "\"What?\" $name says to him."
+    },
+    {
+      "id": "n_nwq_lunch_day_2_3",
+      "next": "n_nwq_lunch_day_2_4",
+      "text": "He laughs, saying, \"Why you always dressed so funny?\""
+    },
+    {
+      "id": "n_nwq_lunch_day_2_4",
+      "next": "n_nwq_lunch_day_2_5",
+      "text": "$name looks down and frowns. \"What do you mean…?\""
+    },
+    {
+      "id": "n_nwq_lunch_day_2_5",
+      "next": "n_nwq_lunch_day_2_6",
+      "text": "\"You a"
+    },
+    {
+      "id": "n_nwq_lunch_day_2_6",
+      "next": "n_nwq_lunch_day_2_7",
+      "text": "or something?\" The bully laughs"
+    },
+    {
+      "choices": [
+        {
+          "id": "c_nwq_too_loudly",
+          "text": "too loudly"
+        }
+      ],
+      "id": "n_nwq_lunch_day_2_7",
+      "isEnd": true,
+      "text": "to be comfortable."
+    },
+    {
+      "id": "n_nwq_not_flower_question",
+      "next": "n_nwq_not_flower_question_2",
+      "text": "$name stares out the window as $pos classmate"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_2",
+          "id": "c_nwq_go_to_lunch_3",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_not_flower_question_2",
+      "text": "answers the question. $name knew the answer, but $sbj was too embarrassed to answer. Maybe next time."
+    },
+    {
+      "id": "n_nwq_book_club_part_1",
+      "next": "n_nwq_book_club_part_1_2",
+      "text": "After school, $name goes to the middle school book club"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_2",
+      "next": "n_nwq_book_club_part_1_3",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "with $ally"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_3",
+      "next": "n_nwq_book_club_part_1_4",
+      "text": ".  $name sits down"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_4",
+      "next": "n_nwq_book_club_part_1_5",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "next to $ally"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_5",
+      "next": "n_nwq_book_club_part_1_6",
+      "text": "and, as usual, starts writing."
+    },
+    {
+      "id": "n_nwq_book_club_part_1_6",
+      "next": "n_nwq_book_club_part_1_7",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_7",
+      "next": "n_nwq_book_club_part_1_8",
+      "text": "Today, $name is writing"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_8",
+      "next": "n_nwq_book_club_part_1_9",
+      "showIf": {
+        "counter": "happy",
+        "op": ">",
+        "type": "counter",
+        "value": 2
+      },
+      "text": "a short story about"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_9",
+      "next": "n_nwq_book_club_part_1_10",
+      "showIf": {
+        "of": {
+          "counter": "happy",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "text": "a poem"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_10",
+      "next": "n_nwq_book_club_part_1_11",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "happy",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          {
+            "counter": "happy",
+            "op": "<",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "about knives."
+    },
+    {
+      "id": "n_nwq_book_club_part_1_11",
+      "next": "n_nwq_book_club_part_1_12",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "happy",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          {
+            "counter": "happy",
+            "op": "<",
+            "type": "counter",
+            "value": 1
+          },
+          {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": -1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "All the knives"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_12",
+      "next": "n_nwq_book_club_part_1_13",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "happy",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "happy",
+              "op": "<",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "metaphorically describing"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_13",
+      "next": "n_nwq_book_club_part_1_14",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "happy",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "happy",
+              "op": "<",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "."
+    },
+    {
+      "id": "n_nwq_book_club_part_1_14",
+      "next": "n_nwq_book_club_part_1_15",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_15",
+      "next": "n_nwq_book_club_part_1_16",
+      "text": "Soon, it is time for everyone to"
+    },
+    {
+      "id": "n_nwq_book_club_part_1_16",
+      "isEnd": true,
+      "text": "."
+    },
+    {
+      "id": "n_nwq_go_to_the_field",
+      "next": "n_nwq_go_to_the_field_2",
+      "text": "$ally takes $name out to the field and asks $obj how $sbj's doing.  $name stares at $pos shoes and shrugs."
+    },
+    {
+      "id": "n_nwq_go_to_the_field_2",
+      "next": "n_nwq_go_to_the_field_3",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_not_talk_to_ryan_day_2",
+          "id": "c_nwq_tell_ally_that_everything",
+          "text": "Tell $ally that everything's fine"
+        }
+      ],
+      "id": "n_nwq_go_to_the_field_3",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_go_to_the_book",
+          "showIf": {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": -2
+            },
+            "type": "not"
+          },
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_cry_in_the_hallway_part_1",
+      "text": "$name stops in the hallway and checks to see that no one else is there."
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_2",
+      "next": "n_nwq_talk_to_ryan_day_2_2",
+      "onEnter": [
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "$name looks up at $ally."
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_2_2",
+      "next": "n_nwq_talk_to_ryan_day_2_3",
+      "text": "$name: \"I just hate that people keep doing that.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_2_3",
+      "next": "n_nwq_talk_to_ryan_day_2_4",
+      "text": "$ally: \"Yeah. That guy was a real jerk.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_2_4",
+      "next": "n_nwq_talk_to_ryan_day_2_5",
+      "text": "$name: \"Uh, thanks for standing up for me.\" $name stares at $pos shoes. \"Not a lot of people do that.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_2_5",
+      "next": "n_nwq_talk_to_ryan_day_2_6",
+      "text": "$ally: \"No problem, $deadname. That guy bothers you again, just let me know.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_of_course",
+          "showIf": {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 2
+          },
+          "text": "Of course"
+        },
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_go_to_the_book_2",
+          "showIf": {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_talk_to_ryan_day_2_6",
+      "text": "$name: \"I will.\""
+    },
+    {
+      "id": "n_nwq_not_talk_to_ryan_day_2",
+      "next": "n_nwq_not_talk_to_ryan_day_2_2",
+      "text": "$name continues staring at $pos feet. \"I'm doing fine.\""
+    },
+    {
+      "id": "n_nwq_not_talk_to_ryan_day_2_2",
+      "next": "n_nwq_not_talk_to_ryan_day_2_3",
+      "text": "$ally nods.  \"If you ever want to talk…\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_of_course_2",
+          "showIf": {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 2
+          },
+          "text": "Of course"
+        },
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_go_to_the_book_3",
+          "showIf": {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_not_talk_to_ryan_day_2_3",
+      "text": "$name smiles weakly. \"Thanks, $ally.\""
+    },
+    {
+      "id": "n_nwq_math_class_part_1",
+      "next": "n_nwq_math_class_part_1_2",
+      "text": "During math class, $name needs to go to the bathroom.  $name walks out into the hallway and has to make a choice. Which bathroom should $sbj use?"
+    },
+    {
+      "id": "n_nwq_math_class_part_1_2",
+      "next": "n_nwq_math_class_part_1_3",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_math_class_part_1_3",
+      "next": "n_nwq_math_class_part_1_4",
+      "text": "<!--Unfortunately, $name has been told $sbj is not supposed to use this one.-->"
+    },
+    {
+      "id": "n_nwq_math_class_part_1_4",
+      "next": "n_nwq_math_class_part_1_5",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_math_class_part_1_5",
+      "next": "n_nwq_math_class_part_1_6",
+      "text": "<!--Nobody complains when $sbj uses the $misnoun's room, but $name doesn't like being associated with $noun things.-->"
+    },
+    {
+      "id": "n_nwq_math_class_part_1_6",
+      "next": "n_nwq_math_class_part_1_7",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_your_bathroom",
+          "id": "c_nwq_noun_s_room",
+          "text": "$noun's room"
+        },
+        {
+          "goto": "n_nwq_not_your_bathroom",
+          "id": "c_nwq_misnoun_s_room",
+          "text": "$misnoun's room"
+        },
+        {
+          "goto": "n_nwq_no_bathroom",
+          "id": "c_nwq_other",
+          "text": "other"
+        }
+      ],
+      "id": "n_nwq_math_class_part_1_7",
+      "text": "<!--If there was a gender-neutral bathroom, that'd be great.-->"
+    },
+    {
+      "id": "n_nwq_your_bathroom",
+      "next": "n_nwq_your_bathroom_2",
+      "text": "$name goes to the bathroom and does what $sbj needs to do.  As $sbj walks out, $pos art teacher, Ms. Tedders, walks by."
+    },
+    {
+      "id": "n_nwq_your_bathroom_2",
+      "next": "n_nwq_your_bathroom_3",
+      "text": "\"What were you doing in the $noun's bathroom,\" she demands."
+    },
+    {
+      "id": "n_nwq_your_bathroom_3",
+      "next": "n_nwq_your_bathroom_4",
+      "text": "\"Um, using the bathroom…?\""
+    },
+    {
+      "id": "n_nwq_your_bathroom_4",
+      "next": "n_nwq_your_bathroom_5",
+      "text": "\"You can't use the $noun's bathroom, $deadname,\" Ms. Tedders says.  \"You're a $misnoun.\""
+    },
+    {
+      "id": "n_nwq_your_bathroom_5",
+      "next": "n_nwq_your_bathroom_6",
+      "text": "\"You're right. I'm sorry,\" $name whispers before heading back to math class."
+    },
+    {
+      "id": "n_nwq_your_bathroom_6",
+      "next": "n_nwq_your_bathroom_7",
+      "text": "Despite the confrontation, $name still feels like $sbj did the right thing.  If only other people"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_back_to_math_class",
+          "id": "c_nwq_understood_obj",
+          "text": "understood $obj"
+        }
+      ],
+      "id": "n_nwq_your_bathroom_7",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_not_your_bathroom",
+      "next": "n_nwq_not_your_bathroom_2",
+      "text": "$name goes into the $misnoun's bathroom.  It bothers $obj to need to hide who $sbj is but the fear keeps $obj from doing differently.  Afterward, $name heads"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_back_to_math_class",
+          "id": "c_nwq_back_to_math_class",
+          "text": "back to math class"
+        }
+      ],
+      "id": "n_nwq_not_your_bathroom_2",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_no_bathroom",
+      "next": "n_nwq_no_bathroom_2",
+      "text": "Unfortunately, $name's school doesn't have a gender-neutral bathroom.  $name frowns but as $sbj really has to pee, $sbj makes a choice."
+    },
+    {
+      "id": "n_nwq_no_bathroom_2",
+      "next": "n_nwq_no_bathroom_3",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_your_bathroom",
+          "id": "c_nwq_noun_s_room_2",
+          "text": "$noun's room"
+        },
+        {
+          "goto": "n_nwq_not_your_bathroom",
+          "id": "c_nwq_misnoun_s_room_2",
+          "text": "$misnoun's room"
+        }
+      ],
+      "id": "n_nwq_no_bathroom_3",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_back_to_math_class",
+      "next": "n_nwq_back_to_math_class_2",
+      "text": "Back in math class, $name zones out as Mrs. Pendle goes over"
+    },
+    {
+      "id": "n_nwq_back_to_math_class_2",
+      "next": "n_nwq_back_to_math_class_3",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_back_to_math_class_3",
+      "next": "n_nwq_back_to_math_class_4",
+      "text": "Eventually, it's time for"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_3",
+          "id": "c_nwq_lunch",
+          "text": "lunch"
+        }
+      ],
+      "id": "n_nwq_back_to_math_class_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_lunch_day_3",
+      "next": "n_nwq_lunch_day_3_2",
+      "text": "$name picks a table"
+    },
+    {
+      "id": "n_nwq_lunch_day_3_2",
+      "next": "n_nwq_lunch_day_3_3",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "with $ally"
+    },
+    {
+      "id": "n_nwq_lunch_day_3_3",
+      "next": "n_nwq_lunch_day_3_4",
+      "text": "and starts eating $pos sandwich."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_4",
+      "next": "n_nwq_lunch_day_3_5",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_lunch_day_3_5",
+      "next": "n_nwq_lunch_day_3_6",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "They talk about reading, writing, and the book club. $ally encourages $name to share $pos writing with the other club members because it's good."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_6",
+      "next": "n_nwq_lunch_day_3_7",
+      "showIf": {
+        "of": [
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$dummy[They talk about their interests."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_7",
+      "next": "n_nwq_lunch_day_3_8",
+      "text": "$name decides to invite $ally to $pos afterschool book club, and $ally enthusiastically accepts."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_8",
+      "next": "n_nwq_lunch_day_3_9",
+      "onEnter": [
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "]"
+    },
+    {
+      "id": "n_nwq_lunch_day_3_9",
+      "next": "n_nwq_lunch_day_3_10",
+      "showIf": {
+        "of": [
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$ally sees $name sitting alone in the cafeteria and decides to join $obj. Though they're mostly silent, it's nice to have company during lunch."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_10",
+      "next": "n_nwq_lunch_day_3_11",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_lunch_day_3_11",
+      "next": "n_nwq_lunch_day_3_12",
+      "text": "Today, no one bullies $name during the lunch period."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_12",
+      "next": "n_nwq_lunch_day_3_13",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_lunch_day_3_13",
+      "next": "n_nwq_lunch_day_3_14",
+      "text": "All too soon, it's time to go to $pos"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_english_class_part_1",
+          "id": "c_nwq_next_class",
+          "text": "next class"
+        }
+      ],
+      "id": "n_nwq_lunch_day_3_14",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_pe_class_part_1",
+      "next": "n_nwq_pe_class_part_1_2",
+      "text": "$name heads to PE class.  Coach Paul splits the class into boys and girls teams to play dodgeball. You walk over to the $noun's team"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_2",
+      "next": "n_nwq_pe_class_part_1_3",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 4
+      },
+      "text": "with $ally"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_3",
+      "next": "n_nwq_pe_class_part_1_4",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_4",
+      "next": "n_nwq_pe_class_part_1_5",
+      "text": "Coach Paul calls $name out. \"$deadname, stop wasting time and get on your team already.\" $name shivers upon hearing //that// name."
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_5",
+      "next": "n_nwq_pe_class_part_1_6",
+      "text": "What should $name do?"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_6",
+      "next": "n_nwq_pe_class_part_1_7",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_7",
+      "next": "n_nwq_pe_class_part_1_8",
+      "text": "<ul>"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_8",
+      "next": "n_nwq_pe_class_part_1_9",
+      "showIf": {
+        "counter": "self",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "<li>stay on the"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_9",
+      "next": "n_nwq_pe_class_part_1_10",
+      "showIf": {
+        "counter": "self",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_10",
+      "next": "n_nwq_pe_class_part_1_11",
+      "text": "<li>play on the"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_11",
+      "next": "n_nwq_pe_class_part_1_12",
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_pe_class_part_1_12",
+      "next": "n_nwq_pe_class_part_1_13",
+      "text": "</ul>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_defend_gender_pe",
+          "id": "c_nwq_noun_s_team",
+          "showIf": {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 1
+          },
+          "text": "$noun's team"
+        },
+        {
+          "goto": "n_nwq_not_defend_gender_pe",
+          "id": "c_nwq_misnoun_s_team",
+          "text": "$misnoun's team"
+        }
+      ],
+      "id": "n_nwq_pe_class_part_1_13",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_art_class_day_5",
+      "next": "n_nwq_art_class_day_5_2",
+      "text": "$name goes to $pos art class with $ally. Today, the class is"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_2",
+      "next": "n_nwq_art_class_day_5_3",
+      "text": "their paper-mâché sculptures."
+    },
+    {
+      "id": "n_nwq_art_class_day_5_3",
+      "next": "n_nwq_art_class_day_5_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_4",
+      "next": "n_nwq_art_class_day_5_5",
+      "text": "$ally stares quizzically at $name's sculpture.  It's a stylized depiction of"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_5",
+      "next": "n_nwq_art_class_day_5_6",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_6",
+      "next": "n_nwq_art_class_day_5_7",
+      "text": "\"What's yours about?\" $ally asks."
+    },
+    {
+      "id": "n_nwq_art_class_day_5_7",
+      "next": "n_nwq_art_class_day_5_8",
+      "text": "$name frowns at $pos sculpture."
+    },
+    {
+      "id": "n_nwq_art_class_day_5_8",
+      "next": "n_nwq_art_class_day_5_9",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_9",
+      "next": "n_nwq_art_class_day_5_10",
+      "text": "<ul>"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_10",
+      "next": "n_nwq_art_class_day_5_11",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 1
+          },
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 4
+          }
+        ],
+        "type": "all"
+      },
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_11",
+      "next": "n_nwq_art_class_day_5_12",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 1
+          },
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 4
+          }
+        ],
+        "type": "all"
+      },
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_12",
+      "next": "n_nwq_art_class_day_5_13",
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_13",
+      "next": "n_nwq_art_class_day_5_14",
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_art_class_day_5_14",
+      "next": "n_nwq_art_class_day_5_15",
+      "text": "</ul>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_talk_to_ryan_day_5",
+          "id": "c_nwq_talk_about_name_s",
+          "showIf": {
+            "of": [
+              {
+                "counter": "self",
+                "op": ">",
+                "type": "counter",
+                "value": 1
+              },
+              {
+                "counter": "ryan",
+                "op": ">",
+                "type": "counter",
+                "value": 4
+              }
+            ],
+            "type": "all"
+          },
+          "text": "Talk about $name's hardships"
+        },
+        {
+          "goto": "n_nwq_not_talk_to_ryan_day_5",
+          "id": "c_nwq_evade_ally_s_question",
+          "text": "Evade $ally's question"
+        }
+      ],
+      "id": "n_nwq_art_class_day_5_15",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_english_class_part_1",
+      "next": "n_nwq_english_class_part_1_2",
+      "text": "The last class of the day is English class. Mr. Francis is lecturing about misplaced and dangling modifiers."
+    },
+    {
+      "id": "n_nwq_english_class_part_1_2",
+      "next": "n_nwq_english_class_part_1_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_3",
+      "next": "n_nwq_english_class_part_1_4",
+      "text": "As $name's taking notes, $sbj doodles"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_4",
+      "next": "n_nwq_english_class_part_1_5",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "happy",
+              "op": ">",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "a way to leave this world behind"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_5",
+      "next": "n_nwq_english_class_part_1_6",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "happy",
+              "op": ">",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "nothing of particular importance"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_6",
+      "next": "n_nwq_english_class_part_1_7",
+      "text": "in the margins of $pos notes."
+    },
+    {
+      "id": "n_nwq_english_class_part_1_7",
+      "next": "n_nwq_english_class_part_1_8",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_8",
+      "next": "n_nwq_english_class_part_1_9",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_9",
+      "next": "n_nwq_english_class_part_1_10",
+      "text": "Eventually, the bell rings."
+    },
+    {
+      "id": "n_nwq_english_class_part_1_10",
+      "next": "n_nwq_english_class_part_1_11",
+      "showIf": {
+        "counter": "self",
+        "op": ">",
+        "type": "counter",
+        "value": -1
+      },
+      "text": "$name"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_11",
+      "next": "n_nwq_english_class_part_1_12",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 3
+          }
+        ],
+        "type": "all"
+      },
+      "text": "excitedly"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_12",
+      "next": "n_nwq_english_class_part_1_13",
+      "showIf": {
+        "counter": "self",
+        "op": ">",
+        "type": "counter",
+        "value": -1
+      },
+      "text": "heads to $pos"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_13",
+      "next": "n_nwq_english_class_part_1_14",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          }
+        ],
+        "type": "all"
+      },
+      "text": "with"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_14",
+      "next": "n_nwq_english_class_part_1_15",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "counter": "ryan",
+            "op": "<",
+            "type": "counter",
+            "value": 4
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$pos new friend,"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_15",
+      "next": "n_nwq_english_class_part_1_16",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$ally"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_16",
+      "next": "n_nwq_english_class_part_1_17",
+      "showIf": {
+        "counter": "self",
+        "op": ">",
+        "type": "counter",
+        "value": -1
+      },
+      "text": "."
+    },
+    {
+      "id": "n_nwq_english_class_part_1_17",
+      "next": "n_nwq_english_class_part_1_18",
+      "showIf": {
+        "of": {
+          "counter": "self",
+          "op": ">",
+          "type": "counter",
+          "value": -1
+        },
+        "type": "not"
+      },
+      "text": "$name slowly packs $pos things and heads"
+    },
+    {
+      "id": "n_nwq_english_class_part_1_18",
+      "next": "n_nwq_english_class_part_1_19",
+      "showIf": {
+        "of": {
+          "counter": "self",
+          "op": ">",
+          "type": "counter",
+          "value": -1
+        },
+        "type": "not"
+      },
+      "text": "."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_after_school_book_club",
+          "showIf": {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          },
+          "text": "after school book club"
+        },
+        {
+          "goto": "n_nwq_cry_in_the_hallway_part_1",
+          "id": "c_nwq_into_a_quiet_hallway",
+          "showIf": {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": -1
+            },
+            "type": "not"
+          },
+          "text": "into a quiet hallway"
+        }
+      ],
+      "id": "n_nwq_english_class_part_1_19",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5",
+      "next": "n_nwq_talk_to_ryan_day_5_2",
+      "onEnter": [
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "talk",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "$name looks up at $ally."
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_2",
+      "next": "n_nwq_talk_to_ryan_day_5_3",
+      "text": "$name: \"Well, there's something I want to tell you.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_3",
+      "next": "n_nwq_talk_to_ryan_day_5_4",
+      "text": "$ally: \"Cool.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_4",
+      "next": "n_nwq_talk_to_ryan_day_5_5",
+      "text": "$name: \"I… don't think I'm normal.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_5",
+      "next": "n_nwq_talk_to_ryan_day_5_6",
+      "text": "$ally: \"What do you mean by that? No one's actually 'normal,' silly.”"
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_6",
+      "next": "n_nwq_talk_to_ryan_day_5_7",
+      "text": "$name: \"I don’t know. It's just that, I’ve always felt different.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_7",
+      "next": "n_nwq_talk_to_ryan_day_5_8",
+      "text": "$ally: \"Different how…?\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_8",
+      "next": "n_nwq_talk_to_ryan_day_5_9",
+      "text": "$name: \"You know how everyone thinks I’m a $misnoun?\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_9",
+      "next": "n_nwq_talk_to_ryan_day_5_10",
+      "text": "$ally: \"Oh. Yeah?”"
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_10",
+      "next": "n_nwq_talk_to_ryan_day_5_11",
+      "text": "$name: \"Well, I don't think I’m actually a $misnoun.  I mean, I've always felt weird when people called me '$missbj' or '$misobj' or tried to associate me with"
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_11",
+      "next": "n_nwq_talk_to_ryan_day_5_12",
+      "text": "things.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_12",
+      "next": "n_nwq_talk_to_ryan_day_5_13",
+      "text": "$ally: \"I see.\""
+    },
+    {
+      "id": "n_nwq_talk_to_ryan_day_5_13",
+      "next": "n_nwq_talk_to_ryan_day_5_14",
+      "text": "$name looks"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_ryan_accepts_you",
+          "id": "c_nwq_down_at_pos_feet",
+          "text": "down at $pos feet"
+        }
+      ],
+      "id": "n_nwq_talk_to_ryan_day_5_14",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_defend_gender_pe",
+      "next": "n_nwq_defend_gender_pe_2",
+      "text": "$name decides $sbj wants to play on the $noun's team."
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_2",
+      "next": "n_nwq_defend_gender_pe_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_3",
+      "next": "n_nwq_defend_gender_pe_4",
+      "showIf": {
+        "of": [
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 4
+          },
+          {
+            "flag": "talk",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Despite not fully understanding why,"
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_4",
+      "next": "n_nwq_defend_gender_pe_5",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 4
+      },
+      "text": "$ally supports $obj, too. The two of them stand their ground, and Coach Paul lets $name stay on the $noun's team."
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_5",
+      "next": "n_nwq_defend_gender_pe_6",
+      "onEnter": [
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "ryan",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "showIf": {
+        "of": {
+          "counter": "ryan",
+          "op": ">",
+          "type": "counter",
+          "value": 4
+        },
+        "type": "not"
+      },
+      "text": "$name's classmates stare at $obj weirdly and"
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_6",
+      "next": "n_nwq_defend_gender_pe_7",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 4
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": 2
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$sbj stands $pos ground.  Coach Paul lets $name stay."
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_7",
+      "next": "n_nwq_defend_gender_pe_8",
+      "onEnter": [
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 4
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "$sbj stares at the ground for a moment before walking to the $misnoun's team."
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_8",
+      "next": "n_nwq_defend_gender_pe_9",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_9",
+      "next": "n_nwq_defend_gender_pe_10",
+      "text": "$name isn't particularly good at sports, but dodgeball is easy enough. The class period"
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_10",
+      "next": "n_nwq_defend_gender_pe_11",
+      "showIf": {
+        "of": [
+          {
+            "counter": "ryan",
+            "op": "<",
+            "type": "counter",
+            "value": 6
+          },
+          {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 3
+          }
+        ],
+        "type": "all"
+      },
+      "text": "is tolerable"
+    },
+    {
+      "id": "n_nwq_defend_gender_pe_11",
+      "next": "n_nwq_defend_gender_pe_12",
+      "showIf": {
+        "of": {
+          "of": [
+            {
+              "counter": "ryan",
+              "op": "<",
+              "type": "counter",
+              "value": 6
+            },
+            {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 3
+            }
+          ],
+          "type": "all"
+        },
+        "type": "not"
+      },
+      "text": "goes without a hitch"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_ryan_wants_to_talk_day_4",
+          "id": "c_nwq_talk_after_class",
+          "showIf": {
+            "of": [
+              {
+                "counter": "ryan",
+                "op": ">",
+                "type": "counter",
+                "value": 6
+              },
+              {
+                "counter": "self",
+                "op": ">",
+                "type": "counter",
+                "value": 1
+              }
+            ],
+            "type": "all"
+          },
+          "text": "talk after class"
+        },
+        {
+          "goto": "n_nwq_lunch_day_4",
+          "id": "c_nwq_go_to_lunch_4",
+          "showIf": {
+            "of": {
+              "of": [
+                {
+                  "counter": "ryan",
+                  "op": ">",
+                  "type": "counter",
+                  "value": 6
+                },
+                {
+                  "counter": "self",
+                  "op": ">",
+                  "type": "counter",
+                  "value": 1
+                }
+              ],
+              "type": "all"
+            },
+            "type": "not"
+          },
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_defend_gender_pe_12",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_not_defend_gender_pe",
+      "next": "n_nwq_not_defend_gender_pe_2",
+      "text": "$name decides it's easier if $sbj plays on the $misnoun's team."
+    },
+    {
+      "id": "n_nwq_not_defend_gender_pe_2",
+      "next": "n_nwq_not_defend_gender_pe_3",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 4
+      },
+      "text": "$ally notices $name's discomfort but doesn't say anything. $name probably shouldn't have let it go so easily."
+    },
+    {
+      "id": "n_nwq_not_defend_gender_pe_3",
+      "next": "n_nwq_not_defend_gender_pe_4",
+      "showIf": {
+        "of": {
+          "counter": "ryan",
+          "op": ">",
+          "type": "counter",
+          "value": 4
+        },
+        "type": "not"
+      },
+      "text": "$name feels shitty about playing on the $misnoun's team but whatever. This is how life is."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_4",
+          "id": "c_nwq_go_to_lunch_5",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_not_defend_gender_pe_4",
+      "text": "$name isn't particularly good at sports, but dodgeball is easy enough. The class period is tolerable."
+    },
+    {
+      "id": "n_nwq_lunch_day_4",
+      "next": "n_nwq_lunch_day_4_2",
+      "showIf": {
+        "counter": "ryan",
+        "op": ">",
+        "type": "counter",
+        "value": 3
+      },
+      "text": "$ally has homework to get done, so $sbj doesn't have time to eat lunch with $name."
+    },
+    {
+      "id": "n_nwq_lunch_day_4_2",
+      "next": "n_nwq_lunch_day_4_3",
+      "text": "$name eats $pos sandwich in peace, thinking about"
+    },
+    {
+      "id": "n_nwq_lunch_day_4_3",
+      "next": "n_nwq_lunch_day_4_4",
+      "text": ", when $sbj gets bullied by this girl and it sucks ass."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_confront_the_bully",
+          "id": "c_nwq_another_way_to_live",
+          "showIf": {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 0
+          },
+          "text": "another way to live"
+        },
+        {
+          "goto": "n_nwq_after_lunch_day_4",
+          "id": "c_nwq_ignores_her",
+          "showIf": {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          "text": "ignores her"
+        }
+      ],
+      "id": "n_nwq_lunch_day_4_4",
+      "text": "\"Why do you dress so weird, you gay bitch?\" she hollered from the other side of the lunch table."
+    },
+    {
+      "id": "n_nwq_ryan_wants_to_talk_day_4",
+      "next": "n_nwq_ryan_wants_to_talk_day_4_2",
+      "text": "$ally asks $name why $sbj insisted on playing on the $noun's team with $obj for dodgeball today. $name can tell that $sbj is truly curious and trying to help."
+    },
+    {
+      "id": "n_nwq_ryan_wants_to_talk_day_4_2",
+      "next": "n_nwq_ryan_wants_to_talk_day_4_3",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_talk_to_ryan_day_5",
+          "id": "c_nwq_explain_name_s_reasons",
+          "text": "Explain $name's reasons"
+        },
+        {
+          "goto": "n_nwq_not_talk_to_ryan_day_5",
+          "id": "c_nwq_evade_ally_question",
+          "text": "Evade $ally question"
+        }
+      ],
+      "id": "n_nwq_ryan_wants_to_talk_day_4_3",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you",
+      "next": "n_nwq_ryan_accepts_you_2",
+      "text": "$ally cracks a smile. \"That’s actually really cool!\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_2",
+      "next": "n_nwq_ryan_accepts_you_3",
+      "text": "$name: \"Oh. You think so?\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_3",
+      "next": "n_nwq_ryan_accepts_you_4",
+      "text": "$ally: \"Yeah!  I think so. You're saying that you're actually a $noun, like me.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_4",
+      "next": "n_nwq_ryan_accepts_you_5",
+      "text": "$name: \"Um, yeah. Kind of, I guess. Yeah.\" $name shuffles from foot to foot."
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_5",
+      "next": "n_nwq_ryan_accepts_you_6",
+      "text": "$ally: \"Hey, $deadname. You okay?\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_6",
+      "next": "n_nwq_ryan_accepts_you_7",
+      "text": "$name: \"Um, I don't actually being called $deadname.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_7",
+      "next": "n_nwq_ryan_accepts_you_8",
+      "text": "$ally: \"Oh. I'm sorry.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_8",
+      "next": "n_nwq_ryan_accepts_you_9",
+      "text": "$name: \"It's okay. You didn't mean it.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_9",
+      "next": "n_nwq_ryan_accepts_you_10",
+      "text": "$ally: \"Well, is there something else I could call you?\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_10",
+      "next": "n_nwq_ryan_accepts_you_11",
+      "text": "$name: \"Um, is it okay if you call me $name instead?\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_11",
+      "next": "n_nwq_ryan_accepts_you_12",
+      "text": "$ally: \"$name. That's a cool name. I like it.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_12",
+      "next": "n_nwq_ryan_accepts_you_13",
+      "text": "$name: \"Yeah. I like it, too.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_13",
+      "next": "n_nwq_ryan_accepts_you_14",
+      "text": "$ally: \"$name, a cool name for a cool a $noun.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_14",
+      "next": "n_nwq_ryan_accepts_you_15",
+      "text": "$name: \"Yeah! Thanks.\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_15",
+      "next": "n_nwq_ryan_accepts_you_16",
+      "text": "$name laughs along with $pos friend.  $name hasn't felt this good about $obj&#96;self&#96; since… $sbj can't remember when."
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_16",
+      "next": "n_nwq_ryan_accepts_you_17",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_17",
+      "next": "n_nwq_ryan_accepts_you_18",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "$ally: \"So, what you’re doing afterschool?\" <br />"
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_18",
+      "next": "n_nwq_ryan_accepts_you_19",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "$name: \"Not much.  Just my book club."
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_19",
+      "next": "n_nwq_ryan_accepts_you_20",
+      "showIf": {
+        "of": [
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "I don't even know why I keep going."
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_20",
+      "next": "n_nwq_ryan_accepts_you_21",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "\" <br />"
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_21",
+      "next": "n_nwq_ryan_accepts_you_22",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "$ally: \"Can I come with?\"  <br />"
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_22",
+      "next": "n_nwq_ryan_accepts_you_23",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "$name smiles.  \"Um, of course!\""
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_23",
+      "next": "n_nwq_ryan_accepts_you_24",
+      "onEnter": [
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "club",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "<br /><br />"
+    },
+    {
+      "id": "n_nwq_ryan_accepts_you_24",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "counter": "self",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "self",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_not_talk_to_ryan_day_5",
+      "next": "n_nwq_not_talk_to_ryan_day_5_2",
+      "text": "$name: \"It's nothing. Don't worry about it.\""
+    },
+    {
+      "id": "n_nwq_not_talk_to_ryan_day_5_2",
+      "next": "n_nwq_not_talk_to_ryan_day_5_3",
+      "text": "$ally: \"Okay.\""
+    },
+    {
+      "id": "n_nwq_not_talk_to_ryan_day_5_3",
+      "isEnd": true,
+      "text": "But $sbj looks unconvinced."
+    },
+    {
+      "id": "n_nwq_confront_the_bully",
+      "next": "n_nwq_confront_the_bully_2",
+      "text": "$name walked up to the bully. \"Why? Why do you say these things?\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_cry_in_the_hallway_part_1",
+          "id": "c_nwq_out_of_the_cafeteria",
+          "showIf": {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 0
+          },
+          "text": "out of the cafeteria"
+        },
+        {
+          "goto": "n_nwq_after_lunch_day_4",
+          "id": "c_nwq_left_obj_alone",
+          "showIf": {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          "text": "left $obj alone"
+        }
+      ],
+      "id": "n_nwq_confront_the_bully_2",
+      "text": "The bully looked at her hand and then $name again. \"Chill out, dude, I was just joking. Can't you take a joke?\""
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4",
+      "next": "n_nwq_after_lunch_day_4_2",
+      "text": "After lunch but before $pos next class, $name meets up with $ally and tells $obj about what just happened. $ally is deeply saddened."
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_2",
+      "next": "n_nwq_after_lunch_day_4_3",
+      "text": "$ally: \"She had no right to harass you like that!\""
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_3",
+      "next": "n_nwq_after_lunch_day_4_4",
+      "text": "$name: \"…\""
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_4",
+      "next": "n_nwq_after_lunch_day_4_5",
+      "text": "$ally: \"She didn't. I won't let you or anyone else tell me otherwise.\""
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_5",
+      "next": "n_nwq_after_lunch_day_4_6",
+      "text": "$name: \"Thanks.\""
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_6",
+      "next": "n_nwq_after_lunch_day_4_7",
+      "text": "$ally: \"No problem, $deadname."
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_7",
+      "next": "n_nwq_after_lunch_day_4_8",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "See you at the"
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_8",
+      "next": "n_nwq_after_lunch_day_4_9",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "."
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_9",
+      "next": "n_nwq_after_lunch_day_4_10",
+      "text": "\" {"
+    },
+    {
+      "id": "n_nwq_after_lunch_day_4_10",
+      "next": "n_nwq_after_lunch_day_4_11",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "<br /><br />"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_book_club",
+          "showIf": {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          },
+          "text": "book club"
+        },
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_go_to_the_book_4",
+          "showIf": {
+            "flag": "club",
+            "type": "flag",
+            "value": false
+          },
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_after_lunch_day_4_11",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_ryan_39_s_sculpture",
+      "next": "n_nwq_ryan_39_s_sculpture_2",
+      "text": "$name studies $ally's sculpture. It's a fairly tall structure comprised of complex hubs stacked atop one another, each bearing its own theme. Some are monochromatic while others are speckled with rough textures. One hub even has parts of the inner copper frame intentionally left bare."
+    },
+    {
+      "id": "n_nwq_ryan_39_s_sculpture_2",
+      "next": "n_nwq_ryan_39_s_sculpture_3",
+      "text": "$name: \"Your sculpture is really cool, too. So diverse and abstract.\""
+    },
+    {
+      "id": "n_nwq_ryan_39_s_sculpture_3",
+      "next": "n_nwq_ryan_39_s_sculpture_4",
+      "text": "$ally studies $pos own sculpture for a second. \"Sure, but it's nowhere near as cool as yours,"
+    },
+    {
+      "id": "n_nwq_ryan_39_s_sculpture_4",
+      "next": "n_nwq_ryan_39_s_sculpture_5",
+      "showIf": {
+        "flag": "talk",
+        "type": "flag",
+        "value": true
+      },
+      "text": "$name. Yours feels like you"
+    },
+    {
+      "id": "n_nwq_ryan_39_s_sculpture_5",
+      "next": "n_nwq_ryan_39_s_sculpture_6",
+      "showIf": {
+        "flag": "talk",
+        "type": "flag",
+        "value": false
+      },
+      "text": "$deadname"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_1",
+          "id": "c_nwq_go_to_the_book_5",
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_ryan_39_s_sculpture_6",
+      "text": ".\""
+    }
+  ],
+  "replayable": false,
+  "title": "Biology class part 1"
+}

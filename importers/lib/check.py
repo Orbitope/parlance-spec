@@ -88,10 +88,76 @@ def project_texts(root):
         d = json.load(open(p, encoding="utf-8"))
         for n in d.get("nodes", []):
             if n.get("text"):
-                out.append(("line", d["id"], n["id"], n["text"]))
+                out.append(("line", d["id"], n["id"], n["text"], n.get("showIf")))
             for c in n.get("choices") or []:
                 if c.get("text"):
-                    out.append(("option", d["id"], f"{n['id']}/{c['id']}", c["text"]))
+                    out.append(("option", d["id"], f"{n['id']}/{c['id']}", c["text"],
+                                c.get("showIf")))
+    return out
+
+
+def canon_condition(cond):
+    """A condition as a comparable string, insensitive to the order of an
+    all/any list — that order carries no meaning, and demanding it would report
+    a difference where there is none."""
+    if cond is None:
+        return None
+
+    def norm_cond(c):
+        if not isinstance(c, dict):
+            return c
+        if c.get("type") in ("all", "any") and isinstance(c.get("of"), list):
+            return {**c, "of": sorted((norm_cond(x) for x in c["of"]),
+                                      key=lambda x: json.dumps(x, sort_keys=True))}
+        if "of" in c:
+            return {**c, "of": norm_cond(c["of"])}
+        return c
+
+    return json.dumps(norm_cond(cond), sort_keys=True, ensure_ascii=False)
+
+
+def condition_defects(units, got_rows, rewrites):
+    """Guards the output does not agree with the manifest about.
+
+    This is the one defect class the string comparison structurally cannot see.
+    Both Yarn and Ink write an `else` branch without restating what it is the
+    alternative to, so the tempting mapping gives both branches the SAME guard —
+    and then, whenever it holds, the player reads two lines where the author
+    wrote one. Nothing is missing and nothing is invented, so `missing` and
+    `invented` are both empty and the import converges on a defect.
+
+    Two directions, because either alone leaves half the hole open:
+    a mapped guard that the output dropped or altered, and a gate on output text
+    the source did not gate at all. A unit the parser declared UNMAPPABLE is left
+    out of the second check on purpose — carrying one of those by hand is the
+    documented escape hatch, and the author is already being shown it.
+    """
+    want = {}
+    for u in units:
+        if not u.get("text"):
+            continue
+        key = norm(u["text"], rewrites)
+        if u.get("showIf"):
+            want.setdefault(key, []).append(canon_condition(u["showIf"]))
+        elif not u.get("unmappable"):
+            want.setdefault(key, []).append(None)
+
+    got = {}
+    for _kind, did, nid, text, cond in got_rows:
+        got.setdefault(norm(text, []), []).append((f"{did}::{nid}", canon_condition(cond)))
+
+    out = []
+    for key, expected in sorted(want.items()):
+        present = got.get(key)
+        if not present:
+            continue        # a missing line, already counted as such
+        for exp in sorted(set(expected), key=lambda x: (x is None, x or "")):
+            if any(actual == exp for _at, actual in present):
+                continue
+            out.append({"text": key,
+                        "expected": json.loads(exp) if exp else None,
+                        "found": [{"at": at, "showIf": json.loads(a) if a else None}
+                                  for at, a in present]})
     return out
 
 
@@ -115,19 +181,8 @@ def run_validator(root, validator_path):
     return {"errors": errs, "warnings": warns}, []
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--root", required=True)
-    ap.add_argument("--manifest", required=True)
-    ap.add_argument("--validator", default=None,
-                    help="path to tooling/validate.py (default: search upward)")
-    ap.add_argument("--max-passes", type=int, default=3)
-    ap.add_argument("--reset", action="store_true", help="start a new loop")
-    a = ap.parse_args()
-
-    man = json.load(open(a.manifest, encoding="utf-8"))
-
-    # --- the manifest must be the one the parser produced -------------------
+def verify_manifest(man):
+    """0 if this manifest is the one a parser produced, else the exit code to use."""
     # Presence first, because a MISSING field is the quiet failure. Reading each
     # one with a default made `residue` absent indistinguishable from `residue`
     # empty: deleting the key from a stamped manifest left the stamp valid and
@@ -153,6 +208,62 @@ def main():
               "Units, rewrites or residue changed after parsing. Re-parse the source; do not "
               "hand-edit a manifest to make the check pass.", file=sys.stderr)
         return 2
+    return 0
+
+
+def merge_manifests(parts):
+    """Several per-file manifests as one yardstick.
+
+    A story split across files is parsed per file and imported into one project,
+    so the comparison needs every file's units at once. Each part is verified
+    against its OWN stamp first (see verify_manifest) and the merge happens after
+    — a stamp recomputed here over this script's own input would not be a stamp,
+    and would wave through exactly the hand-edit the check exists to refuse. The
+    merged object is never re-stamped and never written anywhere.
+
+    Rewrites must agree across parts: they are a property of the FORMAT, and two
+    files of one story parsed by one parser cannot legitimately declare different
+    ones.
+    """
+    if len(parts) == 1:
+        return parts[0]
+    rewrites = [[tuple(r) for r in p["rewrites"]] for p in parts]
+    if any(r != rewrites[0] for r in rewrites):
+        sys.exit("MANIFESTS DISAGREE ON REWRITES — they describe the format, not the "
+                 "file, so two parts of one story cannot declare different ones.")
+    merged = dict(parts[0])
+    for key in ("units", "unmapped", "residue"):
+        merged[key] = [x for p in parts for x in p.get(key, [])]
+    merged["sources"] = [p.get("source") for p in parts]
+    merged["nodes"] = [n for p in parts for n in p.get("nodes", [])]
+    return merged
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--root", required=True)
+    ap.add_argument("--manifest", required=True, action="append",
+                    help="repeatable: a story split across files is parsed per file, "
+                         "and every manifest is verified separately before they are "
+                         "compared against one project")
+    ap.add_argument("--validator", default=None,
+                    help="path to tooling/validate.py (default: search upward)")
+    ap.add_argument("--max-passes", type=int, default=3)
+    ap.add_argument("--reset", action="store_true", help="start a new loop")
+    a = ap.parse_args()
+
+    parts = [json.load(open(m, encoding="utf-8")) for m in a.manifest]
+
+    # --- the manifest must be the one the parser produced -------------------
+    # Checked per FILE, before anything is merged. Verifying a merged manifest
+    # would mean re-stamping it here, and a stamp this script computes over its
+    # own input is not a stamp — it would accept exactly the hand-edit the check
+    # exists to refuse.
+    for one in parts:
+        code = verify_manifest(one)
+        if code:
+            return code
+    man = merge_manifests(parts)
 
     rewrites = [tuple(r) for r in man["rewrites"]]
     if len(rewrites) > MAX_REWRITES:
@@ -173,7 +284,7 @@ def main():
     declared = [u for u in man["units"] if u.get("text") and u.get("unmappable")]
     src = Counter(norm(u["text"], rewrites) for u in mappable)
     got_rows = project_texts(a.root)
-    got = Counter(norm(t, []) for _, _, _, t in got_rows)
+    got = Counter(norm(t, []) for _, _, _, t, _c in got_rows)
 
     missing = src - got          # in the source, absent from the output
     invented = got - src         # in the output, absent from the source
@@ -185,13 +296,13 @@ def main():
             del invented[t]
 
     where = {}
-    for kind, did, nid, t in got_rows:
+    for kind, did, nid, t, _cond in got_rows:
         where.setdefault(norm(t, []), []).append(f"{did}::{nid}")
 
     src_lines = sum(1 for u in mappable if u.get("kind") == "line")
     src_opts = sum(1 for u in mappable if u.get("kind") == "option")
-    got_lines = sum(1 for k, _, _, _ in got_rows if k == "line")
-    got_opts = sum(1 for k, _, _, _ in got_rows if k == "option")
+    got_lines = sum(1 for k, *_ in got_rows if k == "line")
+    got_opts = sum(1 for k, *_ in got_rows if k == "option")
 
     vpath = a.validator
     if not vpath:
@@ -205,7 +316,9 @@ def main():
     vres, verr = (run_validator(a.root, vpath) if vpath else (None, ["validator not found"]))
 
     n_err = len(vres["errors"]) if vres else 0
-    defects = sum(missing.values()) + n_err + abs(src_lines - got_lines) + abs(src_opts - got_opts)
+    cond_defects = condition_defects(man["units"], got_rows, rewrites)
+    defects = (sum(missing.values()) + n_err + len(cond_defects)
+               + abs(src_lines - got_lines) + abs(src_opts - got_opts))
 
     statep = os.path.join(a.root, STATE)
     prev = {}
@@ -275,6 +388,7 @@ def main():
                              if norm(u["text"], rewrites) not in got],
         "invented": [{"text": t, "n": c, "at": where.get(t, [])}
                      for t, c in invented.most_common()],
+        "condition_mismatch": cond_defects,
         "rewrites_declared": [list(r) for r in rewrites],
     }
     print(json.dumps(report, indent=2, ensure_ascii=False))

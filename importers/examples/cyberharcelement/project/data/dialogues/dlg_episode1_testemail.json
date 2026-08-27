@@ -1,0 +1,13 @@
+{
+  "entry": "n_episode1_testemail",
+  "id": "dlg_episode1_testemail",
+  "nodes": [
+    {
+      "id": "n_episode1_testemail",
+      "isEnd": true,
+      "text": "Check your mail, bro"
+    }
+  ],
+  "replayable": false,
+  "title": "TestEmail"
+}

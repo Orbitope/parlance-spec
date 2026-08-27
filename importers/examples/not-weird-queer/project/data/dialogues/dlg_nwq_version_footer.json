@@ -1,0 +1,23 @@
+{
+  "entry": "n_nwq_version_footer",
+  "id": "dlg_nwq_version_footer",
+  "nodes": [
+    {
+      "id": "n_nwq_version_footer",
+      "next": "n_nwq_version_footer_2",
+      "text": "<!-- Made a nice, neat, formatted footer page to make the footer nicer, neater, and most importantly, uniform across all pages. -->"
+    },
+    {
+      "id": "n_nwq_version_footer_2",
+      "next": "n_nwq_version_footer_3",
+      "text": "----"
+    },
+    {
+      "id": "n_nwq_version_footer_3",
+      "isEnd": true,
+      "text": "^^version $version - <a href= \"https://forms.gle/mc2JKRCaoz9jvtki9\" target=\"_blank\" rel=\"noopener noreferrer\">feedback</a>^^"
+    }
+  ],
+  "replayable": false,
+  "title": "Version footer"
+}

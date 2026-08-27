@@ -1,0 +1,548 @@
+{
+  "entry": "n_nwq_book_club_part_2",
+  "id": "dlg_nwq_book_club_part_2",
+  "nodes": [
+    {
+      "id": "n_nwq_book_club_part_2",
+      "next": "n_nwq_book_club_part_2_2",
+      "text": "$name and $ally go to the afterschool book club."
+    },
+    {
+      "id": "n_nwq_book_club_part_2_2",
+      "next": "n_nwq_book_club_part_2_3",
+      "text": "$name writes a story about $dummy["
+    },
+    {
+      "id": "n_nwq_book_club_part_2_3",
+      "next": "n_nwq_book_club_part_2_4",
+      "text": "]. When $sbj showes $ally, $sbj tells $name that it's really good, and"
+    },
+    {
+      "id": "n_nwq_book_club_part_2_4",
+      "next": "n_nwq_book_club_part_2_5",
+      "text": "that other people will like it."
+    },
+    {
+      "id": "n_nwq_book_club_part_2_5",
+      "next": "n_nwq_book_club_part_2_6",
+      "text": "Soon, it's time for everyone to"
+    },
+    {
+      "id": "n_nwq_book_club_part_2_6",
+      "isEnd": true,
+      "text": "."
+    },
+    {
+      "id": "n_nwq_lunch_day_9",
+      "next": "n_nwq_lunch_day_9_2",
+      "text": "When $name meets up with $ally at lunch, $sbj tells $obj about what happened in history class."
+    },
+    {
+      "id": "n_nwq_lunch_day_9_2",
+      "next": "n_nwq_lunch_day_9_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_lunch_day_9_3",
+      "next": "n_nwq_lunch_day_9_4",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_lunch_day_9_4",
+      "next": "n_nwq_lunch_day_9_5",
+      "text": "$name: \"Anyway, let's talk about something more lighthearted. I've had enough of him for the day.\""
+    },
+    {
+      "id": "n_nwq_lunch_day_9_5",
+      "next": "n_nwq_lunch_day_9_6",
+      "text": "$ally smiles. \""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_talk_about_books",
+          "id": "c_nwq_sure",
+          "text": "Sure"
+        }
+      ],
+      "id": "n_nwq_lunch_day_9_6",
+      "text": ".\""
+    },
+    {
+      "id": "n_nwq_art_class_part_2",
+      "next": "n_nwq_art_class_part_2_2",
+      "text": "$name goes to $pos art class with $ally. Today, the class is"
+    },
+    {
+      "id": "n_nwq_art_class_part_2_2",
+      "next": "n_nwq_art_class_part_2_3",
+      "text": "sculptures made from recycled materials."
+    },
+    {
+      "id": "n_nwq_art_class_part_2_3",
+      "next": "n_nwq_art_class_part_2_4",
+      "text": "$name is making a $dummy["
+    },
+    {
+      "id": "n_nwq_art_class_part_2_4",
+      "next": "n_nwq_art_class_part_2_5",
+      "text": "]."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_2",
+          "id": "c_nwq_book_club_part_2",
+          "text": "Book club part 2"
+        }
+      ],
+      "id": "n_nwq_art_class_part_2_5",
+      "text": "$ally is also working on a sculpture of $pos own with some sort of recycled materials."
+    },
+    {
+      "id": "n_nwq_math_class_day_10",
+      "next": "n_nwq_math_class_day_10_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Dylan",
+          "variable": "mathbud"
+        },
+        {
+          "type": "set_text",
+          "value": "Jaina",
+          "variable": "mathbud"
+        },
+        {
+          "type": "set_text",
+          "value": "Dylan",
+          "variable": "mathbud"
+        },
+        {
+          "type": "set_text",
+          "value": "Jaina",
+          "variable": "mathbud"
+        }
+      ],
+      "text": "$name goes to math class. Today, they're just catching up on past assignments. $name decides to do tonight's homework."
+    },
+    {
+      "id": "n_nwq_math_class_day_10_2",
+      "next": "n_nwq_math_class_day_10_3",
+      "text": "$name's sitting next to $mathbud, a $noun that $name had gone to elementary school with. Though they don't know each other that well, $name has always had a fairly positive opinion of $mathbud."
+    },
+    {
+      "id": "n_nwq_math_class_day_10_3",
+      "next": "n_nwq_math_class_day_10_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_math_class_day_10_4",
+      "isEnd": true,
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_english_class_day_10",
+      "next": "n_nwq_english_class_day_10_2",
+      "text": "$name heads to English class. Mr. Francis"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_2",
+      "next": "n_nwq_english_class_day_10_3",
+      "text": "refers to $obj as a $misnoun. Should $name correct him"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_3",
+      "next": "n_nwq_english_class_day_10_4",
+      "text": "?"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_4",
+      "next": "n_nwq_english_class_day_10_5",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_5",
+      "next": "n_nwq_english_class_day_10_6",
+      "text": "<ul>"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_6",
+      "next": "n_nwq_english_class_day_10_7",
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_7",
+      "next": "n_nwq_english_class_day_10_8",
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_8",
+      "next": "n_nwq_english_class_day_10_9",
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_9",
+      "next": "n_nwq_english_class_day_10_10",
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_10",
+      "next": "n_nwq_english_class_day_10_11",
+      "text": "</ul>"
+    },
+    {
+      "id": "n_nwq_english_class_day_10_11",
+      "isEnd": true,
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_defend_gender_angrily_english",
+      "next": "n_nwq_defend_gender_angrily_english_2",
+      "text": "$name: \"I told you that I'm a $noun. Don't you even bother to listen, Mr. Francis?\""
+    },
+    {
+      "id": "n_nwq_defend_gender_angrily_english_2",
+      "next": "n_nwq_defend_gender_angrily_english_3",
+      "text": "Mr. Francis: $dummy[(angry retorts)]"
+    },
+    {
+      "id": "n_nwq_defend_gender_angrily_english_3",
+      "next": "n_nwq_defend_gender_angrily_english_4",
+      "text": "$name: $dummy[(angry defending)]"
+    },
+    {
+      "id": "n_nwq_defend_gender_angrily_english_4",
+      "next": "n_nwq_defend_gender_angrily_english_5",
+      "text": "Mr. Francis: $dummy[(gets annoyed and just calls $name by the right gender)]"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_2",
+          "id": "c_nwq_go_to_the_book_6",
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_defend_gender_angrily_english_5",
+      "text": "Though $name seems to have won that encounter, agitating Mr. Francis doesn't seem like the right choice of action."
+    },
+    {
+      "id": "n_nwq_defend_gender_calmly_english",
+      "next": "n_nwq_defend_gender_calmly_english_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_defend_gender_calmly_english_2",
+      "next": "n_nwq_defend_gender_calmly_english_3",
+      "text": "}"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_2",
+          "id": "c_nwq_go_to_the_book_7",
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_defend_gender_calmly_english_3",
+      "text": "Getting people to repsepct $name's gender is an uphill battle, but calm and collected is the way to win the war."
+    },
+    {
+      "id": "n_nwq_don_39_t_defend_gender_english",
+      "next": "n_nwq_don_39_t_defend_gender_english_2",
+      "text": "{"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_cry_in_the_hallway_part_2",
+          "id": "c_nwq_go_to_the_hallway",
+          "showIf": {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 4
+          },
+          "text": "Go to the hallway"
+        },
+        {
+          "goto": "n_nwq_book_club_part_2",
+          "id": "c_nwq_go_to_the_book_8",
+          "showIf": {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 4
+            },
+            "type": "not"
+          },
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_don_39_t_defend_gender_english_2",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_explain_art_gender",
+      "next": "n_nwq_explain_art_gender_2",
+      "text": "$name decides to explain to $mathbud the personal significance of the"
+    },
+    {
+      "id": "n_nwq_explain_art_gender_2",
+      "next": "n_nwq_explain_art_gender_3",
+      "text": "pain depicted in $pos sculpture."
+    },
+    {
+      "id": "n_nwq_explain_art_gender_3",
+      "next": "n_nwq_explain_art_gender_4",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_explain_art_gender_4",
+      "next": "n_nwq_explain_art_gender_5",
+      "onEnter": [
+        {
+          "counter": "action",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "action",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_explain_art_gender_5",
+      "next": "n_nwq_explain_art_gender_6",
+      "text": "$mathbud: \"Anyway, don't ever stop making art. You've got a good eye.\""
+    },
+    {
+      "id": "n_nwq_explain_art_gender_6",
+      "next": "n_nwq_explain_art_gender_7",
+      "text": "$name: \"Thanks, $mathbud.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_10",
+          "id": "c_nwq_go_to_lunch_9",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_explain_art_gender_7",
+      "text": "$name is surprised at how $mathbud reacts to $pos art. $mathbud is actually a pretty cool person."
+    },
+    {
+      "id": "n_nwq_not_explain_art_gender",
+      "next": "n_nwq_not_explain_art_gender_2",
+      "text": "$name tells $mathbud that $sbj was inspired by this book that $sbj recently read. $mathbud isn't really into books, but agrees that that book sounds cool."
+    },
+    {
+      "id": "n_nwq_not_explain_art_gender_2",
+      "next": "n_nwq_not_explain_art_gender_3",
+      "text": "$mathbud: \"Anyway, don't ever stop making art. You've got a good eye.\""
+    },
+    {
+      "id": "n_nwq_not_explain_art_gender_3",
+      "next": "n_nwq_not_explain_art_gender_4",
+      "text": "$name: \"Thanks, $mathbud.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_10",
+          "id": "c_nwq_go_to_lunch_10",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_not_explain_art_gender_4",
+      "text": "$name wonders how $mathbud would've reacted to $name's gender, but quickly dismisses the thought. Not every interaction is a challenge to $pos gender, and sometimes, it's okay to take a break and just live."
+    },
+    {
+      "id": "n_nwq_pe_class_day_9",
+      "next": "n_nwq_pe_class_day_9_2",
+      "text": "$name goes to $pos PE class with $ally. Today's just a fitness day, so they run the mile together. The weather isn't too warm yet for running, yet, which $name is grateful for. $ally goes on and on about $pos $dummy["
+    },
+    {
+      "id": "n_nwq_pe_class_day_9_2",
+      "next": "n_nwq_pe_class_day_9_3",
+      "text": "] while $name just listens along and chimes in when $sbj feels like it."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_2",
+          "id": "c_nwq_go_to_the_book_9",
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_pe_class_day_9_3",
+      "text": "It wasn't $name's best mile, but $ally's silly antics sure made up for it."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_wander_the_field",
+          "id": "c_nwq_wander_the_field",
+          "text": "Wander the field"
+        }
+      ],
+      "id": "n_nwq_lunch_day_10",
+      "text": "$name starts out lunch with $ally and they hang out as much as they can while eating as $ally has something to get done during the lunch period. $ally bids $name goodbye and leaves to work on $pos project."
+    },
+    {
+      "id": "n_nwq_history_class_day_9",
+      "next": "n_nwq_history_class_day_9_2",
+      "text": "$dummy[$name gets bullied. Details coming soon.] What should $name do?"
+    },
+    {
+      "id": "n_nwq_history_class_day_9_2",
+      "next": "n_nwq_history_class_day_9_3",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_history_class_day_9_3",
+      "next": "n_nwq_history_class_day_9_4",
+      "text": "*"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_react_to_bully_calmly",
+          "id": "c_nwq_defend_obj_96_self",
+          "text": "defend $obj&#96;self&#96; calmly"
+        },
+        {
+          "goto": "n_nwq_react_to_bully_angry",
+          "id": "c_nwq_defend_obj_96_self_2",
+          "text": "defend $obj&#96;self&#96; angrily"
+        },
+        {
+          "goto": "n_nwq_not_react_to_bully",
+          "id": "c_nwq_do_nothing_5",
+          "text": "do nothing"
+        }
+      ],
+      "id": "n_nwq_history_class_day_9_4",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_don_39_t_make_a_fuss",
+      "next": "n_nwq_don_39_t_make_a_fuss_2",
+      "text": "$ally: \"Yeah, but you're like way cooler. You're so good at writing. And don't get me started on your art!\""
+    },
+    {
+      "id": "n_nwq_don_39_t_make_a_fuss_2",
+      "next": "n_nwq_don_39_t_make_a_fuss_3",
+      "text": "$name: \"Stop teasing me!\""
+    },
+    {
+      "id": "n_nwq_don_39_t_make_a_fuss_3",
+      "next": "n_nwq_don_39_t_make_a_fuss_4",
+      "text": "$ally: \"I'm not teasing you! You've got to show me some of your other writing sometime.\""
+    },
+    {
+      "id": "n_nwq_don_39_t_make_a_fuss_4",
+      "next": "n_nwq_don_39_t_make_a_fuss_5",
+      "text": "$name: \"Okay, I will, but only if you don't make such a big fuss about it.\""
+    },
+    {
+      "id": "n_nwq_don_39_t_make_a_fuss_5",
+      "next": "n_nwq_don_39_t_make_a_fuss_6",
+      "text": "$ally: \"I only say it's good because it is good.\""
+    },
+    {
+      "id": "n_nwq_don_39_t_make_a_fuss_6",
+      "next": "n_nwq_don_39_t_make_a_fuss_7",
+      "text": "$name: \"Well, I think your writing is really good, and you don't believe me.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_book_club_part_2",
+          "id": "c_nwq_go_to_the_book_11",
+          "text": "Go to the book club"
+        }
+      ],
+      "id": "n_nwq_don_39_t_make_a_fuss_7",
+      "text": "$ally: \"Touché, $name. Touché.\""
+    },
+    {
+      "id": "n_nwq_cry_in_the_hallway_part_2",
+      "isEnd": true,
+      "text": "$name stops in the hallway and checks to see that no one else is there."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_english_class_day_10",
+          "id": "c_nwq_go_to_english_class",
+          "text": "Go to English class"
+        }
+      ],
+      "id": "n_nwq_wander_the_field",
+      "text": "$name heads out to the field and wanders alone in the quiet landscape, thinking."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_9",
+          "id": "c_nwq_go_to_lunch_11",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_react_to_bully_calmly",
+      "text": "$dummy[The peacful option gives $name the best outcome. ]"
+    },
+    {
+      "id": "n_nwq_react_to_bully_angry",
+      "next": "n_nwq_react_to_bully_angry_2",
+      "text": "$name becomes angry at the bully, and the two almost get violent. At the end, the bully gives up, avoiding a physical confrontation."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_9",
+          "id": "c_nwq_go_to_lunch_12",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_react_to_bully_angry_2",
+      "text": "$name doesn't feel worse than before, but this doesn't feel like the right reaction."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_lunch_day_9",
+          "id": "c_nwq_go_to_lunch_13",
+          "text": "Go to lunch"
+        }
+      ],
+      "id": "n_nwq_not_react_to_bully",
+      "text": "$name sits there silently as the bully berates $obj. This is a shitty experience. Why didn't $name fight back? Why?"
+    },
+    {
+      "id": "n_nwq_talk_about_books",
+      "next": "n_nwq_talk_about_books_2",
+      "text": "$dummy[$name and $ally talk about"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_pe_class_day_9",
+          "id": "c_nwq_go_to_pe",
+          "text": "Go to PE"
+        }
+      ],
+      "id": "n_nwq_talk_about_books_2",
+      "text": "as they eat their lunches.]"
+    }
+  ],
+  "replayable": false,
+  "title": "Book club part 2"
+}

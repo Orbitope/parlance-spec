@@ -1,0 +1,38 @@
+{
+  "entry": "n_episode1_testchatmessage",
+  "id": "dlg_episode1_testchatmessage",
+  "nodes": [
+    {
+      "id": "n_episode1_testchatmessage",
+      "next": "n_episode1_testchatmessage_2",
+      "speakerId": "char_sophie",
+      "text": "Blah blah blah"
+    },
+    {
+      "id": "n_episode1_testchatmessage_2",
+      "next": "n_episode1_testchatmessage_3",
+      "speakerId": "char_you",
+      "text": "Oui, en effet !"
+    },
+    {
+      "id": "n_episode1_testchatmessage_3",
+      "next": "n_episode1_testchatmessage_4",
+      "speakerId": "char_you",
+      "text": "Et en plus!"
+    },
+    {
+      "id": "n_episode1_testchatmessage_4",
+      "next": "n_episode1_testchatmessage_5",
+      "speakerId": "char_ryan",
+      "text": "C’est bon ! C'est pas un drame non plus…"
+    },
+    {
+      "id": "n_episode1_testchatmessage_5",
+      "isEnd": true,
+      "speakerId": "char_nabil",
+      "text": "Lui encore !"
+    }
+  ],
+  "replayable": false,
+  "title": "TestChatMessage"
+}

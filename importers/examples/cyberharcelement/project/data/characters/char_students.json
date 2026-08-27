@@ -1,0 +1,9 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode2_start"
+    }
+  ],
+  "id": "char_students",
+  "name": "Students"
+}

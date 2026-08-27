@@ -1,0 +1,13 @@
+{
+  "entry": "n_episode1_proof1",
+  "id": "dlg_episode1_proof1",
+  "nodes": [
+    {
+      "id": "n_episode1_proof1",
+      "isEnd": true,
+      "text": "Nothing"
+    }
+  ],
+  "replayable": false,
+  "title": "Proof1"
+}

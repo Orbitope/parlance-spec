@@ -1,0 +1,43 @@
+{
+  "entry": "n_episode1_email2",
+  "id": "dlg_episode1_email2",
+  "nodes": [
+    {
+      "id": "n_episode1_email2",
+      "next": "n_episode1_email2_2",
+      "text": "Chers parents d'élèves, chers élèves,"
+    },
+    {
+      "id": "n_episode1_email2_2",
+      "next": "n_episode1_email2_3",
+      "text": "Je me permets de vous écrire ce mail pour insister sur le fait que le cyberharcèlement est un sujet sérieux et grave."
+    },
+    {
+      "id": "n_episode1_email2_3",
+      "next": "n_episode1_email2_4",
+      "text": "Grave, parce que l’impact qu’il a sur les victimes ont de lourdes conséquences : sur leur scolarité, sur leur santé morale, parfois même sur leur envie de vivre…"
+    },
+    {
+      "id": "n_episode1_email2_4",
+      "next": "n_episode1_email2_5",
+      "text": "Sérieux aussi parce que le cyberharcèlement est un délit. Il est interdit par la loi. Je rappelle que les harceleurs s’exposent à de lourdes amendes, voire à des peines de prisons, si les faits sont avérés."
+    },
+    {
+      "id": "n_episode1_email2_5",
+      "next": "n_episode1_email2_6",
+      "text": "Comme vous l’a expliqué M Douraud, votre CPE, si vous êtes victime de cyberharcèlement, ou si vous avez été témoin de cyberharcèlement, le meilleur moyen d’y mettre un terme est de libérer la parole. N'hésitez pas à en parler à vos professeurs, votre famille, ou à appeler e-enfance au 3018."
+    },
+    {
+      "id": "n_episode1_email2_6",
+      "next": "n_episode1_email2_7",
+      "text": "Bien cordialement,"
+    },
+    {
+      "id": "n_episode1_email2_7",
+      "isEnd": true,
+      "text": "M Bertrand, principal"
+    }
+  ],
+  "replayable": false,
+  "title": "Email2"
+}

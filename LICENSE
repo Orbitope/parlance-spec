@@ -17,7 +17,7 @@ for checking conformance to them, and the editorial audits written against them:
   tooling/VERSIONING.md
   tooling/MIGRATIONS.md
   tooling/audits/          review-only editorial audits (Claude skills)
-  tooling/importers/       format importers, Yarn and Ink (Claude skills)
+  tooling/importers/       format importers, Yarn / Ink / Twine (Claude skills)
   tooling/PUBLISHED_SKILLS.md  the index to those two bundles
 
 Copying these is the intent, not a leak. An engine port cannot be written
@@ -29,6 +29,15 @@ withholds the right to modify. They read a project and report; they never write
 prose and never edit `data/`. The importers are here on the same reasoning:
 conversion is not authorship, every string they emit came from the source file
 byte for byte, and a project in an unusual dialect needs them forked.
+
+ONE EXCEPTION, inside a path listed above. `tooling/importers/examples/` holds
+worked migrations of third-party stories: the author's original source file and
+the Parlance project a faithful import of it produces. That content is NOT ours
+and this document does not grant anything over it. Each example carries its
+upstream licence verbatim in its own LICENSE file, with the commit it was taken
+from recorded in SOURCE.md, and it is redistributed under those terms and no
+others. What IS granted here is everything else under `tooling/importers/` —
+the skills, the parsers, the gate — and the prose we wrote about each example.
 
 Everything else in this repository is licensed separately and is NOT covered by
 this document — in particular the editor (`editor/`), which is governed by

@@ -1,0 +1,18 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode1_chat1"
+    },
+    {
+      "dialogue": "dlg_episode1_chat2"
+    },
+    {
+      "dialogue": "dlg_episode1_chat3"
+    },
+    {
+      "dialogue": "dlg_episode1_chat4"
+    }
+  ],
+  "id": "char_clem",
+  "name": "Clem"
+}

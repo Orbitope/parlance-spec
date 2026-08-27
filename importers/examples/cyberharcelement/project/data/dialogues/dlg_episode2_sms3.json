@@ -1,0 +1,111 @@
+{
+  "entry": "n_episode2_sms3",
+  "id": "dlg_episode2_sms3",
+  "nodes": [
+    {
+      "id": "n_episode2_sms3",
+      "next": "n_episode2_sms3_2",
+      "text": "[character name=\"Maman de Liam\"][/character]Re-bonsoir."
+    },
+    {
+      "id": "n_episode2_sms3_2",
+      "next": "n_episode2_sms3_3",
+      "text": "[character name=\"Maman de Liam\"][/character]Je suis désolée de te déranger, mais je te contacte pour une raison assez particulière."
+    },
+    {
+      "id": "n_episode2_sms3_3",
+      "next": "n_episode2_sms3_4",
+      "text": "[character name=\"Maman de Liam\"][/character]As-tu remarqué un changement de comportement chez Liam ? Il est assez bizarre ces temps-ci, je ne le reconnais plus."
+    },
+    {
+      "id": "n_episode2_sms3_4",
+      "next": "n_episode2_sms3_5",
+      "text": "[character name=\"Maman de Liam\"][/character]Il semble se refermer sur lui-même, il s’isole de plus en plus et je n'arrive pas à lui faire dire pourquoi."
+    },
+    {
+      "id": "n_episode2_sms3_5",
+      "next": "n_episode2_sms3_6",
+      "text": "[character name=\"Maman de Liam\"][/character]Il me répond que tout va bien. Mais je suis sa mère et je vois très bien que ça ne va pas."
+    },
+    {
+      "id": "n_episode2_sms3_6",
+      "next": "n_episode2_sms3_7",
+      "text": "[character name=\"Maman de Liam\"][/character]Si tu sais quelque chose, je t’en prie, dis le moi. Ça me rend triste de le voir comme ça."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_sms3_8",
+          "id": "c_episode2_expliquer_que_tu_as",
+          "text": "Expliquer que tu as aussi remarqué son changement de comportement"
+        },
+        {
+          "id": "c_episode2_rassurer_la_m_re",
+          "text": "Rassurer la mère de Liam"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "id": "c_episode2_viter_de_r_pondre",
+          "text": "Éviter de répondre"
+        }
+      ],
+      "id": "n_episode2_sms3_7",
+      "isEnd": true,
+      "text": "[character name=\"Maman de Liam\"][/character]Encore désolée du dérangement, bonne soirée et à bientôt."
+    },
+    {
+      "id": "n_episode2_sms3_8",
+      "next": "n_episode2_sms3_9",
+      "speakerId": "char_you",
+      "text": "Bonsoir. Oui, j’ai remarqué moi aussi."
+    },
+    {
+      "id": "n_episode2_sms3_9",
+      "next": "n_episode2_sms3_10",
+      "showIf": {
+        "flag": "askedliam",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Je lui en ai parlé dès que j’ai trouvé ça bizarre."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "id": "c_episode2_parler_des_r_sultats",
+          "text": "Parler des résultats scolaires"
+        },
+        {
+          "id": "c_episode2_ne_pas_donner_de",
+          "text": "Ne pas donner de détails"
+        }
+      ],
+      "id": "n_episode2_sms3_10",
+      "isEnd": true,
+      "text": "[character name=\"Maman de Liam\"][/character] Je vois, et alors? Il t’a donné une explication ?"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms3"
+}

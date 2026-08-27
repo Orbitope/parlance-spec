@@ -1,0 +1,21 @@
+{
+  "dialogues": [
+    {
+      "dialogue": "dlg_episode1_chat1"
+    },
+    {
+      "dialogue": "dlg_episode1_chat2"
+    },
+    {
+      "dialogue": "dlg_episode1_chat4"
+    },
+    {
+      "dialogue": "dlg_episode1_testchatmessage"
+    },
+    {
+      "dialogue": "dlg_episode2_chat1"
+    }
+  ],
+  "id": "char_nabil",
+  "name": "Nabil"
+}

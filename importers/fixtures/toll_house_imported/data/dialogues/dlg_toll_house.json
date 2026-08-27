@@ -77,16 +77,36 @@
     },
     {
       "id": "n_take",
-      "next": "n_end",
+      "next": "n_end_1",
       "text": "Good. It goes stale either way."
     },
     {
       "id": "n_refuse",
-      "next": "n_end",
+      "next": "n_end_1",
       "text": "Suit yourself."
     },
     {
-      "id": "n_end",
+      "id": "n_end_1",
+      "next": "n_end_2",
+      "showIf": {
+        "flag": "took_bread",
+        "type": "flag",
+        "value": true
+      },
+      "text": "The bread is gone before the fire is."
+    },
+    {
+      "id": "n_end_2",
+      "next": "n_end_3",
+      "showIf": {
+        "flag": "took_bread",
+        "type": "flag",
+        "value": false
+      },
+      "text": "The bread sits where he left it."
+    },
+    {
+      "id": "n_end_3",
       "isEnd": true,
       "text": "The fire settles. Outside, the ford keeps going in the dark."
     }

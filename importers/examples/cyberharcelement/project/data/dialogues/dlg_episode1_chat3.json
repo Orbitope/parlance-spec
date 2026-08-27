@@ -1,0 +1,28 @@
+{
+  "entry": "n_episode1_chat3",
+  "id": "dlg_episode1_chat3",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "id": "c_episode1_partager_la_vid_o",
+          "text": "Partager la vidéo en la critiquant"
+        },
+        {
+          "id": "c_episode1_partager_la_vid_o_2",
+          "text": "Partager la vidéo en ajoutant \\#teamfragile"
+        },
+        {
+          "id": "c_episode1_ne_pas_partager_la",
+          "text": "Ne pas partager la vidéo"
+        }
+      ],
+      "id": "n_episode1_chat3",
+      "isEnd": true,
+      "speakerId": "char_clem",
+      "text": "Quelqu’un pourrait me dire ce qu’il y a à faire en math pour demain ? j’ai oublié de noter."
+    }
+  ],
+  "replayable": false,
+  "title": "Chat3"
+}

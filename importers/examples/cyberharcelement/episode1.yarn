@@ -1,0 +1,1070 @@
+title: Start
+type: title
+---
+<<declare $time = "">>
+<<declare $bg = "">>
+<<declare $score = 0>>
+<<declare $didShowBackpackVideo = false>>
+<<declare $didShareGood = false>>
+<<declare $didShareBad = false>>
+<<declare $didWriteHakim = false>>
+
+<<setIconVisibility proof false>>
+
+Comme chaque matin, 6h45, le réveil de ton téléphone sonne pour aller au collège...
+
+<<jump Bedroom1>>
+===
+title: Bedroom1
+bg: bedroom
+time: lundi 13 novembre, 06h45
+allowIcons: true
+---
+SKIP 
+
+<<addMessage Email1>>
+<<addNodeOption Chat1>>
+<<addNodeOption Sms1>>
+
+<<if visited("Chat1") && visited("Sms1")>>
+-> Aller en classe 
+    <<jump Class1>>
+<<endif>>
+
+===
+title: Email1
+time: 10 Nov, 17h00
+type: email
+from: M Douraud
+---
+
+Chers parents d'élèves, chers élèves,
+
+Je vous informe que je passerai ce jour dans chaque classe afin de vous donner quelques recommandations sur un sujet particulièrement sensible : celui du cyberharcèlement. 
+
+Veuillez faire attention à bien arriver à l'heure en salle de classe afin que vous ne manquiez aucune information.
+
+Bien cordialement,
+
+M Douraud, CPE
+===
+title: Chat1
+type: chat
+---
+
+Clem: qq'1 sait s'il va y avoir une interro en math ? Pas sûre d'avoir révisé le bon chapitre 😭
+Nabil: Avec ce prof, c'est possible ! Il a dit qu'il fallait réviser les fractions 😉 de rien, c'est gratuit 😊
+Clem: Naaaan ! J'me suis gourée de chapitre ! 😅
+Tao: Vous avez lu le mail du CPE ? Pourquoi il va nous parler de ça ???
+Sophie: Parce que ça existe le cyberharcèlement, Sherlock 😉
+Sophie: Vous avez des news de Hakim ? Ça fait 3 semaines qu'il est absent 😔
+Ryan: Il est de nature « fragile »... C'est pour ça !
+Sophie: Mais LOL !
+===
+title: Sms1
+type: sms
+from: Sophie
+---
+Sophie: Salut !
+Sophie: Je n'ai pas de nouvelles de Hakim. Tu sais ce qu'il devient ? Je m'inquiète un peu.
+Sophie: A tout'
+-> Non, mais je lui écrirai ce soir
+    <<set $score = $score + 1>>
+    You: Hi ! Non, pas d'info non plus. Je lui écrirai ce soir. J'te dis si j'ai du nouveau. See you
+-> Non, je n'avais pas remarqué son absence
+    You: Hi ! Non, pas d'info. J'avais pas spécialement remarqué son absence d'ailleurs... See you
+===
+title: Class1
+bg: class
+---
+SKIP
+<<set $time to "Lundi 13 Novembre, 08h35">>
+Narrator: La journée au collège débute avec le cours de mathématiques.
+Narrator: Ta professeure Madame Martin fait l’appel.
+
+Professor: Bonjour à toutes et à tous. Veuillez vous installer rapidement, s’il vous plaît.
+Professor: Béranger Clémence ?
+Présente !
+Professor: Bonnet Maxime ?
+Présent !
+
+Professor: Par rapport à Bouracha Hakim je souhaitais vous informer qu'il ne viendra plus en classe désormais.
+Professor: Si vous avez des questions je pourrais y répondre.
+
+Pourquoi ?
+Il a quitté le collège ?
+Il reviendra jamais du coup ?
+Si c'est ça, dommage, il était cool.
+C'est pas comme si c'était grave.
+J’ai même pas pu lui dire au revoir.
+J'espère qu'il déménage !
+Y’a bien une raison pour qu’il soit parti, non ?
+Ah, pas sûr que ce soit une grande perte, c’était pas loin d’être le mec le plus inutile de la classe.
+Haha ! Ouais il sera mieux dans un autre établissement avec d’autres fragiles comme lui.
+
+-> "Vous êtes qui pour le juger comme ça?"
+    <<set $score = $score + 1>>
+    You: Vous êtes qui pour le juger comme ça, vous lui avez jamais parlé. 
+    You: Vous connaissez quoi de lui pour dire ça, sérieux?
+-> "Tout le monde l’a oublié" 
+    <<set $score = $score - 1>>
+    You: J’avoue que ça fait 3 semaines qu’il ne vient pas tout le monde l’a oublié.
+-> Ne rien dire
+    You: ...
+
+Professor: Ça suffit ! 
+Professor: Si vous souhaitez en parler, nous pouvons le faire, mais il faut bien s'écouter.
+Professor: Maintenant, je vous demande de prêter toute votre attention à M Douraud, qui souhaite vous parler d’un sujet important : le cyberharcèlement.
+
+<<set $time to "Lundi 13 Novembre, 08h50">>
+<<clearDialog>>
+
+CPE: Bonjour à tous. Si j’interviens ce matin, c’est pour vous parler d'un sujet qui nous préoccupe avec l'équipe enseignante. 
+CPE: Il s'agit du cyberharcèlement. #mood:mad
+CPE: Je rappelle à chacun que harceler quelqu'un, même via les réseaux, est strictement interdit. Si c'est avéré, cela constitue un délit, passible d'une peine de prison et de fortes amendes. #mood:mad
+CPE: De même, le simple fait de relayer ce type de contenu est condamnable au regard de la loi. #mood:mad
+
+<<setIconVisibility proof true>>
+
+<<jump Class1Questions>>
+===
+title: Class1Questions
+bg: class
+time: Lundi 13 Novembre, 08h50
+---
+SKIP
+
+<<clearDialog>>
+CPE: Avez-vous des questions ? 
+
+-> Que faire si on se fait harceler sur les réseaux sociaux ? #once
+    You: Que faire si on se fait harceler sur les réseaux sociaux ?
+    CPE: Si vous en êtes victime, sachez qu'en parler est votre meilleure défense. 
+    CPE: Vous pouvez le faire auprès de vos amis, de vos proches comme la famille, d’associations spécialisées comme e-enfance à appeler au 3018, de vos professeurs ou de moi-même. 
+    CPE: Nous serons toujours là pour vous écouter. 
+    CPE: Mais vous pouvez également le faire en vous rendant auprès de la gendarmerie ou du commissariat, ou pour plus de discrétion, par téléphone ou chat dédié.
+    CPE: Dans tous les cas, ne restez pas dans le silence, c'est très important.
+    <<jump Class1Questions>>
+-> Que faire si on est témoin de cyberharcèlement ? #once
+    You: Que faire si on est témoin de cyberharcèlement ?
+    CPE: Maintenant, si vous en êtes témoin, vous pouvez agir afin d'aider une personne victime de cyberharcèlement. 
+    CPE: Il est aussi possible de contacter les services de police ou de gendarmerie : Vous pourrez témoigner, collecter des preuves sous forme de capture d'écran, d'enregistrement audio ou vidéo. 
+    CPE: Les preuves sont essentielles aux services de justice. Mais en aucun cas vous ne devez publier ces preuves sur Internet.
+    CPE: Vous pouvez les conserver dans le coffre fort de l'application 3018.
+    <<jump Class1Questions>>
+-> Non 
+    CPE: Je ne vais pas perturber votre cours plus longtemps. Merci de votre attention.
+
+<<clearAll>>
+<<set $bg = "school">>
+<<jump PreOutside1>>
+===
+title: PreOutside1
+type: title
+---
+La sonnerie retentit, tout le monde sort pour la pause.
+Dans la cour, plusieurs groupes d’élèves discutent de l’intervention du CPE.
+
+<<jump Outside1>>
+===
+title: Outside1
+bg: school
+time: Lundi 13 Novembre, 16h35
+---
+SKIP
+
+<<declare $listenedConversations = 0>>
+
+<<addForegroundImage student-group-1 30 440>> 
+<<addForegroundImage student-group-2 390 480>>
+<<addForegroundImage student-group-3 850 466>>
+<<clearDialog>>
+-> Je suis vraiment inquiète pour Hakim. #position:300,400 #discover:Écouter #once
+    <<set $listenedConversations = $listenedConversations + 1>>
+    J'espère qu'il va bien... #position:300,400 
+
+    -> Ne rien faire
+    -> Prendre des notes sur la conversation        
+        Narrator: Tu prends des notes sur la conversation.
+    -> Intervenir dans la conversation
+        You: J'espère qu'il va bien aussi
+
+-> Mais sérieux, c'est quoi ces gens qui se plaignent pour tout et n'importe quoi ? #position:635,450 #once
+    <<set $listenedConversations = $listenedConversations + 1>>
+    C’est bien la preuve que c’est un fragile! Il n’y a que les fragiles qui se plaignent. #position:635,450
+    C'est quoi déjà, le nom de ce gars, Hakim ? #position:635,450
+    -> Ne rien faire
+    -> Prendre des notes sur la conversation 
+        Narrator: Tu prends des notes sur la conversation.
+    -> Intervenir dans la conversation
+        You: Ça se fait pas de se moquer comme ça !
+        De quoi tu te mêles ? On dit ce qu'on veut de toute façon ! #position:635,450
+
+->  Haha ! Il tirait une de ces tronches ! #position:1100,420 #once
+    J'ai bien fait d'immortaliser ce moment. #position:1100,420 
+    La vidéo est de plus en plus partagée ! #position:1100,420 
+    <<set $listenedConversations = $listenedConversations + 1>>
+    
+    -> Ne rien faire
+    -> Prendre des notes sur la conversation
+        Narrator: Tu prends des notes sur la conversation.
+        <<addMessage Proof1>>
+    -> Intervenir dans la conversation
+        You: Ça va pas de faire ce genre de choses ?! Vraiment vous n’avez aucune honte !
+        En même temps il avait qu'à pas être de la team fragile ! #position:1100,420 
+
+<<if $listenedConversations is 3>>
+-> Rentrer chez toi
+    <<jump PreBedroom2>>
+<<else>>
+<<jump Outside1>>
+<<endif>>
+
+===
+title: PreBedroom2
+type: title
+---
+Après une journée de cours bien remplie, tu retrouves enfin ta chambre.
+
+<<jump Bedroom2>>
+===
+title: Bedroom2
+bg: bedroom
+time: Lundi 13 novembre, 17h15
+allowIcons: true
+---
+SKIP
+
+<<addMessage Email2>>
+<<addNodeOption Chat2>>
+<<addNodeOption Sms2>>
+
+<<if visitedAllNodeOptions() >>
+-> Suite
+    <<jump PreOutside2>>
+<<endif>>
+
+===
+title: Sms2
+type: sms
+from: Hakim
+---
+-> Ecrire à Hakim
+    <<set $didWriteHakim to true>>
+    <<set $score = $score + 1>>
+    You: Salut ! Tu pourrais donner des nouvelles, mec 😉 
+    You: Ça fait un bail qu'on t'a pas vu en cours.
+-> Ne pas écrire
+    <<set $score = $score - 1>>
+
+===
+title: Email2
+type: email
+time: 13 Nov, 15h24
+from: M Bertrand 
+---
+Chers parents d'élèves, chers élèves,
+Je me permets de vous écrire ce mail pour insister sur le fait que le cyberharcèlement est un sujet sérieux et grave.
+Grave, parce que l’impact qu’il a sur les victimes ont de lourdes conséquences : sur leur scolarité, sur leur santé morale, parfois même sur leur envie de vivre…
+Sérieux aussi parce que le cyberharcèlement est un délit. Il est interdit par la loi. Je rappelle que les harceleurs s’exposent à de lourdes amendes, voire à des peines de prisons, si les faits sont avérés.
+Comme vous l’a expliqué M Douraud, votre CPE, si vous êtes victime de cyberharcèlement, ou si vous avez été témoin de cyberharcèlement, le meilleur moyen d’y mettre un terme est de libérer la parole. N'hésitez pas à en parler à vos professeurs, votre famille, ou à appeler e-enfance au 3018.
+Bien cordialement,
+M Bertrand, principal
+===
+title: Chat2
+type: chat
+---
+Clem: C'était bizarre l'intervention du CPE ce matin, non ?
+Sophie: Pas tant que ça ! Du harcèlement, il y en a partout. Dans le collège y compris 😔
+Nabil: Tu sais quelque chose, Sophie ?
+Sophie: Je ne suis sûre de rien.
+Ryan: Si c'est ça du cyberharcèlement, il n'y pas de quoi en faire un drame ! \#fragile #image:screenshot1
+
+-> Faire un screenshot de la conversation
+    <<addMessage Proof2>>
+-> Ne rien faire
+
+Ryan: 🤣
+
+-> T'es sérieux ? 
+    <<set $score = $score + 1>>
+    You: T'es sérieux ? 
+    You: T'aimerais qu'on fasse ça avec toi ?
+-> Franchement, elle est plutôt drôle, cette vidéo ! 
+    <<set $score = $score - 1>>
+    You: Franchement, elle est plutôt drôle, cette vidéo ! 
+    You: Merci pour le partage, frère !
+===
+title: PreOutside2
+type: title
+---
+Le lendemain matin, en arrivant devant le collège, un attroupement attire ton attention.
+"Vas-y fragile", "prouve que t’en as" crient certains. 
+Tu finis par te rapprocher.
+
+<<jump Outside2>>
+===
+title: Outside2
+time: Mardi 14 Novembre, 08H20
+bg: front-of-school
+---
+SKIP
+
+<<addForegroundImage outside2-scene>>
+
+Allez le fragile ! #position:850,400
+Prouve au monde entier que tu n'es pas un loser ! #position:1100,600
+Si tu y arrives, tu ne seras plus considéré comme faisant partie de la \#teamfragile ! #position:450,800
+
+Narrator: Devant toi, un élève est forcé de porter son sac… entre les dents.
+
+-> Détourner le regard et ne rien faire
+    Narrator: Tu détournes le regard.
+-> Filmer la scène avec ton téléphone 
+    <<addMessage Proof3>>
+    Narrator: Le groupe de harceleurs semble t'avoir vu, mais ils ne réagissent pas.
+
+SKIP
+-> Te rendre dans le bureau du CPE pour dénoncer le harcèlement
+    <<jump Temoignage>>
+-> Ne rien faire et aller en cours
+    <<jump PreBedroom3>>
+===
+title: Temoignage
+time: Mardi 14 Novembre, 09H00
+bg: class-empty
+---
+SKIP
+
+CPE: Oui ? Je t'écoute...
+You: Excusez-moi de vous déranger monsieur, mais un élève vient de se faire humilier devant le collège.
+CPE: Merci de m'en avoir informé. #mood:mad
+CPE: Je sais que quelques élèves ont parfois un comportement déplacé mais là, ça dépasse les limites. #mood:mad
+CPE: As-tu des preuves qui viendraient appuyer tes propos ? #mood:mad
+
+
+
+<<if hasMessage("Proof3")>>
+-> Montrez l'enregistrement à M Douraud 
+    <<set $didShowBackpackVideo to true>>
+    <<addForegroundImage outside2-scene-phone 200 200 0>>
+    <<clearDialog>>
+    Narrator: Oui, Monsieur. J'ai enregistré la scène. La voici. 
+    <<clearForegroundImage outside2-scene-phone>>
+    CPE: Très bien, cela viendra renforcer ton témoignage. #mood:mad
+-> Ne pas montrer la vidéo  
+    You: Non, Monsieur. Je viens simplement vous apporter mon témoignage.
+    CPE: Pas de problème, ton témoignage reste important. #mood:mad
+<<else>>
+You: Non, Monsieur. Je viens simplement vous apporter mon témoignage.
+CPE: Pas de problème. Mais ton témoignage reste important. #mood:mad
+<<endif>>
+
+SKIP
+
+Narrator: Suite
+<<clearCharacter>>
+<<jump PreBedroom3>>
+===
+title: PreBedroom3
+type: title
+---
+<<if hasMessage("Proof3")>>
+Après une journée intense au collège, tu finis par rentrer chez toi.
+“Vas-y fragile”, “Prouve que tu en as”… 
+La scène que tu as vécue ce matin tourne en boucle dans ton esprit et sur ton téléphone !
+<<else>>
+Tu fais une recherche sur les réseaux pour voir de quoi il retourne avec ce \#teamfragile. 
+Tu tombes sur plusieurs vidéos et photos mettant en scène des humiliations subies par de nombreuses personnes. 
+Certaines sont difficiles à regarder. 
+Une des vidéos t'interpelle car c’est la même scène que tu as vécue ce matin au collège ! 
+<<endif>>
+
+<<jump Bedroom3>>
+===
+title: Bedroom3
+time: Mardi 14 Novembre, 18H15
+bg: bedroom
+allowIcons: true
+---
+SKIP
+
+<<if $didShowBackpackVideo>>
+<<addMessage Email3>>
+<<endif>>
+
+<<addNodeOption Chat3>>
+
+<<addNodeOption Sms3c>>
+
+<<if visited("Chat3")>>
+    // Talk to Rayan
+    <<addNodeOption Sms3b>>
+<<endif>>
+<<if visited("Sms3b")>>
+    // Talk to Sophie
+    <<addNodeOption Sms3a>>
+<<endif>>
+
+SKIP 
+
+<<if visitedAllNodeOptions() >>
+Narrator: Passer à la journée suivante
+    <<jump PreBedroom4>>
+<<endif>>
+===
+title: Email3
+type: email
+time: 14 Nov, 16H15
+from: M Douraud
+---
+Madame, monsieur, bonsoir,
+Je tenais à remercier votre enfant pour son témoignage de ce matin. 
+Grâce à ce témoignage, nous avons une vision plus claire de ce qui se passe au collège. Les auteurs ont été identifiés et des sanctions vont être prises rapidement, non seulement contre eux, mais aussi contre celles et ceux qui relayeront ce genre de vidéo. Ce n'est pas de gaîté de cœur que nous allons prendre ces mesures, mais il faut absolument que cela cesse au plus vite.
+Très bonne soirée à vous,
+M Douraud, CPE.
+===
+title: Chat3
+type: chat
+---
+Clem: Quelqu’un pourrait me dire ce qu’il y a à faire en math pour demain ? j’ai oublié de noter.
+
+<<if hasMessage("Proof3")>>
+-> Partager la vidéo en la critiquant
+    You: J'ai été témoin de cette scène ce matin. #image:outside2-scene-screenshot
+    You: Je trouve ce genre de comportement révoltant ! Honte à vous !
+    <<set $didShareGood to true>>
+
+    Sophie: C’est bien de se révolter contre ces pratiques. Mais partager la vidéo est une très mauvaise idée. 
+    Sophie: Elle risque d’être utilisée avec de mauvaises intentions…
+-> Partager la vidéo en ajoutant \#teamfragile
+    You: Go \#teamfragile #image:outside2-scene-screenshot
+    <<set $didShareBad to true>>
+    <<set $score = $score - 1>>
+
+    Sophie: Ce que tu viens de faire est pitoyable !
+-> Ne pas partager la vidéo
+<<endif>>
+===
+title: Sms3a
+type: sms
+from: Sophie
+---
+<<if $didShareBad>>
+Sophie: Tu me déçois franchement ! Tes actes et remarques sont cruels ! #image:outside2-scene-screenshot
+Sophie: Pas la peine de me répondre, mais il fallait que tu en prennes conscience. 
+<< elseif $didShareGood>>
+Sophie: Salut ! Je comprends ce que tu as voulu faire avec ta vidéo sur le groupe de tchat. 
+Sophie: Seulement, tu ne fais qu'exposer encore plus ceux qui en sont victimes. Ta vidéo risque d'être partagée, et pas par les bonnes personnes...
+<< elseif $score < -1 >>
+Sophie: Tu me déçois franchement en ce moment ...
+Sophie: Pas la peine de me répondre, mais il fallait que tu en prennes conscience. 
+<< else >>
+// + Si le joueur a fait plusieurs actions « + » : 
+Sophie: Salut ! Je vois que nous sommes sur la même longueur d'onde. 
+Sophie: Je crois sincèrement que Hakim est victime de cyberharcèlement. 
+Sophie: Faut pas qu'on le laisse seul avec ça... 
+Sophie: Tu lui as écrit ? Il t'a répondu ? 
+<<if $didWriteHakim>>
+You: Oui, mais il n'a pas répondu. Je lui écris à nouveau.
+<<else>>
+You: Oui, mais il n'a pas répondu. Je ne vais plus le déranger.
+<<endif>>
+
+<<endif>>
+
+===
+title: Sms3b
+type: sms
+from: Ryan
+---
+<<if $didShareBad>>
+Ryan: Trop bien la vidéo ! Avec le \# en plus !
+Ryan: T'es clairement pas un fragile, toi !
+<<elseif $didShareGood>>
+Ryan: J'ai vu ta vidéo et ton commentaire... 
+Ryan: Je sens que l'on a trouvé quelqu'un pour les épreuves de la \#teamfragile ! 
+<<elseif hasMessage("Proof3")>>
+Ryan: J'ai vu que tu avais filmé notre petit jeu ce matin. 
+Ryan: Tu peux la partager sur les réseaux avec le \#teamfragile stp ? 
+
+-> Partager
+    <<set $didShareBad to true>>
+    You: Ok.
+    Ryan: Merci ! T'es pas fragile au moins !
+-> Partager en dénonçant 
+    <<set $didShareGood to true>>
+    You: Je partagerai cette vidéo pour dénoncer ce type de comportement. C'est vraiment naze de faire subir ça à quelqu'un ! \#stopauharcèlement. 
+-> Non, je ne le ferai pas. 
+    You: Non, je ne le ferai pas. 
+    Ryan: Ok, je comprends. Tu me l'envoies au moins ?
+    -> Ok, la voici.
+        You: Ok, la voici.  #image:outside2-scene-screenshot
+        <<set $didShareBad to true>>
+        Ryan: Merci ! T'es pas fragile au moins !
+    -> Non, je n'approuve pas ce que tu fais avec tes potes ! 
+        You: Non, je n'approuve pas ce que tu fais avec tes potes !
+        Ryan: Ok, je m'en souviendrai !
+    -> Faire une capture d'écran
+        <<addMessage Proof4>>
+<<else>>
+Ryan: Tu as vu notre petit jeu ce matin ? LOL
+<<endif>>
+
+===
+title: Sms3c
+type: sms
+from: Hakim
+---
+You: Salut Hakim. Pas de réponse de ta part... 
+
+-> T'abuses !
+    You: T'abuses mec !
+-> Ça ne te ressemble pas.
+    <<set $score = $score + 1>>
+    You: Ça ne te ressemble pas. 
+    You: Quels que soient tes soucis, sache que je suis là, au besoin. Courage !    
+===
+title: PreBedroom4
+type: title
+---
+Tu te réveilles le mercredi matin 
+
+<<if $didShareBad>>
+Manifestement, la majorité de la classe désapprouve le fait que tu aies partagé cette vidéo. 
+Certains même ne sont pas tendres, voire t'insultent... 
+<<elseif $didShareGood>>
+La majorité de la classe approuve ta critique du harcèlement.  
+Cependant, les amis de Ryan l'ont très mal pris et voilent à peine leurs menaces...  #once
+<<else>>
+Quelqu'un a partagé une vidéo de la scène de harcèlement sur les réseaux sociaux. 
+<<endif>>
+
+<<jump Bedroom4>>
+===
+title: Bedroom4
+time: Mercredi 15 Novembre, 06H50
+bg: bedroom
+allowIcons: true
+---
+SKIP
+
+<<if $didShareBad or $didShareGood>>
+<<addMessage Email4>>
+<<endif>>
+
+<<addNodeOption Chat4>>
+
+<<if (not $didShareBad) and (not $didShareGood) and ($score > -1)>>
+<<addNodeOption Sms4a>>
+<<endif>>
+
+<<addNodeOption Sms4b>>
+
+SKIP
+
+<<if visitedAllNodeOptions() >>
+-> Suite
+    <<jump Outside3>>
+<<endif>>
+===
+title: Email4
+type: email
+time: 15 Nov, 00H20
+from: GAFA
+---
+Madame, Monsieur,
+
+La vidéo que vous avez postée a été signalée par plusieurs utilisateurs pour contenu choquant. 
+
+Après vérification, cette vidéo entrait en violation avec la politique d'utilisation de notre service. Nous l'avons donc retirée.
+
+Nous sommes aussi dans l'obligation de vous bannir de notre réseau social et d'effacer votre compte.
+
+Cordialement 
+===
+title: Chat4
+type: chat
+---
+Sophie: Ce genre de vidéo me révolte ! Comment peut-on faire ça à quelqu’un ?
+Clem: C’est pas cool du tout, en effet !
+Ryan: C’est bon ! C'est pas un drame non plus…
+Nabil: Bah si ! Ça se voit que c’est pas toi qui subis !
+
+===
+title: Sms4a
+type: sms
+from: Sophie
+---
+Sophie: Salut, je t'écris parce que j'ai appris quelque chose :
+Sophie: Tu te souviens de ma cousine Yasmine ?
+Sophie: Elle était en 3ème C l’année dernière. 
+Sophie: Elle a fait la même colo que Hakim durant les dernières vacances. Elle savait qu'un garçon s'était fait malmener. 
+Sophie: Je te passe les détails mais c'est bien lui sur la vidéo... Je m’en doutais, mais là, c'est confirmé. 
+Sophie: Je comprends qu'il se sente mal... Il faut qu'on l'aide...
+-> Elle pourrait témoigner
+    You: Tu penses que ta cousine pourrait témoigner ?
+    <<addMessage Proof5>>
+    Sophie: Très bonne idée ! 
+    Sophie: Je vais même lui dire que je peux l'accompagner ! 
+-> Elle est assez grande pour savoir quoi faire.
+    You: Elle est assez grande pour savoir quoi faire.
+===
+title: Sms4b
+type: sms
+from: Hakim
+---
+-> J'espère ne pas dépasser les limites
+    <<set $score = $score + 1>>
+    You: Salut Hakim. J'espère ne pas dépasser les limites. 
+    You: Avec Sophie, nous savons que tu subis du cyberharcèlement. 
+    You: Nous sommes avec toi, quoi qu'il en soit. Courage ! 
+-> Ça devient lourd
+    <<set $score = $score - 1>>
+    You: Toujours pas de réponse... Ça devient lourd. Donne des news !
+===
+title: Outside3
+bg: school
+time: Mercredi 15 Novembre, 10H35 
+---
+SKIP
+
+Narrator: Pendant une pause, Ryan se dirige vers toi d'un pas décidé. 
+Narrator: De toute évidence, il te cherchait... 
+
+<<if $score > 2>>
+Ryan: On voulait que tu saches qu’on t’a à l’œil !
+<<else>>
+<<if $score < -2>>
+Ryan: T'as vraiment assuré ! Y'en a marre de tous ces fragiles ! 
+<<endif>>
+
+Ryan: La prochaine fois, tu viens avec nous pour filmer ?
+
+-> Comptez sur moi 
+    <<set $score = $score - 1>>
+    You: Comptez sur moi !
+    Ryan: Cool
+-> Non, ça ira.
+    You:  Non, ça ira, je passe mon tour cette fois.
+    Ryan: Ok, c’est toi qui vois
+-> Hors de question
+    <<set $score = $score + 1>>
+    You:  Non, c'est hors de question ! 
+    Ryan: Ah... je vois qu'on se dégonfle, finalement ?
+<<endif>>
+
+Narrator: Suite
+    <<jump Bedroom5>>
+===
+title: Bedroom5
+bg: bedroom
+time: Mercredi 15 Novembre, 18H30
+allowIcons: true
+---
+SKIP
+
+<<if $didShareBad or $score < -3>>
+<<addNodeOption Sms5a>>
+<<elseif $didShareGood>>
+<<addNodeOption Sms5c>>
+<<else>>
+<<addNodeOption Sms5b>>
+<<endif>>
+
+<<if hasMessage("Proof5")>>
+    <<addNodeOption Sms5d>>
+<<elseif $score > 3 >>
+    <<addMessage Email5a>>
+<<endif>>
+
+SKIP
+
+<<if (visitedAllNodeOptions() and ( ((not hasMessage("Email5a")) or hasReadMessage("Email5a")) ) and ( (not hasMessage("Email5b") ) or hasReadMessage("Email5b") ) ) >>
+-> Suite 
+    <<if $score > 3 >>
+        << jump PreEndPositive>> 
+    <<elseif $didShareBad or $score < -2 >>
+        << jump EndNegative>>
+    <<else>> 
+        << jump EndNeutral>>
+    <<endif>>
+<<endif>>
+===
+title: Sms5a
+type: sms
+from: Hakim
+---
+Hakim: Je me décide à t'écrire, parce que là, c'en est trop ! 
+Hakim: Sans être des amis proches, je pensais que tu étais du genre à respecter les autres. On se marrait bien quand on jouait ensemble aux jeux vidéos... 
+Hakim: Mais c'est tout le contraire. Tu filmes, tu partages, tu mets le \# qui va bien pour être certain que ce soit vu par un maximum de personnes. 
+Hakim: Est-ce que tu imagines une seconde ce que ça peut faire ? Par tes actions, tu m'as blessé. Je n'avais vraiment pas besoin de ça en ce moment. 
+Hakim: Tu t'en doutes, je ne reviendrai pas au collège. Tu peux effacer mon numéro.
+Hakim: Pour ma part, je ne souhaite plus te parler. Adieu !
+===
+title: Sms5b
+type: sms
+from: Hakim
+---
+Hakim: Salut. Je suis désolé de ne pas avoir répondu plus tôt, mais ce n'est pas facile en ce moment, comme tu peux t'en douter. 
+Hakim: Avec ce qui se passe autour de la vidéo, je me suis mis en retrait des réseaux sociaux. 
+Hakim: J'en ai besoin. 
+Hakim: Mais je voulais te remercier pour ton soutien, c'est précieux. 
+Hakim: Laisse-moi encore un peu de temps. Je t'expliquerai tout très bientôt. 
+===
+title: Sms5c
+type: sms
+from: Hakim
+---
+Hakim: Salut. Je suis désolé de ne pas avoir répondu plus tôt, mais ce n'est pas facile en ce moment, comme tu peux t'en douter. 
+Hakim: Avec ce qui se passe autour de la vidéo, je me suis mis en retrait des réseaux sociaux. J'en ai besoin. 
+Hakim: Je voulais te remercier pour ton soutien mais te dire aussi que tu as un peu compliqué les choses. 
+Hakim: Je comprends ce que tu as voulu faire en critiquant la vidéo que tu as partagée mais d'autres l'ont relayée avec de moins bonnes attentions. 
+Hakim: Evite à l'avenir. Laisse-moi encore un peu de temps. Je t'expliquerai tout très bientôt.
+===
+title: Sms5d
+type: sms
+from: Sophie
+---
+Sophie: Ma cousine est d'accord pour témoigner en faveur de Hakim. 
+Sophie: Le plus simple serait de rencontrer le CPE pour savoir quoi faire exactement. 
+Sophie: Tu viens avec nous et tu te charges de prendre rdv ? 
+You: Ok, ça marche
+
+<<addMessage Email5b>>
+===
+title: Email5a
+type: email
+from: Toi
+to: M Douraud
+time: 15 Nov, 18H30
+---
+Bonjour Monsieur Douraud,
+
+Je souhaite vous rencontrer pour prendre conseil au sujet de ce qui se passe avec Hakim. 
+
+Il me semble détenir quelques preuves qui pourraient être utiles mais je ne sais pas si elles sont utilisables, je ne veux pas faire d’erreur. De plus, ceux qui harcèlent Hakim commencent à me menacer aussi.
+
+Bonne journée.
+===
+title: Email5b
+type: email
+from: Toi
+to: M Douraud
+time: 15 Nov, 18H30
+---
+Bonjour Monsieur Douraud,
+
+Je souhaite vous rencontrer pour prendre conseil au sujet de ce qui se passe avec Hakim. 
+
+Il me semble détenir quelques preuves qui pourraient être utiles mais je ne sais pas si elles sont utilisables, je ne veux pas faire d’erreur. De plus, ceux qui harcèlent Hakim commencent à me menacer aussi.
+
+Je précise que Sophie et sa cousine ayant un témoignage à fournir m'accompagneront. En effet, elle était dans le même centre que Hakim durant les vacances.
+
+Bonne journée.
+===
+title: PreEndPositive
+type: title
+---
+Monsieur Douraud vous reçoit dans la salle de classe.
+<<if hasMessage("Proof5")>>
+Yasmine, la cousine de Sophie, raconte ce qu'elle sait au sujet de la vidéo qui tourne et dont Hakim est la victime. 
+Ce témoignage permettra, entre autres, d'identifier ceux qui ont humilié ton camarade puis qui ont filmé et utilisé cette vidéo à des fins de cyberharcèlement.
+Puis, tu montres à Monsieur Douraud toutes les preuves que tu détiens.
+<<else>>
+Tu montres à Monsieur Douraud toutes les preuves que tu détiens.
+<<endif>>
+
+<<jump EndPositive>>
+===
+title: EndPositive
+time: Jeudi 16 Novembre, 08H35
+bg: class-empty
+---
+SKIP
+
+CPE: Bien ! Ces preuves seront très utiles à Hakim car il a décidé de porter plainte pour que ce harcèlement prenne fin au plus vite. 
+CPE: Si la plainte aboutit, les coupables risquent de lourdes sanctions. #mood:mad 
+CPE: Quant à nous, au collège, nous avons décidé de prendre des mesures sévères à leur encontre. #mood:mad
+CPE: Toutefois, je suis désolé de vous dire que cette période a été très douloureuse pour Hakim et qu’il a préféré s'inscrire dans un autre établissement. #mood:mad
+CPE: Il ne reviendra donc pas. #mood:mad
+
+-> Suite
+    <<jump PreEpilogue>>
+===
+title: EndNegative
+time: Jeudi 16 Novembre, 08H35
+bg: class
+---
+SKIP
+
+Narrator: Monsieur Douraud te reçoit dans la salle de classe. 
+
+CPE: Ah, te voici ! Je voulais te voir pour te dire que tes agissements de ces derniers jours ne sont pas acceptables. #mood:mad
+CPE: Il faut que tu saches que des preuves de complicité de cyberharcèlement ont été constituées contre toi. #mood:mad
+CPE: Qu’est-ce qui t’a pris ? #mood:mad
+CPE: Est-ce qu'à un moment, tu as pensé à te mettre à la place des autres ? #mood:mad
+CPE: Tes actes ont des conséquences pour les élèves victimes de harcèlement et pour toi ! #mood:mad
+CPE: L'élève dont tu as partagé la vidéo à décidé de porter plainte, tout comme Hakim il y'a quelques jours.  #mood:mad
+CPE: Du coup, tu devrais être bientôt convoqué par la gendarmerie.  #mood:mad
+CPE: Comme tu es mineur, tu auras la possibilité d’être accompagné par tes parents. J’imagine qu’ils seront ravis…  #mood:mad
+CPE: Quant à la direction du collège, elle n'a pas encore statué sur ton cas. Je vais convoquer tes parents dès aujourd’hui. #mood:mad
+
+-> Suite
+    <<jump PreEpilogue>>
+===
+title: EndNeutral
+time: Jeudi 16 Novembre, 08H35
+bg: class
+---
+SKIP
+
+Narrator: Monsieur Douraud vient interrompre votre cours pour faire le point sur la situation.
+
+CPE: Je reviens dans votre classe pour vous dire que ces dernières semaines, quelques élèves ont fait l'objet de harcèlement et de cyberharcèlement, c'est pourquoi certains comme Hakim ont décidé de ne pas revenir, voire de changer d'établissement.  #mood:mad
+CPE: Grâce aux témoignages de personnes qui resteront anonymes, d'éléments recueillis, des preuves de complicité de cyberharcèlement ont été constituées à l'encontre de certains élèves du collège.  #mood:mad
+CPE: Dois-je vous encore vous rappeler ce qu'encourent les auteurs ou complices au regard de la loi ?  #mood:mad
+CPE: D'ailleurs, ils devraient bientôt être convoqués par la gendarmerie car certaines victimes ont décidés de porter plainte pour faire cesser au plus vite tout type de harcèlement. #mood:mad
+CPE: La direction du collège prendra, quant à elle, des mesures disciplinaires sévères contre ces élèves.  #mood:mad
+CPE: Des exclusions sont envisagées.  #mood:mad
+
+-> Suite
+    <<jump PreEpilogue>>
+=== 
+title: PreEpilogue
+type: title:
+---
+Quelques semaines plus tard, le soir...
+
+<<jump Epilogue>>
+===
+title: Epilogue
+time: Quelques semaines plus tard, le soir
+bg: bedroom
+allowIcons: true
+---
+SKIP
+
+<<if $score > 3 and (not $didShareBad)>>
+    << addNodeOption Sms6a >> 
+<<elseif ($score < -2  or $didShareBad)>>
+    << addNodeOption Sms6b >> 
+<<else>> 
+    << addNodeOption Sms6c >> 
+<<endif>>
+
+SKIP
+
+<<if visitedAllNodeOptions() >>
+-> Fin
+    // SKIP
+    <<quit>>
+<<endif>>
+===
+title: Sms6a
+type: sms
+from: Hakim
+---
+Hakim: Salut, je prends enfin le temps de te donner des nouvelles.
+Hakim: Tout d’abord, un grand merci à toi. Je m’en rendais pas trop compte sur le moment mais ton implication et tes messages de soutien m’ont vraiment aidé. 
+Hakim: Déjà à me sentir moins seul dans tout ça. Et aussi parce que tu m’as permis d’ouvrir les yeux et de mettre des mots sur ce que je vivais. 
+Hakim: Ça m’a beaucoup aidé à avancer mais aussi à redevenir sociable. 
+Hakim: J’avais commencé à m’enfermer dans une bulle où j’avais peur de tous les autres, je n’avais plus confiance ni foi en rien ni personne. 
+Hakim: Mais encore merci d’avoir été là !
+
+<< jump Sms6aQ>>
+===
+title: Sms6aQ
+type: sms
+from: Hakim
+---
+-> Comment ça va depuis ? #once
+    You: Comment ça va depuis ?
+    Hakim: Les moqueries ont beaucoup diminué, je ne suis plus identifié dans des commentaires ou publications gênantes. La vidéo continue de tourner sur quelques comptes. Mais globalement ça s’est bien calmé.
+    << jump Sms6aQ>>
+-> Tu as de l'aide ? #once
+    You: C’est cool ! Mais est-ce que tu reçois de l’aide de quelqu’un, d’une asso ?
+    Hakim: Je vois un psy depuis quelques temps. 
+    Hakim: Ça va m’aider à passer au dessus de tout ça, à digérer toute cette affaire.
+    << jump Sms6aQ>>
+-> Et dans dans ton nouveau collège ? #once
+    You: Bien ! Et comment ça se passe dans ton nouveau collège ?
+    Hakim: Plutôt bien ! Je me suis fait quelques potes. Mais c’est pas pour ça qu’on s’oublie ! Je veux garder contact avec toi ! 
+    Hakim: T’es vraiment une bonne personne.
+    << jump Sms6aQ>>
+-> Dire au revoir
+    You: À très bientôt !
+===
+title: Sms6b
+type: sms
+from: Hakim
+---
+Hakim: Bonsoir,
+Hakim: Je suis la maman de Hakim. Je me permets de t'écrire car il nous a parlé quelques fois de toi et de vos parties de jeux vidéo. Ayant trouvé ton numéro dans son téléphone, je suppose que vous devez être amis ?
+Hakim: Je souhaite donc donner des nouvelles de Hakim : Comme tu le sais sans doute, il a fait l'objet de harcèlement et de moqueries. Comme il ne nous en parlait pas, nous ne nous sommes pas immédiatement inquiétés. Nous aurions dû...
+Hakim: Quand son père et moi avons compris à quel point c'était grave, c'était un peu tard. Même si la plainte a été déposée et qu'elle a eu son effet, Hakim n'était toujours pas bien.
+Hakim: Pour être concise et respecter la vie privée de Hakim, je dirais simplement que son état s'est empiré, et qu'il a dû être hospitalisé quelques semaines.
+Hakim: Tu vois, je t'écris car Hakim n'a toujours pas la force de le faire, même à ses amis. Merci de m'avoir lue.
+Hakim: Au revoir.
+===
+title: Sms6c
+type: sms
+from: Hakim
+---
+Hakim: Salut, je prends enfin le temps de t'écrire.
+Hakim: Tout d’abord, même si tu as eu quelques mots sympas pour moi, tu n'as pas été clean sur toute la ligne... 
+Hakim: Je m’en rendais pas trop compte sur le moment mais certains de tes actes ne m’ont pas vraiment aidé à aller mieux.
+Hakim: J'ai heureusement fini par ouvrir les yeux et j'ai pu mettre des mots sur ce que je vivais. Ça m’a beaucoup aidé à avancer mais aussi à redevenir sociable. 
+Hakim: J’avais commencé à m’enfermer dans une bulle où j’avais peur de tous les autres, je n’avais plus confiance en rien ni personne. Grâce à la plainte, aux preuves et aux témoignages, les moqueries ont beaucoup diminué. 
+Hakim: Je ne suis plus identifié dans des commentaires ou publications gênants. La vidéo continue de tourner sur quelques comptes. Mais globalement ça s’est bien calmé.
+
+You: Je ne pensais pas mal agir… Tu te fais aider au moins ?
+
+Hakim: Je vois un psy depuis quelques temps. Ça va m’aider à passer au-dessus de tout ça, à digérer toute cette affaire.
+
+You: Bien ! Et comment ça se passe dans ton nouveau collège ?
+Hakim: Plutôt mieux que dans l’ancien. Mais j’ai encore du mal avec les relations. D’ailleurs, je pense qu'il est préférable de tourner la page te concernant. Je ne t'en veux pas spécialement, mais je pense que c'est mieux ainsi.
+===
+title: Proof1
+type: proof
+name: Note sur une discussion
+icon: notes
+image: proof-1
+---
+Nothing
+===
+title: Proof2
+type: proof
+name: Capture d'écran du partage de Ryan
+icon: screenshot
+image: proof-2
+---
+Nothing
+
+===
+title: Proof3
+type: proof
+name: Vidéo d'une scène de harcèlement 
+icon: video
+image: proof-3
+---
+Nothing
+
+===
+title: Proof4
+type: proof
+name: Capture d'écran des menaces
+icon: chat
+image: proof-4
+---
+Nothing
+
+===
+title: Proof5
+type: proof
+name: Témoignage de Yasmine
+icon: speech
+image: proof-5
+---
+Nothing
+===
+title: TestProof
+bg: class
+time: now
+allowIcons: true
+---
+SKIP
+
+<<addMessage Proof1>>
+<<addMessage Proof2>>
+<<addMessage Proof3>>
+<<addMessage Proof4>>
+<<addMessage Proof5>>
+
+You have 5 pieces of evidence
+===
+title: TestActionButton
+bg: class
+time: now
+---
+SKIP
+
+Narrator: Watch out, here comes an action button
+
+-> Here we are
+    <<jump TestActionButton2>>
+===
+title: TestActionButton2
+bg: school
+time: later
+---
+
+You did it!
+===
+
+title: TestTitle
+type: title
+---
+
+here is line 1
+here is line 2
+here is line 3
+
+<<jump TestTitle>>
+===
+title: TestChat
+bg: bedroom
+time: later
+allowIcons: true
+---
+
+<<addNodeOption TestChatMessage>>
+
+asdf
+
+===
+title: TestChatMessage
+type: chat
+---
+Sophie: Blah blah blah
+You: Oui, en effet !
+You: Et en plus!
+Ryan: C’est bon ! C'est pas un drame non plus…
+Nabil: Lui encore !
+===
+title: TestQuit
+bg: bedroom
+time: later
+allowIcons: true
+---
+Time to quit
+
+-> Quit
+    <<quit>>
+===
+title: TestEmail
+bg: bedroom
+time: later
+allowIcons: true
+---
+<< addMessage Email1 >>
+<< addMessage Email2 >>
+<< addMessage Email3 >>
+<< addMessage Email4 >>
+<< addMessage Email5a >>
+<< addMessage Email5b >>
+
+Check your mail, bro
+===
+title: TestSms
+bg: bedroom
+time: later
+allowIcons: true
+---
+SKIP
+
+<<addNodeOption Sms1>>
+<<addNodeOption Sms1>>
+<<addNodeOption Sms2>>
+
+===

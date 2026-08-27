@@ -1,0 +1,472 @@
+{
+  "entry": "n_nwq_story_sharing_part_1",
+  "id": "dlg_nwq_story_sharing_part_1",
+  "nodes": [
+    {
+      "id": "n_nwq_story_sharing_part_1",
+      "next": "n_nwq_story_sharing_part_1_2",
+      "text": "The book club president asks if there are any volunteers. $name looks down at $pos story."
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_2",
+      "next": "n_nwq_story_sharing_part_1_3",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_3",
+      "next": "n_nwq_story_sharing_part_1_4",
+      "text": "<ul>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_4",
+      "next": "n_nwq_story_sharing_part_1_5",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_5",
+      "next": "n_nwq_story_sharing_part_1_6",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_6",
+      "next": "n_nwq_story_sharing_part_1_7",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_7",
+      "next": "n_nwq_story_sharing_part_1_8",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_8",
+      "next": "n_nwq_story_sharing_part_1_9",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_9",
+      "next": "n_nwq_story_sharing_part_1_10",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_10",
+      "next": "n_nwq_story_sharing_part_1_11",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "<li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_11",
+      "next": "n_nwq_story_sharing_part_1_12",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": false
+      },
+      "text": "</li>"
+    },
+    {
+      "id": "n_nwq_story_sharing_part_1_12",
+      "next": "n_nwq_story_sharing_part_1_13",
+      "text": "</ul>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_share_your_story_with_ryan",
+          "id": "c_nwq_share_name_s_story",
+          "showIf": {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Share $name's story"
+        },
+        {
+          "goto": "n_nwq_not_share_story_with_ryan",
+          "id": "c_nwq_do_nothing_2",
+          "showIf": {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Do nothing"
+        },
+        {
+          "goto": "n_nwq_share_poem_without_ryan",
+          "id": "c_nwq_share_name_s_story_2",
+          "showIf": {
+            "flag": "club",
+            "type": "flag",
+            "value": false
+          },
+          "text": "Share $name's story"
+        },
+        {
+          "goto": "n_nwq_not_share_poem_without_ryan",
+          "id": "c_nwq_do_nothing_3",
+          "showIf": {
+            "flag": "club",
+            "type": "flag",
+            "value": false
+          },
+          "text": "Do nothing"
+        }
+      ],
+      "id": "n_nwq_story_sharing_part_1_13",
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_go_home_part_1",
+      "next": "n_nwq_go_home_part_1_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_2",
+      "next": "n_nwq_go_home_part_1_3",
+      "showIf": {
+        "of": [
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "counter": "ryan",
+            "op": ">",
+            "type": "counter",
+            "value": 4
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Before heading off, $ally says, \"Remember, you're super awesome,"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_3",
+      "next": "n_nwq_go_home_part_1_4",
+      "showIf": {
+        "of": [
+          {
+            "flag": "club",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "of": {
+              "counter": "ryan",
+              "op": ">",
+              "type": "counter",
+              "value": 4
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Before heading off, $ally says, \"Remember, if you ever need to talk, I'm here for you,"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_4",
+      "next": "n_nwq_go_home_part_1_5",
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "$deadname.\" <br />It hurts to hear $pos friend call $obj by that name, but $name knows $ally doesn't know any better. The sentiment is still appreciated."
+    },
+    {
+      "id": "n_nwq_go_home_part_1_5",
+      "next": "n_nwq_go_home_part_1_6",
+      "onEnter": [
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "showIf": {
+        "flag": "club",
+        "type": "flag",
+        "value": true
+      },
+      "text": "<br /><br />"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_6",
+      "next": "n_nwq_go_home_part_1_7",
+      "text": "After the club meeting, $name goes home."
+    },
+    {
+      "id": "n_nwq_go_home_part_1_7",
+      "next": "n_nwq_go_home_part_1_8",
+      "onEnter": [
+        {
+          "counter": "self",
+          "delta": -1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "self",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        },
+        {
+          "counter": "self",
+          "delta": -1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "self",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "bus",
+          "type": "set_flag",
+          "value": false
+        }
+      ],
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": -2
+      },
+      "text": "$badEnding"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_8",
+      "next": "n_nwq_go_home_part_1_9",
+      "onEnter": [
+        {
+          "flag": "death",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "counter": "deaths",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "showIf": {
+        "of": {
+          "counter": "self",
+          "op": "<",
+          "type": "counter",
+          "value": -2
+        },
+        "type": "not"
+      },
+      "text": "<br /><br />"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_9",
+      "next": "n_nwq_go_home_part_1_10",
+      "showIf": {
+        "of": {
+          "counter": "self",
+          "op": "<",
+          "type": "counter",
+          "value": -2
+        },
+        "type": "not"
+      },
+      "text": "$name is ready to start a"
+    },
+    {
+      "id": "n_nwq_go_home_part_1_10",
+      "next": "n_nwq_go_home_part_1_11",
+      "showIf": {
+        "of": {
+          "counter": "self",
+          "op": "<",
+          "type": "counter",
+          "value": -2
+        },
+        "type": "not"
+      },
+      "text": "."
+    },
+    {
+      "id": "n_nwq_go_home_part_1_11",
+      "isEnd": true,
+      "text": "}"
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan",
+      "next": "n_nwq_share_poem_without_ryan_2",
+      "text": "$name shares $pos poem with the club.  The other members"
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan_2",
+      "next": "n_nwq_share_poem_without_ryan_3",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "start to"
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan_3",
+      "next": "n_nwq_share_poem_without_ryan_4",
+      "text": "snap"
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan_4",
+      "next": "n_nwq_share_poem_without_ryan_5",
+      "showIf": {
+        "counter": "happy",
+        "op": "<",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "quietly after an awkward silence"
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan_5",
+      "next": "n_nwq_share_poem_without_ryan_6",
+      "showIf": {
+        "of": [
+          {
+            "counter": "self",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "counter": "happy",
+            "op": ">",
+            "type": "counter",
+            "value": -1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "for $obj"
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan_6",
+      "next": "n_nwq_share_poem_without_ryan_7",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_share_poem_without_ryan_7",
+      "next": "n_nwq_share_poem_without_ryan_8",
+      "text": "After a few more club memebers share their writing, it's time to"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_go_home_part_1",
+          "id": "c_nwq_go_home",
+          "text": "go home"
+        }
+      ],
+      "id": "n_nwq_share_poem_without_ryan_8",
+      "text": "."
+    },
+    {
+      "id": "n_nwq_not_share_poem_without_ryan",
+      "next": "n_nwq_not_share_poem_without_ryan_2",
+      "onEnter": [
+        {
+          "counter": "happy",
+          "delta": -1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "happy",
+          "delta": -1,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "$name stares at $pos poem.  Embarrassed, $sbj feels angry at $obj&#96;self&#96; but it's too late to do anything about it."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_go_home_part_1",
+          "id": "c_nwq_go_home_2",
+          "text": "go home"
+        }
+      ],
+      "id": "n_nwq_not_share_poem_without_ryan_2",
+      "text": "After the other club members share their stories, it's time to"
+    },
+    {
+      "id": "n_nwq_share_your_story_with_ryan",
+      "next": "n_nwq_share_your_story_with_ryan_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_share_your_story_with_ryan_2",
+      "next": "n_nwq_share_your_story_with_ryan_3",
+      "text": "}"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nwq_go_home_part_1",
+          "id": "c_nwq_go_home_3",
+          "text": "Go home"
+        }
+      ],
+      "id": "n_nwq_share_your_story_with_ryan_3",
+      "text": "The other club members share their stories and $name snaps for each one of them."
+    },
+    {
+      "id": "n_nwq_not_share_story_with_ryan",
+      "isEnd": true,
+      "text": "$ally asks $name what $sbj wrote, so $name shares $pos story with just $ally."
+    }
+  ],
+  "replayable": false,
+  "title": "Story sharing part 1"
+}

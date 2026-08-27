@@ -1,0 +1,13 @@
+{
+  "entry": "n_episode1_testsms",
+  "id": "dlg_episode1_testsms",
+  "nodes": [
+    {
+      "id": "n_episode1_testsms",
+      "isEnd": true,
+      "text": "SKIP"
+    }
+  ],
+  "replayable": false,
+  "title": "TestSms"
+}

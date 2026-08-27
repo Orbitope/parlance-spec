@@ -1,0 +1,44 @@
+{
+  "entry": "n_episode2_sms6",
+  "id": "dlg_episode2_sms6",
+  "nodes": [
+    {
+      "id": "n_episode2_sms6",
+      "next": "n_episode2_sms6_2",
+      "speakerId": "char_you",
+      "text": "Salut Liam. Aujourd’hui, on a eu une réunion sur le cyberharcèlement au collège."
+    },
+    {
+      "id": "n_episode2_sms6_2",
+      "next": "n_episode2_sms6_3",
+      "speakerId": "char_you",
+      "text": "On nous a rappelé qu’il existe une association qui s’appelle E-enfance."
+    },
+    {
+      "id": "n_episode2_sms6_3",
+      "next": "n_episode2_sms6_4",
+      "speakerId": "char_you",
+      "text": "Elle donne des ressources et des conseils pour les victimes, les proches et les témoins de cyberharcèlement."
+    },
+    {
+      "id": "n_episode2_sms6_4",
+      "next": "n_episode2_sms6_5",
+      "speakerId": "char_you",
+      "text": "Ils ont même un numéro d’appel si tu veux discuter avec eux. C’est le 3018, avec une application sur le téléphone aussi."
+    },
+    {
+      "id": "n_episode2_sms6_5",
+      "next": "n_episode2_sms6_6",
+      "speakerId": "char_you",
+      "text": "Et comme ce que tu vis c’est clairement du cyberharcèlement, je me suis dit que tu pouvais peut-être les contacter pour te faire aider, non ?"
+    },
+    {
+      "id": "n_episode2_sms6_6",
+      "isEnd": true,
+      "speakerId": "char_liam",
+      "text": "C’est cool de ta part, je vais regarder ça ! Merci !"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms6"
+}

@@ -42,6 +42,12 @@ python3 lib/parse_yarn.py story.yarn --emit manifest > manifest.json
 commands, jumps, variables. `manifest.json` is the contract the check verifies
 against — every line and option in the source, plus the declared rewrites.
 
+Two fields there are answers, not raw material. `variableKinds` is each variable's
+Parlance kind as DERIVED from what the story does with it — register the variables
+that way rather than deciding yourself. And a unit's `showIf` is its guard, already
+translated into a Parlance condition with the branch negations worked out; copy it
+onto the node or choice verbatim.
+
 Read `ir.unmapped` first. It lists Yarn constructs with no Parlance equivalent, and
 it is the spine of your final report.
 
@@ -65,7 +71,8 @@ into what is clearly a different scene entered by its own gate.
 | `<<set $v to true>>` | `effects: [{type: set_flag, ...}]` |
 | `<<set $v to 3>>` | `adjust_counter` — a numeric variable is a counter, not a flag |
 | `<<if $v>>` around an **option** | `choice.showIf` |
-| `<<if $v>>` around a **line** | **no mapping** — see below |
+| `<<if $v>>` around a **line** | one node + `node.showIf` |
+| `<<elseif>>` / `<<else>>` | one node + `showIf` per line; each branch carries the NEGATION of the branches above it |
 | `<<declare>>` / any `$var` | an entry in `variables.json` |
 
 **Never merge a back-and-forth into one node.** One node per speaker, chained by
@@ -79,33 +86,39 @@ the author, not a naming opportunity.
 **Never fill an optional field.** `summary`, `description`, `dialogueStyle`,
 `archetype` and friends stay absent. The author writes them or they stay empty.
 
-#### The one that will tempt you
+#### Conditional narration, and the one that will tempt you
 
-Yarn guards any line with `<<if>>`. This importer does not map those guards onto a
-Parlance node, so a conditional narration line has no mapping **it** can make.
+Yarn guards any line with `<<if>>`, and `parse_yarn.py` maps those onto `node.showIf`
+— **it has already done the work**. Read `unit.showIf` in the manifest and write it
+onto the node. Do not re-derive the condition from the source yourself, and in
+particular do not write the `if`'s guard onto an `<<else>>` branch:
 
-Do **not** wrap it in a choice to make it fit. That fabricates a decision the player
-never made and puts a phantom entry in their history. `parse_yarn.py` already marks
-these `unmappable`, `check.py` reports them as declared loss without blocking
-convergence, and your job is to carry them into the final report so the author can
-decide. Expect a downstream validator warning too — dropping the line often orphans
-the flag it read, which surfaces as `[FLAG] ... set but never read`. That warning is
-a true signal, not noise.
+> An `<<else>>` (or a later `<<elseif>>`) carries the NEGATION of every branch above
+> it. Yarn writes the alternative without restating the condition, so the tempting
+> mapping gives both branches the same guard — and then the player reads two lines
+> where the author wrote one. No line is missing and none is invented.
 
-**Status note.** Parlance 0.11.0 added `DialogueNode.showIf`, so the target for this
-now exists — what is missing is the mapping, not the field. It is deliberately still
-declared loss: an `else` branch written without restating its condition must map to the
-NEGATED guard, and getting that wrong shows both branches together whenever the guard
-holds. Nothing is lost and nothing is invented, so no content check can catch it.
-`IMPORTERS.md` carries the checklist.
+`check.py` compares the conditions in the output against the manifest and reports
+`condition_mismatch` when they disagree, in either direction. It is the only defect
+class the string comparison cannot see, which is why it is checked rather than trusted.
 
-Node-level `showIf` shipped in 0.11.0; when this importer takes it up, guarded
-narration becomes a real mapping rather than declared loss, and the `unmappable`
-reason above is wrong. `IMPORTERS.md` carries the checklist for that change,
-including the trap in it: an `else` branch must be mapped to the NEGATED condition,
-because both formats write the alternative without restating it and giving both
-branches the same guard duplicates the narration — a defect no content check can see,
-since nothing is lost and nothing is invented.
+A guarded node needs `next`, and may carry neither `choices` nor `isEnd`
+(validator rule `COND`) — a conditional node is interstitial narration.
+
+What is still declared loss is narrower, and the parser says which each time. The two
+you will actually meet:
+
+- **A guard on a variable the story never assigns.** Its kind cannot be derived, and a
+  number is truthy in Yarn too, so reading it as a flag would silently change when the
+  line shows. Register the variable in the source or accept the loss — do not guess.
+- **A guarded line immediately before an option block.** That line would have to be the
+  node hosting those choices, and `showIf` and `choices` are mutually exclusive.
+
+For those, do **not** wrap the line in a choice to make it fit — that fabricates a
+decision the player never made and puts a phantom entry in their history. Carry them
+into the report so the author can decide. Expect a downstream validator warning too:
+dropping the line often orphans the flag it read, which surfaces as
+`[FLAG] ... set but never read`. That warning is a true signal, not noise.
 
 ### 3. Check, and let it decide
 

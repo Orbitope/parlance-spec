@@ -23,6 +23,53 @@ from collections import Counter
 
 WORD = re.compile(r"[^\W_]+(?:['’][^\W_]+)*", re.UNICODE)
 
+# A `//` comment — but NOT the `//` in `https://example.com`. Both parsers used to
+# cut at the first `//` unconditionally, which excised the rest of any line
+# containing a URL. Residue caught that, loudly, which is how it was found; the
+# rule is shared from here so the parsers and the accounting cannot disagree about
+# where a comment starts.
+LINE_COMMENT = re.compile(r"(?<!:)//[^\n]*")
+BLOCK_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+
+
+def strip_comment(line):
+    """One line, with any trailing `//` comment removed. Shared with the parsers."""
+    return LINE_COMMENT.sub("", line)
+
+
+def blank_comments(text):
+    """Comment text replaced by spaces, with every newline kept.
+
+    Line numbering has to survive, because residue reports by line — so this
+    blanks rather than deletes. Block comments are the reason it exists at all:
+    they are not player-facing prose, the parsers already skip them, and residue
+    counted every word inside one as a line the parser had lost.
+    """
+    def blank(m):
+        return "".join(c if c == "\n" else " " for c in m.group(0))
+    return LINE_COMMENT.sub(blank, BLOCK_COMMENT.sub(blank, text))
+
+
+def blank_yarn_headers(text):
+    """Yarn node headers blanked, with newlines kept.
+
+    A header runs from the start of a node to its `---`, and may hold ANY key —
+    `title`, `tags`, and whatever else the game's tooling reads. The only way to
+    tell a header's `to: M Douraud` from a body line's `Keeper: Two coins.` is
+    WHERE it is, which is why this tracks the region instead of listing keys.
+    """
+    out, in_body = [], False
+    for raw in text.splitlines():
+        s = raw.strip()
+        if s == "---":
+            in_body = True
+        elif s == "===":
+            in_body = False
+        elif not in_body and s:
+            raw = " " * len(raw)
+        out.append(raw)
+    return "\n".join(out)
+
 
 def _words(s):
     return WORD.findall(s or "")
@@ -54,8 +101,20 @@ def _words(s):
 # all of them from the count.
 MARKUP = {
     "yarn": [
-        r"<<[^>\n]*>>",               # commands
-        r"^\s*(?:title|tags|position|colorID|bg|time|type|from|allowIcons)\s*:.*$",
+        # NOT `<<[^>\n]*>>`: that excludes `>` from the body, so every command
+        # containing a comparison — `<<if $coins >= 2>>`, `<<elseif $n > 0>>` —
+        # matched nothing at all and was counted as prose. The whole line then
+        # showed up as residue and refused to converge, on a story that had
+        # nothing wrong with it. Non-greedy to the first `>>` instead, which
+        # still stops at the end of the command and still cannot cross a line.
+        r"<<[^\n]*?>>",               # commands
+        # Node headers are blanked STRUCTURALLY, by `blank_yarn_headers` below,
+        # not matched here. They used to be an allowlist of key names — and a
+        # Yarn header may carry any key at all, so a real script using `to:`,
+        # `name:`, `icon:` or `image:` reported every one of them as lost prose.
+        # A general `^\s*\w+\s*:.*$` cannot replace the list either: it would eat
+        # `Keeper: Two coins.` and hide a whole speaker line, which is the very
+        # thing this file exists to make impossible.
         r"^\s*(?:---|===)\s*$",       # node delimiters
         r"^\s*->",                    # option marker (its text is a unit)
         r"#[\w:.\-]+",                # line tags
@@ -68,16 +127,22 @@ MARKUP = {
         r"^\s*=\s*[A-Za-z_]\w*.*$",   # stitch headers
         r"^\s*(?:VAR|CONST|LIST|EXTERNAL|INCLUDE)\b.*$",
         r"^\s*~.*$",                  # logic lines
-        # Diverts and threads BEFORE the choice/gather markers, so that the
-        # `-` of `->` is not consumed as a gather first. Anchored to
-        # end-of-line: in Ink, text after a divert is unreachable, so a `->`
-        # mid-sentence is prose the parser mis-read, not syntax, and stripping
-        # those would hide exactly that defect.
-        r"->\s*(?:[A-Za-z_][\w.]*|END|DONE)\s*(?:->)?\s*$",
+        # Diverts and threads BEFORE the choice/gather markers, so that the `-`
+        # of `->` is not consumed as a gather first. Three shapes are recognised:
+        # `-> a`, `-> a ->`, and `-> a -> b` (a tunnel that hands on to another
+        # container). Only the LAST may be followed by end-of-line or a brace: in
+        # Ink, text after a divert is unreachable, so a `->` mid-sentence is prose
+        # the parser mis-read rather than syntax, and stripping those would hide
+        # exactly that defect. The optional `}` is for a conditional whose whole
+        # body is a divert: `{ flag: -> knot }`.
+        r"(?:->\s*(?:[A-Za-z_][\w.]*|END|DONE)\s*)+(?:->\s*)?\}?\s*$",
         r"<-\s*[A-Za-z_][\w.]*\s*$",
         # Conditional-block branch markers: `- else:`, `- cond:`.
         r"^\s*-\s*(?:else|otherwise)?\s*[^:\n]*:\s*$",
-        r"^\s*[*+\-]+",                # choice / gather markers
+        # Choice and gather markers, with the label that may follow one. The
+        # markers may be spaced (`- - (bunk_opts)`) as readily as run together,
+        # and a label is an address rather than prose.
+        r"^\s*(?:[*+\-]\s*)+(?:\(\w+\)\s*)?",
         r"#[\w:.\-]+",                 # inline tags
         # ONLY the head of a brace group: `{cond}`, `{ cond:`, `{var:`. A group
         # holding an alternative (`{a|b}`) has no head to match and is left
@@ -86,6 +151,25 @@ MARKUP = {
         r"^\s*\}\s*$",                # a brace group's closing line
         r"[|}]",                      # the alternative separator and closer
         r"<>",                        # glue
+    ],
+    "twine": [
+        r"^\s*::.*$",                          # passage headers
+        # ONLY the macro head. A macro's arguments can hold prose — `(print: "…")`
+        # is the case that proves it — so they are accounted for by the parser
+        # instead, which records every macro's argument text with its line. The
+        # same rule as the Ink brace head, and for the same reason.
+        r"\(\s*[A-Za-z][\w-]*\s*:",
+        # A link's TARGET is an address, not prose; the text beside it is prose
+        # and stays required. Both orders: `[[Text|Target]]`, `[[Text->Target]]`
+        # and `[[Target<-Text]]`.
+        r"(?:\||->)[^\]\n]*(?=\]\])",
+        r"\[\[[^\]\n]*?<-",
+        r"\[\[|\]\]",
+        # Variable interpolation, WITH any possessive or contraction hanging off
+        # it. `$name's` strips to a bare `'s`, whose `s` the word pattern then
+        # counts as a word of prose nobody wrote — 64 lines of a real story
+        # reported lost on the strength of one apostrophe.
+        r"\$\w+(?:['’]\w+)?",
     ],
 }
 
@@ -121,8 +205,14 @@ def find_residue(source_text, units, unmapped=(), extra_accounted=(), fmt=None):
         add(lineno, text)
 
     out = []
-    for i, raw in enumerate(source_text.splitlines(), 1):
-        if not raw.strip() or raw.lstrip().startswith("//"):
+    # Comments are not player-facing prose and the parsers already skip them, so
+    # counting their words reported the parser as having lost lines nobody wrote
+    # for a player. Blanked rather than deleted: residue reports by line number.
+    blanked = blank_comments(source_text)
+    if fmt == "yarn":
+        blanked = blank_yarn_headers(blanked)
+    for i, raw in enumerate(blanked.splitlines(), 1):
+        if not raw.strip():
             continue
         stripped = raw
         for pat in MARKUP.get(fmt or "", []):

@@ -1,0 +1,44 @@
+{
+  "entry": "n_episode1_sms6a",
+  "id": "dlg_episode1_sms6a",
+  "nodes": [
+    {
+      "id": "n_episode1_sms6a",
+      "next": "n_episode1_sms6a_2",
+      "speakerId": "char_hakim",
+      "text": "Salut, je prends enfin le temps de te donner des nouvelles."
+    },
+    {
+      "id": "n_episode1_sms6a_2",
+      "next": "n_episode1_sms6a_3",
+      "speakerId": "char_hakim",
+      "text": "Tout d’abord, un grand merci à toi. Je m’en rendais pas trop compte sur le moment mais ton implication et tes messages de soutien m’ont vraiment aidé."
+    },
+    {
+      "id": "n_episode1_sms6a_3",
+      "next": "n_episode1_sms6a_4",
+      "speakerId": "char_hakim",
+      "text": "Déjà à me sentir moins seul dans tout ça. Et aussi parce que tu m’as permis d’ouvrir les yeux et de mettre des mots sur ce que je vivais."
+    },
+    {
+      "id": "n_episode1_sms6a_4",
+      "next": "n_episode1_sms6a_5",
+      "speakerId": "char_hakim",
+      "text": "Ça m’a beaucoup aidé à avancer mais aussi à redevenir sociable."
+    },
+    {
+      "id": "n_episode1_sms6a_5",
+      "next": "n_episode1_sms6a_6",
+      "speakerId": "char_hakim",
+      "text": "J’avais commencé à m’enfermer dans une bulle où j’avais peur de tous les autres, je n’avais plus confiance ni foi en rien ni personne."
+    },
+    {
+      "id": "n_episode1_sms6a_6",
+      "isEnd": true,
+      "speakerId": "char_hakim",
+      "text": "Mais encore merci d’avoir été là !"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms6a"
+}

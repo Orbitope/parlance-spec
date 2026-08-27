@@ -1,0 +1,50 @@
+{
+  "entry": "n_episode1_sms3c",
+  "id": "dlg_episode1_sms3c",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_sms3c_2",
+          "id": "c_episode1_t_abuses",
+          "text": "T'abuses !"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_sms3c_3",
+          "id": "c_episode1_a_ne_te_ressemble",
+          "text": "Ça ne te ressemble pas."
+        }
+      ],
+      "id": "n_episode1_sms3c",
+      "speakerId": "char_you",
+      "text": "Salut Hakim. Pas de réponse de ta part..."
+    },
+    {
+      "id": "n_episode1_sms3c_2",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "T'abuses mec !"
+    },
+    {
+      "id": "n_episode1_sms3c_3",
+      "next": "n_episode1_sms3c_4",
+      "speakerId": "char_you",
+      "text": "Ça ne te ressemble pas."
+    },
+    {
+      "id": "n_episode1_sms3c_4",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Quels que soient tes soucis, sache que je suis là, au besoin. Courage !"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms3c"
+}

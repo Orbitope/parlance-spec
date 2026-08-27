@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><title>Lamp Room</title></head><body>
+<tw-story></tw-story>
+<script type="text/javascript">/* the Harlowe engine would sit here — several
+hundred kilobytes of it, none of it story. The parser blanks everything outside
+tw-storydata before it reads a word. */ var x = "&lt;not story&gt;";</script>
+<tw-storydata name="Lamp Room" startnode="1" creator="Twine"
+ creator-version="2.10.0" format="Harlowe" format-version="3.3.9"
+ ifid="3F1E7A20-4C55-4B4E-9F2E-0C1D6B8A5E31" options="" tags="" zoom="1" hidden>
+<tw-passagedata pid="1" name="Landing" tags="" position="100,100" size="100,100">(set: $lamp to false)
+(set: $coins to 2)
+The stair ends at a door nobody has painted this century.
+[[Try the handle|Handle]]</tw-passagedata>
+<tw-passagedata pid="2" name="Handle" tags="" position="100,200" size="100,100">(set: $lamp to true)
+The handle turns, which is more than you expected.
+(if: $coins &gt;= 2)[
+You still have the fare in your pocket, for whatever that is worth now.
+](else:)[
+Your pockets are empty and the night is not over.
+]
+(text-style:&quot;underline&quot;)[The room beyond is dark.]
+[[Go in|Inside]]
+[[Turn back|Landing]]</tw-passagedata>
+<tw-passagedata pid="3" name="Inside" tags="" position="100,300" size="100,100">(track: &#39;doorClose&#39;, &#39;play&#39;)
+Somebody has left a lamp burning on the sill.
+(if: $lamp)[The handle is still warm in your hand.]
+(if: $name is &quot;&quot;)[
+Nobody has asked your name yet.
+[[Say nothing|Inside]]
+]
+(print: $coins) coins, and nothing to spend them on.
+The window looks out on the ford, which is still going.</tw-passagedata>
+</tw-storydata>
+</body></html>

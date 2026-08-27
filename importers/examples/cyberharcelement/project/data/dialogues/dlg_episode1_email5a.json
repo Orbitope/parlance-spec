@@ -1,0 +1,28 @@
+{
+  "entry": "n_episode1_email5a",
+  "id": "dlg_episode1_email5a",
+  "nodes": [
+    {
+      "id": "n_episode1_email5a",
+      "next": "n_episode1_email5a_2",
+      "text": "Bonjour Monsieur Douraud,"
+    },
+    {
+      "id": "n_episode1_email5a_2",
+      "next": "n_episode1_email5a_3",
+      "text": "Je souhaite vous rencontrer pour prendre conseil au sujet de ce qui se passe avec Hakim."
+    },
+    {
+      "id": "n_episode1_email5a_3",
+      "next": "n_episode1_email5a_4",
+      "text": "Il me semble détenir quelques preuves qui pourraient être utiles mais je ne sais pas si elles sont utilisables, je ne veux pas faire d’erreur. De plus, ceux qui harcèlent Hakim commencent à me menacer aussi."
+    },
+    {
+      "id": "n_episode1_email5a_4",
+      "isEnd": true,
+      "text": "Bonne journée."
+    }
+  ],
+  "replayable": false,
+  "title": "Email5a"
+}

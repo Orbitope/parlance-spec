@@ -1,0 +1,23 @@
+{
+  "entry": "n_nwq_enchant_header",
+  "id": "dlg_nwq_enchant_header",
+  "nodes": [
+    {
+      "id": "n_nwq_enchant_header",
+      "next": "n_nwq_enchant_header_2",
+      "text": "{"
+    },
+    {
+      "id": "n_nwq_enchant_header_2",
+      "next": "n_nwq_enchant_header_3",
+      "text": "<!-- Made a formatting schema for important names that's uniform across all pages. -->"
+    },
+    {
+      "id": "n_nwq_enchant_header_3",
+      "isEnd": true,
+      "text": "}"
+    }
+  ],
+  "replayable": false,
+  "title": "Enchant header"
+}

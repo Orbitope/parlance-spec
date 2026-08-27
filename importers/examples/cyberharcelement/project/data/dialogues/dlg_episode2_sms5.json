@@ -1,0 +1,194 @@
+{
+  "entry": "n_episode2_sms5",
+  "id": "dlg_episode2_sms5",
+  "nodes": [
+    {
+      "id": "n_episode2_sms5",
+      "next": "n_episode2_sms5_2",
+      "speakerId": "char_alex",
+      "text": "Salut, ça va ?"
+    },
+    {
+      "id": "n_episode2_sms5_2",
+      "next": "n_episode2_sms5_3",
+      "speakerId": "char_you",
+      "text": "Hey ! Ça va et toi ? Ça fait longtemps !"
+    },
+    {
+      "id": "n_episode2_sms5_3",
+      "next": "n_episode2_sms5_4",
+      "speakerId": "char_alex",
+      "text": "Super ! Oui ça fait trop longtemps ! D’ailleurs ça te tente de faire une sortie samedi dans l’aprem ?"
+    },
+    {
+      "id": "n_episode2_sms5_4",
+      "next": "n_episode2_sms5_5",
+      "speakerId": "char_you",
+      "text": "Carrément ! Je proposerai à Liam aussi, ça sera mieux à trois, qu’est-ce que t’en dis ?"
+    },
+    {
+      "id": "n_episode2_sms5_5",
+      "next": "n_episode2_sms5_6",
+      "speakerId": "char_alex",
+      "text": "Ah ouais... Euh... En fait, j’aimerais autant éviter qu’on me voie avec lui pour être honnête. Je savais pas que tu traînais encore avec lui..."
+    },
+    {
+      "id": "n_episode2_sms5_6",
+      "next": "n_episode2_sms5_7",
+      "speakerId": "char_you",
+      "text": "Ah bon mais pourquoi ça ? On fait toujours du handball ensemble donc on est toujours soudés ! On est une équipe."
+    },
+    {
+      "id": "n_episode2_sms5_7",
+      "next": "n_episode2_sms5_8",
+      "speakerId": "char_alex",
+      "text": "Ah ouais, j’avais oublié. Mais si j’étais toi j’éviterais de traîner avec lui en public."
+    },
+    {
+      "id": "n_episode2_sms5_8",
+      "next": "n_episode2_sms5_9",
+      "speakerId": "char_you",
+      "text": "Mais c’est quoi le problème à la fin ?!"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_sms5_10",
+          "id": "c_episode2_et_est_ce_que",
+          "text": "Et est-ce que tu as des preuves ?"
+        },
+        {
+          "goto": "n_episode2_sms5_12",
+          "id": "c_episode2_euh_ok",
+          "text": "Euh, ok..."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_sms5_14",
+          "id": "c_episode2_non_s_rieux_envoie",
+          "text": "Non sérieux ?! Envoie plus d’infos !"
+        }
+      ],
+      "id": "n_episode2_sms5_9",
+      "speakerId": "char_alex",
+      "text": "Bah... Tu sais bien, il a essayé d’embrasser son pote Ben. Il s’est fait recaler mais ça reste dégueu !"
+    },
+    {
+      "id": "n_episode2_sms5_10",
+      "next": "n_episode2_sms5_11",
+      "speakerId": "char_you",
+      "text": "Et est-ce tu as des preuves de tout ça avant de t’emballer dans des rumeurs et théories folles ?"
+    },
+    {
+      "id": "n_episode2_sms5_11",
+      "next": "n_episode2_sms5_17",
+      "speakerId": "char_alex",
+      "text": "Dans tous les cas, il y a une lettre d’amour que Liam a écrite à Ben qui circule !"
+    },
+    {
+      "id": "n_episode2_sms5_12",
+      "next": "n_episode2_sms5_13",
+      "speakerId": "char_you",
+      "text": "Euh, ok… Je sais pas trop quoi faire de cette info..."
+    },
+    {
+      "id": "n_episode2_sms5_13",
+      "next": "n_episode2_sms5_17",
+      "speakerId": "char_alex",
+      "text": "J’te mets au courant, c’est tout. Tu peux pas faire comme si tu savais pas maintenant !"
+    },
+    {
+      "id": "n_episode2_sms5_14",
+      "next": "n_episode2_sms5_15",
+      "speakerId": "char_you",
+      "text": "Non sérieux ?! Envoie plus d’infos !"
+    },
+    {
+      "id": "n_episode2_sms5_15",
+      "next": "n_episode2_sms5_16",
+      "speakerId": "char_alex",
+      "text": "Alors, maintenant la moitié du collège est au courant. Y’a même une lettre d’amour qui circule sur Insta !"
+    },
+    {
+      "id": "n_episode2_sms5_16",
+      "next": "n_episode2_sms5_17",
+      "speakerId": "char_alex",
+      "text": "Sérieux, c’est trop la honte d’écrire une lettre d’amour ! Ah ah !"
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_sms5_18",
+          "id": "c_episode2_mouais_donc_toi_tu",
+          "text": "Mouais, donc toi tu trouves ça marrant ?"
+        },
+        {
+          "goto": "n_episode2_sms5_20",
+          "id": "c_episode2_x",
+          "text": "😑"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode2_sms5_21",
+          "id": "c_episode2_trop_bien_j_adore",
+          "text": "Trop bien ! J’adore !"
+        }
+      ],
+      "id": "n_episode2_sms5_17",
+      "speakerId": "char_alex",
+      "text": "... Et en plus, on peut voir des vidéos challenge sur TikTok pour rejeter celles et ceux qui tentent un truc. Quelqu’un a même inventé le \\#clubdesrecalés. Attends, je t’en partage une."
+    },
+    {
+      "id": "n_episode2_sms5_18",
+      "next": "n_episode2_sms5_19",
+      "speakerId": "char_you",
+      "text": "Mouais, donc toi tu trouves ça marrant ? Je ne comprends pas ce qui est drôle. C’est même méchant de faire tourner des vidéos comme ça !"
+    },
+    {
+      "id": "n_episode2_sms5_19",
+      "isEnd": true,
+      "speakerId": "char_alex",
+      "text": "Oh ça va ! Le ridicule ne tue pas."
+    },
+    {
+      "id": "n_episode2_sms5_20",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "😑"
+    },
+    {
+      "id": "n_episode2_sms5_21",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Trop bien ! J’adore !"
+    }
+  ],
+  "replayable": false,
+  "title": "Sms5"
+}

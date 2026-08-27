@@ -1,0 +1,1125 @@
+{
+  "entry": "n_episode1_start",
+  "id": "dlg_episode1_start",
+  "nodes": [
+    {
+      "id": "n_episode1_start",
+      "next": "n_episode1_bedroom1",
+      "text": "Comme chaque matin, 6h45, le réveil de ton téléphone sonne pour aller au collège..."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_class1",
+          "id": "c_episode1_aller_en_classe",
+          "text": "Aller en classe"
+        }
+      ],
+      "id": "n_episode1_bedroom1",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_class1",
+      "next": "n_episode1_class1_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_class1_2",
+      "next": "n_episode1_class1_3",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Lundi 13 Novembre, 08h35",
+          "variable": "time"
+        }
+      ],
+      "speakerId": "char_narrator",
+      "text": "La journée au collège débute avec le cours de mathématiques."
+    },
+    {
+      "id": "n_episode1_class1_3",
+      "next": "n_episode1_class1_4",
+      "speakerId": "char_narrator",
+      "text": "Ta professeure Madame Martin fait l’appel."
+    },
+    {
+      "id": "n_episode1_class1_4",
+      "next": "n_episode1_class1_5",
+      "speakerId": "char_professor",
+      "text": "Bonjour à toutes et à tous. Veuillez vous installer rapidement, s’il vous plaît."
+    },
+    {
+      "id": "n_episode1_class1_5",
+      "next": "n_episode1_class1_6",
+      "speakerId": "char_professor",
+      "text": "Béranger Clémence ?"
+    },
+    {
+      "id": "n_episode1_class1_6",
+      "next": "n_episode1_class1_7",
+      "text": "Présente !"
+    },
+    {
+      "id": "n_episode1_class1_7",
+      "next": "n_episode1_class1_8",
+      "speakerId": "char_professor",
+      "text": "Bonnet Maxime ?"
+    },
+    {
+      "id": "n_episode1_class1_8",
+      "next": "n_episode1_class1_9",
+      "text": "Présent !"
+    },
+    {
+      "id": "n_episode1_class1_9",
+      "next": "n_episode1_class1_10",
+      "speakerId": "char_professor",
+      "text": "Par rapport à Bouracha Hakim je souhaitais vous informer qu'il ne viendra plus en classe désormais."
+    },
+    {
+      "id": "n_episode1_class1_10",
+      "next": "n_episode1_class1_11",
+      "speakerId": "char_professor",
+      "text": "Si vous avez des questions je pourrais y répondre."
+    },
+    {
+      "id": "n_episode1_class1_11",
+      "next": "n_episode1_class1_12",
+      "text": "Pourquoi ?"
+    },
+    {
+      "id": "n_episode1_class1_12",
+      "next": "n_episode1_class1_13",
+      "text": "Il a quitté le collège ?"
+    },
+    {
+      "id": "n_episode1_class1_13",
+      "next": "n_episode1_class1_14",
+      "text": "Il reviendra jamais du coup ?"
+    },
+    {
+      "id": "n_episode1_class1_14",
+      "next": "n_episode1_class1_15",
+      "text": "Si c'est ça, dommage, il était cool."
+    },
+    {
+      "id": "n_episode1_class1_15",
+      "next": "n_episode1_class1_16",
+      "text": "C'est pas comme si c'était grave."
+    },
+    {
+      "id": "n_episode1_class1_16",
+      "next": "n_episode1_class1_17",
+      "text": "J’ai même pas pu lui dire au revoir."
+    },
+    {
+      "id": "n_episode1_class1_17",
+      "next": "n_episode1_class1_18",
+      "text": "J'espère qu'il déménage !"
+    },
+    {
+      "id": "n_episode1_class1_18",
+      "next": "n_episode1_class1_19",
+      "text": "Y’a bien une raison pour qu’il soit parti, non ?"
+    },
+    {
+      "id": "n_episode1_class1_19",
+      "next": "n_episode1_class1_20",
+      "text": "Ah, pas sûr que ce soit une grande perte, c’était pas loin d’être le mec le plus inutile de la classe."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_class1_21",
+          "id": "c_episode1_vous_tes_qui_pour",
+          "text": "\"Vous êtes qui pour le juger comme ça?\""
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_class1_23",
+          "id": "c_episode1_tout_le_monde_l",
+          "text": "\"Tout le monde l’a oublié\""
+        },
+        {
+          "goto": "n_episode1_class1_24",
+          "id": "c_episode1_ne_rien_dire",
+          "text": "Ne rien dire"
+        }
+      ],
+      "id": "n_episode1_class1_20",
+      "text": "Haha ! Ouais il sera mieux dans un autre établissement avec d’autres fragiles comme lui."
+    },
+    {
+      "id": "n_episode1_class1_21",
+      "next": "n_episode1_class1_22",
+      "speakerId": "char_you",
+      "text": "Vous êtes qui pour le juger comme ça, vous lui avez jamais parlé."
+    },
+    {
+      "id": "n_episode1_class1_22",
+      "next": "n_episode1_class1_25",
+      "speakerId": "char_you",
+      "text": "Vous connaissez quoi de lui pour dire ça, sérieux?"
+    },
+    {
+      "id": "n_episode1_class1_23",
+      "next": "n_episode1_class1_25",
+      "speakerId": "char_you",
+      "text": "J’avoue que ça fait 3 semaines qu’il ne vient pas tout le monde l’a oublié."
+    },
+    {
+      "id": "n_episode1_class1_24",
+      "next": "n_episode1_class1_25",
+      "speakerId": "char_you",
+      "text": "..."
+    },
+    {
+      "id": "n_episode1_class1_25",
+      "next": "n_episode1_class1_26",
+      "speakerId": "char_professor",
+      "text": "Ça suffit !"
+    },
+    {
+      "id": "n_episode1_class1_26",
+      "next": "n_episode1_class1_27",
+      "speakerId": "char_professor",
+      "text": "Si vous souhaitez en parler, nous pouvons le faire, mais il faut bien s'écouter."
+    },
+    {
+      "id": "n_episode1_class1_27",
+      "next": "n_episode1_class1_28",
+      "speakerId": "char_professor",
+      "text": "Maintenant, je vous demande de prêter toute votre attention à M Douraud, qui souhaite vous parler d’un sujet important : le cyberharcèlement."
+    },
+    {
+      "id": "n_episode1_class1_28",
+      "next": "n_episode1_class1_29",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Lundi 13 Novembre, 08h50",
+          "variable": "time"
+        }
+      ],
+      "speakerId": "char_cpe",
+      "text": "Bonjour à tous. Si j’interviens ce matin, c’est pour vous parler d'un sujet qui nous préoccupe avec l'équipe enseignante."
+    },
+    {
+      "id": "n_episode1_class1_29",
+      "next": "n_episode1_class1_30",
+      "speakerId": "char_cpe",
+      "text": "Il s'agit du cyberharcèlement."
+    },
+    {
+      "id": "n_episode1_class1_30",
+      "next": "n_episode1_class1_31",
+      "speakerId": "char_cpe",
+      "text": "Je rappelle à chacun que harceler quelqu'un, même via les réseaux, est strictement interdit. Si c'est avéré, cela constitue un délit, passible d'une peine de prison et de fortes amendes."
+    },
+    {
+      "id": "n_episode1_class1_31",
+      "next": "n_episode1_class1questions",
+      "speakerId": "char_cpe",
+      "text": "De même, le simple fait de relayer ce type de contenu est condamnable au regard de la loi."
+    },
+    {
+      "id": "n_episode1_class1questions",
+      "next": "n_episode1_class1questions_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_class1questions_3",
+          "id": "c_episode1_que_faire_si_on",
+          "text": "Que faire si on se fait harceler sur les réseaux sociaux ?"
+        },
+        {
+          "goto": "n_episode1_class1questions_9",
+          "id": "c_episode1_que_faire_si_on_2",
+          "text": "Que faire si on est témoin de cyberharcèlement ?"
+        },
+        {
+          "goto": "n_episode1_class1questions_14",
+          "id": "c_episode1_non",
+          "text": "Non"
+        }
+      ],
+      "id": "n_episode1_class1questions_2",
+      "speakerId": "char_cpe",
+      "text": "Avez-vous des questions ?"
+    },
+    {
+      "id": "n_episode1_class1questions_3",
+      "next": "n_episode1_class1questions_4",
+      "speakerId": "char_you",
+      "text": "Que faire si on se fait harceler sur les réseaux sociaux ?"
+    },
+    {
+      "id": "n_episode1_class1questions_4",
+      "next": "n_episode1_class1questions_5",
+      "speakerId": "char_cpe",
+      "text": "Si vous en êtes victime, sachez qu'en parler est votre meilleure défense."
+    },
+    {
+      "id": "n_episode1_class1questions_5",
+      "next": "n_episode1_class1questions_6",
+      "speakerId": "char_cpe",
+      "text": "Vous pouvez le faire auprès de vos amis, de vos proches comme la famille, d’associations spécialisées comme e-enfance à appeler au 3018, de vos professeurs ou de moi-même."
+    },
+    {
+      "id": "n_episode1_class1questions_6",
+      "next": "n_episode1_class1questions_7",
+      "speakerId": "char_cpe",
+      "text": "Nous serons toujours là pour vous écouter."
+    },
+    {
+      "id": "n_episode1_class1questions_7",
+      "next": "n_episode1_class1questions_8",
+      "speakerId": "char_cpe",
+      "text": "Mais vous pouvez également le faire en vous rendant auprès de la gendarmerie ou du commissariat, ou pour plus de discrétion, par téléphone ou chat dédié."
+    },
+    {
+      "id": "n_episode1_class1questions_8",
+      "next": "n_episode1_class1questions",
+      "speakerId": "char_cpe",
+      "text": "Dans tous les cas, ne restez pas dans le silence, c'est très important."
+    },
+    {
+      "id": "n_episode1_class1questions_9",
+      "next": "n_episode1_class1questions_10",
+      "speakerId": "char_you",
+      "text": "Que faire si on est témoin de cyberharcèlement ?"
+    },
+    {
+      "id": "n_episode1_class1questions_10",
+      "next": "n_episode1_class1questions_11",
+      "speakerId": "char_cpe",
+      "text": "Maintenant, si vous en êtes témoin, vous pouvez agir afin d'aider une personne victime de cyberharcèlement."
+    },
+    {
+      "id": "n_episode1_class1questions_11",
+      "next": "n_episode1_class1questions_12",
+      "speakerId": "char_cpe",
+      "text": "Il est aussi possible de contacter les services de police ou de gendarmerie : Vous pourrez témoigner, collecter des preuves sous forme de capture d'écran, d'enregistrement audio ou vidéo."
+    },
+    {
+      "id": "n_episode1_class1questions_12",
+      "next": "n_episode1_class1questions_13",
+      "speakerId": "char_cpe",
+      "text": "Les preuves sont essentielles aux services de justice. Mais en aucun cas vous ne devez publier ces preuves sur Internet."
+    },
+    {
+      "id": "n_episode1_class1questions_13",
+      "next": "n_episode1_class1questions",
+      "speakerId": "char_cpe",
+      "text": "Vous pouvez les conserver dans le coffre fort de l'application 3018."
+    },
+    {
+      "id": "n_episode1_class1questions_14",
+      "next": "n_episode1_preoutside1",
+      "speakerId": "char_cpe",
+      "text": "Je ne vais pas perturber votre cours plus longtemps. Merci de votre attention."
+    },
+    {
+      "id": "n_episode1_preoutside1",
+      "next": "n_episode1_preoutside1_2",
+      "text": "La sonnerie retentit, tout le monde sort pour la pause."
+    },
+    {
+      "id": "n_episode1_preoutside1_2",
+      "next": "n_episode1_outside1",
+      "text": "Dans la cour, plusieurs groupes d’élèves discutent de l’intervention du CPE."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "listenedconversations",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_outside1_2",
+          "id": "c_episode1_je_suis_vraiment_inqui",
+          "text": "Je suis vraiment inquiète pour Hakim. #position:300,400 #discover:Écouter"
+        },
+        {
+          "effects": [
+            {
+              "counter": "listenedconversations",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_outside1_5",
+          "id": "c_episode1_mais_s_rieux_c",
+          "text": "Mais sérieux, c'est quoi ces gens qui se plaignent pour tout et n'importe quoi ? #position:635,450"
+        },
+        {
+          "goto": "n_episode1_outside1_10",
+          "id": "c_episode1_haha_il_tirait_une",
+          "text": "Haha ! Il tirait une de ces tronches ! #position:1100,420"
+        }
+      ],
+      "id": "n_episode1_outside1",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_outside1",
+          "id": "c_episode1_ne_rien_faire",
+          "text": "Ne rien faire"
+        },
+        {
+          "goto": "n_episode1_outside1_3",
+          "id": "c_episode1_prendre_des_notes_sur",
+          "text": "Prendre des notes sur la conversation"
+        },
+        {
+          "goto": "n_episode1_outside1_4",
+          "id": "c_episode1_intervenir_dans_la_conversation",
+          "text": "Intervenir dans la conversation"
+        }
+      ],
+      "id": "n_episode1_outside1_2",
+      "text": "J'espère qu'il va bien... #position:300,400"
+    },
+    {
+      "id": "n_episode1_outside1_3",
+      "next": "n_episode1_outside1",
+      "speakerId": "char_narrator",
+      "text": "Tu prends des notes sur la conversation."
+    },
+    {
+      "id": "n_episode1_outside1_4",
+      "next": "n_episode1_outside1",
+      "speakerId": "char_you",
+      "text": "J'espère qu'il va bien aussi"
+    },
+    {
+      "id": "n_episode1_outside1_5",
+      "next": "n_episode1_outside1_6",
+      "text": "C’est bien la preuve que c’est un fragile! Il n’y a que les fragiles qui se plaignent. #position:635,450"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_outside1",
+          "id": "c_episode1_ne_rien_faire_2",
+          "text": "Ne rien faire"
+        },
+        {
+          "goto": "n_episode1_outside1_7",
+          "id": "c_episode1_prendre_des_notes_sur_2",
+          "text": "Prendre des notes sur la conversation"
+        },
+        {
+          "goto": "n_episode1_outside1_8",
+          "id": "c_episode1_intervenir_dans_la_conversation_2",
+          "text": "Intervenir dans la conversation"
+        }
+      ],
+      "id": "n_episode1_outside1_6",
+      "text": "C'est quoi déjà, le nom de ce gars, Hakim ? #position:635,450"
+    },
+    {
+      "id": "n_episode1_outside1_7",
+      "next": "n_episode1_outside1",
+      "speakerId": "char_narrator",
+      "text": "Tu prends des notes sur la conversation."
+    },
+    {
+      "id": "n_episode1_outside1_8",
+      "next": "n_episode1_outside1_9",
+      "speakerId": "char_you",
+      "text": "Ça se fait pas de se moquer comme ça !"
+    },
+    {
+      "id": "n_episode1_outside1_9",
+      "next": "n_episode1_outside1",
+      "text": "De quoi tu te mêles ? On dit ce qu'on veut de toute façon ! #position:635,450"
+    },
+    {
+      "id": "n_episode1_outside1_10",
+      "next": "n_episode1_outside1_11",
+      "text": "J'ai bien fait d'immortaliser ce moment. #position:1100,420"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_outside1",
+          "id": "c_episode1_ne_rien_faire_3",
+          "text": "Ne rien faire"
+        },
+        {
+          "goto": "n_episode1_outside1_12",
+          "id": "c_episode1_prendre_des_notes_sur_3",
+          "text": "Prendre des notes sur la conversation"
+        },
+        {
+          "goto": "n_episode1_outside1_13",
+          "id": "c_episode1_intervenir_dans_la_conversation_3",
+          "text": "Intervenir dans la conversation"
+        }
+      ],
+      "id": "n_episode1_outside1_11",
+      "text": "La vidéo est de plus en plus partagée ! #position:1100,420"
+    },
+    {
+      "id": "n_episode1_outside1_12",
+      "next": "n_episode1_outside1",
+      "speakerId": "char_narrator",
+      "text": "Tu prends des notes sur la conversation."
+    },
+    {
+      "id": "n_episode1_outside1_13",
+      "next": "n_episode1_outside1_14",
+      "speakerId": "char_you",
+      "text": "Ça va pas de faire ce genre de choses ?! Vraiment vous n’avez aucune honte !"
+    },
+    {
+      "id": "n_episode1_outside1_14",
+      "next": "n_episode1_outside1",
+      "text": "En même temps il avait qu'à pas être de la team fragile ! #position:1100,420"
+    },
+    {
+      "id": "n_episode1_prebedroom2",
+      "next": "n_episode1_bedroom2",
+      "text": "Après une journée de cours bien remplie, tu retrouves enfin ta chambre."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_preoutside2",
+          "id": "c_episode1_suite",
+          "text": "Suite"
+        }
+      ],
+      "id": "n_episode1_bedroom2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_preoutside2",
+      "next": "n_episode1_preoutside2_2",
+      "text": "Le lendemain matin, en arrivant devant le collège, un attroupement attire ton attention."
+    },
+    {
+      "id": "n_episode1_preoutside2_2",
+      "next": "n_episode1_preoutside2_3",
+      "text": "\"Vas-y fragile\", \"prouve que t’en as\" crient certains."
+    },
+    {
+      "id": "n_episode1_preoutside2_3",
+      "next": "n_episode1_outside2",
+      "text": "Tu finis par te rapprocher."
+    },
+    {
+      "id": "n_episode1_outside2",
+      "next": "n_episode1_outside2_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_outside2_2",
+      "next": "n_episode1_outside2_3",
+      "text": "Allez le fragile ! #position:850,400"
+    },
+    {
+      "id": "n_episode1_outside2_3",
+      "next": "n_episode1_outside2_4",
+      "text": "Prouve au monde entier que tu n'es pas un loser ! #position:1100,600"
+    },
+    {
+      "id": "n_episode1_outside2_4",
+      "next": "n_episode1_outside2_5",
+      "text": "Si tu y arrives, tu ne seras plus considéré comme faisant partie de la \\#teamfragile ! #position:450,800"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_outside2_6",
+          "id": "c_episode1_d_tourner_le_regard",
+          "text": "Détourner le regard et ne rien faire"
+        },
+        {
+          "goto": "n_episode1_outside2_7",
+          "id": "c_episode1_filmer_la_sc_ne",
+          "text": "Filmer la scène avec ton téléphone"
+        }
+      ],
+      "id": "n_episode1_outside2_5",
+      "speakerId": "char_narrator",
+      "text": "Devant toi, un élève est forcé de porter son sac… entre les dents."
+    },
+    {
+      "id": "n_episode1_outside2_6",
+      "next": "n_episode1_outside2_8",
+      "speakerId": "char_narrator",
+      "text": "Tu détournes le regard."
+    },
+    {
+      "id": "n_episode1_outside2_7",
+      "next": "n_episode1_outside2_8",
+      "speakerId": "char_narrator",
+      "text": "Le groupe de harceleurs semble t'avoir vu, mais ils ne réagissent pas."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_temoignage",
+          "id": "c_episode1_te_rendre_dans_le",
+          "text": "Te rendre dans le bureau du CPE pour dénoncer le harcèlement"
+        },
+        {
+          "id": "c_episode1_ne_rien_faire_et",
+          "text": "Ne rien faire et aller en cours"
+        }
+      ],
+      "id": "n_episode1_outside2_8",
+      "isEnd": true,
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_temoignage",
+      "next": "n_episode1_temoignage_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_temoignage_2",
+      "next": "n_episode1_temoignage_3",
+      "speakerId": "char_cpe",
+      "text": "Oui ? Je t'écoute..."
+    },
+    {
+      "id": "n_episode1_temoignage_3",
+      "next": "n_episode1_temoignage_4",
+      "speakerId": "char_you",
+      "text": "Excusez-moi de vous déranger monsieur, mais un élève vient de se faire humilier devant le collège."
+    },
+    {
+      "id": "n_episode1_temoignage_4",
+      "next": "n_episode1_temoignage_5",
+      "speakerId": "char_cpe",
+      "text": "Merci de m'en avoir informé."
+    },
+    {
+      "id": "n_episode1_temoignage_5",
+      "next": "n_episode1_temoignage_6",
+      "speakerId": "char_cpe",
+      "text": "Je sais que quelques élèves ont parfois un comportement déplacé mais là, ça dépasse les limites."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "flag": "didshowbackpackvideo",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_episode1_temoignage_7",
+          "id": "c_episode1_montrez_l_enregistrement_m",
+          "text": "Montrez l'enregistrement à M Douraud"
+        },
+        {
+          "goto": "n_episode1_temoignage_7",
+          "id": "c_episode1_ne_pas_montrer_la",
+          "text": "Ne pas montrer la vidéo"
+        }
+      ],
+      "id": "n_episode1_temoignage_6",
+      "speakerId": "char_cpe",
+      "text": "As-tu des preuves qui viendraient appuyer tes propos ?"
+    },
+    {
+      "id": "n_episode1_temoignage_7",
+      "next": "n_episode1_temoignage_8",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_temoignage_8",
+      "isEnd": true,
+      "speakerId": "char_narrator",
+      "text": "Suite"
+    },
+    {
+      "id": "n_episode1_bedroom3",
+      "next": "n_episode1_bedroom3_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_bedroom3_2",
+      "next": "n_episode1_prebedroom4",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_prebedroom4",
+      "next": "n_episode1_prebedroom4_2",
+      "text": "Tu te réveilles le mercredi matin"
+    },
+    {
+      "id": "n_episode1_prebedroom4_2",
+      "next": "n_episode1_prebedroom4_3",
+      "showIf": {
+        "flag": "didsharebad",
+        "type": "flag",
+        "value": true
+      },
+      "text": "Manifestement, la majorité de la classe désapprouve le fait que tu aies partagé cette vidéo."
+    },
+    {
+      "id": "n_episode1_prebedroom4_3",
+      "next": "n_episode1_prebedroom4_4",
+      "showIf": {
+        "flag": "didsharebad",
+        "type": "flag",
+        "value": true
+      },
+      "text": "Certains même ne sont pas tendres, voire t'insultent..."
+    },
+    {
+      "id": "n_episode1_prebedroom4_4",
+      "next": "n_episode1_prebedroom4_5",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "text": "La majorité de la classe approuve ta critique du harcèlement."
+    },
+    {
+      "id": "n_episode1_prebedroom4_5",
+      "next": "n_episode1_prebedroom4_6",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Cependant, les amis de Ryan l'ont très mal pris et voilent à peine leurs menaces..."
+    },
+    {
+      "id": "n_episode1_prebedroom4_6",
+      "next": "n_episode1_bedroom4",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Quelqu'un a partagé une vidéo de la scène de harcèlement sur les réseaux sociaux."
+    },
+    {
+      "id": "n_episode1_bedroom4",
+      "next": "n_episode1_bedroom4_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_outside3",
+          "id": "c_episode1_suite_2",
+          "text": "Suite"
+        }
+      ],
+      "id": "n_episode1_bedroom4_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_outside3",
+      "next": "n_episode1_outside3_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_outside3_2",
+      "next": "n_episode1_outside3_3",
+      "speakerId": "char_narrator",
+      "text": "Pendant une pause, Ryan se dirige vers toi d'un pas décidé."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_outside3_4",
+          "id": "c_episode1_comptez_sur_moi",
+          "text": "Comptez sur moi"
+        },
+        {
+          "goto": "n_episode1_outside3_6",
+          "id": "c_episode1_non_a_ira",
+          "text": "Non, ça ira."
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_outside3_8",
+          "id": "c_episode1_hors_de_question",
+          "text": "Hors de question"
+        }
+      ],
+      "id": "n_episode1_outside3_3",
+      "speakerId": "char_narrator",
+      "text": "De toute évidence, il te cherchait..."
+    },
+    {
+      "id": "n_episode1_outside3_4",
+      "next": "n_episode1_outside3_5",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_you",
+      "text": "Comptez sur moi !"
+    },
+    {
+      "id": "n_episode1_outside3_5",
+      "next": "n_episode1_outside3_10",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_ryan",
+      "text": "Cool"
+    },
+    {
+      "id": "n_episode1_outside3_6",
+      "next": "n_episode1_outside3_7",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_you",
+      "text": "Non, ça ira, je passe mon tour cette fois."
+    },
+    {
+      "id": "n_episode1_outside3_7",
+      "next": "n_episode1_outside3_10",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_ryan",
+      "text": "Ok, c’est toi qui vois"
+    },
+    {
+      "id": "n_episode1_outside3_8",
+      "next": "n_episode1_outside3_9",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_you",
+      "text": "Non, c'est hors de question !"
+    },
+    {
+      "id": "n_episode1_outside3_9",
+      "next": "n_episode1_outside3_10",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_ryan",
+      "text": "Ah... je vois qu'on se dégonfle, finalement ?"
+    },
+    {
+      "id": "n_episode1_outside3_10",
+      "next": "n_episode1_bedroom5",
+      "speakerId": "char_narrator",
+      "text": "Suite"
+    },
+    {
+      "id": "n_episode1_bedroom5",
+      "next": "n_episode1_bedroom5_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_endneutral",
+          "id": "c_episode1_suite_3",
+          "text": "Suite"
+        }
+      ],
+      "id": "n_episode1_bedroom5_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_preendpositive",
+      "next": "n_episode1_endpositive",
+      "text": "Monsieur Douraud vous reçoit dans la salle de classe."
+    },
+    {
+      "id": "n_episode1_endpositive",
+      "next": "n_episode1_endpositive_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_endpositive_2",
+      "next": "n_episode1_endpositive_3",
+      "speakerId": "char_cpe",
+      "text": "Bien ! Ces preuves seront très utiles à Hakim car il a décidé de porter plainte pour que ce harcèlement prenne fin au plus vite."
+    },
+    {
+      "id": "n_episode1_endpositive_3",
+      "next": "n_episode1_endpositive_4",
+      "speakerId": "char_cpe",
+      "text": "Si la plainte aboutit, les coupables risquent de lourdes sanctions."
+    },
+    {
+      "id": "n_episode1_endpositive_4",
+      "next": "n_episode1_endpositive_5",
+      "speakerId": "char_cpe",
+      "text": "Quant à nous, au collège, nous avons décidé de prendre des mesures sévères à leur encontre."
+    },
+    {
+      "id": "n_episode1_endpositive_5",
+      "next": "n_episode1_endpositive_6",
+      "speakerId": "char_cpe",
+      "text": "Toutefois, je suis désolé de vous dire que cette période a été très douloureuse pour Hakim et qu’il a préféré s'inscrire dans un autre établissement."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_preepilogue",
+          "id": "c_episode1_suite_4",
+          "text": "Suite"
+        }
+      ],
+      "id": "n_episode1_endpositive_6",
+      "speakerId": "char_cpe",
+      "text": "Il ne reviendra donc pas."
+    },
+    {
+      "id": "n_episode1_endnegative",
+      "next": "n_episode1_endnegative_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_endnegative_2",
+      "next": "n_episode1_endnegative_3",
+      "speakerId": "char_narrator",
+      "text": "Monsieur Douraud te reçoit dans la salle de classe."
+    },
+    {
+      "id": "n_episode1_endnegative_3",
+      "next": "n_episode1_endnegative_4",
+      "speakerId": "char_cpe",
+      "text": "Ah, te voici ! Je voulais te voir pour te dire que tes agissements de ces derniers jours ne sont pas acceptables."
+    },
+    {
+      "id": "n_episode1_endnegative_4",
+      "next": "n_episode1_endnegative_5",
+      "speakerId": "char_cpe",
+      "text": "Il faut que tu saches que des preuves de complicité de cyberharcèlement ont été constituées contre toi."
+    },
+    {
+      "id": "n_episode1_endnegative_5",
+      "next": "n_episode1_endnegative_6",
+      "speakerId": "char_cpe",
+      "text": "Qu’est-ce qui t’a pris ?"
+    },
+    {
+      "id": "n_episode1_endnegative_6",
+      "next": "n_episode1_endnegative_7",
+      "speakerId": "char_cpe",
+      "text": "Est-ce qu'à un moment, tu as pensé à te mettre à la place des autres ?"
+    },
+    {
+      "id": "n_episode1_endnegative_7",
+      "next": "n_episode1_endnegative_8",
+      "speakerId": "char_cpe",
+      "text": "Tes actes ont des conséquences pour les élèves victimes de harcèlement et pour toi !"
+    },
+    {
+      "id": "n_episode1_endnegative_8",
+      "next": "n_episode1_endnegative_9",
+      "speakerId": "char_cpe",
+      "text": "L'élève dont tu as partagé la vidéo à décidé de porter plainte, tout comme Hakim il y'a quelques jours."
+    },
+    {
+      "id": "n_episode1_endnegative_9",
+      "next": "n_episode1_endnegative_10",
+      "speakerId": "char_cpe",
+      "text": "Du coup, tu devrais être bientôt convoqué par la gendarmerie."
+    },
+    {
+      "id": "n_episode1_endnegative_10",
+      "next": "n_episode1_endnegative_11",
+      "speakerId": "char_cpe",
+      "text": "Comme tu es mineur, tu auras la possibilité d’être accompagné par tes parents. J’imagine qu’ils seront ravis…"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_preepilogue",
+          "id": "c_episode1_suite_5",
+          "text": "Suite"
+        }
+      ],
+      "id": "n_episode1_endnegative_11",
+      "speakerId": "char_cpe",
+      "text": "Quant à la direction du collège, elle n'a pas encore statué sur ton cas. Je vais convoquer tes parents dès aujourd’hui."
+    },
+    {
+      "id": "n_episode1_endneutral",
+      "next": "n_episode1_endneutral_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_endneutral_2",
+      "next": "n_episode1_endneutral_3",
+      "speakerId": "char_narrator",
+      "text": "Monsieur Douraud vient interrompre votre cours pour faire le point sur la situation."
+    },
+    {
+      "id": "n_episode1_endneutral_3",
+      "next": "n_episode1_endneutral_4",
+      "speakerId": "char_cpe",
+      "text": "Je reviens dans votre classe pour vous dire que ces dernières semaines, quelques élèves ont fait l'objet de harcèlement et de cyberharcèlement, c'est pourquoi certains comme Hakim ont décidé de ne pas revenir, voire de changer d'établissement."
+    },
+    {
+      "id": "n_episode1_endneutral_4",
+      "next": "n_episode1_endneutral_5",
+      "speakerId": "char_cpe",
+      "text": "Grâce aux témoignages de personnes qui resteront anonymes, d'éléments recueillis, des preuves de complicité de cyberharcèlement ont été constituées à l'encontre de certains élèves du collège."
+    },
+    {
+      "id": "n_episode1_endneutral_5",
+      "next": "n_episode1_endneutral_6",
+      "speakerId": "char_cpe",
+      "text": "Dois-je vous encore vous rappeler ce qu'encourent les auteurs ou complices au regard de la loi ?"
+    },
+    {
+      "id": "n_episode1_endneutral_6",
+      "next": "n_episode1_endneutral_7",
+      "speakerId": "char_cpe",
+      "text": "D'ailleurs, ils devraient bientôt être convoqués par la gendarmerie car certaines victimes ont décidés de porter plainte pour faire cesser au plus vite tout type de harcèlement."
+    },
+    {
+      "id": "n_episode1_endneutral_7",
+      "next": "n_episode1_endneutral_8",
+      "speakerId": "char_cpe",
+      "text": "La direction du collège prendra, quant à elle, des mesures disciplinaires sévères contre ces élèves."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_preepilogue",
+          "id": "c_episode1_suite_6",
+          "text": "Suite"
+        }
+      ],
+      "id": "n_episode1_endneutral_8",
+      "speakerId": "char_cpe",
+      "text": "Des exclusions sont envisagées."
+    },
+    {
+      "id": "n_episode1_preepilogue",
+      "next": "n_episode1_epilogue",
+      "text": "Quelques semaines plus tard, le soir..."
+    },
+    {
+      "id": "n_episode1_epilogue",
+      "next": "n_episode1_epilogue_2",
+      "text": "SKIP"
+    },
+    {
+      "choices": [
+        {
+          "id": "c_episode1_fin",
+          "text": "Fin"
+        }
+      ],
+      "id": "n_episode1_epilogue_2",
+      "isEnd": true,
+      "text": "SKIP"
+    }
+  ],
+  "replayable": false,
+  "title": "Start"
+}

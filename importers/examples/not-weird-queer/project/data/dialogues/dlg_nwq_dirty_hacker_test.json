@@ -1,0 +1,65 @@
+{
+  "entry": "n_nwq_dirty_hacker_test",
+  "id": "dlg_nwq_dirty_hacker_test",
+  "nodes": [
+    {
+      "id": "n_nwq_dirty_hacker_test",
+      "next": "n_nwq_dirty_hacker_test_2",
+      "text": "Start the story here and visit any one of these pages to test the way  &#96;$dirtyhacker&#96; looks on any page where it exists."
+    },
+    {
+      "id": "n_nwq_dirty_hacker_test_2",
+      "next": "n_nwq_dirty_hacker_test_3",
+      "text": "$dirtyhacker"
+    },
+    {
+      "id": "n_nwq_dirty_hacker_test_3",
+      "next": "n_nwq_dirty_hacker_test_4",
+      "onEnter": [
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "sidebar",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "whategg",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "sidebar",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_dirty_hacker_test_4",
+      "next": "n_nwq_dirty_hacker_test_5",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_dirty_hacker_test_5",
+      "next": "n_nwq_dirty_hacker_test_6",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_dirty_hacker_test_6",
+      "next": "n_nwq_dirty_hacker_test_7",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_dirty_hacker_test_7",
+      "isEnd": true,
+      "text": "*"
+    }
+  ],
+  "replayable": false,
+  "title": "Dirty hacker test"
+}

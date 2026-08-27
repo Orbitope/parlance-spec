@@ -1,0 +1,18 @@
+{
+  "entry": "n_episode1_testproof",
+  "id": "dlg_episode1_testproof",
+  "nodes": [
+    {
+      "id": "n_episode1_testproof",
+      "next": "n_episode1_testproof_2",
+      "text": "SKIP"
+    },
+    {
+      "id": "n_episode1_testproof_2",
+      "isEnd": true,
+      "text": "You have 5 pieces of evidence"
+    }
+  ],
+  "replayable": false,
+  "title": "TestProof"
+}
