@@ -306,12 +306,20 @@ def main():
 
     vpath = a.validator
     if not vpath:
+        # Two layouts, because these files are published as well as developed in.
+        # Upstream the validator is tooling/validate.py; the publish map remaps it
+        # to validate/validate.py in parlance-spec, so a reader who clones the
+        # PUBLIC repo and runs the command an example's REPORT.md gives them hit
+        # "validator not found" — the one command the examples exist to offer.
+        # Search both rather than documenting a different command per repo.
+        rel = (("tooling", "validate.py"), ("validate", "validate.py"))
         d = os.path.abspath(a.root)
-        while d != os.path.dirname(d):
-            c = os.path.join(d, "tooling", "validate.py")
-            if os.path.exists(c):
-                vpath = c
-                break
+        while d != os.path.dirname(d) and not vpath:
+            for parts in rel:
+                c = os.path.join(d, *parts)
+                if os.path.exists(c):
+                    vpath = c
+                    break
             d = os.path.dirname(d)
     vres, verr = (run_validator(a.root, vpath) if vpath else (None, ["validator not found"]))
 
