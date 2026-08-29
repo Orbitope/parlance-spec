@@ -1,4 +1,7 @@
-<!-- spec-lint: allow-file — a migration guide must name the vocabulary it migrates away from. -->
+<!-- This guide is lint-guarded against private-project vocabulary. A term that
+     legitimately must appear here (a field being renamed away from) should be exempted
+     on its own line, not by a blanket file directive — the file carried one of those
+     until its examples were made generic, and it hid a real leak for two releases. -->
 
 # Parlance — Breaking changes and how to migrate
 
@@ -281,7 +284,7 @@ the editor no longer has a fixed list to offer.
 
 ```python
 QUEST_TAG_VOCABULARY = ["main", "side", "act1", "act2", "act3",
-                        "faction:church", "faction:court", ...]
+                        "group:a", "group:b", ...]
 ```
 
 **After** — declared per project in `data/rules.json`:
@@ -289,7 +292,7 @@ QUEST_TAG_VOCABULARY = ["main", "side", "act1", "act2", "act3",
 ```json
 {
   "quest": {
-    "tagVocabulary": ["main", "side", "act1", "act2", "act3", "faction:church", "faction:court"]
+    "tagVocabulary": ["main", "side", "act1", "act2", "act3", "group:a", "group:b"]
   }
 }
 ```
@@ -313,8 +316,7 @@ p = pathlib.Path("data/rules.json")
 d = json.loads(p.read_text()) if p.exists() else {}
 d.setdefault("quest", {})["tagVocabulary"] = [
     "main", "side", "act1", "act2", "act3",
-    "faction:church", "faction:court", "faction:reform",
-    "faction:heretic", "faction:military", "faction:labor", "faction:solitary",
+    "group:a", "group:b", "group:c",
 ]
 p.write_text(json.dumps(d, sort_keys=True, indent=2, ensure_ascii=False) + "\n")
 PY
