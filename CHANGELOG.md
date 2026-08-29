@@ -100,7 +100,7 @@ taxonomy as a hard requirement.
 
 | # | Change | Auto-migratable |
 |---|---|---|
-| 1 | `character.caste` → `character.archetype`, no longer required | yes |
+| 1 | `character.class` → `character.archetype`, no longer required | yes |
 | 2 | `location.exits[].gateType` enum → free-form string | yes (no-op) |
 | 3 | Quest tag vocabulary moves to `rules.quest.tagVocabulary` | yes |
 | 4 | `location.connectsTo` removed | **no** — each link needs a spawn chosen |

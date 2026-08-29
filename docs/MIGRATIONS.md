@@ -1,4 +1,7 @@
-<!-- spec-lint: allow-file — a migration guide must name the vocabulary it migrates away from. -->
+<!-- This guide is lint-guarded against private-project vocabulary. A term that
+     legitimately must appear here (a field being renamed away from) should be exempted
+     on its own line, not by a blanket file directive — the file carried one of those
+     until its examples were made generic, and it hid a real leak for two releases. -->
 
 # Parlance — Breaking changes and how to migrate
 
@@ -171,7 +174,7 @@ published or a second project adopts it.
 
 | # | Change | Kind | Auto-migratable |
 |---|---|---|---|
-| 1 | `character.caste` → `character.archetype`, no longer required | field rename + relax | yes |
+| 1 | `character.class` → `character.archetype`, no longer required | field rename + relax | yes |
 | 2 | `location.exits[].gateType` enum → free-form string | constraint removal | yes (no-op) |
 | 3 | Quest tag vocabulary moves to `rules.quest.tagVocabulary` | constant → config | yes |
 | 4 | `location.connectsTo` removed | field removal | **no** — each link needs a spawn chosen |
@@ -191,12 +194,12 @@ which spawn point to arrive at, and only you know which spawn is a location's de
 
 ---
 
-### 1. `character.caste` → `character.archetype`, and now optional
+### 1. `character.class` → `character.archetype`, and now optional
 
 **Before**
 
 ```json
-{ "id": "npc_wren", "name": "Wren", "caste": "operative" }
+{ "id": "npc_wren", "name": "Wren", "class": "operative" }
 ```
 
 **After**
@@ -205,12 +208,12 @@ which spawn point to arrive at, and only you know which spawn is a location's de
 { "id": "npc_wren", "name": "Wren", "archetype": "operative" }
 ```
 
-**Why.** The field was already generic in practice — the values in use were
-`warder`/`official`/`operative`/`newcomer`/`trader`, not a single one of the bee castes
-its own schema description enumerated. Only the description carried the project's
-taxonomy. Two things were wrong with it:
+**Why.** The field was already generic in practice — the values in use were plain role
+labels (`official`, `operative`, `newcomer`, `trader`), none of them matching the
+narrower taxonomy its own schema description enumerated. Only the description carried the
+project's taxonomy. Two things were wrong with it:
 
-- The **name** described one project's world model as though it were a format concept.
+- The **name** imposed one project's classification axis as though it were a format concept.
 - **`required`** forced the axis on every adopter, including projects that have no such
   axis at all (a two-hander visual novel, a single-narrator interactive fiction).
 
@@ -218,7 +221,7 @@ taxonomy. Two things were wrong with it:
 (role, class, species, rank). It stays free-form and is now optional.
 
 **Breaking because** `character.schema.json` sets `additionalProperties: false`, so a
-file still carrying `caste` is a hard SCHEMA error. There is no grace period.
+file still carrying `class` is a hard SCHEMA error. There is no grace period.
 
 **Migrate:**
 
@@ -229,21 +232,21 @@ import json, pathlib
 for p in pathlib.Path("data/characters").rglob("*.json"):
     if p.name.endswith(".layout.json"): continue
     d = json.loads(p.read_text())
-    if "caste" in d:
-        d["archetype"] = d.pop("caste")
+    if "class" in d:
+        d["archetype"] = d.pop("class")
         p.write_text(json.dumps(d, sort_keys=True, indent=2, ensure_ascii=False) + "\n")
 PY
 ```
 
 **Also update, if your project has them:**
 
-- Any engine-side code reading `character.caste`.
-- Portrait ids following the `portrait_{caste}` convention — the convention is now
+- Any engine-side code reading `character.class`.
+- Portrait ids following the `portrait_{class}` convention — the convention is now
   `portrait_{archetype}`. Ids are opaque to Parlance, so renaming them is optional; if
   you do rename, update `character.portrait` references in the same pass.
-- Tags of the shape `caste:x`, if you use them for portrait or filter grouping.
+- Tags of the shape `class:x`, if you use them for portrait or filter grouping.
 
-**Editor note.** The characters list's **Group by → Caste** is now **Group by →
+**Editor note.** The characters list's **Group by → Class** is now **Group by →
 Archetype**. Characters with no `archetype` group under "Unknown".
 
 ---
@@ -253,7 +256,7 @@ Archetype**. Characters with no `archetype` group under "Unknown".
 **Before** — a closed enum in the schema:
 
 ```json
-"gateType": { "enum": ["warder_post", "smoke_zone", "caste_door", "escort_gate", "labor_gate", "act_gate"] }
+"gateType": { "enum": ["checkpoint", "locked_door", "guard_post", "escort_gate", "labor_gate", "act_gate"] }
 ```
 
 **After** — any non-empty string.
@@ -281,7 +284,7 @@ the editor no longer has a fixed list to offer.
 
 ```python
 QUEST_TAG_VOCABULARY = ["main", "side", "act1", "act2", "act3",
-                        "faction:church", "faction:court", ...]
+                        "group:a", "group:b", ...]
 ```
 
 **After** — declared per project in `data/rules.json`:
@@ -289,7 +292,7 @@ QUEST_TAG_VOCABULARY = ["main", "side", "act1", "act2", "act3",
 ```json
 {
   "quest": {
-    "tagVocabulary": ["main", "side", "act1", "act2", "act3", "faction:church", "faction:court"]
+    "tagVocabulary": ["main", "side", "act1", "act2", "act3", "group:a", "group:b"]
   }
 }
 ```
@@ -313,8 +316,7 @@ p = pathlib.Path("data/rules.json")
 d = json.loads(p.read_text()) if p.exists() else {}
 d.setdefault("quest", {})["tagVocabulary"] = [
     "main", "side", "act1", "act2", "act3",
-    "faction:church", "faction:court", "faction:reform",
-    "faction:heretic", "faction:military", "faction:labor", "faction:solitary",
+    "group:a", "group:b", "group:c",
 ]
 p.write_text(json.dumps(d, sort_keys=True, indent=2, ensure_ascii=False) + "\n")
 PY
@@ -401,7 +403,7 @@ half-met.
 
 **Before:** every skill had to declare a `cluster`, even though the schema described it as
 "project-defined grouping, free-form" — a required field whose value the format has no
-opinion about. Same debt as the old `character.caste`.
+opinion about. Same debt as the old `character.class`.
 
 **After:** optional. Existing data is untouched and still valid; a project that doesn't
 group its skills now simply omits it. The editor no longer seeds `cluster: "body"` into
@@ -627,7 +629,7 @@ In order, from your project root:
 # 1. Take a branch. These scripts rewrite data in place.
 git checkout -b migrate-parlance-0.9
 
-# 2. Apply the three scripted rewrites — changes 1 (caste), 5 (region) and
+# 2. Apply the three scripted rewrites — changes 1 (class), 5 (region) and
 #    6 (acceptsInjections). Paste each python block above, or run from a file.
 
 # 3. Optionally restore the quest tag check (change 3).
@@ -656,7 +658,7 @@ git diff --stat
 git diff
 ```
 
-**Expected diff shape.** One `caste` → `archetype` rename per character file, one
+**Expected diff shape.** One `class` → `archetype` rename per character file, one
 `region` → `zone` rename per affected location, a deleted `acceptsInjections` key per
 affected dialogue node, one added `"isDefault": true` per location that has a default
 arrival spawn, plus whatever exits you authored by hand for step 4 — and nothing else. If you see reordered
@@ -669,8 +671,8 @@ saves do not produce spurious diffs.
 
 | Symptom | Cause |
 |---|---|
-| `[SCHEMA] ...: Additional properties are not allowed ('caste' was unexpected)` | A character file the rename script missed — check for nested subdirectories. |
-| `[SCHEMA] ...: 'archetype' is not of type 'string'` | A `caste` value that was not a string (an array or object). Fix by hand. |
+| `[SCHEMA] ...: Additional properties are not allowed ('class' was unexpected)` | A character file the rename script missed — check for nested subdirectories. |
+| `[SCHEMA] ...: 'archetype' is not of type 'string'` | A `class` value that was not a string (an array or object). Fix by hand. |
 | `[OBJ] ... not in the project's quest tag vocabulary` | You declared a `tagVocabulary` that is missing tags your data uses. Add them, or delete the declaration. |
 | Engine-side null/undefined where an archetype was expected | `archetype` is optional now. Give the engine a fallback rather than making the field required again. |
 | `[LOC] ...: N spawns marked default` | More than one spawn in a location carries `"isDefault": true`. Exactly one can. |
