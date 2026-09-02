@@ -8,6 +8,26 @@ Pre-1.0, breaking changes land in minor releases with no deprecation window —
 see [`docs/VERSIONING.md`](docs/VERSIONING.md). Pin an exact tag and vendor the
 conformance vectors at it.
 
+## v0.13.0
+
+**No new rule; one conformance vector added.**
+
+`schema/`, `validate/` and `docs/RUNTIME_CONTRACT.md` are byte-identical to `v0.12.0`. The
+only change to the contract surface is in `conformance/`: a new regression-guard case,
+`npc-interactable-dialogue-places`, that pins existing `LOC` and `LADDER` behaviour. It was
+added while the editor's validator was refactored internally, to prove the refactor produced
+identical results — not to introduce a rule.
+
+**What a port must do:** if you vendor the conformance vectors and run them in CI, re-vendor at
+this tag to pick up the new case — a conformant validator already emits its expected output, so
+it passes as-is. Nothing else: no rule to implement, no schema field, no runtime change. A port
+pinned to `v0.12.0` that does not run the vectors needs no action at all.
+
+Upstream, 0.13.0's headline is git-native collaboration in the desktop editor (draft, review,
+and publish narrative against a studio's own GitHub/GitLab/Bitbucket repo), plus a command-line
+CLI and CI action. None of it touches the format or how a runtime reads it, which is why none of
+it is here.
+
 ## v0.12.0
 
 **No contract change.**
