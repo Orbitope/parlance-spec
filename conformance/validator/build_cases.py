@@ -202,6 +202,34 @@ def case_ladder_stranded_dialogue(p: dict) -> None:
     }
 
 
+def case_npc_interactable_dialogue_places(p: dict) -> None:
+    """An npc interactable's `dialogue` field still counts as a world placement.
+
+    Same stranded shape as ladder-stranded-dialogue, but the dialogue is named
+    by an npc interactable — a misuse (the runtime resolves the character's
+    ladder, hence the LOC advisory) that nonetheless places the dialogue, so
+    the LADDER stranded warning must NOT fire. This case exists because the
+    TypeScript validator's local/derive split briefly counted only non-npc
+    interactables as placements while the Python reference counted all of them
+    — a divergence the shared cases could not see until this one pinned it.
+    """
+    p["data/dialogues/dlg_aside.json"] = {
+        "entry": "n1",
+        "id": "dlg_aside",
+        "nodes": [{"id": "n1", "isEnd": True, "text": "A line reached via the yard."}],
+        "speakerId": "npc_keeper",
+        "title": "An Aside",
+    }
+    p["data/locations/loc_yard.json"] = {
+        "id": "loc_yard",
+        "interactables": [
+            {"character": "npc_keeper", "dialogue": "dlg_aside", "id": "it_keeper", "kind": "npc"}
+        ],
+        "name": "The Yard",
+        "spawns": [{"id": "sp_gate", "isDefault": True}],
+    }
+
+
 def case_dialogue_availablewhen_dangling(p: dict) -> None:
     """A dialogue gate reading a variable nothing defines."""
     p["data/dialogues/dlg_meet.json"]["availableWhen"] = {
@@ -936,6 +964,15 @@ CASE_BUILDERS = {
     "ladder-stranded-dialogue": (
         case_ladder_stranded_dialogue,
         {"must": [{"code": "LADDER", "contains": "dlg_aside", "severity": "warning"}]},
+    ),
+    "npc-interactable-dialogue-places": (
+        case_npc_interactable_dialogue_places,
+        {
+            # The advisory proves the shape is present and exercised...
+            "must": [{"code": "LOC", "contains": "did you mean character", "severity": "warning"}],
+            # ...and the placement suppresses the stranded warning in BOTH validators.
+            "mustNot": [{"code": "LADDER", "contains": "dlg_aside"}],
+        },
     ),
     "plain-goto-dangling": (
         case_plain_goto_dangling,

@@ -10,7 +10,7 @@ Migration into Parlance from the formats writers are already using.
 | SugarCube | Twine's other story format | not started — a different macro language, and `twine-import` refuses a story that declares it |
 
 [`examples/`](examples/README.md) holds three real migrations — inkle's *The
-Intercept* (Ink), Play Curious's *Cyberharcèlement* (Yarn) and Henrique Karez's
+Intercept* (Ink), Play Curious's *Cyberharcèlement* (Yarn) and
 Jake Kao's *Not Weird. Queer* (Twine) — each with the author's original file
 beside the imported project, so the claim below can be
 re-run rather than believed. Start with their `REPORT.md`s: the declared-loss

@@ -14,6 +14,28 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.13.0 — one conformance vector added; no new rule
+
+`tooling/conformance/` gains a regression-guard case, `npc-interactable-dialogue-places`,
+that pins existing `LOC` and `LADDER` behaviour. It was added while the editor's validator
+was refactored internally (into local + derive phases), to prove the refactor produced
+identical results. `schema/`, `tooling/validate.py` and `RUNTIME_CONTRACT.md` are untouched:
+there is no new rule and no schema change, and a conformant validator already emits this
+case's expected output.
+
+**What a port must do: nothing to its code.** If you vendor the conformance vectors and run
+them in your own CI, re-vendor to pick up the new case — it already passes.
+
+Everything else in the release is editor- and tooling-side and touches nothing a runtime
+reads. Its headline is git-native collaboration: a non-technical writer and a non-technical
+owner can now draft, review, and publish narrative end-to-end inside the desktop app, against
+the studio's own GitHub, GitLab, or Bitbucket repository — Parlance hosts nothing. It also
+carries incremental, off-thread save validation, the published `@orbitope/parlance-cli` and
+its reusable GitHub Action, and starter templates for a new project. None of that changes how
+a story is written or how a runtime reads it.
+
+---
+
 ## 0.12.0 — no contract change
 
 Nothing in the contract moved. `schema/`, `tooling/conformance/`, `tooling/validate.py`

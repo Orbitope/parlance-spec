@@ -8,7 +8,8 @@ your own project is the point, and a licence that withholds that makes them usel
 - **[`audits/`](audits/README.md)** — editorial audits. They read a project and report
   on it: whether a dialogue ladder's ordering tells the intended story, whether a
   character sounds like themselves, whether a line can be reached in a state where it
-  is not yet true.
+  is not yet true, and whether a use of a `COOKBOOK.md` recipe trips that recipe's
+  documented pitfall.
 - **[`importers/`](importers/IMPORTERS.md)** — format migration. They move a story you
   already wrote out of another tool and into Parlance, then verify nothing was lost.
   [`importers/examples/`](importers/examples/README.md) holds three real migrations

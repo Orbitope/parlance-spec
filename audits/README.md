@@ -33,6 +33,7 @@ you already wrote down:
 | `ladder-audit` | your stated arc for the character |
 | `state-reachability-audit` | what the dialogue graph proves the player can know |
 | `character-presence-audit` | the payoff scene you wrote, measured against its setup |
+| `cookbook-conformance-audit` | the pattern cookbook recipe each site is reaching for |
 
 **When the anchor is missing, the audit stops and asks you for it.** It does not
 substitute a standard of its own. An audit that would have to invent the intent in
@@ -85,7 +86,7 @@ Copy the audits you want into a project's skills directory:
 cp -r audits/character-voice-audit /path/to/project/.claude/skills/
 ```
 
-Take one, take five, take none. They share no code and no state; each `SKILL.md` is
+Take one, take all, take none. They share no code and no state; each `SKILL.md` is
 self-contained.
 
 ## Telling an audit about your project

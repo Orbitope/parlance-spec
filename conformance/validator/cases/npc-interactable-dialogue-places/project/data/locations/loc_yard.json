@@ -1,0 +1,18 @@
+{
+  "id": "loc_yard",
+  "interactables": [
+    {
+      "character": "npc_keeper",
+      "dialogue": "dlg_aside",
+      "id": "it_keeper",
+      "kind": "npc"
+    }
+  ],
+  "name": "The Yard",
+  "spawns": [
+    {
+      "id": "sp_gate",
+      "isDefault": true
+    }
+  ]
+}

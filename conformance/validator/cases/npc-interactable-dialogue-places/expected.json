@@ -1,0 +1,15 @@
+{
+  "must": [
+    {
+      "code": "LOC",
+      "contains": "did you mean character",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "LADDER",
+      "contains": "dlg_aside"
+    }
+  ]
+}

@@ -343,9 +343,11 @@ def build_one(ir, ns):
             return
         del holder[key]
         known = v[1:] in b.yarn
+        # Hoisted out of the f-string: a multi-line f-string expression is a
+        # SyntaxError before Python 3.12 (PEP 701), and this repo's CI runs 3.11.
+        reason = "every line of which is declared loss" if known else "which this file never defines"
         notes.append(
-            f"jump to '{v[1:]}', {'every line of which is declared loss' if known else
-             'which this file never defines'} — nothing to go to, so the branch ends here")
+            f"jump to '{v[1:]}', {reason} — nothing to go to, so the branch ends here")
         if key == "next":
             b.close(holder)
 
