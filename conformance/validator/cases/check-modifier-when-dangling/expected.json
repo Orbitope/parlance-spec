@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "modifier 0",
+      "severity": "error"
+    }
+  ]
+}

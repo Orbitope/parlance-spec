@@ -1,30 +1,242 @@
 [
   {
     "fn": "resolveCharacterDialogue",
-    "description": "first-match wins: highest passing rung is returned even when lower rungs also pass",
+    "description": "most specific eligible offer wins over a less specific one",
     "state": {
-      "flags": { "betrayed": true, "met": true },
+      "flags": { "met": true, "betrayed": true },
       "reputation": {},
       "skills": {},
       "counters": {},
       "inventory": [],
       "questStages": {}
     },
-    "character": {
-      "id": "char_wren",
-      "name": "Wren",
-      "archetype": "operative",
-      "dialogues": [
-        { "dialogue": "d_confront", "showIf": { "type": "flag", "flag": "betrayed", "value": true } },
-        { "dialogue": "d_post_meeting", "showIf": { "type": "flag", "flag": "met", "value": true } },
-        { "dialogue": "d_first_meeting" }
-      ]
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_greeting": { "id": "d_greeting", "speakerId": "char_wren", "offer": {} },
+        "d_met": {
+          "id": "d_met",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_confront": {
+          "id": "d_confront",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "all",
+              "of": [
+                { "type": "flag", "flag": "met", "value": true },
+                { "type": "flag", "flag": "betrayed", "value": true }
+              ]
+            }
+          }
+        }
+      }
     },
     "expected": "d_confront"
   },
   {
     "fn": "resolveCharacterDialogue",
-    "description": "unconditional rung above shadows a later matching rung",
+    "description": "priority tier beats a higher-specificity offer",
+    "state": {
+      "flags": { "met": true, "urgent": true },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_specific": {
+          "id": "d_specific",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "all",
+              "of": [
+                { "type": "flag", "flag": "met", "value": true },
+                { "type": "flag", "flag": "urgent", "value": true }
+              ]
+            }
+          }
+        },
+        "d_urgent": {
+          "id": "d_urgent",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": { "type": "flag", "flag": "urgent", "value": true },
+            "priority": 1
+          }
+        }
+      }
+    },
+    "expected": "d_urgent"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "id breaks a tie by ordinal (UTF-16 code unit) order, not locale collation: d_Z before d_a",
+    "state": { "flags": {}, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {} },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_Z": { "id": "d_Z", "speakerId": "char_wren", "offer": {} },
+        "d_a": { "id": "d_a", "speakerId": "char_wren", "offer": {} }
+      }
+    },
+    "expected": "d_Z"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "fallback (no when) is offered when nothing more specific is eligible",
+    "state": {
+      "flags": { "met": false },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_met": {
+          "id": "d_met",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_greeting": { "id": "d_greeting", "speakerId": "char_wren", "offer": {} }
+      }
+    },
+    "expected": "d_greeting"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "an any offer scores the MINIMUM of its branches, so a two-clause all offer outranks it",
+    "state": {
+      "flags": { "a": true, "b": true, "c": true },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_aaa": {
+          "id": "d_aaa",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "any",
+              "of": [
+                { "type": "flag", "flag": "a", "value": true },
+                { "type": "flag", "flag": "b", "value": true }
+              ]
+            }
+          }
+        },
+        "d_zzz": {
+          "id": "d_zzz",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "all",
+              "of": [
+                { "type": "flag", "flag": "a", "value": true },
+                { "type": "flag", "flag": "c", "value": true }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "expected": "d_zzz"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "a not offer scores its operand's specificity (1), beating a bare fallback",
+    "state": {
+      "flags": { "a": false },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_not": {
+          "id": "d_not",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "not",
+              "of": { "type": "flag", "flag": "a", "value": true }
+            }
+          }
+        },
+        "d_fallback": { "id": "d_fallback", "speakerId": "char_wren", "offer": {} }
+      }
+    },
+    "expected": "d_not"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "a character with no eligible offer resolves to null",
+    "state": { "flags": {}, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {} },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_gated": {
+          "id": "d_gated",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": { "type": "flag", "flag": "never", "value": true }
+          }
+        }
+      }
+    },
+    "expected": null
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "a dialogue without an offer is not a candidate even when its speakerId matches",
+    "state": { "flags": {}, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {} },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_scene": { "id": "d_scene", "speakerId": "char_wren" }
+      }
+    },
+    "expected": null
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "offer.character offers a dialogue for a character other than its speaker",
+    "state": { "flags": {}, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {} },
+    "character": { "id": "player", "name": "Player" },
+    "project": {
+      "dialogues": {
+        "d_trial": {
+          "id": "d_trial",
+          "offer": { "character": "player" }
+        }
+      }
+    },
+    "expected": "d_trial"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "a visited non-replayable offer is dropped and the next-best offer plays",
     "state": {
       "flags": { "met": true },
       "reputation": {},
@@ -33,97 +245,217 @@
       "inventory": [],
       "questStages": {}
     },
-    "character": {
-      "id": "char_wren",
-      "name": "Wren",
-      "archetype": "operative",
-      "dialogues": [
-        { "dialogue": "d_idle" },
-        { "dialogue": "d_post_meeting", "showIf": { "type": "flag", "flag": "met", "value": true } }
-      ]
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_intro": {
+          "id": "d_intro",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_greeting": { "id": "d_greeting", "speakerId": "char_wren", "offer": {} }
+      }
     },
-    "expected": "d_idle"
+    "visited": ["d_intro"],
+    "expected": "d_greeting"
   },
   {
     "fn": "resolveCharacterDialogue",
-    "description": "fallthrough: rung with no showIf is selected when nothing above matches",
+    "description": "a visited replayable offer is kept",
     "state": {
-      "flags": { "betrayed": false, "met": false },
+      "flags": { "met": true },
       "reputation": {},
       "skills": {},
       "counters": {},
       "inventory": [],
       "questStages": {}
     },
-    "character": {
-      "id": "char_wren",
-      "name": "Wren",
-      "archetype": "operative",
-      "dialogues": [
-        { "dialogue": "d_confront", "showIf": { "type": "flag", "flag": "betrayed", "value": true } },
-        { "dialogue": "d_post_meeting", "showIf": { "type": "flag", "flag": "met", "value": true } },
-        { "dialogue": "d_first_meeting" }
-      ]
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_intro": {
+          "id": "d_intro",
+          "speakerId": "char_wren",
+          "replayable": true,
+          "offer": {
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_greeting": { "id": "d_greeting", "speakerId": "char_wren", "offer": {} }
+      }
     },
-    "expected": "d_first_meeting"
+    "visited": ["d_intro"],
+    "expected": "d_intro"
   },
   {
     "fn": "resolveCharacterDialogue",
-    "description": "empty ladder resolves to null",
+    "description": "forced routing: with active_dialogue__<character> set, the tier-1 offer gated on it beats a more specific tier-0 offer",
     "state": {
-      "flags": {},
+      "flags": { "active_dialogue__char_wren": true, "met": true, "urgent": true },
       "reputation": {},
       "skills": {},
       "counters": {},
       "inventory": [],
       "questStages": {}
     },
-    "character": {
-      "id": "char_mute",
-      "name": "Mute",
-      "archetype": "operative",
-      "dialogues": []
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_queued": {
+          "id": "d_queued",
+          "speakerId": "char_wren",
+          "offer": {
+            "priority": 1,
+            "when": { "type": "flag", "flag": "active_dialogue__char_wren", "value": true }
+          }
+        },
+        "d_specific": {
+          "id": "d_specific",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "all",
+              "of": [
+                { "type": "flag", "flag": "met", "value": true },
+                { "type": "flag", "flag": "urgent", "value": true }
+              ]
+            }
+          }
+        },
+        "d_default": { "id": "d_default", "speakerId": "char_wren", "offer": {} }
+      }
     },
-    "expected": null
+    "expected": "d_queued"
   },
   {
     "fn": "resolveCharacterDialogue",
-    "description": "absent ladder resolves to null",
+    "description": "forced routing: once the flag is cleared the same state resolves to the ordinary winner",
     "state": {
-      "flags": {},
+      "flags": { "active_dialogue__char_wren": false, "met": true, "urgent": true },
       "reputation": {},
       "skills": {},
       "counters": {},
       "inventory": [],
       "questStages": {}
     },
-    "character": {
-      "id": "char_mute",
-      "name": "Mute",
-      "archetype": "operative"
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_queued": {
+          "id": "d_queued",
+          "speakerId": "char_wren",
+          "offer": {
+            "priority": 1,
+            "when": { "type": "flag", "flag": "active_dialogue__char_wren", "value": true }
+          }
+        },
+        "d_specific": {
+          "id": "d_specific",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": {
+              "type": "all",
+              "of": [
+                { "type": "flag", "flag": "met", "value": true },
+                { "type": "flag", "flag": "urgent", "value": true }
+              ]
+            }
+          }
+        },
+        "d_default": { "id": "d_default", "speakerId": "char_wren", "offer": {} }
+      }
     },
-    "expected": null
+    "expected": "d_specific"
   },
   {
     "fn": "resolveCharacterDialogue",
-    "description": "no rung matches (all gated, none satisfied) resolves to null",
+    "description": "offer.character overrides a present speakerId: the dialogue is a candidate for the offer's character, not the speaker (wren side)",
     "state": {
-      "flags": { "betrayed": false, "met": false },
+      "flags": { "met": true },
       "reputation": {},
       "skills": {},
       "counters": {},
       "inventory": [],
       "questStages": {}
     },
-    "character": {
-      "id": "char_wren",
-      "name": "Wren",
-      "archetype": "operative",
-      "dialogues": [
-        { "dialogue": "d_confront", "showIf": { "type": "flag", "flag": "betrayed", "value": true } },
-        { "dialogue": "d_post_meeting", "showIf": { "type": "flag", "flag": "met", "value": true } }
-      ]
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_handoff": {
+          "id": "d_handoff",
+          "speakerId": "char_guide",
+          "offer": {
+            "character": "char_wren",
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_guide_default": { "id": "d_guide_default", "speakerId": "char_guide", "offer": {} },
+        "d_wren_default": { "id": "d_wren_default", "speakerId": "char_wren", "offer": {} }
+      }
     },
-    "expected": null
+    "expected": "d_handoff"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "offer.character overrides a present speakerId: the speaker does not get the dialogue (guide side)",
+    "state": {
+      "flags": { "met": true },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "character": { "id": "char_guide", "name": "Guide" },
+    "project": {
+      "dialogues": {
+        "d_handoff": {
+          "id": "d_handoff",
+          "speakerId": "char_guide",
+          "offer": {
+            "character": "char_wren",
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_guide_default": { "id": "d_guide_default", "speakerId": "char_guide", "offer": {} },
+        "d_wren_default": { "id": "d_wren_default", "speakerId": "char_wren", "offer": {} }
+      }
+    },
+    "expected": "d_guide_default"
+  },
+  {
+    "fn": "resolveCharacterDialogue",
+    "description": "an explicit priority 0 is the same tier as an absent priority: equal specificity, so the lower id wins",
+    "state": {
+      "flags": { "met": true },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "character": { "id": "char_wren", "name": "Wren" },
+    "project": {
+      "dialogues": {
+        "d_b_explicit": {
+          "id": "d_b_explicit",
+          "speakerId": "char_wren",
+          "offer": {
+            "priority": 0,
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        },
+        "d_a_absent": {
+          "id": "d_a_absent",
+          "speakerId": "char_wren",
+          "offer": {
+            "when": { "type": "flag", "flag": "met", "value": true }
+          }
+        }
+      }
+    },
+    "expected": "d_a_absent"
   }
 ]

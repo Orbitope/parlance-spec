@@ -1,0 +1,22 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "The player has met the keeper.",
+      "id": "met_keeper",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "The keeper's story has been heard out.",
+      "id": "heard_story",
+      "kind": "flag"
+    },
+    {
+      "default": 0,
+      "description": "Times the keeper has been talked to.",
+      "id": "keeper_talks",
+      "kind": "counter"
+    }
+  ]
+}

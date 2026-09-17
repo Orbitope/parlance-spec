@@ -40,9 +40,9 @@ def main():
 
     W.write_project(
         os.path.join(HERE, "project"),
-        dialogues,
+        W.offer_entries(dialogues, ladders),
         W.variables_of(builder.kinds, defaults, "Ink VAR"),
-        W.characters_of(builder.speakers, ladders),
+        W.characters_of(builder.speakers),
     )
     print(f"{len(dialogues)} dialogues, "
           f"{sum(len(d['nodes']) for d in dialogues)} nodes, "

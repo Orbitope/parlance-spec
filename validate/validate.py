@@ -78,6 +78,145 @@ def strip_comments(o):
 PLACEHOLDER_RE = re.compile(r"\{([a-z][a-z0-9_]*)\}")
 
 
+def condition_specificity(c):
+    """How specific a condition tree is — the 'most specific offer wins' tiebreak
+    (ws 17). Mirrors conditionSpecificity in editor/core/src/runtime.ts:
+    absent 0, any leaf 1, all = sum, any = min, not = operand."""
+    if not c:
+        return 0
+    t = c.get("type")
+    if t == "all":
+        return sum(condition_specificity(m) for m in c.get("of", []))
+    if t == "any":
+        of = c.get("of", [])
+        return 0 if not of else min(condition_specificity(m) for m in of)
+    if t == "not":
+        return condition_specificity(c.get("of"))
+    return 1  # any leaf
+
+
+def _top_conjuncts(c):
+    """Top-level conjuncts of a condition — an `all` flattened one level, else
+    the condition itself. The unit the offer-exclusivity oracle reasons over."""
+    if c.get("type") == "all":
+        out = []
+        for m in c.get("of", []):
+            out.extend(_top_conjuncts(m))
+        return out
+    return [c]
+
+
+_NEG_INF = (float("-inf"), True)
+_POS_INF = (float("inf"), True)
+
+
+def _interval(op, v, negated):
+    """The (lo, hi) a numeric comparison admits, each bound a (value, open)
+    pair; None for the negation of `==` (a hole, not an interval)."""
+    if not negated:
+        return {
+            ">=": ((v, False), _POS_INF),
+            ">": ((v, True), _POS_INF),
+            "<=": (_NEG_INF, (v, False)),
+            "<": (_NEG_INF, (v, True)),
+            "==": ((v, False), (v, False)),
+        }.get(op)
+    flipped = {">=": "<", ">": "<=", "<=": ">", "<": ">="}.get(op)
+    return _interval(flipped, v, False) if flipped else None
+
+
+_NUMERIC_KEYS = {"counter": "counter", "reputation": "faction", "relationship": "character", "skill": "skill"}
+
+
+def _literal(c, negated=False):
+    """Reduce a conjunct to a literal the oracle reasons about — ("bool", key,
+    value) or ("num", key, lo, hi) — or None. Mirrors `literal` in
+    editor/core/src/offerExclusivity.ts."""
+    t = c.get("type")
+    if t == "not":
+        return None if negated else _literal(c.get("of", {}), True)
+    if t == "flag":
+        v = bool(c.get("value"))
+        return ("bool", f"flag:{c.get('flag')}", (not v) if negated else v)
+    if t == "item":
+        v = bool(c.get("has"))
+        return ("bool", f"item:{c.get('item')}", (not v) if negated else v)
+    if t in _NUMERIC_KEYS:
+        v = c.get("value")
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            return None
+        iv = _interval(c.get("op"), v, negated)
+        return ("num", f"{t}:{c.get(_NUMERIC_KEYS[t])}", iv[0], iv[1]) if iv else None
+    return None
+
+
+def _below(x, y):
+    """Bound x lies strictly below bound y (touching counts when either is open)."""
+    return x[0] < y[0] or (x[0] == y[0] and (x[1] or y[1]))
+
+
+def _literals_contradict(a, b):
+    if a[1] != b[1]:
+        return False
+    if a[0] == "bool" and b[0] == "bool":
+        return a[2] != b[2]
+    if a[0] == "num" and b[0] == "num":
+        return _below(a[3], b[2]) or _below(b[3], a[2])
+    return False
+
+
+def _condition_contradicts(c, b):
+    """Does conjunct `c` contradict condition `b`? A boolean or numeric literal
+    contradicts b if b has a top-level literal on the same variable with the
+    other value / a disjoint interval; an `any` contradicts b iff EVERY member
+    does. Mirrors `conditionContradicts` in editor/core/src/offerExclusivity.ts."""
+    if c.get("type") == "any":
+        return all(_condition_contradicts(m, b) for m in c.get("of", []))
+    lc = _literal(c)
+    if lc is None:
+        return False
+    for d in _top_conjuncts(b):
+        ld = _literal(d)
+        if ld is not None and _literals_contradict(lc, ld):
+            return True
+    return False
+
+
+def _offer_outranks(id_a, offer_a, id_b, offer_b):
+    """Does offer a beat offer b when both are eligible — the runtime's ranking:
+    priority tier, then condition specificity, then the lower id."""
+    pa, pb = offer_a.get("priority", 0), offer_b.get("priority", 0)
+    if pa != pb:
+        return pa > pb
+    sa, sb = condition_specificity(offer_a.get("when")), condition_specificity(offer_b.get("when"))
+    if sa != sb:
+        return sa > sb
+    return id_a < id_b
+
+
+def condition_reads_flag(c, flag):
+    """Does this gate REQUIRE `flag` true — a top-level conjunct `flag f=true`?
+    The test for a forced offer. Mirrors `conditionReadsFlag` in
+    editor/core/src/offerExclusivity.ts."""
+    return bool(c) and any(
+        t.get("type") == "flag" and t.get("flag") == flag and t.get("value") is True
+        for t in _top_conjuncts(c)
+    )
+
+
+def offers_exclusive(a, b):
+    """Two offer conditions are provably exclusive if some top-level conjunct of
+    one contradicts the other: opposite values of one flag/item, disjoint ranges
+    of one counter/reputation/relationship/skill (each also under a `not`), or
+    an `any` whose every side does. A fallback (no when) is never exclusive. Shared by
+    the validator's tie rule and migrate_ladders.py (ws 17) so they never
+    disagree about which pairs need a priority tier."""
+    if not a or not b:
+        return False
+    return (any(_condition_contradicts(c, b) for c in _top_conjuncts(a))
+            or any(_condition_contradicts(c, a) for c in _top_conjuncts(b)))
+
+
 class ProjectValidator:
     """All registries + passes for one project root. Construct, then run()."""
 
@@ -158,10 +297,10 @@ class ProjectValidator:
         self.xp_grants = []  # (amount, where)
         self.used_portraits = set()
         self.chars_with_dialogue = set()
-        # characterId -> [dialogue ids naming them as ROOT speaker]. The ladder
+        # characterId -> [dialogue ids naming them as ROOT speaker]. The offer
         # pass uses this to spot dialogues nothing can reach: a speakerId does
-        # NOT make a dialogue discoverable — only a ladder rung, or
-        # availableWhen, does.
+        # NOT make a dialogue discoverable — only an offer, or a world
+        # placement, does.
         self.dialogues_by_speaker = {}
 
         self.default_dice = DEFAULT_DICE
@@ -206,9 +345,22 @@ class ProjectValidator:
     def schema_check(self, path, fn, obj):
         """Returns True when the entity is schema-clean."""
         ok = True
+        # A leftover `character.dialogues` ladder is a migration task, not a
+        # shape error (ws 17): report MIGRATE naming the script, and skip the
+        # bare additionalProperties reject so a stale project gets an actionable
+        # message and the character otherwise validates normally.
+        legacy_ladder = (
+            fn == "character.schema.json"
+            and isinstance(obj, dict)
+            and "dialogues" in obj
+        )
         for e in sorted(self._validator_for(fn).iter_errors(strip_comments(obj)), key=str):
+            if legacy_ladder and e.validator == "additionalProperties" and "dialogues" in e.message:
+                continue
             ok = False
             self.err("SCHEMA", f"{self.rel(path)}: {e.message} (at {'/'.join(map(str, e.path)) or 'root'})")
+        if legacy_ladder:
+            self.err("MIGRATE", f"{self.rel(path)}: character still carries a 'dialogues' ladder (Parlance 0.13) — convert it to dialogue offers: Validation panel → \"Convert ladders to offers\", or `parlance migrate` (outside the editor: python3 tooling/scripts/migrate_ladders.py)")
         return ok
 
     def valid(self, kind, eid):
@@ -416,22 +568,46 @@ class ProjectValidator:
             self.xp_grants.append((e.get("amount", 0), w, site == "quest_outcome"))
         elif t == "set_active_dialogue":
             # Feed model: sets the `active_dialogue__{character}` flag, read by
-            # the character's ladder. Register it as written so hygiene balances.
+            # a forced (tier-1) offer. Register it as written so hygiene balances.
             self.flags_written.add(f"active_dialogue__{e['character']}")
             if e["character"] not in self.characters:
                 self.err("REF", f"{w}: set_active_dialogue unknown character '{e['character']}'")
             if e["dialogue"] not in self.dialogues:
                 self.err("REF", f"{w}: set_active_dialogue unknown dialogue '{e['dialogue']}'")
             else:
-                # Speaker mismatch (LOGIC) — mirrors validator.ts: pushing a
-                # dialogue whose root speaker is someone else onto a character
-                # is almost always a copy-paste id slip.
+                # Speaker mismatch (LOGIC) — mirrors local.ts: pushing a
+                # dialogue presented by someone else onto a character is almost
+                # always a copy-paste id slip. The presenter is the offer's
+                # character (offer.character ?? speakerId) when there is an
+                # offer — a dialogue spoken by Y but offered FOR X is the
+                # contract-blessed cross-character forced pattern.
                 tgt = self.dialogues[e["dialogue"]][0]
-                if tgt.get("speakerId") and tgt["speakerId"] != e["character"]:
+                offer = tgt.get("offer")
+                presenter = (
+                    (offer.get("character") or tgt.get("speakerId")) if isinstance(offer, dict) else tgt.get("speakerId")
+                )
+                if presenter and presenter != e["character"]:
                     self.warn(
                         "LOGIC",
                         f"{w}: set_active_dialogue pushes dialogue '{e['dialogue']}' "
-                        f"(speaker '{tgt['speakerId']}') onto character '{e['character']}' — speaker mismatch",
+                        f"(presented by '{presenter}') onto character '{e['character']}' — speaker mismatch",
+                    )
+                # The effect only sets a flag; routing happens because the
+                # target carries an offer FOR this character gated on that flag.
+                # Without one the flag forces nothing (mirrors local.ts).
+                flag = f"active_dialogue__{e['character']}"
+                forced = (
+                    isinstance(offer, dict)
+                    and presenter == e["character"]
+                    and condition_reads_flag(offer.get("when"), flag)
+                )
+                if not forced:
+                    self.warn(
+                        "OFFER",
+                        f"{w}: set_active_dialogue names '{e['dialogue']}' for '{e['character']}', but "
+                        f"'{e['dialogue']}' carries no offer for '{e['character']}' gated on flag '{flag}' — the flag "
+                        f"routes nothing (give it an offer for '{e['character']}' whose condition reads that flag, "
+                        f"at a priority above the character's other offers)",
                     )
         elif t == "set_text":
             self.ref_var(e["variable"], "text", w)
@@ -584,6 +760,14 @@ class ProjectValidator:
             # apply — a flag read only by a dialogue gate is a real read.
             if dlg.get("availableWhen"):
                 self.walk_condition(dlg["availableWhen"], f"{w0} availableWhen")
+            # Offer (ws 17): offer.character is a REF; offer.when is a condition
+            # site — REF-check it and register its reads for FLAG/REP/REL hygiene.
+            offer = dlg.get("offer")
+            if isinstance(offer, dict):
+                if offer.get("character"):
+                    self.ref_char(offer["character"], f"{w0} offer.character")
+                if offer.get("when"):
+                    self.walk_condition(offer["when"], f"{w0} offer.when")
             seen = set()
             for n in dlg["nodes"]:
                 if n["id"] in seen:
@@ -655,6 +839,18 @@ class ProjectValidator:
                     if "check" in ch:
                         k = ch["check"]
                         self.ref_skill(k["skill"], cw)
+                        # A check modifier's `when` is a condition site (both
+                        # modes). Walk it for REF + hygiene reads.
+                        modifiers = k.get("modifiers")
+                        if modifiers == []:
+                            self.warn("CHECK", f"{cw}: empty modifiers list — remove the field")
+                        for i, m in enumerate(modifiers or []):
+                            self.walk_condition(m["when"], f"{cw} modifier {i}")
+                            if m["bonus"] == 0:
+                                self.warn("CHECK", f"{cw}: modifier {i} has bonus 0 — it changes nothing; give it a value or remove it")
+                        # Positive bonuses can lift an otherwise-impossible
+                        # difficulty (used in the max-roll warning below).
+                        max_bonus = sum(max(0, m["bonus"]) for m in (modifiers or []))
                         if k["mode"] == "active":
                             for key in ("onSuccess", "onFailure"):
                                 if key not in k:
@@ -677,12 +873,13 @@ class ProjectValidator:
                                     self.err("RULES", f"{cw}: {e}")
                             n_dice, m_sides = check_dice
                             max_roll = n_dice * m_sides
-                            if k["difficulty"] > max_roll:
+                            if k["difficulty"] > max_roll + max_bonus:
+                                with_mods = f" even with +{max_bonus} from modifiers" if max_bonus > 0 else ""
                                 self.warn(
                                     "GATE",
                                     f"{cw}: difficulty {k['difficulty']} exceeds max roll "
-                                    f"({max_roll} on {n_dice}d{m_sides}); needs skill ≥ "
-                                    f"{k['difficulty'] - max_roll} to ever pass",
+                                    f"({max_roll} on {n_dice}d{m_sides}){with_mods}; needs skill ≥ "
+                                    f"{k['difficulty'] - max_roll - max_bonus} to ever pass",
                                 )
                         else:
                             if "onSuccess" in k or "onFailure" in k:
@@ -809,13 +1006,20 @@ class ProjectValidator:
                     color[nid] = 2
 
     def check_coverage(self):
-        # A character "has dialogue" if they speak one OR a ladder rung presents
-        # one. Checking speakerId alone reports ladder-only characters as
+        # A character "has dialogue" if they speak one or are OFFERED one
+        # (ws 17). Checking speakerId alone reports offer-only characters as
         # uncovered.
+        offered = set()
+        for _did, (dlg, _p) in self.dialogues.items():
+            offer = dlg.get("offer")
+            if isinstance(offer, dict):
+                key = offer.get("character") or dlg.get("speakerId")
+                if key:
+                    offered.add(key)
         for cid, (o, _p) in self.characters.items():
             if not self.valid("character", cid):
                 continue
-            if cid not in self.chars_with_dialogue and not (o.get("dialogues") or []):
+            if cid not in self.chars_with_dialogue and cid not in offered:
                 self.warn("COVERAGE", f"character '{cid}' has no dialogue")
 
     def flags_written_by_task(self, q, value=None):
@@ -1179,33 +1383,84 @@ class ProjectValidator:
                 if did not in self.dialogues:
                     self.err("SNAP", f"{w}: visitedDialogueIds names unknown dialogue '{did}'")
 
-    @staticmethod
-    def dialogue_is_effectful(dlg):
-        for n in dlg.get("nodes", []):
-            if n.get("onEnter"):
-                return True
-            for ch in n.get("choices", []):
-                if ch.get("effects"):
-                    return True
-        return False
 
-    def check_locations_and_ladders(self):
+    def check_offers(self):
+        # OFFER family (ws 17) — mirrors checkOffers in
+        # editor/core/src/validation/global.ts. Computed over all dialogues.
+        exclusive = offers_exclusive
+
+        by_character = {}
+        for did in sorted(self.dialogues):
+            if not self.valid("dialogue", did):
+                continue
+            dlg = self.dialogues[did][0]
+            offer = dlg.get("offer")
+            if not isinstance(offer, dict):
+                continue
+            key = offer.get("character") or dlg.get("speakerId")
+            w = f"dialogue '{did}'"
+            if not key:
+                # An opt-in that names nobody is never offered (mirrors checkOffers).
+                self.warn("OFFER", f"{w}: offer names no character — it has no speakerId and no offer.character, so nothing ever offers it (set one, or drop the offer)")
+                continue
+            by_character.setdefault(key, []).append(did)
+            if offer.get("priority", 0) > 0 and "when" not in offer:
+                self.warn("OFFER", f"{w}: offer has priority {offer['priority']} but no 'when' — a prioritized fallback wins over every lower tier forever and re-fires on every re-entry (gate it, or drop the priority)")
+
+        for cid in sorted(by_character):
+            ids = sorted(by_character[cid])
+            offers = [(i, self.dialogues[i][0]["offer"]) for i in ids]
+            # A routing-only character (every offer forced through its
+            # active_dialogue__ flag) resolves to nothing outside a routed beat
+            # by design — mirrors checkOffers.
+            forced_flag = f"active_dialogue__{cid}"
+            def _is_forced(c):
+                return condition_reads_flag(c, forced_flag)
+            if not any("when" not in o for _i, o in offers) and not all(_is_forced(o.get("when")) for _i, o in offers):
+                self.warn("OFFER", f"character '{cid}': {len(offers)} offer(s) but none is unconditional ({', '.join(ids)}) — resolution returns no dialogue in states where every 'when' fails (add a fallback offer with no 'when')")
+            # A forced offer must out-rank every ordinary offer that can be
+            # eligible beside it, or the flag routes to the ordinary one and the
+            # queued scene never plays (mirrors checkOffers).
+            for fi, fo in offers:
+                if not _is_forced(fo.get("when")):
+                    continue
+                for oi, oo in offers:
+                    if oi == fi or _is_forced(oo.get("when")) or exclusive(fo.get("when"), oo.get("when")):
+                        continue
+                    if _offer_outranks(oi, oo, fi, fo):
+                        self.warn("OFFER", f"character '{cid}': forced offer '{fi}' (priority {fo.get('priority', 0)}) can be out-ranked by '{oi}' while '{forced_flag}' is set — routing would play '{oi}' instead (raise '{fi}' to a priority tier above it)")
+                        break
+            for a in range(len(offers)):
+                for b in range(a + 1, len(offers)):
+                    ia, oa = offers[a]
+                    ib, ob = offers[b]
+                    if oa.get("priority", 0) != ob.get("priority", 0):
+                        continue
+                    if condition_specificity(oa.get("when")) != condition_specificity(ob.get("when")):
+                        continue
+                    if exclusive(oa.get("when"), ob.get("when")):
+                        continue
+                    self.warn("OFFER", f"character '{cid}': offers '{ia}' and '{ib}' have equal priority and specificity and are not provably exclusive — the id decides which wins ('{ia}' sorts first; make one more specific, tier it, or gate them so they can't both apply)")
+
+    def check_locations_and_offers(self):
         # Locations (LOC pass) — mirrors editor/core/src/validator.ts. Graph
         # integrity: exit targets + spawns, denial dialogues, gates,
         # interactables, reachability, and within-location id uniqueness.
         valid_locations = {lid: lp for lid, lp in self.locations.items() if self.valid("location", lid)}
 
-        # Dialogues placed in the world without needing a ladder:
+        # Dialogues placed in the world without needing an offer:
         # object/environment interactables name a dialogue directly, and an
         # exit's denialDialogue plays when a gate refuses. A speaker reachable
-        # only those ways is correctly ladderless.
-        # Every dialogue presented by ANY character's ladder — a rung makes a
-        # dialogue discoverable regardless of whose ladder it sits in.
-        dialogues_in_ladders = {
-            rung["dialogue"]
-            for c, _p in self.characters.values()
-            for rung in (c.get("dialogues") or [])
-        }
+        # only those ways is correctly offer-less.
+        # A character presents a dialogue if any dialogue offers for them
+        # (ws 17) — the npc-interactable no-op check reads this.
+        characters_with_source = set()
+        for _did, (dlg, _p) in self.dialogues.items():
+            offer = dlg.get("offer")
+            if isinstance(offer, dict):
+                key = offer.get("character") or dlg.get("speakerId")
+                if key:
+                    characters_with_source.add(key)
         dialogues_placed_in_world = set()
         for _lid, (loc, _lp) in valid_locations.items():
             for it in loc.get("interactables", []) or []:
@@ -1215,56 +1470,21 @@ class ProjectValidator:
                 if ex.get("denialDialogue"):
                     dialogues_placed_in_world.add(ex["denialDialogue"])
 
-        # Dialogue ladder: dangling-ref (REF) + shallow shape checks (LADDER).
-        # Mirrors checkDialogueLadder in editor/core/src/validator.ts.
+        # Stranded speaker-dialogues (OFFER, ws 17): naming this character as
+        # ROOT speaker makes nothing discoverable — only an offer or a world
+        # placement does. Mirrors the stranded check in checkOffers
+        # (editor/core/src/validation/global.ts).
         for cid, (o, _p) in self.characters.items():
             if not self.valid("character", cid):
                 continue
-            ladder = o.get("dialogues") or []
             w = f"character '{cid}'"
-            for i, rung in enumerate(ladder):
-                if rung["dialogue"] not in self.dialogues:
-                    self.err("REF", f"{w}: dialogues[{i}] '{rung['dialogue']}' not found")
-                if "showIf" in rung:
-                    self.walk_condition(rung["showIf"], f"{w} dialogues[{i}].showIf")
-            # dead rung: unconditional rung that is not last shadows every rung
-            # below it.
-            for i, rung in enumerate(ladder):
-                if "showIf" not in rung and i < len(ladder) - 1:
-                    shadowed = len(ladder) - 1 - i
-                    self.warn("LADDER", f"{w}: dialogues[{i}] '{rung['dialogue']}' is unconditional but not last — shadows {shadowed} rung(s) below (dead rungs)")
-            # stuck rung: unconditional + top-priority + effectful → wins
-            # forever, re-fires.
-            if ladder:
-                top = ladder[0]
-                if "showIf" not in top and top["dialogue"] in self.dialogues and self.dialogue_is_effectful(self.dialogues[top["dialogue"]][0]):
-                    self.warn("LADDER", f"{w}: dialogues[0] '{top['dialogue']}' is unconditional, top-priority, and carries effects — it wins forever and re-fires on every re-entry")
-            # no fallthrough: last rung gated → character may resolve to no
-            # dialogue.
-            if ladder and "showIf" in ladder[-1]:
-                self.warn("LADDER", f"{w}: last ladder rung '{ladder[-1]['dialogue']}' has a showIf — no unconditional fallthrough, so the character may resolve to no dialogue in some states")
-            # Stranded speaker-dialogues: naming this character as ROOT speaker
-            # makes nothing discoverable — only a ladder rung (ANY character's),
-            # an availableWhen, or a world placement does. Checked for EVERY
-            # character: a ladder-owning character can still have a dialogue no
-            # rung presents. This used to be nested inside `if not ladder`, and
-            # to ignore ladder membership, so it disagreed with validator.ts in
-            # both directions — the editor warned where CI was silent, and CI
-            # warned where the editor was silent. Under --strict that is a
-            # disagreement about the exit code.
             stranded = sorted(
                 d for d in self.dialogues_by_speaker.get(cid, [])
-                if not self.dialogues[d][0].get("availableWhen")
+                if not isinstance(self.dialogues[d][0].get("offer"), dict)
                 and d not in dialogues_placed_in_world
-                and d not in dialogues_in_ladders
             )
-            if not ladder:
-                # No ladder at all: resolveCharacterDialogue returns null, and
-                # discovery only falls back to availableWhen.
-                if stranded:
-                    self.warn("LADDER", f"{w}: no dialogues ladder, so resolution returns null — {len(stranded)} dialogue(s) carry no availableWhen either and are unreachable: {', '.join(stranded)}")
-            elif stranded:
-                self.warn("LADDER", f"{w}: {len(stranded)} speaker dialogue(s) sit in no ladder rung, carry no availableWhen, and have no world placement — unreachable: {', '.join(stranded)}")
+            if stranded:
+                self.warn("OFFER", f"{w}: {len(stranded)} speaker dialogue(s) are offered by nothing and have no world placement — unreachable: {', '.join(stranded)}")
 
         spawns_by_loc = {lid: {s["id"] for s in loc.get("spawns", [])} for lid, (loc, _p) in valid_locations.items()}
         reachable_from = {lid: set() for lid in valid_locations}
@@ -1314,13 +1534,14 @@ class ProjectValidator:
                         self.err("LOC", f"{iw}: kind 'npc' requires character field")
                     elif it["character"] not in self.characters:
                         self.err("REF", f"{iw}: unknown character '{it['character']}'")
-                    elif not (self.characters[it["character"]][0].get("dialogues") or []):
-                        # An npc interactable resolves through the ladder ONLY.
-                        # Without one, resolveCharacterDialogue returns null and
-                        # interacting does nothing.
-                        self.warn("LOC", f"{iw}: character '{it['character']}' has no dialogues ladder, so resolution returns null and this interactable is a no-op — give them a ladder ending in an unconditional rung")
+                    elif it["character"] not in characters_with_source:
+                        # An npc interactable resolves through the character's
+                        # offers (ws 17). With none,
+                        # resolveCharacterDialogue returns null and interacting
+                        # does nothing.
+                        self.warn("LOC", f"{iw}: character '{it['character']}' has no offered dialogue, so resolution returns null and this interactable is a no-op — give them an offered dialogue (a fallback offer with no when)")
                     if it.get("dialogue"):
-                        self.warn("LOC", f"{iw}: npc interactable has dialogue field; runtime resolves the character's dialogue ladder — did you mean character?")
+                        self.warn("LOC", f"{iw}: npc interactable has dialogue field; runtime resolves the character's offered dialogue — did you mean character?")
                     if it.get("trigger") == "on_enter":
                         # A character who starts talking at you the moment you
                         # walk in is almost always a scene wearing an npc
@@ -1505,11 +1726,12 @@ class ProjectValidator:
 
     def check_check_discipline(self):
         # --- Priced/oneshot check discipline (CHECK) + mandatory-path lockout (REACH) ---
-        ladder_read_flags = set()
-        for cid, (o, _p) in self.characters.items():
-            for rung in o.get("dialogues") or []:
-                if "showIf" in rung:
-                    self.flags_in_condition(rung["showIf"], ladder_read_flags)
+        # Offer gate flag reads feed the priced-gate advisory (ws 17).
+        offer_read_flags = set()
+        for _did, (dlg, _p) in self.dialogues.items():
+            offer = dlg.get("offer")
+            if isinstance(offer, dict) and offer.get("when"):
+                self.flags_in_condition(offer["when"], offer_read_flags)
         for did, (dlg, _p) in self.dialogues.items():
             if not self.valid("dialogue", did):
                 continue
@@ -1543,8 +1765,8 @@ class ProjectValidator:
                     else:
                         fail = nodes_by_id.get(k["onFailure"])
                         for e in (fail or {}).get("onEnter", []):
-                            if e.get("type") == "set_flag" and e.get("flag") in ladder_read_flags:
-                                self.warn("CHECK", f"{cw}: priced-gate failure sets ladder-reordering flag '{e['flag']}' — confirm this isn't a punishment-spiral cost (advisory)")
+                            if e.get("type") == "set_flag" and e.get("flag") in offer_read_flags:
+                                self.warn("CHECK", f"{cw}: priced-gate failure sets offer-gating flag '{e['flag']}' — confirm this isn't a punishment-spiral cost (advisory)")
             inbound = {}
             for n in dlg["nodes"]:
                 # next (N2) is an unconditional edge — every player takes it, so
@@ -1613,7 +1835,8 @@ class ProjectValidator:
         self.check_codex_endings()
         self.check_routes()
         self.check_snapshots()
-        self.check_locations_and_ladders()
+        self.check_locations_and_offers()
+        self.check_offers()
         self.check_portrait_usage()
         self.check_text()
         self.check_flag_hygiene()

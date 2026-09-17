@@ -1,0 +1,8 @@
+{
+  "mustNot": [
+    {
+      "code": "COVERAGE"
+    }
+  ],
+  "noErrors": true
+}

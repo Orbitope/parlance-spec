@@ -69,6 +69,8 @@ reference resolves. That's what catches inconsistencies before they reach the ga
 A check wraps a skill roll around a choice.
 - `active` checks are rolled (pass/fail, can be retried per game rules TBD).
 - `passive` checks silently reveal/hide a choice based on a threshold (no roll).
+- optional `modifiers` add a conditional `bonus` to the total when their `when` holds
+  (they sum; negative = harder). `difficulty` stays the fixed DC. Per-check, not global.
 
 ```
 "check": {
@@ -76,7 +78,10 @@ A check wraps a skill roll around a choice.
   "skill": "rhetoric",
   "difficulty": 12,
   "onSuccess": "node_official_convinced",
-  "onFailure": "node_official_suspicious"
+  "onFailure": "node_official_suspicious",
+  "modifiers": [
+    { "when": { "type": "item", "item": "guild_seal", "has": true }, "bonus": 3, "label": "Guild seal" }
+  ]
 }
 ```
 

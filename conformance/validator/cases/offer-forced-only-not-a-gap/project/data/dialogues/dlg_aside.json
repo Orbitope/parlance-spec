@@ -1,0 +1,20 @@
+{
+  "entry": "node_a",
+  "id": "dlg_aside",
+  "nodes": [
+    {
+      "id": "node_a",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "character": "npc_keeper",
+          "dialogue": "dlg_meet",
+          "type": "set_active_dialogue"
+        }
+      ],
+      "text": "Go and see the keeper."
+    }
+  ],
+  "offer": {},
+  "speakerId": "npc_keeper"
+}

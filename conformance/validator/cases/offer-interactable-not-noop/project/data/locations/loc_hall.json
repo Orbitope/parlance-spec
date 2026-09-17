@@ -1,0 +1,20 @@
+{
+  "id": "loc_hall",
+  "interactables": [
+    {
+      "character": "npc_keeper",
+      "id": "ix_keeper",
+      "kind": "npc"
+    }
+  ],
+  "name": "The Hall",
+  "spawns": [
+    {
+      "id": "sp_main",
+      "isDefault": true
+    }
+  ],
+  "tags": [
+    "start"
+  ]
+}

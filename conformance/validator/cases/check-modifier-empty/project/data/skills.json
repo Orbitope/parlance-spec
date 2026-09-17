@@ -1,0 +1,10 @@
+{
+  "skills": [
+    {
+      "cluster": "mind",
+      "description": "Noticing the detail that is out of place.",
+      "id": "observation",
+      "name": "Observation"
+    }
+  ]
+}

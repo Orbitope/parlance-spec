@@ -5,8 +5,12 @@
   "description": "A conversation as a graph of nodes. Each node shows text and offers choices. Choices may be gated by conditions, wrapped in skill checks, and may apply effects and route to other nodes.",
   "type": "object",
   "properties": {
-    "id": { "$ref": "common.schema.json#/definitions/id" },
-    "title": { "type": "string" },
+    "id": {
+      "$ref": "common.schema.json#/definitions/id"
+    },
+    "title": {
+      "type": "string"
+    },
     "speakerId": {
       "$ref": "common.schema.json#/definitions/id",
       "description": "default character speaking in this dialogue"
@@ -15,9 +19,24 @@
       "type": "boolean",
       "description": "true if the player can re-enter this dialogue after first completion; once-only choices (showIf flag gates) will simply not appear"
     },
-    "availableWhen": {
-      "$ref": "common.schema.json#/definitions/condition",
-      "description": "optional pull-based gate; prefer set_active_dialogue effects for scene switches — use this only for corner-case overrides"
+    "offer": {
+      "type": "object",
+      "description": "Self-declared candidacy for being OFFERED to the player (presented on approach, or discovered as a continuation). The PRESENCE of this object is the opt-in — a dialogue without it is never a candidate and is reached only by goto/entersDialogue/route/world placement. Resolution gathers a character's offers, drops those whose when fails (and visited non-replayable ones), and picks by priority tier, then condition specificity (leaf 1, all sum, any min, not operand), then ordinal id. Replaces the character dialogues ladder.",
+      "properties": {
+        "character": {
+          "$ref": "common.schema.json#/definitions/id",
+          "description": "The character this dialogue is offered BY, when that is not its speakerId (e.g. a narrated protagonist trial). Defaults to speakerId."
+        },
+        "when": {
+          "$ref": "common.schema.json#/definitions/condition",
+          "description": "Gate. Absent = the fallback (specificity 0), offered whenever nothing more specific or higher-tier is eligible."
+        },
+        "priority": {
+          "type": "integer",
+          "description": "Priority TIER, compared before specificity (default 0). A higher tier beats every lower-tier candidate however specific. Forced routing uses a tier-1 offer gated on active_dialogue__{character}."
+        }
+      },
+      "additionalProperties": false
     },
     "entry": {
       "$ref": "common.schema.json#/definitions/id",
@@ -29,22 +48,31 @@
       "items": {
         "type": "object",
         "properties": {
-          "id": { "$ref": "common.schema.json#/definitions/id" },
+          "id": {
+            "$ref": "common.schema.json#/definitions/id"
+          },
           "speakerId": {
             "$ref": "common.schema.json#/definitions/id",
             "description": "overrides the dialogue's default speaker for this line — a character or skill id; omit for narration"
           },
-          "text": { "type": "string" },
+          "text": {
+            "type": "string"
+          },
           "onEnter": {
             "type": "array",
-            "items": { "$ref": "common.schema.json#/definitions/effect" },
+            "items": {
+              "$ref": "common.schema.json#/definitions/effect"
+            },
             "description": "effects applied when this node is reached"
           },
           "showIf": {
             "$ref": "common.schema.json#/definitions/condition",
             "description": "Optional gate on this node's DISPLAY. When it fails the node is skipped and resolution continues at 'next': its text is not shown and its onEnter effects DO NOT fire. Requires 'next'; mutually exclusive with 'choices' and 'isEnd', which confines this to interstitial narration and makes skipping unambiguous. A 'next' chain must terminate at a node with no showIf."
           },
-          "isEnd": { "type": "boolean", "description": "true if this node ends the conversation" },
+          "isEnd": {
+            "type": "boolean",
+            "description": "true if this node ends the conversation"
+          },
           "next": {
             "$ref": "common.schema.json#/definitions/id",
             "description": "choiceless advance to another node id in this same dialogue, for listen-only beats. Mutually exclusive with a non-empty 'choices' and with isEnd — enforced by the validator (FLOW), not expressible here since additionalProperties:false plus all-optional fields makes a schema-level oneOf reject valid nodes."
@@ -54,23 +82,34 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "$ref": "common.schema.json#/definitions/id" },
-                "text": { "type": "string" },
+                "id": {
+                  "$ref": "common.schema.json#/definitions/id"
+                },
+                "text": {
+                  "type": "string"
+                },
                 "showIf": {
                   "$ref": "common.schema.json#/definitions/condition",
                   "description": "choice is hidden unless this condition passes"
                 },
-                "check": { "$ref": "common.schema.json#/definitions/check" },
+                "check": {
+                  "$ref": "common.schema.json#/definitions/check"
+                },
                 "effects": {
                   "type": "array",
-                  "items": { "$ref": "common.schema.json#/definitions/effect" }
+                  "items": {
+                    "$ref": "common.schema.json#/definitions/effect"
+                  }
                 },
                 "goto": {
                   "$ref": "common.schema.json#/definitions/id",
                   "description": "next node id (omit if check provides onSuccess/onFailure, or if choice ends convo)"
                 }
               },
-              "required": ["id", "text"],
+              "required": [
+                "id",
+                "text"
+              ],
               "additionalProperties": false
             }
           },
@@ -83,13 +122,24 @@
             "description": "Author-only annotation. Never shown to the player; ignored by the runtime."
           }
         },
-        "required": ["id", "text"],
+        "required": [
+          "id",
+          "text"
+        ],
         "additionalProperties": false
       }
     },
-    "loreRef": { "$ref": "common.schema.json#/definitions/loreRef" },
-    "tags": { "$ref": "common.schema.json#/definitions/tags" }
+    "loreRef": {
+      "$ref": "common.schema.json#/definitions/loreRef"
+    },
+    "tags": {
+      "$ref": "common.schema.json#/definitions/tags"
+    }
   },
-  "required": ["id", "entry", "nodes"],
+  "required": [
+    "id",
+    "entry",
+    "nodes"
+  ],
   "additionalProperties": false
 }

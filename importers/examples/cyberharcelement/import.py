@@ -27,7 +27,8 @@ def main():
     builders, dialogues, notes = B.build(irs, names)
 
     # Which character speaks which dialogue, in the order the source presents
-    # them. A ladder is required for a character to be reachable at all.
+    # them. The first becomes that character's offer; without one the character
+    # is not reachable at all.
     ladders = {}
     for d in dialogues:
         speakers = []
@@ -64,9 +65,9 @@ def main():
 
     W.write_project(
         os.path.join(HERE, "project"),
-        dialogues,
+        W.offer_entries(dialogues, ladders),
         W.variables_of(kinds, defaults, "Yarn $"),
-        W.characters_of(speakers, ladders),
+        W.characters_of(speakers),
     )
     print(f"{len(dialogues)} dialogues, "
           f"{sum(len(d['nodes']) for d in dialogues)} nodes, "

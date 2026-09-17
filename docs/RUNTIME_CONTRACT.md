@@ -97,7 +97,7 @@ All calls return a **new** immutable `GameState`; the input is never mutated.
 | `take_item` | `inventory.delete(item)` (no-op if not held) |
 | `advance_quest` | `questStages[quest] = toStage`. Records the quest's current stage in `GameState`. Stage evaluation (e.g. `completeWhen`) is the caller's responsibility — the runtime only stores the stage id. |
 | `grant_xp` | `xp += amount`. Monotonic total-earned XP; levels/points are DERIVED from it (never a spendable balance). `amount` should be positive (validator warns on ≤ 0). Authored on quest outcomes by convention. |
-| `set_active_dialogue` | `flags["active_dialogue__" + character] = true` (feed model — no separate `activeDialogues` map). The character's ladder carries a high-priority rung gated on this flag; the effect's `dialogue` field is metadata for tooling/validation. Clear it with a normal `set_flag … false` (or `clearActiveDialogue`) to fall through again. |
+| `set_active_dialogue` | `flags["active_dialogue__" + character] = true` (feed model — no separate `activeDialogues` map). A forced dialogue carries a tier-1 `offer` gated on this flag; the effect's `dialogue` field is metadata for tooling/validation. Clear it with a normal `set_flag … false` (or `clearActiveDialogue`) to fall through again. |
 | `play_cutscene` | `pendingCutscene = cutscene`. The runtime only records the request — it never plays a cutscene. See "Cutscene playback" below. |
 | `set_text` | `texts[variable] = value`, last-write-wins. `value` is always a literal — capturing free-text player input is the engine's job, which calls this effect with whatever string it collected. See "Text interpolation" below. |
 
@@ -105,18 +105,45 @@ All calls return a **new** immutable `GameState`; the input is never mutated.
 
 ---
 
-## resolveCheck(check, state, rng, defaultDice?): CheckResult
+## resolveCheck(check, state, rng, defaultDice?, criticals?, project?): CheckResult
 
-Active checks only. Passive checks are display-only and use a plain `goto`.
+Active checks only. Passive checks are display-only and use a plain `goto` (their reveal
+threshold is `passiveCheckPasses`, below).
 
 ```
 spec       = check.dice ? parseDice(check.dice) : (defaultDice ?? 1d20)   // "NdM"
 roll       = sum over spec.n of (floor(rng() * spec.m) + 1)   // consumes spec.n rng() calls, in order
 skillValue = state.skills[check.skill] ?? 0
-total      = roll + skillValue
+bonus      = Σ m.bonus for m in (check.modifiers ?? []) where evaluate(m.when, state, project)
+total      = roll + skillValue + bonus
 passed     = total >= check.difficulty
 CheckResult = { passed, roll, total, skillValue, dice: "NdM" }
+             // + bonus, appliedModifiers  — present IFF the check declares ≥1 modifier
 ```
+
+**Modifiers.** `check.modifiers` is an optional list of `{ when: Condition, bonus: int,
+label?: string }`. Every modifier whose `when` holds contributes its `bonus` to the total
+(`difficulty` stays the fixed DC); they SUM, and a negative bonus makes the check harder.
+Evaluating them needs `project` (a `quest`/`questOutcome` `when` reads stage order), so a
+check that declares modifiers MUST be resolved with a project — the reference implementation
+throws otherwise rather than read those conditions as silently false. `CheckResult.bonus`
+(the applied sum) and `CheckResult.appliedModifiers` (the contributing indices, in array
+order) are present **iff the check declares at least one modifier** — a check without
+modifiers produces a byte-identical result to one from before the feature. Modifiers are
+per-check, not a global skill layer. Criticals still decide on faces, so an all-minimum roll
+fails whatever the bonus.
+
+## passiveCheckPasses(check, state, project): boolean
+
+The passive reveal threshold — passive checks do not roll:
+
+```
+passed = (state.skills[check.skill] ?? 0) + bonus >= check.difficulty   // bonus as above
+```
+
+A passive check with modifiers reveals its choice when skill plus the applicable bonus
+clears the difficulty. Engines that hide/show passive-check choices MUST use this formula so
+a modifier means the same thing in both modes.
 
 **Dice.** Notation is `NdM` (N dice of M sides, summed; N ≥ 1, M ≥ 2). The skill value is
 the modifier, not part of the notation. Precedence: per-check `check.dice` > project
@@ -338,8 +365,8 @@ a concrete entity:
 not distinguish them. The validator is what turns a dangling id into an error (REF); an id
 present in BOTH the character and skill maps is also a validator error (ambiguous), which
 `resolveSpeaker` doesn't detect either — it simply prefers character in that unreachable-in-
-valid-data case. Dialogue-level `speakerId` stays character-only (it doubles as dialogue
-ownership for `selectDialogue`/ladder resolution); only the NODE level may name a skill.
+valid-data case. Dialogue-level `speakerId` stays character-only (it doubles as the default
+`offer.character` for offer resolution); only the NODE level may name a skill.
 
 **`resolvePortrait(project, dialogue, node): Id | null`** (D10) — the portrait to render:
 
@@ -473,7 +500,8 @@ These are choices made here that a runtime must implement consistently:
 
 | Decision | Value |
 |---|---|
-| Roll model | `NdM` + skill_value ≥ difficulty; default 1d20. Precedence: check.dice > rules.check.dice > 1d20. One rng() call per die, in order |
+| Roll model | `NdM` + skill_value + Σ(modifier bonuses) ≥ difficulty; default 1d20. Precedence: check.dice > rules.check.dice > 1d20. One rng() call per die, in order |
+| Check modifiers | `check.modifiers[].bonus` summed over those whose `when` holds; added to the total (passive: to the reveal threshold). Per-check, not global. `CheckResult.bonus`/`appliedModifiers` present iff ≥1 modifier declared. Needs `project` to evaluate |
 | Criticals | `rules.check.criticals`, default OFF. All-minimum always fails, all-maximum always succeeds, overriding the total. Judged on individual faces, never the sum |
 | Reputation clamp | Faction `reputationRange.min` / `.max`; strict clamp after every delta |
 | Counter range | Unbounded (no clamping) |
@@ -488,11 +516,11 @@ These are choices made here that a runtime must implement consistently:
 | Relationship clamping | **None.** `adjust_relationship` is unclamped, like `adjust_counter` and unlike `adjust_reputation` — a character declares no range the way a faction's `reputationRange` does. A per-character or project-level range can be added additively later without breaking data. |
 | Unadvanced quest in a `quest` condition | Sits **before every stage**: `<` / `<=` true, `>=` / `>` / `==` false. So "not started yet" is `< <firstStage>` and "started" is `>= <firstStage>`. |
 | Unknown quest or stage in a `quest` condition | **False for every op**, never throws. The validator reports both as REF errors at author time; the runtime stays total so a save naming a since-deleted stage degrades to unstarted rather than crashing. |
-| Passive check destination | Uses `choice.goto`, never `onSuccess`/`onFailure` |
+| Passive check destination | Uses `choice.goto`, never `onSuccess`/`onFailure`. Reveal threshold `passiveCheckPasses`: `skill + Σbonus ≥ difficulty` |
 | `onEnter` application timing | First arrival only; caller responsibility |
 | Portrait resolution | `node.portrait` > `character.portrait` > `null`; no shared-base fallback |
-| Character dialogue resolution | `resolveCharacterDialogue`: first ladder rung whose `showIf` passes (absent `showIf` = always); `null` if none. Array order significant (first-match-wins) |
-| `set_active_dialogue` | Feed model: sets flag `active_dialogue__{character}` (no `activeDialogues` map); resolution is always the ladder |
+| Character dialogue resolution | `resolveCharacterDialogue`: gather the character's OFFERS, drop failed `when` and visited non-replayable ones, pick by (priority tier, condition specificity, then lowest id); `null` if none. Order-independent |
+| `set_active_dialogue` | Feed model: sets flag `active_dialogue__{character}` (no `activeDialogues` map); resolution is always through offers (a forced dialogue is a tier-1 offer gated on that flag) |
 | Progression | `xp` monotonic total-earned; levels/points derived via `xpThresholds`; effective skill = `min(preset + invested, maxSkill)`; investing is a guarded player action, not an effect |
 | Quest resolution | `resolveQuests`: condition-gated stage/outcome effects fire once when true, recorded in `questFired`; fixpoint; deterministic order; never writes `questStages` |
 | `Check.kind` | Authoring/validation tag only — runtime does not branch on it; both `priced` and `oneshot` resolve through the same `resolveCheck` |
@@ -500,44 +528,63 @@ These are choices made here that a runtime must implement consistently:
 
 ---
 
-## Character dialogue ladder — `resolveCharacterDialogue(state, character, project)`
+## Character dialogue offers — `resolveCharacterDialogue(state, character, project, visited?)`
 
-**This is the canonical answer to "which dialogue plays next."** It is the ordered,
-first-match-wins mechanism, and the only one with conformance vectors
-(`conformance/resolveCharacterDialogue.json`) — which, under this contract's own rule
-that the vectors are the truth, is what makes it canonical rather than merely
-preferred. A project should express a character's arc as their ladder.
+**This is the canonical answer to "which dialogue plays next."** It is the
+saliency-ranked, order-independent mechanism, and the only one with conformance
+vectors (`conformance/resolveCharacterDialogue.json`) — which, under this contract's
+own rule that the vectors are the truth, is what makes it canonical. A project
+expresses a character's arc through the dialogues that OFFER themselves to that
+character; nothing on the character declares an ordered list.
 
-`selectDialogue` is the **escape hatch**: it returns dialogues owned by a character
-whose own `availableWhen` passes, for the case where availability is a property of the
-dialogue rather than of the character's arc. It has no vectors and no ordering
-guarantee beyond that filter. Prefer the ladder; reach for this only when the ladder
-genuinely cannot express the thing.
+A dialogue self-declares candidacy with an `offer` object,
+`{ character?, when?, priority? }`. The **presence** of the object is the opt-in:
+a dialogue with no `offer` is never a candidate and is reached only by
+`goto`/`entersDialogue`/route/world placement. `offer.character` names who offers
+it (defaulting to `speakerId`); `offer.when` is the gate (absent = the fallback,
+specificity 0); `offer.priority` is the tier (default 0).
 
-A character owns an ordered `dialogues` ladder (`DialogueCandidate[]`, each
-`{ dialogue, showIf? }`). To decide what a character presents, walk the ladder
-top-to-bottom and return the first rung whose `showIf` `evaluate`s true; an
-absent `showIf` always matches (unconditional **fallthrough**). Return `null`
-if the ladder is empty/absent or nothing matches.
+To decide what a character presents, gather every dialogue that offers for them
+(`offer.character ?? speakerId === character.id`), drop those whose `when` fails
+and any visited non-`replayable` one, and pick the most salient. Return `null`
+if nothing is eligible.
 
 ```
-resolveCharacterDialogue(state, character, project):
-  for rung in character.dialogues ?? []:
-    if rung.showIf is absent or evaluate(rung.showIf, state, project): return rung.dialogue
-  return null
+resolveCharacterDialogue(state, character, project, visited?):
+  candidates = [d for d in project.dialogues
+                if d.offer is present and (d.offer.character ?? d.speakerId) == character.id]
+  eligible = [d for d in candidates
+              if (d.offer.when is absent or evaluate(d.offer.when, state, project))
+              and not (visited and d.replayable != true and d.id in visited)]
+  if eligible is empty: return null
+  return the d in eligible maximizing (priority tier, condition specificity, then
+         LOWEST id) — ties broken by ordinal (UTF-16 code-unit) id, NOT localeCompare
 ```
 
-- **Array order is significant** — first match wins. This is the single source
-  of truth used by the runtime, the resolution preview, and the stuck-rung
-  static check. Re-entry needs no special code: walking the ladder again
-  re-runs resolution against current state, so a different rung wins once flags
-  change.
+- **Order-independent.** Resolution ranks by `(priority tier desc, condition
+  specificity desc, id asc)`, so a dialogue's position in the file never matters.
+  Condition specificity: a leaf is 1, an `all` is the sum of its members, an `any`
+  is the MIN of its members, a `not` is its operand's, an absent gate is 0. This
+  is the single source of truth used by the runtime, the resolution preview, and
+  the OFFER static checks. Re-entry needs no special code: resolving again against
+  current state lets a different offer win once flags change.
 - **Feed model.** `set_active_dialogue` does not write a resolution override; it
-  sets the flag `active_dialogue__{character}`, and the character's ladder is
-  expected to carry a high-priority rung gated on that flag. There is no
-  `activeDialogues` map in `GameState`.
+  sets the flag `active_dialogue__{character}`, and a forced dialogue is expected
+  to carry a **tier-1 offer** gated on that flag (a higher tier beats every
+  lower-tier candidate however specific). There is no `activeDialogues` map in
+  `GameState`. Clear the flag (`set_flag … false` / `clearActiveDialogue`) once
+  the forced dialogue is consumed so resolution falls to the next-best offer.
+  The effect's `dialogue` field is metadata: the runtime never reads it, so the
+  validators check it instead — the named dialogue must carry an offer for
+  that character whose gate reads the flag at the top level, and that offer
+  must out-rank every ordinary offer that can be eligible beside it (both
+  `OFFER` warnings, with conformance cases). In `nextContinuations`
+  (`conformance/nextContinuations.json`) a routed character's winner counts as
+  **forced** — presented as queued, visited set ignored — only when its gate
+  reads the flag; an ordinary offer that wins the ranking instead is plain
+  discovery, the visited filter applies to it, and the flag stays set.
 - **NPC interactable resolution** is exactly one `resolveCharacterDialogue` call
-  (the forced dialogue is just a high-priority rung).
+  (the forced dialogue is just a tier-1 offer).
 - **`trigger` is host-only.** An interactable's optional `trigger` (`"walk_up"`,
   the default, or `"on_enter"`) says how the player reaches it: something they
   approach in space, or a scene that starts by itself on entering the location
@@ -779,8 +826,8 @@ be read as an editor snapshot, and a snapshot be loaded as a save.
 ```
 
 `visitedDialogueIds` is the one piece of bookkeeping the contract pins down, because the
-runtime **reads** it: discovery excludes a dialogue when `replayable !== true` and the
-dialogue is in the visited set (see `selectDialogue` and the ladder discovery pool). It is
+runtime **reads** it: offer resolution excludes a dialogue when `replayable !== true` and
+the dialogue is in the visited set (see `resolveCharacterDialogue`'s eligibility filter). It is
 NOT part of `GameState` and must not be added to it — the state is what the story is,
 while the visited set is what the host has shown — so it rides on the envelope, next to
 the state, in both a save and a snapshot.
@@ -796,7 +843,9 @@ Rules an engine port must honour:
   mid-playthrough baseline is offered content the player had already spent — it passes on
   a path no player can walk, which is worse than failing.
 - **Forced offers ignore the visited set** (routing a character somewhere is an explicit
-  re-entry). Only discovery filters on it.
+  re-entry). Only discovery filters on it. A forced offer is one whose gate reads the
+  character's `active_dialogue__` flag and wins while it is set — see the feed model
+  above and `conformance/nextContinuations.json`.
 
 The asymmetry between the three shapes is worth stating plainly, because it decides what
 tooling is even possible: a **route** is a path, a **save** is a position, a **snapshot**

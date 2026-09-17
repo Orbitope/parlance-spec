@@ -14,6 +14,119 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.14.0 — dialogue offers replace the ladder; checks gain conditional modifiers
+
+0.14.0 bundles two contract changes. Do both when you move a project or a port to it:
+
+1. **Dialogue offers replace the character ladder** — a breaking change (data and runtime).
+   Existing projects must be migrated; runtimes must resolve offers instead of ladders.
+2. **Conditional check modifiers** — additive to the schema, but *not* safe to ignore: a
+   runtime that skips it rolls the wrong odds on any check that uses the field.
+
+Each is written up in full below. A port must ship both before it can claim 0.14.0
+conformance; a project only needs the migration in §1 (the modifier field is opt-in).
+
+### 1. The character dialogue ladder is replaced by dialogue offers (breaking)
+
+**What broke.** A character no longer owns an ordered `dialogues` ladder. The field
+`character.dialogues` is gone, and so is the dialogue-level `availableWhen` escape hatch.
+Instead, each dialogue self-declares its candidacy with an `offer` object,
+`{ character?, when?, priority? }`:
+
+- `offer.character` — who presents (offers) the dialogue (defaults to `speakerId`); a scene
+  spoken by one character can be offered for another.
+- `offer.when` — the gate; **absent** means the fallback (offered whenever nothing more
+  specific or higher-tier is eligible).
+- `offer.priority` — the tier (default 0); a higher tier beats every lower-tier candidate
+  however specific.
+
+The **presence** of the `offer` object is the opt-in. A dialogue with no `offer` is never
+a candidate and is reached only by `goto`/`entersDialogue`/route/world placement.
+`resolveCharacterDialogue` gathers a character's offers, drops those whose `when` fails
+(and visited non-`replayable` ones), and picks by **priority tier, then condition
+specificity, then lowest id** — so the arrangement of dialogues in the project no longer
+affects resolution. See `RUNTIME_CONTRACT.md`'s offers section for the exact ranking, and
+`conformance/resolveCharacterDialogue.json` for the vectors.
+
+**Why it was worth breaking.** The ladder was ordered and first-match-wins, so which
+dialogue played depended on array position, and a general rung placed above a specific one
+silently shadowed it forever — the single most common authoring bug. Offers make selection
+order-independent and *local*: a dialogue carries its own eligibility, the way a node
+carries its own `showIf`, and "most specific wins" is the engine's job, not the author's
+sort order. It also collapses two mechanisms (the ladder and the `availableWhen` escape
+hatch) into one.
+
+**Exactly what to run.** Three equivalent routes, one converter — the editor, the
+`parlance` CLI, and the reference script apply the same algorithm (the TypeScript and
+Python copies are held to one set of parity vectors under `tooling/conformance/migrate_ladders/`):
+
+- **In the editor:** a project still carrying ladders opens with a `MIGRATE` error and a
+  banner in the Validation panel — click **Convert ladders to offers**. The report appears
+  in the panel and the issues clear when it finishes.
+- **From a terminal, with the editor installed:** `parlance migrate <your-project>`, or
+  `parlance migrate <your-project> --check` to see the report without writing.
+- **Without the editor:** `python3 tooling/scripts/migrate_ladders.py --root <your-project>`
+  (in the published spec repo it sits beside the validator as `validate/migrate_ladders.py`).
+
+It rewrites every `character.dialogues` ladder into `offer` objects on the named dialogues,
+assigning priority tiers where a lower rung would otherwise shadow a higher one, and folds
+each dialogue-level `availableWhen` into that dialogue's `offer.when`. Run it with
+`--check` first to see the report. It preserves the ladder's winner in every state — an
+**INVERSION** note marks a rung that needed a priority tier because specificity alone
+would have re-ordered it, and a **SHADOWED** note marks an unconditional rung that was
+not last: it keeps its tier (so the rungs below stay unreachable, exactly as before) and
+the validator's `OFFER` prioritized-fallback warning will point at it — drop the tier if
+you would rather those lower rungs now play. Those notes are the few places to eyeball. The validators now emit a `MIGRATE` error, naming these three routes, for any
+project still carrying `character.dialogues`, so a stale project fails loudly with an
+actionable message rather than a bare schema reject.
+
+**What a port must do.** Reimplement `resolveCharacterDialogue` against offers (gather,
+filter, rank by tier → specificity → id) and delete any ladder/`selectDialogue` code path.
+If the port implements `nextContinuations`, a routed character's winner counts as forced
+only when its gate reads `active_dialogue__<character>` (see RUNTIME_CONTRACT § feed model).
+Re-vendor the conformance vectors — `resolveCharacterDialogue.json` is rewritten for the
+new semantics and `nextContinuations.json` is new; the validator conformance cases add an
+`OFFER` family (no fallback, prioritized fallback, unbreakable tie with an exclusivity
+oracle that proves opposite flag/item values and disjoint numeric ranges, names no
+character, stranded speaker dialogue, a `set_active_dialogue` target with no forced offer,
+a forced offer that can be out-ranked) plus `MIGRATE` and `migrate-character-dialogues`,
+rename `dialogue-availablewhen-dangling` to `offer-when-dangling`, and drop the `LADDER`
+cases. Two new parity artefacts ship beside them: every validator case now carries
+`expected.full.json` (the reference validator's whole output) with
+`validator/known_divergences.json` naming the few legitimate differences, and
+`conformance/migrate_ladders/vectors.json` pins the migration itself. A port that only
+reads 0.14 projects can ignore the migration vectors.
+
+One capability is gone, deliberately: a dialogue is offered by **one** character
+(`offer.character ?? speakerId`), where a ladder could list the same dialogue under two.
+The migration reports the second listing as `CONFLICT` and drops it; give each character
+its own short routing scene that jumps to the shared one if two characters must open it.
+
+### 2. Checks gain conditional modifiers (additive, NOT safe to skip)
+
+**What changed.** `Check` gains an optional `modifiers: { when: Condition, bonus: int,
+label? }[]`. Every modifier whose `when` holds adds its `bonus` to the check total (active:
+`roll + skill + Σbonus ≥ difficulty`; passive reveal: `skill + Σbonus ≥ difficulty`);
+`difficulty` stays the fixed DC and bonuses sum. `CheckResult` gains `bonus` and
+`appliedModifiers`, present only when the check declares a modifier.
+
+**Why additive but not ignorable.** Like `DialogueNode.showIf` (0.11.0), a project that uses
+the field renders wrong on a runtime that ignores it — the odds and pass/fail silently move.
+A port that reads "additive" and skips this release is *wrong*, not merely behind.
+
+**Detection.** `grep -rl '"modifiers"' data/dialogues` — if any dialogue check carries the
+field, the runtime must implement it.
+
+**What a port must do.** Implement the modifier sum (a shared `checkBonus` helper);
+thread a `project` into `resolveCheck` (a `quest`/`questOutcome` `when` needs it, and the
+reference implementation throws if a check with modifiers is resolved without one); add
+`passiveCheckPasses` for the passive reveal threshold; re-vendor `conformance/resolve_check.json`
+(now 24 vectors, some carrying `project`), `conformance/choose_choice.json`, and the six new
+`check-modifier-*` / `check-difficulty-*-bonus` validator cases. `check.modifiers[].when` is a
+new condition site — walk it wherever conditions are walked.
+
+---
+
 ## 0.13.0 — one conformance vector added; no new rule
 
 `tooling/conformance/` gains a regression-guard case, `npc-interactable-dialogue-places`,

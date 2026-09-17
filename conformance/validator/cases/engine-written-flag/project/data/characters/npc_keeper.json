@@ -1,10 +1,5 @@
 {
   "archetype": "keeper",
-  "dialogues": [
-    {
-      "dialogue": "dlg_meet"
-    }
-  ],
   "id": "npc_keeper",
   "name": "The Keeper"
 }

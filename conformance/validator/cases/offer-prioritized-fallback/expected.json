@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "OFFER",
+      "contains": "priority 1 but no 'when'",
+      "severity": "warning"
+    }
+  ]
+}

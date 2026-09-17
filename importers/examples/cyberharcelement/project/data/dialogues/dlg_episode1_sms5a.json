@@ -39,6 +39,9 @@
       "text": "Pour ma part, je ne souhaite plus te parler. Adieu !"
     }
   ],
+  "offer": {
+    "character": "char_hakim"
+  },
   "replayable": false,
   "title": "Sms5a"
 }

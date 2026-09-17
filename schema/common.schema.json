@@ -515,12 +515,41 @@
         "acknowledgedLockout": {
           "type": "boolean",
           "description": "Only meaningful with kind:'oneshot'. Declares that content reachable only by passing this check is INTENDED to be unreachable on a fail — an identity moment the player meets as whoever they are. Suppresses the REACH oneshot-lockout warning for the nodes behind it, so a project with a legitimate one-shot fork can still run --strict."
+        },
+        "modifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/checkModifier"
+          },
+          "description": "Conditional bonuses, summed over every modifier whose `when` holds and added to the check total (active: roll + skill + Σbonus ≥ difficulty; passive: skill + Σbonus ≥ difficulty). `difficulty` stays the fixed DC. Per-check, not global."
         }
       },
       "required": [
         "mode",
         "skill",
         "difficulty"
+      ],
+      "additionalProperties": false
+    },
+    "checkModifier": {
+      "type": "object",
+      "description": "One conditional adjustment to a check: `bonus` is added to the total when `when` holds (evaluated against state AFTER the choice's effects).",
+      "properties": {
+        "when": {
+          "$ref": "#/definitions/condition"
+        },
+        "bonus": {
+          "type": "integer",
+          "description": "Added to the check total. Negative = harder."
+        },
+        "label": {
+          "type": "string",
+          "description": "Author-facing name for odds breakdowns. Not player-facing."
+        }
+      },
+      "required": [
+        "when",
+        "bonus"
       ],
       "additionalProperties": false
     },

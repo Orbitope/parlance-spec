@@ -83,15 +83,18 @@ positional cases above, which are a different problem: the guard maps, the
 
 ## 4. Validator state
 
-**Zero errors.** 173 warnings:
+**Zero errors.** 172 warnings:
 
 | n | code | why |
 |---|---|---|
 | 159 | `REACH` | Nodes a player can no longer reach. See below — eight diverts, not a hundred problems. |
 | 8 | `FLAG` | Downstream of the dropped `raise`/`lower` calls: flags set but never read, and one read but never set. |
 | 4 | `FLOW` | A node where every choice has a `showIf` — the player may be stuck if none passes. True of the source too, where a read-count fallback covered it. |
-| 1 | `LADDER` | The one character's dialogue list is ungated, so its first rung wins forever. |
 | 1 | `COND` | A conditional node carries `onEnter` effects, which do not fire when it is skipped (advisory). |
+
+The source gave the one character no conditions, so its single dialogue converts to a
+plain fallback `offer` (no `when`) — the offer model expresses "always available" directly,
+with no finding, where the old ladder reported it as a first-rung-wins-forever `LADDER`.
 
 ### What a player can reach — 387 of 546
 

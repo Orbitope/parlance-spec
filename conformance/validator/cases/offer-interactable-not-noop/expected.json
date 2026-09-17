@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "LOC",
+      "contains": "no-op"
+    }
+  ],
+  "noErrors": true
+}

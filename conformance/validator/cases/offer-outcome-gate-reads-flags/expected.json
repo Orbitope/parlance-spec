@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "FLAG",
+      "contains": "saw_omen"
+    }
+  ],
+  "noErrors": true
+}

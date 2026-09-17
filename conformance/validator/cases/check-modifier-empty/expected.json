@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "CHECK",
+      "contains": "empty modifiers",
+      "severity": "warning"
+    }
+  ]
+}

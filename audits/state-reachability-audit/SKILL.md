@@ -208,11 +208,13 @@ ROUTES = {}
 def _route(did, label, cond):
     if did: ROUTES.setdefault(did, []).append((label, cond))
 
-for p in ents("characters"):
-    try: ch = json.load(open(p, encoding="utf-8"))
+for p in ents("dialogues"):
+    try: d = json.load(open(p, encoding="utf-8"))
     except Exception: continue
-    for i, r in enumerate(ch.get("dialogues") or []):
-        _route(r.get("dialogue"), f"ladder {ch.get('id')}[{i}]", r.get("showIf"))
+    offer = d.get("offer")
+    if isinstance(offer, dict):
+        who = offer.get("character") or d.get("speakerId")
+        _route(d.get("id"), f"offer for {who}", offer.get("when"))
 
 for p in ents("locations"):
     try: loc = json.load(open(p, encoding="utf-8"))
@@ -234,17 +236,17 @@ for p in ents("cutscenes"):
 
 # set_active_dialogue is deliberately NOT indexed as a route. It does not enter
 # o["dialogue"] at runtime: it sets active_dialogue__{character} and the
-# character's LADDER then resolves (validate.py registers exactly that flag).
+# character's OFFERS then resolve (validate.py registers exactly that flag).
 # Treating each one as an independent ungated route invented duplicates of the
-# ladder rung already indexed above and, because the guarantee set is an
-# intersection across routes, zeroed guarantees that genuinely hold.
+# offer already indexed above and, because the guarantee set is an intersection
+# across routes, zeroed guarantees that genuinely hold.
 
 def entry_gates(did):
-    """Every route by which this dialogue can be entered, with its gate."""
-    gates = list(ROUTES.get(did, []))
-    _, d = dialogues[did]
-    if d.get("availableWhen"): gates.append(("availableWhen", d["availableWhen"]))
-    return gates
+    """Every route by which this dialogue can be entered, with its gate.
+
+    A dialogue's own `offer.when` is already indexed as an 'offer for …' route
+    above, so it is not re-added here."""
+    return list(ROUTES.get(did, []))
 
 def analyse(did):
     path, d = dialogues[did]
@@ -434,9 +436,9 @@ Read this before reporting anything, and state the limits in your report.
   did in other conversations except as those set flags read by the gates. Untracked
   world state — who is where, what a cutscene showed — is invisible to it.
 - `set_active_dialogue` is **not** an entry route. It sets `active_dialogue__{character}`
-  and the character's ladder resolves from there, so the ladder rung that reads that flag
-  is the route — counting each effect as its own ungated route invented duplicates and,
-  because guarantees are intersected across routes, erased guarantees that genuinely held.
+  and the character's offers resolve from there, so the offer that reads that flag is the
+  route — counting each effect as its own ungated route invented duplicates and, because
+  guarantees are intersected across routes, erased guarantees that genuinely held.
 
 ## 2. Establish the premise
 

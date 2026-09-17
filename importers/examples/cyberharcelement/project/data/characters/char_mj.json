@@ -1,12 +1,4 @@
 {
-  "dialogues": [
-    {
-      "dialogue": "dlg_episode2_start"
-    },
-    {
-      "dialogue": "dlg_episode2_chat1"
-    }
-  ],
   "id": "char_mj",
   "name": "MJ"
 }

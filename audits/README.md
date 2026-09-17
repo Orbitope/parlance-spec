@@ -12,7 +12,7 @@ behaves identically.
 ## The five rules these audits run on
 
 **1. They never write your prose.** No audit drafts a line, rewrites a line, or
-suggests replacement text. A finding names a *structural* fix — reorder this rung,
+suggests replacement text. A finding names a *structural* fix — retune this offer,
 change this gate, this line asserts something the player can't know here — and stops.
 The words are yours. This is a hard rule, restated in every skill, and it is the
 first thing to check if you fork one.
@@ -30,7 +30,7 @@ you already wrote down:
 |---|---|
 | `character-voice-audit` | the character's own `dialogueStyle` field |
 | `quest-journal-audit` | the tense rule stated in `quest.schema.json` |
-| `ladder-audit` | your stated arc for the character |
+| `offer-audit` | your stated arc for the character |
 | `state-reachability-audit` | what the dialogue graph proves the player can know |
 | `character-presence-audit` | the payoff scene you wrote, measured against its setup |
 | `cookbook-conformance-audit` | the pattern cookbook recipe each site is reaching for |

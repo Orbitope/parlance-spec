@@ -1,9 +1,4 @@
 {
-  "dialogues": [
-    {
-      "dialogue": "dlg_episode1_start"
-    }
-  ],
   "id": "char_professor",
   "name": "Professor"
 }

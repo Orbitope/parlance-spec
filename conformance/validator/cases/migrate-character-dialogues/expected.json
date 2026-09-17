@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "code": "MIGRATE",
+      "contains": "migrate_ladders",
+      "severity": "error"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "SCHEMA"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "OFFER",
+      "contains": "none is unconditional",
+      "severity": "warning"
+    }
+  ]
+}

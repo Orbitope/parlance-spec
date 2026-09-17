@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "OFFER",
+      "contains": "names no character",
+      "severity": "warning"
+    }
+  ]
+}

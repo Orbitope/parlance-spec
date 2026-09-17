@@ -1,0 +1,61 @@
+{
+  "entry": "node_open",
+  "id": "dlg_meet",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "goto": "node_close",
+          "id": "ch_listen",
+          "text": "Listen."
+        },
+        {
+          "check": {
+            "dice": "2d6",
+            "difficulty": 14,
+            "mode": "active",
+            "modifiers": [
+              {
+                "bonus": 2,
+                "when": {
+                  "flag": "met_keeper",
+                  "type": "flag",
+                  "value": true
+                }
+              }
+            ],
+            "onFailure": "node_close",
+            "onSuccess": "node_close",
+            "skill": "observation"
+          },
+          "id": "ch_mod",
+          "text": "[Observation] Read the room."
+        }
+      ],
+      "id": "node_open",
+      "onEnter": [
+        {
+          "flag": "met_keeper",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "The keeper looks up."
+    },
+    {
+      "id": "node_close",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "flag": "heard_story",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "They tell you what they saw."
+    }
+  ],
+  "offer": {},
+  "speakerId": "npc_keeper",
+  "title": "Meeting the Keeper"
+}

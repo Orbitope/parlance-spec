@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "npc_ghost",
+      "severity": "error"
+    }
+  ]
+}

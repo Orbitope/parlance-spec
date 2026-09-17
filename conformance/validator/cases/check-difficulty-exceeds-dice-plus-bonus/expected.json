@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "GATE",
+      "contains": "even with +2 from modifiers",
+      "severity": "warning"
+    }
+  ]
+}

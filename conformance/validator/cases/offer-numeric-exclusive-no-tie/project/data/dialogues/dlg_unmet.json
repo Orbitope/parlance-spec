@@ -1,0 +1,24 @@
+{
+  "entry": "n1",
+  "id": "dlg_unmet",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Unmet."
+    }
+  ],
+  "offer": {
+    "character": "npc_flagged",
+    "when": {
+      "of": {
+        "flag": "met_keeper",
+        "type": "flag",
+        "value": true
+      },
+      "type": "not"
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_unmet"
+}

@@ -1,0 +1,15 @@
+{
+  "must": [
+    {
+      "code": "OFFER",
+      "contains": "routes nothing",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "LOGIC",
+      "contains": "speaker mismatch"
+    }
+  ]
+}

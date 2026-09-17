@@ -246,7 +246,7 @@ Only structural defects:
 
 - dangling `goto`/`next`/`entry` ids, missing nodes, unregistered variables
 - a variable registered with the wrong kind (flag vs counter vs text)
-- ladder/entry wiring so the dialogue is reachable
+- offer/entry wiring so the dialogue is reachable
 - schema-shape errors (a required field with a structural value, e.g. `entry`)
 
 Never repair a defect by writing prose, inventing an id, or altering a source line.

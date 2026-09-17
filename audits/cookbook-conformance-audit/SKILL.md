@@ -24,12 +24,14 @@ choice, set this flag on that beat — and stop there.
 Three walkers already cover most of this ground. Keep the boundary crisp or you will
 re-report their findings as noise:
 
-- **The validator** owns *invalid*: dangling ids, dead rungs below an unconditional one, a
-  top rung whose effects re-fire forever, the FLOW rule (a `showIf` node must have `next`
-  and must not have `choices`/`isEnd`). Run `python tooling/validate.py` first. This audit
+- **The validator** owns *invalid*: dangling ids, a character with no fallback offer, a
+  prioritized fallback that shadows every lower tier forever, the FLOW rule (a `showIf` node
+  must have `next` and must not have `choices`/`isEnd`). Run `python tooling/validate.py`
+  first. This audit
   assumes a clean validator and never repeats it.
-- **`ladder-audit`** owns *intent*: whether a ladder's ordering tells the character's arc.
-  It needs a stated arc. This audit needs no arc — its anchor is the recipe, not the story.
+- **`offer-audit`** owns *intent*: whether a character's dialogue offers resolve to the
+  intended arc. It needs a stated arc. This audit needs no arc — its anchor is the recipe,
+  not the story.
 - **This audit** owns the seam between them: arrangements that are valid and say nothing
   about arc, but still do the wrong thing because a recipe was followed most of the way and
   not all of it. The effect on a skipped node. The choice that forgets to spend itself.
@@ -82,7 +84,7 @@ def walk(o, path=""):
 def cond_summary(c):
     return json.dumps(c) if c else "NONE"
 
-# --- who writes what, anywhere in the project (the same map ladder-audit builds) ---
+# --- who writes what, anywhere in the project (the same map offer-audit builds) ---
 writers = {}
 for p in all_json():
     doc = load(p)
@@ -219,30 +221,35 @@ if not hitB:
 
 # ============================================================================
 # C. Say-it-once flag on a skippable branch — recipe 1 pitfall: "set the flag on
-#    a beat the player actually reaches." An intro rung gated `not flag=true` with
-#    an unconditional rung below it, where the flag is not set on every ending.
+#    a beat the player actually reaches." An intro offer gated `not flag=true` with
+#    a fallback offer for the same character, where the flag is not set on every ending.
 # ============================================================================
 print("\n" + "=" * 74)
 print("C. SAY-IT-ONCE FLAG PLACEMENT  (cookbook recipe 1 — 'set the flag on a beat")
-print("   the player actually reaches'). Intro rung gated on `not flag`; if the flag")
-print("   is not set on every ending of the intro, some paths replay the intro.")
+print("   the player actually reaches'). Intro OFFER gated on `not flag`, with a")
+print("   fallback offer for the same character; if the flag is not set on every")
+print("   ending of the intro, some paths replay the intro.")
 print("=" * 74)
 hitC = 0
-for p in sorted(g.glob(os.path.join(DATA, "characters", "**", "*.json"), recursive=True)):
-    ch = load(p)
-    if not isinstance(ch, dict): continue
-    ladder = ch.get("dialogues") or []
-    has_fallthrough_below = lambda i: any(not r.get("showIf") for r in ladder[i + 1:])
-    for i, rung in enumerate(ladder):
-        for kind, name in unset_gates(rung.get("showIf")):
-            if kind != "flag" or not has_fallthrough_below(i): continue
-            intro_id = rung.get("dialogue")
+# character id -> [(dialogue_id, offer)] for every dialogue offering for them
+offers_by_char = {}
+for did, d in dlg_by_id.items():
+    offer = d.get("offer")
+    if not isinstance(offer, dict): continue
+    key = offer.get("character") or d.get("speakerId")
+    if key: offers_by_char.setdefault(key, []).append((did, offer))
+for cid, offers in sorted(offers_by_char.items()):
+    has_fallback = any(not off.get("when") for _did, off in offers)
+    if not has_fallback: continue   # no shorter dialogue to fall through to
+    for intro_id, off in offers:
+        for kind, name in unset_gates(off.get("when")):
+            if kind != "flag": continue
             intro = dlg_by_id.get(intro_id)
             flip_key = f"flag:{name}=True"
             all_sites = writers.get(flip_key) or []
             hitC += 1
-            print(f"\n  {os.path.basename(p)}  character {ch.get('id')}")
-            print(f"    say-it-once rung [{i}] {intro_id}  gated on `not flag {name}`")
+            print(f"\n  character {cid}")
+            print(f"    say-it-once offer {intro_id}  gated on `not flag {name}` (with a fallback offer)")
             if not all_sites:
                 print(f"    *** flag {name!r} is set by NOTHING — the intro plays every time ***")
             if intro is None:
@@ -294,7 +301,7 @@ flag your own recommendation instead of making it.
 In this order:
 
 1. **Recipe coverage** — one line: which recipes the project uses that this audit checks
-   (say-it-once ladders found, `showIf` nodes with effects, gated one-shot choices). This
+   (say-it-once offers found, `showIf` nodes with effects, gated one-shot choices). This
    makes "found nothing" legible as *checked and clean* rather than *did not look*.
 2. **Findings** — real issues only, each as: *the recipe and its pitfall* → *the site in the
    data* → *the play-experience symptom* → *the structural fix*. No praise, no filler.
@@ -309,8 +316,8 @@ In this order:
   `node_brief`, which is skipped on every re-entry because its `showIf` fails once
   `seen_brief` is set, so a returning player never gets the XP" is.
 - **Mechanical validity is the validator's.** If a candidate is actually *invalid* (a
-  `showIf` node with `choices`, a dead rung), note it in one line and defer — do not dress
-  it as a cookbook finding.
+  `showIf` node with `choices`, a character with no fallback offer), note it in one line and
+  defer — do not dress it as a cookbook finding.
 - **Advisory, always.** You advise; the author decides. A skipped effect, a one-shot that
   spends elsewhere, a cold-open ending — each can be intent. Flag and ask.
 - **Never propose dialogue text.** "Move the `set_flag` to `node_office_seen`" is the

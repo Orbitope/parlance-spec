@@ -71,7 +71,7 @@
           },
           "character": {
             "$ref": "common.schema.json#/definitions/id",
-            "description": "For npc: runtime resolves the character's dialogue ladder (resolveCharacterDialogue)."
+            "description": "For npc: runtime resolves the character's offered dialogue (resolveCharacterDialogue)."
           },
           "showIf": { "$ref": "common.schema.json#/definitions/condition" },
           "trigger": {

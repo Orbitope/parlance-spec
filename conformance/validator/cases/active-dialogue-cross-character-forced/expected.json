@@ -1,0 +1,17 @@
+{
+  "mustNot": [
+    {
+      "code": "LOGIC",
+      "contains": "speaker mismatch"
+    },
+    {
+      "code": "OFFER",
+      "contains": "routes nothing"
+    },
+    {
+      "code": "OFFER",
+      "contains": "can be out-ranked"
+    }
+  ],
+  "noErrors": true
+}

@@ -1120,6 +1120,9 @@
       "text": "SKIP"
     }
   ],
+  "offer": {
+    "character": "char_cpe"
+  },
   "replayable": false,
   "title": "Start"
 }

@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "CHECK",
+      "contains": "bonus 0",
+      "severity": "warning"
+    }
+  ]
+}

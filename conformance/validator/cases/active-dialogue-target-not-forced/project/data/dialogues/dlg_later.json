@@ -1,0 +1,20 @@
+{
+  "entry": "n1",
+  "id": "dlg_later",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Later."
+    }
+  ],
+  "offer": {
+    "when": {
+      "flag": "heard_story",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_later"
+}

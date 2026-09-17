@@ -1,0 +1,8 @@
+{
+  "mustNot": [
+    {
+      "code": "GATE",
+      "contains": "exceeds max roll"
+    }
+  ]
+}

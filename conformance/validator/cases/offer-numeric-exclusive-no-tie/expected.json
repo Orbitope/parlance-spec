@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "OFFER",
+      "contains": "not provably exclusive"
+    }
+  ],
+  "noErrors": true
+}

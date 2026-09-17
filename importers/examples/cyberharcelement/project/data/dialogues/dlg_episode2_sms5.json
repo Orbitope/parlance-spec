@@ -189,6 +189,9 @@
       "text": "Trop bien ! J’adore !"
     }
   ],
+  "offer": {
+    "character": "char_alex"
+  },
   "replayable": false,
   "title": "Sms5"
 }

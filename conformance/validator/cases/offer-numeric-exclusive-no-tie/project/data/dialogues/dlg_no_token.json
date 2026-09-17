@@ -1,0 +1,21 @@
+{
+  "entry": "n1",
+  "id": "dlg_no_token",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "No token."
+    }
+  ],
+  "offer": {
+    "character": "npc_holder",
+    "when": {
+      "has": false,
+      "item": "it_token",
+      "type": "item"
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_no_token"
+}

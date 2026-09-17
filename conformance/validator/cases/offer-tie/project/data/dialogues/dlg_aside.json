@@ -1,0 +1,20 @@
+{
+  "entry": "n1",
+  "id": "dlg_aside",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Something else."
+    }
+  ],
+  "offer": {
+    "when": {
+      "flag": "met_keeper",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_aside"
+}

@@ -1,0 +1,20 @@
+{
+  "entry": "n1",
+  "id": "dlg_aside",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "After the omen."
+    }
+  ],
+  "offer": {
+    "when": {
+      "outcome": "out_done",
+      "quest": "qst_errand",
+      "type": "questOutcome"
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_aside"
+}

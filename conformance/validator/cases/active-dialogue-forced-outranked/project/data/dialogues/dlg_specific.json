@@ -1,0 +1,30 @@
+{
+  "entry": "n1",
+  "id": "dlg_specific",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Specific."
+    }
+  ],
+  "offer": {
+    "when": {
+      "of": [
+        {
+          "flag": "met_keeper",
+          "type": "flag",
+          "value": true
+        },
+        {
+          "flag": "heard_story",
+          "type": "flag",
+          "value": true
+        }
+      ],
+      "type": "all"
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_specific"
+}

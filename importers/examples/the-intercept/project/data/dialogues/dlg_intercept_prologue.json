@@ -4945,6 +4945,9 @@
       "text": "With that, he hustles me out of the door and I can't help thinking that, with a little more strategy, I could still have won the day. But too late now, of course."
     }
   ],
+  "offer": {
+    "character": "char_he_has_brought_two_cups_of_tea_in_metal_mugs"
+  },
   "replayable": false,
   "title": "_prologue"
 }

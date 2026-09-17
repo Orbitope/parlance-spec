@@ -1,0 +1,21 @@
+{
+  "entry": "n1",
+  "id": "dlg_regular",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Regular."
+    }
+  ],
+  "offer": {
+    "when": {
+      "counter": "keeper_talks",
+      "op": ">=",
+      "type": "counter",
+      "value": 10
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_regular"
+}

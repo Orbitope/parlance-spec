@@ -1,6 +1,6 @@
 ---
 name: character-presence-audit
-description: Audit whether a character has enough presence, re-entry, and player-chosen investment to carry the scenes that depend on them. Use when a character's footprint feels thin ("does X have enough dialogue?"), before or after authoring a scene whose impact depends on the player caring about someone (a death, disappearance, betrayal, reunion), or as an editorial pass over a cast. Complements ladder-audit, which judges rung ORDERING; this one judges presence, weight, and reachability.
+description: Audit whether a character has enough presence, re-entry, and player-chosen investment to carry the scenes that depend on them. Use when a character's footprint feels thin ("does X have enough dialogue?"), before or after authoring a scene whose impact depends on the player caring about someone (a death, disappearance, betrayal, reunion), or as an editorial pass over a cast. Complements offer-audit, which judges dialogue-offer SALIENCY; this one judges presence, weight, and reachability.
 ---
 
 # Character Presence Audit
@@ -8,10 +8,10 @@ description: Audit whether a character has enough presence, re-entry, and player
 Answers a question no static check can: **has this character been established enough
 to carry what the story asks of them, and did the player get any say in it?**
 
-This is not `ladder-audit`, which traces a ladder's *ordering*. Run that for "does this
-ordering tell the story I meant." Run *this* for "is there enough here at all, and
-could the player choose to spend time with them." A ladder can be perfectly ordered and
-still describe a character the player never had a relationship with.
+This is not `offer-audit`, which traces a character's dialogue-offer *saliency*. Run that
+for "do these offers resolve to the story I meant." Run *this* for "is there enough here at
+all, and could the player choose to spend time with them." A character's offers can resolve
+perfectly and still describe a character the player never had a relationship with.
 
 Run it after the mechanical gates are clean, so you are judging content rather than
 chasing broken references.
@@ -22,7 +22,7 @@ it would cost. It never drafts the missing content.
 ## 1. Measure first — never eyeball a footprint
 
 "How many dialogues does X have?" is the wrong unit and will mislead you. A character's
-ladder lists the conversations they *own*; most characters also speak inside scenes
+offers list the conversations they *own*; most characters also speak inside scenes
 owned by nobody. Count spoken nodes and words across every file, and count where they
 are *named* separately.
 
@@ -265,22 +265,27 @@ placed = {}
 for p in ents("locations"):
     for it in json.load(open(p)).get("interactables", []) or []:
         if it.get("character"): placed.setdefault(it["character"], []).append(bool(it.get("showIf")))
+# character id -> [dialogue dict] for every dialogue that OFFERS for them
+offers_by_char = {}
+for dd in _dlg_by_id.values():
+    offer = dd.get("offer")
+    if not isinstance(offer, dict): continue
+    who = offer.get("character") or dd.get("speakerId")
+    if who: offers_by_char.setdefault(who, []).append(dd)
 print(f"{'character':<26}{'nodes':>6}{'words':>7}{'files':>6}{'top':>6}"
-      f"{'rungs':>7}{'reentry':>9}  placed")
+      f"{'offers':>7}{'reentry':>9}  placed")
 for cid in sorted(chars):
     if cid not in spoken and cid not in placed: continue
     n, w, files = spoken.get(cid, [0, 0, set()])
     reent = 0
-    for r in chars[cid].get("dialogues") or []:
-        dd = _dlg_by_id.get(r["dialogue"])
-        if dd is None: continue
+    for dd in offers_by_char.get(cid) or []:
         fx = any(x.get("onEnter") for x in dd["nodes"]) or \
              any(c.get("effects") for x in dd["nodes"] for c in (x.get("choices") or []))
         if dd.get("replayable") and not fx: reent += 1
     dd_words = by_dlg.get(cid) or {}
     top = f"{max(dd_words.values())/w:.0%}" if w and dd_words else "-"
     print(f"{cid:<26}{n:>6}{w:>7}{len(files):>6}{top:>6}"
-          f"{len(chars[cid].get('dialogues') or []):>7}{reent:>9}  {len(placed.get(cid, []))}")
+          f"{len(offers_by_char.get(cid) or []):>7}{reent:>9}  {len(placed.get(cid, []))}")
 PY
 ```
 
@@ -319,20 +324,20 @@ Two projects is not a sample. If you calibrate a number from your own corpus, wr
 into `AUDIT_CONVENTIONS.md`, where it will at least be yours.
 
 **B. Any re-entry at all — but only where re-entry is owed.** Does the character have a
-rung the player can return to and simply *visit* — no plot, no flags, no effects?
+dialogue the player can return to and simply *visit* — no plot, no flags, no effects?
 
 **Do not flag this blindly.** Split the cast first, because the honest answer differs:
 
 - **Persisting characters** — placed somewhere the player revisits, met across several
-  beats, meant to be known. Missing an idle rung here is a real gap: they have no
+  beats, meant to be known. Missing an idle offer here is a real gap: they have no
   relationship, only appointments.
 - **One-way hinge characters** — they appear at a single consequential scene and are
   done. Consequential scenes are often one-way, and not every re-entry owes the player
-  content; the truthful post-state is silence or a soft refusal. Their one-shot rungs
+  content; the truthful post-state is silence or a soft refusal. Their one-shot dialogues
   are correct, and gating them was a fix rather than a defect.
 
 The discriminator is whether the character is still in the world after their scene.
-Flag only the first kind. Expect the measurement to report "no re-enterable rung" for
+Flag only the first kind. Expect the measurement to report "no re-enterable offer" for
 several characters of whom only one is a finding.
 
 **C. Mandatory versus chosen.** If every scene is on the critical path, the player never
@@ -362,15 +367,15 @@ reference and only the text can say. The audit's job here is to stop you countin
 number it cannot justify.
 
 **E. Absence enforced where?** If a character leaves the story, check *what* removes
-them: a ladder rung, the interactable's `showIf`, or both. Absence enforced **only** at
+them: an offer's `when`, the interactable's `showIf`, or both. Absence enforced **only** at
 the placement layer is fragile — delete one `showIf` and they walk back into the scene
 about their own disappearance. Prefer belt-and-braces: gate the placement AND give the
-ladder a terminal rung, even when that rung has nothing to say.
+character a terminal offer, even when that offer has nothing to say.
 
-**F. Does the ladder contradict the placement?** Resolve the ladder against the states
-the character is actually placed in. A rung that only wins in a state where they are
-unplaced is dead in practice, and the static dead-rung check cannot see it because the
-two live in different files.
+**F. Do the offers contradict the placement?** Resolve the character's offers against the
+states they are actually placed in. An offer that only wins in a state where they are
+unplaced is dead in practice, and the static offer checks cannot see it because the two
+live in different files.
 
 *(Voice and register consistency used to be a seventh check here. It is now
 `character-voice-audit`, which is anchored on `dialogueStyle` and calibrates before it
@@ -380,11 +385,11 @@ running it alongside this audit is usually worth it.)*
 ## 3. What good looks like
 
 - Establishing content is at least comparable to the payoff that leans on it.
-- At least one re-enterable, effect-free rung exists for any character the player is
+- At least one re-enterable, effect-free offer exists for any character the player is
   meant to care about.
 - Some presence is player-chosen, not all of it mandatory.
 - If a name-recognition beat exists, the name is in choice text.
-- Absence is enforced in both the ladder and the placement.
+- Absence is enforced in both the offers and the placement.
 
 ## 4. Reporting
 
@@ -398,12 +403,12 @@ from being unremarkable, extra story actively damages the beat — it converts a
 eerie hole into a conventional death scene, which is both a weaker scene and a far more
 common one. More *ordinary* is usually right; more *important* usually is not.
 
-Any rung you recommend should be effect-free and flagless. The moment an idle rung
-carries an effect it stops being safe to re-enter, and a rung that changes the world
+Any offer you recommend should be effect-free and flagless. The moment an idle offer
+carries an effect it stops being safe to re-enter, and an offer that changes the world
 must not be able to win twice.
 
-**Say what is missing. Do not write it.** "One short re-enterable idle rung under the
-day rungs, carrying nothing" is the finding. What that rung says is the author's.
+**Say what is missing. Do not write it.** "One short re-enterable idle offer beside the
+day dialogues, carrying nothing" is the finding. What that dialogue says is the author's.
 
 ## 5. Worked example — the finding this audit exists for
 
@@ -416,12 +421,12 @@ land hard. Invented numbers, real shape:
   the loss land — the last ordinary conversation — is a handful of lines.
 - The payoff scene is several times the size of everything establishing it. Setup to
   payoff around 1:5 (check A).
-- **Zero re-enterable rungs.** Every conversation is non-replayable *and* mandatory,
+- **Zero re-enterable offers.** Every conversation is non-replayable *and* mandatory,
   because each one fires the cutscene that advances the story (checks B and C).
-- Their absence afterwards is enforced **only** by the interactable's gate. The ladder
-  still resolves to an earlier conversation, so deleting that one gate puts them back on
+- Their absence afterwards is enforced **only** by the interactable's gate. Their offers
+  still resolve to an earlier conversation, so deleting that one gate puts them back on
   screen, talking normally, over the scene about their disappearance (check E).
 
 The recommendation was **not** more scenes with them. It was one short re-enterable idle
-rung under the others, carrying nothing, plus a defensive terminal rung so the absence is
-not one `showIf` away from breaking.
+offer beside the others, carrying nothing, plus a defensive terminal offer so the absence
+is not one `showIf` away from breaking.

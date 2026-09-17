@@ -128,11 +128,12 @@ import {
 ```
 
 **`resolveCharacterDialogue` is how you decide what a character says next**, and a port
-that omits it has no answer to that question. Walk the character's ordered `dialogues`
-ladder and take the first rung whose `showIf` passes; an absent `showIf` always matches.
-It is the canonical discovery path and the only one with conformance vectors. See
-RUNTIME_CONTRACT's ladder section — `selectDialogue` (dialogue-level `availableWhen`) is
-an escape hatch, not a second system to implement first.
+that omits it has no answer to that question. Gather the dialogues that OFFER for the
+character (`offer.character ?? speakerId`), drop those whose `offer.when` fails and any
+visited non-`replayable` one, and pick the most salient — highest priority tier, then
+highest condition specificity, then lowest id. It is the canonical discovery path and the
+only one with conformance vectors. See RUNTIME_CONTRACT's offers section for the exact
+ranking.
 
 ### `createDefaultState(project) → GameState`
 
@@ -185,21 +186,29 @@ played (effects applied, field cleared). Never serialize partial playback — sa
 mid-cutscene just replays it on load. `pendingCutscene` round-trips through
 `serializeState`/`deserializeState` (present only while queued; omitted once cleared).
 
-### `resolveCheck(check, state, rng) → CheckResult`
+### `resolveCheck(check, state, rng, defaultDice?, criticals?, project?) → CheckResult`
 
 Roll an active skill check. Dice are `NdM`, defaulting to `1d20`: each die is
 `floor(rng() * M) + 1` and they are summed, so a `2d6` check consumes **two** `rng()`
 calls in order — the call order is part of the contract. Precedence is per-check
-`check.dice` > project `rules.check.dice` > `1d20`. `total = roll + skillValue`,
+`check.dice` > project `rules.check.dice` > `1d20`. `total = roll + skillValue + Σbonus`,
 `passed = total >= difficulty`. `rng()` must return a value in `[0, 1)`. With
 `rules.check.criticals` on, an all-minimum roll always fails and an all-maximum roll
 always succeeds, judged per face rather than on the sum. Passive checks are
-display-only — pass a plain `goto` through `chooseChoice` instead of calling this.
+display-only — pass a plain `goto` through `chooseChoice` instead of calling this, and use
+`passiveCheckPasses(check, state, project)` (`skill + Σbonus >= difficulty`) for the reveal.
+
+**Modifiers.** `check.modifiers` is an optional `{ when, bonus, label? }[]`; every modifier
+whose `when` holds adds its `bonus` to the total (`difficulty` stays the DC). A check with
+modifiers must be resolved with a `project` (a `quest`/`questOutcome` `when` needs it).
+`CheckResult.bonus` and `appliedModifiers` are present only when the check declares a
+modifier, so pre-existing checks are unaffected.
 
 ```ts
 type CheckResult = {
   passed: boolean; roll: number; total: number; skillValue: number;
   dice: string; critical?: "success" | "failure";
+  bonus?: number; appliedModifiers?: number[];  // present iff the check declares ≥1 modifier
 };
 ```
 

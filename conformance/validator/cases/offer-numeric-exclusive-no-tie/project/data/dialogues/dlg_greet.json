@@ -1,0 +1,14 @@
+{
+  "entry": "n1",
+  "id": "dlg_greet",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Hello again."
+    }
+  ],
+  "offer": {},
+  "speakerId": "npc_keeper",
+  "title": "dlg_greet"
+}

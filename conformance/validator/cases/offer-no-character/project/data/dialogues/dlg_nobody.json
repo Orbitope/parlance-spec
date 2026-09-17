@@ -1,0 +1,12 @@
+{
+  "entry": "node_a",
+  "id": "dlg_nobody",
+  "nodes": [
+    {
+      "id": "node_a",
+      "isEnd": true,
+      "text": "Spoken by no one, offered to no one."
+    }
+  ],
+  "offer": {}
+}

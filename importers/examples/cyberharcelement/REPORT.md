@@ -71,14 +71,18 @@ were declared loss too.
 
 ## 4. Validator state
 
-**Zero errors.** 163 warnings, none of them a defect in the conversion:
+**Zero errors.** 104 warnings, none of them a defect in the conversion:
 
 | n | code | why |
 |---|---|---|
 | 98 | `REACH` | Nodes reachable only through `addMessage` / `addNodeOption` — custom Yarn commands driving the game's own inbox UI. Parlance has no equivalent, so those scenes are in the project but nothing routes to them. |
-| 59 | `LADDER` | A character's dialogues are ordered but ungated, because the source never gave a condition. The first rung wins forever. Real, and not something to paper over with an invented gate. |
 | 4 | `FLAG` | Downstream of the dropped absolute-counter and function-call gates: `didsharebad` and `didsharegood` are read but never set. |
 | 2 | `TEXT` | `bg` and `time` are set by the story and never interpolated into a line — they drive the game's backdrop, not its prose. |
+
+The source gave the characters' dialogues no conditions. The importer marks one dialogue
+per speaker — the first the source presents — with a bare `offer` for that character, and
+leaves the rest reachable only through the graph, so there is no finding — where the old
+character ladder reported all 59 as first-rung-wins-forever `LADDER` warnings.
 
 The `FLAG` warnings are true signals, not noise. They say the imported project
 has gates that can never open, which is exactly what dropping their setters means.
@@ -98,7 +102,10 @@ Specifically unverified here:
   *scenes* is an editorial question nobody has answered.
 - **17 characters**, one per distinct speaker name. `You`, `Narrator` and the game's
   own sentinel lines become characters like anyone else.
-- **Ladder order** within each character, taken as source order.
+- **Which dialogue each character offers.** The importer offers one per speaker (the first
+  the source presents, no gate, no priority tier); every other dialogue of that speaker is
+  reached by the jumps the source wrote. Whether that is the scene the character should
+  open with is an editorial call.
 
 ## 6. How the mapping was done
 

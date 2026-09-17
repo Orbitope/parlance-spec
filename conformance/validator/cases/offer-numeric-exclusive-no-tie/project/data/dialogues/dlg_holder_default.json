@@ -1,0 +1,16 @@
+{
+  "entry": "n1",
+  "id": "dlg_holder_default",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Hm."
+    }
+  ],
+  "offer": {
+    "character": "npc_holder"
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_holder_default"
+}

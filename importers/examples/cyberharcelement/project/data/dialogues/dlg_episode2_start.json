@@ -1389,6 +1389,9 @@
       "text": "SKIP"
     }
   ],
+  "offer": {
+    "character": "char_bryan"
+  },
   "replayable": false,
   "title": "Start"
 }

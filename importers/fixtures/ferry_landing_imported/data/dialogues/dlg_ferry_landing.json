@@ -186,6 +186,9 @@
       "text": "The boat comes back at first light with somebody else's cargo in it."
     }
   ],
+  "offer": {
+    "character": "char_ferryman"
+  },
   "replayable": false,
   "tags": [
     "story: Ferry Landing",

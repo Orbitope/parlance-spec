@@ -1,15 +1,4 @@
 {
-  "dialogues": [
-    {
-      "dialogue": "dlg_episode2_start"
-    },
-    {
-      "dialogue": "dlg_episode2_sms6"
-    },
-    {
-      "dialogue": "dlg_episode2_badendingsms"
-    }
-  ],
   "id": "char_liam",
   "name": "Liam"
 }

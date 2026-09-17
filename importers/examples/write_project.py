@@ -54,19 +54,35 @@ def variables_of(kinds, defaults, source_label):
     return {"variables": out}
 
 
-def characters_of(speakers, ladders):
-    """A character per speaker name, with its dialogues in source order.
+def characters_of(speakers):
+    """A character per speaker name (ws 17: no ladder — see offer_entries).
 
-    The ladder is ORDER ONLY — no rung carries a condition, because the source
-    never gave one. That leaves the first rung winning forever, which the
-    validator warns about and the report repeats: it is a real property of the
-    import, not something to paper over with an invented gate.
+    The flat import has no character-level conditions, so a character presents
+    exactly one dialogue: the first one they appear in, wired as that dialogue's
+    `offer` (offer_entries). The rest of a speaker's dialogues carry no character
+    link — they are reachable only through their own node graph, which is exactly
+    what "first rung winning forever" meant under the old ladder: a real,
+    honestly-reported property of the flat import, not something to paper over.
     """
-    out = {}
-    for cid, name in sorted(speakers.items()):
-        out[cid] = {"id": cid, "name": name,
-                    "dialogues": [{"dialogue": d} for d in ladders.get(cid, [])]}
-    return out
+    return {cid: {"id": cid, "name": name} for cid, name in sorted(speakers.items())}
+
+
+def offer_entries(dialogues, ladders):
+    """Mark each speaker's ENTRY dialogue (the first they appear in) as offered
+    by them (ws 17). Source dialogues carry no speakerId, so the offer names the
+    character explicitly. A dialogue that is already the entry of an earlier
+    (sorted) speaker keeps that owner — a shared first scene has one presenter.
+    Mutates and returns the dialogue list.
+    """
+    by_id = {d["id"]: d for d in dialogues}
+    for cid in sorted(ladders):
+        ids = ladders[cid]
+        if not ids:
+            continue
+        entry = by_id.get(ids[0])
+        if entry is not None and "offer" not in entry:
+            entry["offer"] = {"character": cid}
+    return dialogues
 
 
 def write_project(root, dialogues, variables, characters):

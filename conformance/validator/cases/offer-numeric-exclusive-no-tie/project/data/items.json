@@ -1,0 +1,9 @@
+{
+  "items": [
+    {
+      "description": "A token.",
+      "id": "it_token",
+      "name": "Token"
+    }
+  ]
+}

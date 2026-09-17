@@ -1,0 +1,11 @@
+{
+  "mustNot": [
+    {
+      "code": "GATE"
+    },
+    {
+      "code": "CHECK"
+    }
+  ],
+  "noErrors": true
+}

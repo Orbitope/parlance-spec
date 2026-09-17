@@ -1,0 +1,20 @@
+{
+  "entry": "n1",
+  "id": "dlg_forced",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Forced."
+    }
+  ],
+  "offer": {
+    "when": {
+      "flag": "active_dialogue__npc_keeper",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_forced"
+}

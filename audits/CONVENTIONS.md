@@ -5,7 +5,7 @@ normally if it does not. Nothing generates it, nothing writes to it, and no audi
 requires it.
 
 It exists because the useful house rules are exactly the ones the data cannot state.
-A validator can see that a rung is unreachable; it cannot know that one character's
+A validator can see that an offer is unreachable; it cannot know that one character's
 ambiguity is load-bearing and must never resolve, or that `char_anon_crowd` is a pool
 every passing extra speaks from rather than a person with a thin footprint.
 
@@ -55,7 +55,7 @@ it.
 ```markdown
 ## Unresolvable
 - `char_steward` — loyal servant vs. quiet usurper must stay open in every state.
-  No ladder ordering, no line, and no recommendation may collapse it.
+  No offer, no line, and no recommendation may collapse it.
 ```
 
 ### `## Re-entry`
@@ -66,9 +66,9 @@ one who appears at a single consequential scene and leaves does not.
 
 ```markdown
 ## Re-entry
-Persisting characters get an effect-free idle rung. One-way hinge characters do not —
+Persisting characters get an effect-free idle offer. One-way hinge characters do not —
 after their scene the truthful state is silence or a soft refusal, and gating their
-rung is a fix, not a defect.
+offer is a fix, not a defect.
 ```
 
 ### `## Player knowledge`

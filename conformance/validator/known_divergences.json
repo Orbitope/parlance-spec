@@ -1,0 +1,20 @@
+[
+  {
+    "case": "dup-id-registry",
+    "side": "python",
+    "issue": ["error", "DUP"],
+    "reason": "Registry duplicate-id detection lives at the loader layer. The TypeScript validate() is handed an id-keyed project in which duplicates have already collapsed, so the case is addressed to python only (see its expected.json); the Python reference sees the raw array and reports it."
+  },
+  {
+    "case": "duplicate-node-id",
+    "side": "typescript",
+    "issue": ["warning", "REACH"],
+    "reason": "Once two nodes share an id the dialogue graph is ill-defined. Python merges both copies' outgoing edges under the one id, so node_close stays reachable; TypeScript keys nodes by id and the surviving copy has no edges, so node_close is unreachable. The REACH warning is an artefact of the DUP error both sides report, and it disappears with the duplicate."
+  },
+  {
+    "case": "project-rules-bad-dice",
+    "side": "python",
+    "issue": ["error", "SCHEMA"],
+    "reason": "The Python reference validates rules.json against the published JSON Schema (whose dice pattern rejects '2x6') before running the RULES check, so one defect is reported twice. TypeScript parses rules.json with a permissive loader and reports the same defect once, from the RULES rule alone."
+  }
+]

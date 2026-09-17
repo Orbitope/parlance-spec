@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "OFFER",
+      "contains": "none is unconditional"
+    }
+  ],
+  "noErrors": true
+}

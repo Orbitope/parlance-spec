@@ -1,0 +1,39 @@
+{
+  "id": "qst_errand",
+  "name": "A Small Errand",
+  "outcomes": [
+    {
+      "description": "You heard the keeper out.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "of": {
+          "flag": "saw_omen",
+          "type": "flag",
+          "value": false
+        },
+        "type": "not"
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "You listened.",
+      "id": "stg_listen",
+      "objectives": [
+        {
+          "id": "ob_listen",
+          "text": "Hear the keeper out."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "Hear the keeper out."
+}

@@ -17,10 +17,15 @@ from __future__ import annotations
 
 import copy
 import json
+import sys
 import shutil
 from pathlib import Path
 
 CASES = Path(__file__).resolve().parent / "cases"
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from validate import validate_project  # noqa: E402
+
+VALIDATORS = {"typescript", "python"}
 
 
 # ---------------------------------------------------------------------------
@@ -64,7 +69,6 @@ def base_project() -> dict[str, object]:
         },
         "data/characters/npc_keeper.json": {
             "archetype": "keeper",
-            "dialogues": [{"dialogue": "dlg_meet"}],
             "id": "npc_keeper",
             "name": "The Keeper",
         },
@@ -83,6 +87,7 @@ def base_project() -> dict[str, object]:
         "data/dialogues/dlg_meet.json": {
             "entry": "node_open",
             "id": "dlg_meet",
+            "offer": {},
             "nodes": [
                 {
                     "id": "node_open",
@@ -184,31 +189,12 @@ def case_duplicate_node_id(p: dict) -> None:
     dlg["nodes"].append({"id": "node_open", "isEnd": True, "text": "A second node_open."})
 
 
-def case_ladder_stranded_dialogue(p: dict) -> None:
-    """A character WITH a ladder that still owns an unreachable dialogue.
-
-    Naming a character as speaker makes nothing discoverable: only a ladder
-    rung, an availableWhen, or a world placement does. This case exists because
-    the two validators disagreed on it — the TypeScript one checked every
-    character, the Python one only characters with no ladder at all, so the
-    editor warned where CI was silent.
-    """
-    p["data/dialogues/dlg_aside.json"] = {
-        "entry": "n1",
-        "id": "dlg_aside",
-        "nodes": [{"id": "n1", "isEnd": True, "text": "A line nothing can reach."}],
-        "speakerId": "npc_keeper",
-        "title": "An Aside",
-    }
-
-
 def case_npc_interactable_dialogue_places(p: dict) -> None:
     """An npc interactable's `dialogue` field still counts as a world placement.
 
-    Same stranded shape as ladder-stranded-dialogue, but the dialogue is named
-    by an npc interactable — a misuse (the runtime resolves the character's
-    ladder, hence the LOC advisory) that nonetheless places the dialogue, so
-    the LADDER stranded warning must NOT fire. This case exists because the
+    A speaker dialogue placed by an npc interactable's `dialogue` field — a
+    misuse (the runtime resolves the character's offers, hence the LOC advisory) that nonetheless places the dialogue, so
+    the OFFER stranded warning must NOT fire. This case exists because the
     TypeScript validator's local/derive split briefly counted only non-npc
     interactables as placements while the Python reference counted all of them
     — a divergence the shared cases could not see until this one pinned it.
@@ -230,13 +216,16 @@ def case_npc_interactable_dialogue_places(p: dict) -> None:
     }
 
 
-def case_dialogue_availablewhen_dangling(p: dict) -> None:
-    """A dialogue gate reading a variable nothing defines."""
-    p["data/dialogues/dlg_meet.json"]["availableWhen"] = {
+def case_offer_when_dangling(p: dict) -> None:
+    """A dialogue's offer gate reading a variable nothing defines."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    offer = dict(dlg.get("offer", {}))
+    offer["when"] = {
         "flag": "ghost_flag",
         "type": "flag",
         "value": True,
     }
+    dlg["offer"] = offer
 
 
 def case_cutscene_sets_ending_flag(p: dict) -> None:
@@ -311,6 +300,69 @@ def case_difficulty_exceeds_dice(p: dict) -> None:
         },
         "id": "ch_impossible",
         "text": "[Observation] Attempt the impossible.",
+    })
+
+
+def _append_check_choice(p: dict, cid: str, check: dict) -> None:
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["choices"].append({
+        "check": check, "id": cid, "text": "[Observation] Read the room.",
+    })
+
+
+def case_check_modifier_clean(p: dict) -> None:
+    """An active check with well-formed conditional modifiers (no defect)."""
+    _append_check_choice(p, "ch_mod", {
+        "difficulty": 10, "mode": "active",
+        "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
+        "modifiers": [
+            {"when": {"flag": "met_keeper", "type": "flag", "value": True}, "bonus": 2, "label": "Rapport"},
+            {"when": {"flag": "heard_story", "type": "flag", "value": True}, "bonus": -1},
+        ],
+    })
+
+
+def case_check_modifier_when_dangling(p: dict) -> None:
+    """A modifier `when` reading a flag that no variable declares."""
+    _append_check_choice(p, "ch_mod", {
+        "difficulty": 10, "mode": "active",
+        "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
+        "modifiers": [{"when": {"flag": "no_such_flag", "type": "flag", "value": True}, "bonus": 2}],
+    })
+
+
+def case_check_modifier_zero_bonus(p: dict) -> None:
+    """A modifier with a bonus of 0 — dead authoring."""
+    _append_check_choice(p, "ch_mod", {
+        "difficulty": 10, "mode": "active",
+        "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
+        "modifiers": [{"when": {"flag": "met_keeper", "type": "flag", "value": True}, "bonus": 0}],
+    })
+
+
+def case_check_modifier_empty(p: dict) -> None:
+    """An empty modifiers list — remove the field."""
+    _append_check_choice(p, "ch_mod", {
+        "difficulty": 10, "mode": "active",
+        "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
+        "modifiers": [],
+    })
+
+
+def case_check_difficulty_reachable_with_bonus(p: dict) -> None:
+    """A 2d6 DC 14 check that a +2 modifier lifts within reach (no GATE warning)."""
+    _append_check_choice(p, "ch_mod", {
+        "dice": "2d6", "difficulty": 14, "mode": "active",
+        "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
+        "modifiers": [{"when": {"flag": "met_keeper", "type": "flag", "value": True}, "bonus": 2}],
+    })
+
+
+def case_check_difficulty_exceeds_dice_plus_bonus(p: dict) -> None:
+    """A 2d6 DC 40 check no modifier can reach — the GATE warning names the headroom."""
+    _append_check_choice(p, "ch_mod", {
+        "dice": "2d6", "difficulty": 40, "mode": "active",
+        "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
+        "modifiers": [{"when": {"flag": "met_keeper", "type": "flag", "value": True}, "bonus": 2}],
     })
 
 
@@ -477,25 +529,6 @@ def case_flag_read_never_set(p: dict) -> None:
         showIf={"flag": "saw_ledger", "type": "flag", "value": True},
         text="Mention the ledger.",
     )
-
-
-def case_ladder_dead_rung(p: dict) -> None:
-    """An unconditional ladder rung that is not last — it shadows the rest.
-
-    The top rung is deliberately effect-free so the stuck-rung warning does not
-    fire alongside it: this case pins the dead-rung rule on its own.
-    """
-    p["data/dialogues/dlg_aside.json"] = {
-        "entry": "n1",
-        "id": "dlg_aside",
-        "nodes": [{"id": "n1", "isEnd": True, "text": "Nothing new today."}],
-        "speakerId": "npc_keeper",
-        "title": "An Aside",
-    }
-    p["data/characters/npc_keeper.json"]["dialogues"] = [
-        {"dialogue": "dlg_aside"},
-        {"dialogue": "dlg_meet"},
-    ]
 
 
 def case_exit_spawn_not_in_target(p: dict) -> None:
@@ -943,6 +976,264 @@ def case_cond_effects_advisory(p: dict) -> None:
     dlg["nodes"][0]["choices"][0]["goto"] = "node_aside"
 
 
+# ---------------------------------------------------------------------------
+# OFFER family (ws 17) — the saliency-model equivalents of the LADDER cases.
+# Each converts npc_keeper from a ladder to self-declaring dialogue offers.
+# ---------------------------------------------------------------------------
+
+def _minimal_dialogue(did: str, text: str, offer: dict) -> dict:
+    return {
+        "entry": "n1",
+        "id": did,
+        "nodes": [{"id": "n1", "isEnd": True, "text": text}],
+        "offer": offer,
+        "speakerId": "npc_keeper",
+        "title": did,
+    }
+
+
+def case_offer_no_fallback(p: dict) -> None:
+    """A character whose every offer is gated — resolution can return null."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/dialogues/dlg_meet.json"]["offer"] = {"when": {"flag": "met_keeper", "type": "flag", "value": True}}
+
+
+def case_offer_prioritized_fallback(p: dict) -> None:
+    """An offer with a priority tier but no `when` — wins forever, re-fires."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/dialogues/dlg_meet.json"]["offer"] = {"priority": 1}
+
+
+def case_offer_tie(p: dict) -> None:
+    """Two offers of equal priority and specificity that are not exclusive —
+    the id silently decides which wins. A fallback is present so the no-fallback
+    rule stays quiet and this pins the tie rule on its own."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/dialogues/dlg_meet.json"]["offer"] = {"when": {"flag": "heard_story", "type": "flag", "value": True}}
+    p["data/dialogues/dlg_aside.json"] = _minimal_dialogue(
+        "dlg_aside", "Something else.", {"when": {"flag": "met_keeper", "type": "flag", "value": True}}
+    )
+    p["data/dialogues/dlg_greet.json"] = _minimal_dialogue("dlg_greet", "Hello again.", {})
+
+
+def case_offer_numeric_exclusive_no_tie(p: dict) -> None:
+    """Three characters, each with a family of equal-specificity offers the
+    oracle must prove pairwise exclusive, so NO tie warning: the keeper's
+    sequence on one counter (`== 0` / `== 1` / `== 2`), a `not flag` against
+    its flag, and an item held / not held. Fallbacks keep the no-fallback rule
+    quiet. Offers of different characters never tie with each other, which is
+    why each family gets its own character — a counter gate and an item gate on
+    ONE character are a real tie."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/variables.json"]["variables"].append(
+        {"id": "keeper_talks", "kind": "counter", "default": 0, "description": "Times the keeper has been talked to."}
+    )
+    p["data/items.json"] = {"items": [{"id": "it_token", "name": "Token", "description": "A token."}]}
+    p["data/characters/npc_flagged.json"] = {"id": "npc_flagged", "name": "Flagged"}
+    p["data/characters/npc_holder.json"] = {"id": "npc_holder", "name": "Holder"}
+    cnt = lambda v: {"counter": "keeper_talks", "op": "==", "type": "counter", "value": v}  # noqa: E731
+    p["data/dialogues/dlg_meet.json"]["offer"] = {"when": cnt(0)}
+    p["data/dialogues/dlg_meet.json"]["nodes"][-1].setdefault("onEnter", []).append(
+        {"counter": "keeper_talks", "delta": 1, "type": "adjust_counter"}
+    )
+    p["data/dialogues/dlg_second.json"] = _minimal_dialogue("dlg_second", "Second.", {"when": cnt(1)})
+    p["data/dialogues/dlg_third.json"] = _minimal_dialogue("dlg_third", "Third.", {"when": cnt(2)})
+    p["data/dialogues/dlg_greet.json"] = _minimal_dialogue("dlg_greet", "Hello again.", {})
+    p["data/dialogues/dlg_unmet.json"] = _minimal_dialogue(
+        "dlg_unmet", "Unmet.",
+        {"character": "npc_flagged", "when": {"of": {"flag": "met_keeper", "type": "flag", "value": True}, "type": "not"}},
+    )
+    p["data/dialogues/dlg_met.json"] = _minimal_dialogue(
+        "dlg_met", "Met.", {"character": "npc_flagged", "when": {"flag": "met_keeper", "type": "flag", "value": True}}
+    )
+    p["data/dialogues/dlg_flagged_default.json"] = _minimal_dialogue("dlg_flagged_default", "Hm.", {"character": "npc_flagged"})
+    p["data/dialogues/dlg_token.json"] = _minimal_dialogue(
+        "dlg_token", "Token.", {"character": "npc_holder", "when": {"has": True, "item": "it_token", "type": "item"}}
+    )
+    p["data/dialogues/dlg_no_token.json"] = _minimal_dialogue(
+        "dlg_no_token", "No token.", {"character": "npc_holder", "when": {"has": False, "item": "it_token", "type": "item"}}
+    )
+    p["data/dialogues/dlg_holder_default.json"] = _minimal_dialogue("dlg_holder_default", "Hm.", {"character": "npc_holder"})
+
+
+def case_offer_numeric_overlap_ties(p: dict) -> None:
+    """Two ranges of one counter that OVERLAP (`>= 5` and `>= 10`) are not
+    exclusive: at 10 both pass at equal specificity, so the tie warning must
+    still fire. Guards the numeric oracle against over-eager exclusivity."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/variables.json"]["variables"].append(
+        {"id": "keeper_talks", "kind": "counter", "default": 0, "description": "Times the keeper has been talked to."}
+    )
+    p["data/dialogues/dlg_meet.json"]["offer"] = {
+        "when": {"counter": "keeper_talks", "op": ">=", "type": "counter", "value": 5}
+    }
+    p["data/dialogues/dlg_meet.json"]["nodes"][-1].setdefault("onEnter", []).append(
+        {"counter": "keeper_talks", "delta": 1, "type": "adjust_counter"}
+    )
+    p["data/dialogues/dlg_regular.json"] = _minimal_dialogue(
+        "dlg_regular", "Regular.", {"when": {"counter": "keeper_talks", "op": ">=", "type": "counter", "value": 10}}
+    )
+    p["data/dialogues/dlg_greet.json"] = _minimal_dialogue("dlg_greet", "Hello again.", {})
+
+
+def _route_from_meet(p: dict, target: str) -> None:
+    """Put a set_active_dialogue effect for npc_keeper naming `target` on the
+    keeper's meeting scene, and declare the flag the effect writes."""
+    p["data/variables.json"]["variables"].append(
+        {"id": "active_dialogue__npc_keeper", "kind": "flag", "default": False,
+         "description": "Engine-written: routes the keeper to a queued scene."}
+    )
+    p["data/dialogues/dlg_meet.json"]["nodes"][-1].setdefault("onEnter", []).append(
+        {"character": "npc_keeper", "dialogue": target, "type": "set_active_dialogue"}
+    )
+
+
+def case_active_dialogue_target_not_forced(p: dict) -> None:
+    """set_active_dialogue names a dialogue that carries no offer for the routed
+    character gated on active_dialogue__<character>: the flag routes nothing
+    and the queued scene never plays. Both validators warn (OFFER); the
+    presenter matches, so no LOGIC mismatch."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/dialogues/dlg_meet.json"]["offer"] = {}
+    p["data/dialogues/dlg_later.json"] = _minimal_dialogue(
+        "dlg_later", "Later.", {"when": {"flag": "heard_story", "type": "flag", "value": True}}
+    )
+    _route_from_meet(p, "dlg_later")
+
+
+def case_active_dialogue_forced_outranked(p: dict) -> None:
+    """The forced offer exists but sits at tier 0 beside a more specific
+    ordinary offer, so while the flag is set the ordinary one wins the ranking
+    and routing plays the wrong scene. Both validators warn (OFFER)."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/dialogues/dlg_meet.json"]["offer"] = {}
+    p["data/dialogues/dlg_forced.json"] = _minimal_dialogue(
+        "dlg_forced", "Forced.", {"when": {"flag": "active_dialogue__npc_keeper", "type": "flag", "value": True}}
+    )
+    p["data/dialogues/dlg_specific.json"] = _minimal_dialogue(
+        "dlg_specific", "Specific.",
+        {"when": {"of": [
+            {"flag": "met_keeper", "type": "flag", "value": True},
+            {"flag": "heard_story", "type": "flag", "value": True},
+        ], "type": "all"}},
+    )
+    _route_from_meet(p, "dlg_forced")
+
+
+def case_active_dialogue_cross_character_forced(p: dict) -> None:
+    """The contract-blessed cross-character forced pattern: a scene SPOKEN by
+    the guide but OFFERED FOR the keeper, at tier 1, gated on the keeper's
+    routing flag. Neither a LOGIC speaker mismatch nor an OFFER warning."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/characters/npc_guide.json"] = {"id": "npc_guide", "name": "Guide"}
+    p["data/dialogues/dlg_meet.json"]["offer"] = {}
+    d = _minimal_dialogue(
+        "dlg_handoff", "The guide steps in.",
+        {"character": "npc_keeper", "priority": 1,
+         "when": {"flag": "active_dialogue__npc_keeper", "type": "flag", "value": True}},
+    )
+    d["speakerId"] = "npc_guide"
+    p["data/dialogues/dlg_handoff.json"] = d
+    p["data/dialogues/dlg_guide_default.json"] = _minimal_dialogue("dlg_guide_default", "Hm.", {"character": "npc_guide"})
+    _route_from_meet(p, "dlg_handoff")
+
+
+def case_offer_outcome_gate_reads_flags(p: dict) -> None:
+    """An offer gated on a questOutcome reads, transitively, every flag that
+    outcome's reachedWhen reads — through a `not`, too. A flag that is set in a
+    scene and read ONLY that way is live state, not dead: no FLAG warning."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/variables.json"]["variables"].append(
+        {"id": "saw_omen", "kind": "flag", "default": False, "description": "The player saw the omen."}
+    )
+    p["data/dialogues/dlg_meet.json"]["offer"] = {}
+    p["data/dialogues/dlg_meet.json"]["nodes"][-1].setdefault("onEnter", []).append(
+        {"flag": "saw_omen", "type": "set_flag", "value": True}
+    )
+    quest = _errand_quest()
+    quest["outcomes"][0]["reachedWhen"] = {
+        "of": {"flag": "saw_omen", "type": "flag", "value": False}, "type": "not"
+    }
+    p["data/quests/qst_errand.json"] = quest
+    p["data/dialogues/dlg_aside.json"] = _minimal_dialogue(
+        "dlg_aside", "After the omen.", {"when": {"outcome": "out_done", "quest": "qst_errand", "type": "questOutcome"}}
+    )
+
+
+def case_offer_character_dangling(p: dict) -> None:
+    """offer.character names a character that does not exist."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/dialogues/dlg_meet.json"]["offer"] = {"character": "npc_ghost"}
+
+
+def case_offer_character_covers(p: dict) -> None:
+    """A character with no speaking part and no ladder, but who is the
+    offer.character of a dialogue, counts as covered (ws 17) — no COVERAGE."""
+    p["data/characters/npc_keeper.json"].pop("dialogues", None)
+    p["data/characters/player.json"] = {"id": "player", "name": "Player"}
+    p["data/dialogues/dlg_meet.json"]["offer"] = {"character": "player"}
+
+
+def case_migrate_character_dialogues(p: dict) -> None:
+    """A stale project still carrying the retired character `dialogues` ladder —
+    MIGRATE names the script, and the bare additionalProperties reject is
+    suppressed so the message is actionable (ws 17)."""
+    p["data/characters/npc_keeper.json"]["dialogues"] = [{"dialogue": "dlg_meet"}]
+
+
+def case_offer_no_character(p: dict) -> None:
+    """A dialogue that opts in with an offer but has neither speakerId nor
+    offer.character — nothing ever gathers it (ws 17)."""
+    p["data/dialogues/dlg_nobody.json"] = {
+        "entry": "node_a",
+        "id": "dlg_nobody",
+        "nodes": [{"id": "node_a", "isEnd": True, "text": "Spoken by no one, offered to no one."}],
+        "offer": {},
+    }
+
+
+def case_offer_forced_only_is_not_a_gap(p: dict) -> None:
+    """A routing-only character: its one offer is forced through
+    active_dialogue__npc_keeper, so "no fallback" is the design, not a defect —
+    the no-fallback OFFER warning must stay silent (ws 17)."""
+    p["data/variables.json"]["variables"].append({
+        "default": False,
+        "description": "Routing flag: the keeper's scene has been queued (set by set_active_dialogue).",
+        "id": "active_dialogue__npc_keeper",
+        "kind": "flag",
+    })
+    p["data/dialogues/dlg_meet.json"]["offer"] = {
+        "priority": 1,
+        "when": {"flag": "active_dialogue__npc_keeper", "type": "flag", "value": True},
+    }
+    # Something must route there, or the flag is a FLAG read-never-set warning.
+    p["data/dialogues/dlg_aside.json"] = {
+        "entry": "node_a",
+        "id": "dlg_aside",
+        "nodes": [{
+            "id": "node_a",
+            "isEnd": True,
+            "onEnter": [{"character": "npc_keeper", "dialogue": "dlg_meet", "type": "set_active_dialogue"}],
+            "text": "Go and see the keeper.",
+        }],
+        "offer": {},
+        "speakerId": "npc_keeper",
+    }
+
+
+def case_offer_interactable_not_noop(p: dict) -> None:
+    """An npc interactable whose character has an OFFER is NOT a no-op — the
+    interactable-source check reads offers (ws 17)."""
+    p["data/dialogues/dlg_meet.json"]["offer"] = {}
+    p["data/locations/loc_hall.json"] = {
+        "id": "loc_hall",
+        "interactables": [{"character": "npc_keeper", "id": "ix_keeper", "kind": "npc"}],
+        "name": "The Hall",
+        "spawns": [{"id": "sp_main", "isDefault": True}],
+        "tags": ["start"],
+    }
+
+
 CASE_BUILDERS = {
     "clean-minimal": (case_clean_minimal, {"noErrors": True}),
     "passive-goto-dangling": (
@@ -961,17 +1252,13 @@ CASE_BUILDERS = {
         case_duplicate_node_id,
         {"must": [{"code": "DUP", "contains": "node_open", "severity": "error"}]},
     ),
-    "ladder-stranded-dialogue": (
-        case_ladder_stranded_dialogue,
-        {"must": [{"code": "LADDER", "contains": "dlg_aside", "severity": "warning"}]},
-    ),
     "npc-interactable-dialogue-places": (
         case_npc_interactable_dialogue_places,
         {
             # The advisory proves the shape is present and exercised...
             "must": [{"code": "LOC", "contains": "did you mean character", "severity": "warning"}],
             # ...and the placement suppresses the stranded warning in BOTH validators.
-            "mustNot": [{"code": "LADDER", "contains": "dlg_aside"}],
+            "mustNot": [{"code": "OFFER", "contains": "dlg_aside"}],
         },
     ),
     "plain-goto-dangling": (
@@ -982,8 +1269,8 @@ CASE_BUILDERS = {
         case_dead_end_node,
         {"must": [{"code": "FLOW", "contains": "dead end", "severity": "error"}]},
     ),
-    "dialogue-availablewhen-dangling": (
-        case_dialogue_availablewhen_dangling,
+    "offer-when-dangling": (
+        case_offer_when_dangling,
         {"must": [{"code": "REF", "contains": "ghost_flag", "severity": "error"}]},
     ),
     "cutscene-sets-ending-flag": (
@@ -1008,6 +1295,30 @@ CASE_BUILDERS = {
     "difficulty-exceeds-dice": (
         case_difficulty_exceeds_dice,
         {"must": [{"code": "GATE", "contains": "difficulty", "severity": "warning"}]},
+    ),
+    "check-modifier-clean": (
+        case_check_modifier_clean,
+        {"noErrors": True, "mustNot": [{"code": "GATE"}, {"code": "CHECK"}]},
+    ),
+    "check-modifier-when-dangling": (
+        case_check_modifier_when_dangling,
+        {"must": [{"code": "REF", "contains": "modifier 0", "severity": "error"}]},
+    ),
+    "check-modifier-zero-bonus": (
+        case_check_modifier_zero_bonus,
+        {"must": [{"code": "CHECK", "contains": "bonus 0", "severity": "warning"}]},
+    ),
+    "check-modifier-empty": (
+        case_check_modifier_empty,
+        {"must": [{"code": "CHECK", "contains": "empty modifiers", "severity": "warning"}]},
+    ),
+    "check-difficulty-reachable-with-bonus": (
+        case_check_difficulty_reachable_with_bonus,
+        {"mustNot": [{"code": "GATE", "contains": "exceeds max roll"}]},
+    ),
+    "check-difficulty-exceeds-dice-plus-bonus": (
+        case_check_difficulty_exceeds_dice_plus_bonus,
+        {"must": [{"code": "GATE", "contains": "even with +2 from modifiers", "severity": "warning"}]},
     ),
     "node-id-end": (
         case_node_id_end,
@@ -1042,10 +1353,6 @@ CASE_BUILDERS = {
     "flag-read-never-set": (
         case_flag_read_never_set,
         {"must": [{"code": "FLAG", "contains": "saw_ledger", "severity": "warning"}]},
-    ),
-    "ladder-dead-rung": (
-        case_ladder_dead_rung,
-        {"must": [{"code": "LADDER", "contains": "dead rungs", "severity": "warning"}]},
     ),
     "exit-spawn-not-in-target": (
         case_exit_spawn_not_in_target,
@@ -1179,6 +1486,74 @@ CASE_BUILDERS = {
         case_cond_effects_advisory,
         {"must": [{"code": "COND", "contains": "do NOT fire", "severity": "warning"}]},
     ),
+    "offer-no-fallback": (
+        case_offer_no_fallback,
+        {"must": [{"code": "OFFER", "contains": "none is unconditional", "severity": "warning"}]},
+    ),
+    "offer-prioritized-fallback": (
+        case_offer_prioritized_fallback,
+        {"must": [{"code": "OFFER", "contains": "priority 1 but no 'when'", "severity": "warning"}]},
+    ),
+    "offer-tie": (
+        case_offer_tie,
+        {"must": [{"code": "OFFER", "contains": "not provably exclusive", "severity": "warning"}]},
+    ),
+    "offer-numeric-exclusive-no-tie": (
+        case_offer_numeric_exclusive_no_tie,
+        {"noErrors": True, "mustNot": [{"code": "OFFER", "contains": "not provably exclusive"}]},
+    ),
+    "offer-numeric-overlap-ties": (
+        case_offer_numeric_overlap_ties,
+        {"must": [{"code": "OFFER", "contains": "not provably exclusive", "severity": "warning"}]},
+    ),
+    "active-dialogue-target-not-forced": (
+        case_active_dialogue_target_not_forced,
+        {"must": [{"code": "OFFER", "contains": "routes nothing", "severity": "warning"}],
+         "mustNot": [{"code": "LOGIC", "contains": "speaker mismatch"}]},
+    ),
+    "active-dialogue-forced-outranked": (
+        case_active_dialogue_forced_outranked,
+        {"must": [{"code": "OFFER", "contains": "can be out-ranked", "severity": "warning"}],
+         "mustNot": [{"code": "OFFER", "contains": "routes nothing"}]},
+    ),
+    "active-dialogue-cross-character-forced": (
+        case_active_dialogue_cross_character_forced,
+        {"noErrors": True,
+         "mustNot": [{"code": "LOGIC", "contains": "speaker mismatch"},
+                     {"code": "OFFER", "contains": "routes nothing"},
+                     {"code": "OFFER", "contains": "can be out-ranked"}]},
+    ),
+    "offer-outcome-gate-reads-flags": (
+        case_offer_outcome_gate_reads_flags,
+        {"noErrors": True, "mustNot": [{"code": "FLAG", "contains": "saw_omen"}]},
+    ),
+    "offer-character-dangling": (
+        case_offer_character_dangling,
+        {"must": [{"code": "REF", "contains": "npc_ghost", "severity": "error"}]},
+    ),
+    "offer-forced-only-not-a-gap": (
+        case_offer_forced_only_is_not_a_gap,
+        {"noErrors": True, "mustNot": [{"code": "OFFER", "contains": "none is unconditional"}]},
+    ),
+    "offer-no-character": (
+        case_offer_no_character,
+        {"must": [{"code": "OFFER", "contains": "names no character", "severity": "warning"}]},
+    ),
+    "migrate-character-dialogues": (
+        case_migrate_character_dialogues,
+        {
+            "must": [{"code": "MIGRATE", "contains": "migrate_ladders", "severity": "error"}],
+            "mustNot": [{"code": "SCHEMA"}],
+        },
+    ),
+    "offer-interactable-not-noop": (
+        case_offer_interactable_not_noop,
+        {"noErrors": True, "mustNot": [{"code": "LOC", "contains": "no-op"}]},
+    ),
+    "offer-character-covers": (
+        case_offer_character_covers,
+        {"noErrors": True, "mustNot": [{"code": "COVERAGE"}]},
+    ),
 }
 
 
@@ -1193,6 +1568,14 @@ def main() -> None:
         (case_dir / "expected.json").write_text(
             json.dumps(expected, indent=2, sort_keys=True) + "\n"
         )
+        # The reference validator's FULL output — every (severity, code) — so the
+        # TypeScript harness can compare its multiset to the Python one per case,
+        # not just check the hand-written pins. A rule that fires in one
+        # implementation and not the other is invisible to pins alone.
+        for v in expected.get("validators", []):
+            assert v in VALIDATORS, f"{name}: unknown validator {v!r} (a typo here silently skips the case on BOTH sides)"
+        full = sorted([[iss.severity, iss.code] for iss in validate_project(str(CASES / name / "project")).issues])
+        (CASES / name / "expected.full.json").write_text(json.dumps(full, indent=2) + "\n", encoding="utf-8")
         print(f"wrote {name}")
 
 

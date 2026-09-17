@@ -51,6 +51,9 @@
       "text": "Mais LOL !"
     }
   ],
+  "offer": {
+    "character": "char_clem"
+  },
   "replayable": false,
   "title": "Chat1"
 }

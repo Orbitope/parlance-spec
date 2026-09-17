@@ -1,9 +1,4 @@
 {
-  "dialogues": [
-    {
-      "dialogue": "dlg_ferry_landing"
-    }
-  ],
   "id": "char_ferryman",
   "name": "Ferryman"
 }

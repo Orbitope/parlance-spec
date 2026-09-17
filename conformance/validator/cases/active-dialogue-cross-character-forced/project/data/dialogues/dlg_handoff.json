@@ -1,0 +1,22 @@
+{
+  "entry": "n1",
+  "id": "dlg_handoff",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "The guide steps in."
+    }
+  ],
+  "offer": {
+    "character": "npc_keeper",
+    "priority": 1,
+    "when": {
+      "flag": "active_dialogue__npc_keeper",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_guide",
+  "title": "dlg_handoff"
+}

@@ -6,7 +6,7 @@ two bundles. Both are inside the MIT carve-out (`LICENSE-SPEC`) and publish to
 your own project is the point, and a licence that withholds that makes them useless.
 
 - **[`audits/`](audits/README.md)** — editorial audits. They read a project and report
-  on it: whether a dialogue ladder's ordering tells the intended story, whether a
+  on it: whether a character's dialogue offers resolve to the intended story, whether a
   character sounds like themselves, whether a line can be reached in a state where it
   is not yet true, and whether a use of a `COOKBOOK.md` recipe trips that recipe's
   documented pitfall.

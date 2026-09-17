@@ -1,0 +1,21 @@
+{
+  "entry": "n1",
+  "id": "dlg_met",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "Met."
+    }
+  ],
+  "offer": {
+    "character": "npc_flagged",
+    "when": {
+      "flag": "met_keeper",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "dlg_met"
+}

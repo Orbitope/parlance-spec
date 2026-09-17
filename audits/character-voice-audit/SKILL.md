@@ -1,6 +1,6 @@
 ---
 name: character-voice-audit
-description: Check every line a character speaks against the voice the author declared for them in their `dialogueStyle` field. Use when a character has been written by several hands or over a long stretch, after merging contributed dialogue, or as an editorial pass before a milestone. Judges consistency with the author's OWN stated intent — never against a house style, and never by rewriting. Complements ladder-audit (which judges rung ordering) and character-presence-audit (which judges footprint).
+description: Check every line a character speaks against the voice the author declared for them in their `dialogueStyle` field. Use when a character has been written by several hands or over a long stretch, after merging contributed dialogue, or as an editorial pass before a milestone. Judges consistency with the author's OWN stated intent — never against a house style, and never by rewriting. Complements offer-audit (which judges dialogue-offer saliency) and character-presence-audit (which judges footprint).
 ---
 
 # Character Voice Audit

@@ -1,0 +1,15 @@
+{
+  "must": [
+    {
+      "code": "OFFER",
+      "contains": "can be out-ranked",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "OFFER",
+      "contains": "routes nothing"
+    }
+  ]
+}

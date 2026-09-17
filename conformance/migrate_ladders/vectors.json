@@ -1,0 +1,1326 @@
+[
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_first": {
+          "entry": "n",
+          "id": "d_first",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "npc"
+        },
+        "d_gate": {
+          "entry": "n",
+          "id": "d_gate",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "pressed",
+              "type": "flag",
+              "value": true
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_gate",
+              "showIf": {
+                "flag": "pressed",
+                "type": "flag",
+                "value": true
+              }
+            },
+            {
+              "dialogue": "d_first"
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_first": {
+          "entry": "n",
+          "id": "d_first",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_gate": {
+          "entry": "n",
+          "id": "d_gate",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "gated-then-fallback",
+    "report": []
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_always": {
+          "entry": "n",
+          "id": "d_always",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "priority": 1
+          },
+          "speakerId": "npc"
+        },
+        "d_below": {
+          "entry": "n",
+          "id": "d_below",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "x",
+              "type": "flag",
+              "value": true
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_always"
+            },
+            {
+              "dialogue": "d_below",
+              "showIf": {
+                "flag": "x",
+                "type": "flag",
+                "value": true
+              }
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_always": {
+          "entry": "n",
+          "id": "d_always",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_below": {
+          "entry": "n",
+          "id": "d_below",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "inversion-unconditional-above",
+    "report": [
+      "SHADOWED: npc rung [1] 'd_below' stays unreachable below unconditional [0] 'd_always' — [0] keeps priority 1 so the ladder's winner is preserved, and the validator's OFFER prioritized-fallback warning will point at it; drop that priority to let [1] play when its condition holds",
+      "INVERSION: npc rung [0] 'd_always' sits above a rung it does not out-specify — assigned priority 1; consider making its condition more specific instead"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_a": {
+          "entry": "n",
+          "id": "d_a",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "f",
+              "type": "flag",
+              "value": true
+            }
+          },
+          "speakerId": "npc"
+        },
+        "d_b": {
+          "entry": "n",
+          "id": "d_b",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "f",
+              "type": "flag",
+              "value": false
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_a",
+              "showIf": {
+                "flag": "f",
+                "type": "flag",
+                "value": true
+              }
+            },
+            {
+              "dialogue": "d_b",
+              "showIf": {
+                "flag": "f",
+                "type": "flag",
+                "value": false
+              }
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_a": {
+          "entry": "n",
+          "id": "d_a",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_b": {
+          "entry": "n",
+          "id": "d_b",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "exclusive-pair",
+    "report": []
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_any": {
+          "entry": "n",
+          "id": "d_any",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "of": [
+                {
+                  "flag": "a",
+                  "type": "flag",
+                  "value": true
+                },
+                {
+                  "flag": "c",
+                  "type": "flag",
+                  "value": true
+                }
+              ],
+              "type": "any"
+            }
+          },
+          "speakerId": "npc"
+        },
+        "d_last": {
+          "entry": "n",
+          "id": "d_last",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "npc"
+        },
+        "d_one": {
+          "entry": "n",
+          "id": "d_one",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "priority": 1,
+            "when": {
+              "flag": "a",
+              "type": "flag",
+              "value": true
+            }
+          },
+          "speakerId": "npc"
+        },
+        "d_two": {
+          "entry": "n",
+          "id": "d_two",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "of": [
+                {
+                  "flag": "a",
+                  "type": "flag",
+                  "value": true
+                },
+                {
+                  "flag": "b",
+                  "type": "flag",
+                  "value": true
+                }
+              ],
+              "type": "all"
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_one",
+              "showIf": {
+                "flag": "a",
+                "type": "flag",
+                "value": true
+              }
+            },
+            {
+              "dialogue": "d_two",
+              "showIf": {
+                "of": [
+                  {
+                    "flag": "a",
+                    "type": "flag",
+                    "value": true
+                  },
+                  {
+                    "flag": "b",
+                    "type": "flag",
+                    "value": true
+                  }
+                ],
+                "type": "all"
+              }
+            },
+            {
+              "dialogue": "d_any",
+              "showIf": {
+                "of": [
+                  {
+                    "flag": "a",
+                    "type": "flag",
+                    "value": true
+                  },
+                  {
+                    "flag": "c",
+                    "type": "flag",
+                    "value": true
+                  }
+                ],
+                "type": "any"
+              }
+            },
+            {
+              "dialogue": "d_last"
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_any": {
+          "entry": "n",
+          "id": "d_any",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_last": {
+          "entry": "n",
+          "id": "d_last",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_one": {
+          "entry": "n",
+          "id": "d_one",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_two": {
+          "entry": "n",
+          "id": "d_two",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "three-rungs-mixed-specificity",
+    "report": [
+      "INVERSION: npc rung [0] 'd_one' sits above a rung it does not out-specify — assigned priority 1; consider making its condition more specific instead"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_x": {
+          "entry": "n",
+          "id": "d_x",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "g",
+              "type": "flag",
+              "value": true
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_x",
+              "showIf": {
+                "flag": "g",
+                "type": "flag",
+                "value": true
+              }
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_x": {
+          "availableWhen": {
+            "flag": "stale",
+            "type": "flag",
+            "value": true
+          },
+          "entry": "n",
+          "id": "d_x",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "dropped-availablewhen",
+    "report": [
+      "DROPPED availableWhen: dialogue 'd_x' had an availableWhen that is not a sub-tree of its ladder rung showIf on 'npc' — the rung gate wins; verify"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_base": {
+          "entry": "n",
+          "id": "d_base",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "npc"
+        },
+        "d_gated": {
+          "entry": "n",
+          "id": "d_gated",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "of": [
+                {
+                  "flag": "g",
+                  "type": "flag",
+                  "value": true
+                },
+                {
+                  "flag": "h",
+                  "type": "flag",
+                  "value": true
+                }
+              ],
+              "type": "all"
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_gated",
+              "showIf": {
+                "of": [
+                  {
+                    "flag": "g",
+                    "type": "flag",
+                    "value": true
+                  },
+                  {
+                    "flag": "h",
+                    "type": "flag",
+                    "value": true
+                  }
+                ],
+                "type": "all"
+              }
+            },
+            {
+              "dialogue": "d_base"
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_base": {
+          "entry": "n",
+          "id": "d_base",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_gated": {
+          "availableWhen": {
+            "flag": "g",
+            "type": "flag",
+            "value": true
+          },
+          "entry": "n",
+          "id": "d_gated",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "availablewhen-subtree-of-rung",
+    "report": [
+      "dropped dead availableWhen on laddered dialogue 'd_gated'"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {},
+      "dialogues": {
+        "d_hub": {
+          "entry": "n",
+          "id": "d_hub",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "done",
+              "type": "flag",
+              "value": true
+            }
+          }
+        },
+        "d_solo": {
+          "entry": "n",
+          "id": "d_solo",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "flag": "open",
+              "type": "flag",
+              "value": true
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_hub": {
+          "availableWhen": {
+            "flag": "done",
+            "type": "flag",
+            "value": true
+          },
+          "entry": "n",
+          "id": "d_hub",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ]
+        },
+        "d_solo": {
+          "availableWhen": {
+            "flag": "open",
+            "type": "flag",
+            "value": true
+          },
+          "entry": "n",
+          "id": "d_solo",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "discovery-only-and-speakerless",
+    "report": [
+      "NO SPEAKER: dialogue 'd_hub' had availableWhen but no speakerId — the old runtime never discovered it; its offer now names no character. Set offer.character to whoever should present it, or drop the offer",
+      "discovery-only dialogue 'd_solo': availableWhen -> offer.when (speaker owns it)"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "player": {
+          "id": "player",
+          "name": "P"
+        }
+      },
+      "dialogues": {
+        "d_own": {
+          "entry": "n",
+          "id": "d_own",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "player"
+        },
+        "d_prove": {
+          "entry": "n",
+          "id": "d_prove",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "character": "player",
+            "priority": 1
+          }
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "player": {
+          "dialogues": [
+            {
+              "dialogue": "d_prove"
+            },
+            {
+              "dialogue": "d_own"
+            }
+          ],
+          "id": "player",
+          "name": "P"
+        }
+      },
+      "dialogues": {
+        "d_own": {
+          "entry": "n",
+          "id": "d_own",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "player"
+        },
+        "d_prove": {
+          "entry": "n",
+          "id": "d_prove",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ]
+        }
+      }
+    },
+    "name": "offer-character-when-speaker-differs",
+    "report": [
+      "SHADOWED: player rung [1] 'd_own' stays unreachable below unconditional [0] 'd_prove' — [0] keeps priority 1 so the ladder's winner is preserved, and the validator's OFFER prioritized-fallback warning will point at it; drop that priority to let [1] play when its condition holds",
+      "INVERSION: player rung [0] 'd_prove' sits above a rung it does not out-specify — assigned priority 1; consider making its condition more specific instead"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "a": {
+          "id": "a",
+          "name": "A"
+        },
+        "b": {
+          "id": "b",
+          "name": "B"
+        }
+      },
+      "dialogues": {
+        "d": {
+          "entry": "n",
+          "id": "d",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "character": "a"
+          }
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "a": {
+          "dialogues": [
+            {
+              "dialogue": "d"
+            }
+          ],
+          "id": "a",
+          "name": "A"
+        },
+        "b": {
+          "dialogues": [
+            {
+              "dialogue": "d"
+            }
+          ],
+          "id": "b",
+          "name": "B"
+        }
+      },
+      "dialogues": {
+        "d": {
+          "entry": "n",
+          "id": "d",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ]
+        }
+      }
+    },
+    "name": "conflict-two-ladders",
+    "report": [
+      "CONFLICT: dialogue 'd' is offered by both 'a' and 'b' — the offer model has one offering character; kept 'a', skipped 'b'"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_a_third": {
+          "entry": "n",
+          "id": "d_a_third",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "counter": "talks",
+              "op": "==",
+              "type": "counter",
+              "value": 2
+            }
+          },
+          "speakerId": "npc"
+        },
+        "d_fallback": {
+          "entry": "n",
+          "id": "d_fallback",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "npc"
+        },
+        "d_m_second": {
+          "entry": "n",
+          "id": "d_m_second",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "counter": "talks",
+              "op": "==",
+              "type": "counter",
+              "value": 1
+            }
+          },
+          "speakerId": "npc"
+        },
+        "d_z_first": {
+          "entry": "n",
+          "id": "d_z_first",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "counter": "talks",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_z_first",
+              "showIf": {
+                "counter": "talks",
+                "op": "==",
+                "type": "counter",
+                "value": 0
+              }
+            },
+            {
+              "dialogue": "d_m_second",
+              "showIf": {
+                "counter": "talks",
+                "op": "==",
+                "type": "counter",
+                "value": 1
+              }
+            },
+            {
+              "dialogue": "d_a_third",
+              "showIf": {
+                "counter": "talks",
+                "op": "==",
+                "type": "counter",
+                "value": 2
+              }
+            },
+            {
+              "dialogue": "d_fallback"
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_a_third": {
+          "entry": "n",
+          "id": "d_a_third",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_fallback": {
+          "entry": "n",
+          "id": "d_fallback",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_m_second": {
+          "entry": "n",
+          "id": "d_m_second",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_z_first": {
+          "entry": "n",
+          "id": "d_z_first",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "numeric-sequence-exclusive-no-tiers",
+    "report": []
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_a_high": {
+          "entry": "n",
+          "id": "d_a_high",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "when": {
+              "counter": "talks",
+              "op": ">=",
+              "type": "counter",
+              "value": 10
+            }
+          },
+          "speakerId": "npc"
+        },
+        "d_fallback": {
+          "entry": "n",
+          "id": "d_fallback",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "npc"
+        },
+        "d_z_low": {
+          "entry": "n",
+          "id": "d_z_low",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {
+            "priority": 1,
+            "when": {
+              "counter": "talks",
+              "op": ">=",
+              "type": "counter",
+              "value": 5
+            }
+          },
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_z_low",
+              "showIf": {
+                "counter": "talks",
+                "op": ">=",
+                "type": "counter",
+                "value": 5
+              }
+            },
+            {
+              "dialogue": "d_a_high",
+              "showIf": {
+                "counter": "talks",
+                "op": ">=",
+                "type": "counter",
+                "value": 10
+              }
+            },
+            {
+              "dialogue": "d_fallback"
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_a_high": {
+          "entry": "n",
+          "id": "d_a_high",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_fallback": {
+          "entry": "n",
+          "id": "d_fallback",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        },
+        "d_z_low": {
+          "entry": "n",
+          "id": "d_z_low",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "numeric-overlap-keeps-tier",
+    "report": [
+      "INVERSION: npc rung [0] 'd_z_low' sits above a rung it does not out-specify — assigned priority 1; consider making its condition more specific instead"
+    ]
+  },
+  {
+    "expected": {
+      "characters": {
+        "npc": {
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_real": {
+          "entry": "n",
+          "id": "d_real",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "offer": {},
+          "speakerId": "npc"
+        }
+      }
+    },
+    "input": {
+      "characters": {
+        "npc": {
+          "dialogues": [
+            {
+              "dialogue": "d_ghost"
+            },
+            {
+              "dialogue": "d_real"
+            }
+          ],
+          "id": "npc",
+          "name": "N"
+        }
+      },
+      "dialogues": {
+        "d_real": {
+          "entry": "n",
+          "id": "d_real",
+          "nodes": [
+            {
+              "id": "n",
+              "isEnd": true,
+              "text": "hi"
+            }
+          ],
+          "speakerId": "npc"
+        }
+      }
+    },
+    "name": "unknown-dialogue-skipped",
+    "report": [
+      "SHADOWED: npc rung [1] 'd_real' stays unreachable below unconditional [0] 'd_ghost' — [0] keeps priority 0 so the ladder's winner is preserved, and the validator's OFFER prioritized-fallback warning will point at it; drop that priority to let [1] play when its condition holds",
+      "SKIP: npc rung [0] names unknown dialogue 'd_ghost' — left for the validator"
+    ]
+  }
+]

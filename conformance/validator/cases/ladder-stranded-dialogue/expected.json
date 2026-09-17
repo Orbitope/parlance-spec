@@ -1,9 +1,0 @@
-{
-  "must": [
-    {
-      "code": "LADDER",
-      "contains": "dlg_aside",
-      "severity": "warning"
-    }
-  ]
-}

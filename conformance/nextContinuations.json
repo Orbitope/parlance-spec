@@ -1,0 +1,207 @@
+[
+  {
+    "fn": "nextContinuations",
+    "description": "forced routing wins over discovery and ignores the visited set: the flag-gated tier-1 offer is queued even though it was visited, and no other character is offered",
+    "state": {
+      "flags": { "active_dialogue__npc_x": true },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "visited": ["d_forced"],
+    "currentDialogueId": "d_other",
+    "project": {
+      "characters": {
+        "npc_x": { "id": "npc_x", "name": "X" },
+        "npc_y": { "id": "npc_y", "name": "Y" }
+      },
+      "dialogues": {
+        "d_forced": {
+          "id": "d_forced",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {
+            "priority": 1,
+            "when": { "type": "flag", "flag": "active_dialogue__npc_x", "value": true }
+          }
+        },
+        "d_x_default": {
+          "id": "d_x_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {}
+        },
+        "d_y_default": {
+          "id": "d_y_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_y",
+          "offer": {}
+        }
+      }
+    },
+    "expected": [
+      { "kind": "dialogue", "characterId": "npc_x", "dialogue": "d_forced", "queued": true }
+    ]
+  },
+  {
+    "fn": "nextContinuations",
+    "description": "a routed character whose winning offer does not read the flag is NOT forced: no queued continuation, discovery runs for everyone, the visited filter applies",
+    "state": {
+      "flags": { "active_dialogue__npc_x": true },
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {}
+    },
+    "visited": ["d_x_default"],
+    "currentDialogueId": "d_other",
+    "project": {
+      "characters": {
+        "npc_x": { "id": "npc_x", "name": "X" },
+        "npc_y": { "id": "npc_y", "name": "Y" }
+      },
+      "dialogues": {
+        "d_forced": {
+          "id": "d_forced",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {
+            "priority": 1,
+            "when": {
+              "type": "all",
+              "of": [
+                { "type": "flag", "flag": "active_dialogue__npc_x", "value": true },
+                { "type": "item", "item": "key", "has": true }
+              ]
+            }
+          }
+        },
+        "d_x_default": {
+          "id": "d_x_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {}
+        },
+        "d_y_default": {
+          "id": "d_y_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_y",
+          "offer": {}
+        }
+      }
+    },
+    "expected": [
+      { "kind": "dialogue", "characterId": "npc_y", "dialogue": "d_y_default", "queued": false }
+    ]
+  },
+  {
+    "fn": "nextContinuations",
+    "description": "no flag set: discovery offers each character's best eligible offer, unqueued, dropping visited one-shots and the current dialogue",
+    "state": { "flags": {}, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {} },
+    "visited": ["d_x_default"],
+    "currentDialogueId": "d_y_default",
+    "project": {
+      "characters": {
+        "npc_x": { "id": "npc_x", "name": "X" },
+        "npc_y": { "id": "npc_y", "name": "Y" }
+      },
+      "dialogues": {
+        "d_forced": {
+          "id": "d_forced",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {
+            "priority": 1,
+            "when": { "type": "flag", "flag": "active_dialogue__npc_x", "value": true }
+          }
+        },
+        "d_x_default": {
+          "id": "d_x_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {}
+        },
+        "d_x_replay": {
+          "id": "d_x_replay",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "replayable": true,
+          "offer": {
+            "when": { "type": "flag", "flag": "seen", "value": true }
+          }
+        },
+        "d_y_default": {
+          "id": "d_y_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_y",
+          "offer": {}
+        }
+      }
+    },
+    "expected": []
+  },
+  {
+    "fn": "nextContinuations",
+    "description": "a pending cutscene is listed before any dialogue continuation",
+    "state": { "flags": {}, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {}, "pendingCutscene": "cs_intro" },
+    "visited": [],
+    "currentDialogueId": "d_other",
+    "project": {
+      "characters": {
+        "npc_x": { "id": "npc_x", "name": "X" },
+        "npc_y": { "id": "npc_y", "name": "Y" }
+      },
+      "dialogues": {
+        "d_x_default": {
+          "id": "d_x_default",
+          "entry": "n",
+          "nodes": [
+            { "id": "n", "text": "…", "isEnd": true }
+          ],
+          "speakerId": "npc_x",
+          "offer": {}
+        }
+      },
+      "cutscenes": {
+        "cs_intro": { "id": "cs_intro", "name": "Intro" }
+      }
+    },
+    "expected": [
+      { "kind": "cutscene", "cutscene": "cs_intro" },
+      { "kind": "dialogue", "characterId": "npc_x", "dialogue": "d_x_default", "queued": false }
+    ]
+  }
+]
