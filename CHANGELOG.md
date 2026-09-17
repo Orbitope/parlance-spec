@@ -8,6 +8,45 @@ Pre-1.0, breaking changes land in minor releases with no deprecation window —
 see [`docs/VERSIONING.md`](docs/VERSIONING.md). Pin an exact tag and vendor the
 conformance vectors at it.
 
+## v0.14.0
+
+**Two contract changes: dialogue offers replace the character ladder (breaking), and
+checks gain conditional modifiers (additive, but not safe to skip).** A port must ship
+both to claim 0.14.0 conformance; a project only needs the ladder migration, since the
+modifier field is opt-in.
+
+**What a port must do — dialogue offers.** `character.dialogues` and
+`dialogue.availableWhen` are gone. Each dialogue now self-declares candidacy with an
+`offer` object `{ character?, when?, priority? }`. Reimplement `resolveCharacterDialogue`
+against offers — gather a character's offers, drop those whose `when` fails (and visited
+non-`replayable` ones), and pick by **priority tier, then condition specificity, then
+lowest id** — and delete any ladder/`selectDialogue` code path. If you implement
+`nextContinuations`, a routed character's winner counts as forced only when its gate reads
+`active_dialogue__<character>` (feed model). Re-vendor the vectors: `resolveCharacterDialogue.json`
+is rewritten, `nextContinuations.json` is new, and the validator gains an `OFFER` family
+plus a `MIGRATE` error; the `LADDER` cases are gone. Selection is now order-independent —
+the arrangement of dialogues in a project no longer affects which one plays.
+
+**What a project must do — dialogue offers.** A project still carrying `character.dialogues`
+fails to load with a `MIGRATE` error. Convert it with `validate/migrate_ladders.py --root
+<project>` (run `--check` first for the report). It preserves each ladder's winner in
+every state, assigning priority tiers where specificity alone would reorder a rung; the
+`INVERSION`, `SHADOWED`, and `CONFLICT` notes are the few places to eyeball.
+
+**What a port must do — check modifiers.** `Check` gains an optional `modifiers: { when,
+bonus, label? }[]`. Every modifier whose `when` holds adds its `bonus` to the check total
+(active: `roll + skill + Σbonus ≥ difficulty`; passive reveal: `skill + Σbonus ≥
+difficulty`). Implement the modifier sum, thread a `project` into `resolveCheck` (a
+`quest`/`questOutcome` gate needs it), and add the passive-reveal threshold. `CheckResult`
+gains `bonus` and `appliedModifiers`, present iff the check declares at least one modifier —
+so a check without modifiers is byte-identical to before. Re-vendor `resolve_check.json`
+and `choose_choice.json`. This is additive to the schema but **not safe to skip**: a
+runtime that ignores modifiers rolls the wrong odds on any check that uses them — silently
+wrong, not merely behind. `check.modifiers[].when` is a new condition site; walk it
+wherever you walk conditions.
+
+Full migration recipes and detection commands are in [`docs/MIGRATIONS.md`](docs/MIGRATIONS.md).
+
 ## v0.13.0
 
 **No new rule; one conformance vector added.**
