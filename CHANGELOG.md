@@ -8,6 +8,49 @@ Pre-1.0, breaking changes land in minor releases with no deprecation window —
 see [`docs/VERSIONING.md`](docs/VERSIONING.md). Pin an exact tag and vendor the
 conformance vectors at it.
 
+## v0.15.0
+
+**No project needs migrating; every port must upgrade.** Every project valid under 0.14.0
+stays valid and plays identically: shapes the validator used to reject become legal, and
+new fields are optional. But a 0.14 runtime plays the new shapes wrong with no error. It
+skips a gated node that carries choices, shows a fallback choice beside the choices it
+replaces, and may throw on the new `engine` effect. Runtime vectors go from 182 to 207.
+
+**What a port must do — node shapes and choices.**
+- **Line-only gates.** A node whose `showIf` fails is skipped only when it is
+  interstitial (no `choices`, not `isEnd`). A gated node with choices or `isEnd` is
+  returned; its `onEnter` fires, its choices are offered, and `stepDialogue` returns
+  `textHidden: true` with `text: ""`. Judge the gate once, on arrival, before `onEnter`.
+- **`text` is optional** on a node with non-empty `choices`.
+- **`choice.fallback`.** Offer it only when no non-fallback choice on the node is visible.
+- **Locked choices.** `stepDialogue` returns `lockedChoices`: failing choices whose
+  `whenLocked` (default `rules.choices.whenLockedDefault`, then `"hide"`) is `"show"`.
+  Interpolate `lockedText`. `visibleChoices` keeps its meaning.
+- **`chooseChoice` throws** on a hidden choice, a locked choice or an unoffered fallback.
+- **Tags.** `node.tags` and `choice.tags` pass through `stepDialogue` unchanged.
+- **The `engine` effect** `{ type: "engine", command, args? }` leaves state unchanged and
+  is returned in order among the other effects, for the host to dispatch.
+- **`resolveQuests`** gains a vector that only a port iterating to the fixpoint passes.
+
+Re-vendor `step_dialogue.json` (24), `choose_choice.json` (17, now with `expectedError`
+vectors), `advance.json` (14), `apply_effect.json` (29) and `resolve_quests.json` (7).
+
+**What a validator port must do.** New issue code `ENGINE` (a malformed command is an
+error; with `rules.engine.commands` declared, an undeclared command or a wrong argument
+count is a warning). New `FLOW` findings: a node with no text and no choices (error), more
+than one fallback, a fallback with no gated sibling, and `whenLocked`/`lockedText` without
+`showIf`. The `COND` errors for `showIf` with `choices`/`isEnd` are gone. `FLAG` reports two
+flags of one `rules.flag.exclusiveGroups` group set true in one effect list. Custom entity
+types in `data/types.json` are loaded and checked (`SCHEMA`, `REF`, `DUP`). Optional
+`data/bindings/*.json` (`schema/binding.schema.json`) is checked and warns `BIND`. Strip a
+leading UTF-8 byte-order mark before parsing, and match a `loreRef` in either Unicode
+normalization form. 39 new validator cases.
+
+**Also published:** four new format importers (SugarCube, ChoiceScript, Arcweave, Ren'Py),
+and the existing importers now use the 0.15 shapes and declare much less loss.
+
+Full recipes, vector names and detection commands are in [`docs/MIGRATIONS.md`](docs/MIGRATIONS.md).
+
 ## v0.14.0
 
 **Two contract changes: dialogue offers replace the character ladder (breaking), and
