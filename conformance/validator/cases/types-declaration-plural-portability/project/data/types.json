@@ -1,0 +1,27 @@
+{
+  "device": {
+    "fields": {},
+    "name": "Device",
+    "plural": "aux"
+  },
+  "rumour": {
+    "fields": {},
+    "name": "Rumour",
+    "plural": "Dialogues"
+  },
+  "rune": {
+    "fields": {},
+    "name": "Rune",
+    "plural": "glyphs"
+  },
+  "sigil": {
+    "fields": {},
+    "name": "Sigil",
+    "plural": "Glyphs"
+  },
+  "trail": {
+    "fields": {},
+    "name": "Trail",
+    "plural": "trails\n"
+  }
+}

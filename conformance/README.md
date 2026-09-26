@@ -17,15 +17,15 @@ Counts below drift every time vectors are added, so treat them as indicative and
 | File | Function | Vectors |
 |---|---|---|
 | `evaluate.json` | `evaluate(condition, state, project)` | 53 |
-| `apply_effect.json` | `applyEffect(effect, state, project)` | 27 |
+| `apply_effect.json` | `applyEffect(effect, state, project)` | 29 |
 | `resolve_check.json` | `resolveCheck(check, state, rng, defaultDice?, criticals?, project?)` | 24 |
-| `step_dialogue.json` | `stepDialogue(dialogue, nodeId, state, project)` | 11 |
-| `choose_choice.json` | `chooseChoice(dialogue, nodeId, choiceId, state, project, rng)` | 10 |
-| `advance.json` | `advanceNode(dialogue, nodeId, state, project)` | 12 |
+| `step_dialogue.json` | `stepDialogue(dialogue, nodeId, state, project)` | 24 |
+| `choose_choice.json` | `chooseChoice(dialogue, nodeId, choiceId, state, project, rng)` | 17 |
+| `advance.json` | `advanceNode(dialogue, nodeId, state, project)` | 14 |
 | `resolveCharacterDialogue.json` | `resolveCharacterDialogue(state, character, project, visited?)` | 16 |
 | `nextContinuations.json` | `nextContinuations(state, project, visited, currentDialogueId)` — forced routing vs discovery | 4 |
 | `progression.json` | `levelForXp` / `pointsEarned` / `availablePoints` / `investSkillPoint` / `recomputeSkills` | 13 |
-| `resolve_quests.json` | `resolveQuests(state, project)` | 6 |
+| `resolve_quests.json` | `resolveQuests(state, project)` | 7 |
 | `rng.json` | mulberry32(seed) output stream — the seeded PRNG ports must reproduce exactly | 6 |
 
 ### `migrate_ladders/` — vectors for the 0.13 → 0.14 ladder migration
@@ -53,9 +53,11 @@ agrees. See `validator/README.md` for the case format.
 
 Any runtime file may carry failure cases: a vector with `expectedError` (a substring
 the thrown error's message must contain) instead of `expected` means the call must
-throw. `advance.json` carries them for a missing `next` and for a ring of conditional
-nodes whose gates all fail — both validator-guaranteed impossibilities, thrown rather
-than absorbed because reaching them means the data never passed validation.
+throw. Two files carry them. `advance.json` has them for a missing `next` and for a
+ring of conditional nodes whose gates all fail — both validator-guaranteed
+impossibilities, thrown rather than absorbed because reaching them means the data never
+passed validation. `choose_choice.json` (0.15) has them for a choice that is not
+selectable: hidden, locked, or an unoffered fallback.
 
 ## Vector format
 
@@ -86,7 +88,7 @@ Each file is a JSON array. Each element is a self-contained test vector with the
 
   // Expected output — exactly ONE of these two is present:
   "expected":      varies by fn  // see per-function sections below
-  "expectedError": string        // advanceNode only — see Error cases below
+  "expectedError": string        // advanceNode / chooseChoice only — see their sections
 }
 ```
 
@@ -194,9 +196,29 @@ below: without it, a runtime that never implements the skip walk still passes ev
 whose skipped node carries no `onEnter` — the *typical* gated narration line, since a
 conditional node is choiceless by construction. Older vectors omit the field.
 
-`visibleChoiceIds` is the ordered list of choice ids that pass `showIf` filtering.
+`visibleChoiceIds` is the ordered list of SELECTABLE choice ids: those that pass
+`showIf`, with a `fallback` choice included only when no non-fallback choice passes.
+
+`lockedChoiceIds` (0.15, present on **every** vector — `[]` on the older ones) is the
+ordered list of choices whose `showIf` failed and whose `whenLocked` resolves to `"show"`
+(per-choice, else the vector's `project.rules.choices.whenLockedDefault`, else `"hide"`).
+A port that ignores locked choices fails the vectors that expect a non-empty list, which
+is the point: `lockedChoices` is opt-in for an ENGINE's presentation, not for conformance.
+
+`textHidden` (0.15, optional — absent means `false`) is true when the node's own `showIf`
+failed on a node with `choices` or `isEnd`: the node is NOT skipped, its line is hidden.
+`text`, when present, is the returned `node.text` — `""` for a hidden line, `null` for a
+text-less node (whose `text` is absent). Check both: a port that still skips a gated
+choice node fails on `nodeId`, and one that shows the hidden line fails on `text`.
 `onEnterEffects` is `node.onEnter` in order — the effects are returned but **not
 applied**, which is the caller's responsibility.
+
+Since 0.15 a vector may also state `nodeTags` (the resolved node's `tags`, exactly as
+authored) and `visibleChoiceTags` (per visible choice, its `tags` or `null`, in
+`visibleChoiceIds` order). Tags are opaque pass-through, so check them when present:
+a port that strips, sorts or dedupes them fails. The same vector puts an `engine`
+effect among the `onEnterEffects`. It is returned in position like any effect, and
+`apply_effect.json` pins that applying it changes nothing.
 
 `onEnterEffectCount` is that list's length, kept for ports already checking it.
 **Check `onEnterEffects`, not the count.** The count alone is satisfied by
@@ -217,6 +239,10 @@ wrong thing to the player's state while reporting conformance.
 `checkResult` is only present for active check vectors. `nextNodeId` is `null` for
 terminal choices (no `goto`, no `check`).
 
+A vector with `expectedError` instead of `expected` (0.15) must THROW with a message
+containing that string: choosing a hidden choice, a locked one, or a `fallback` while a
+non-fallback choice is visible is not selectable. Same convention as `advance.json`.
+
 ### advanceNode
 ```json
 { "expected": { "nextNodeId": "node_end", "newState": SerializedGameState } }
@@ -232,8 +258,9 @@ returned `nextNodeId` is **post-skip**: the target is resolved through any faili
 exactly one *shown* beat — skipped nodes are inert, not beats.
 
 **Error cases.** A vector with `expectedError` instead of `expected` means the call must
-throw; `expectedError` is a substring the thrown error's message must contain. This is the
-one function in the suite with a failure contract — call it only on a node that declares
+throw; `expectedError` is a substring the thrown error's message must contain. It is one
+of two functions in the suite with a failure contract (the other is `chooseChoice`) —
+call it only on a node that declares
 `next` (the validator's FLOW checks and the client both prevent constructing the call
 otherwise); reaching it anyway is a bug upstream, not a `Problem`/result-object case.
 
@@ -290,7 +317,7 @@ order; `expected.state.questFired` is the sorted record.
 2. For each vector, deserialize `state` by converting `inventory: string[]` to your
    language's equivalent of `Set<string>`.
 3. Call your implementation of the named function with the provided inputs.
-4. If the vector carries `expectedError` (advanceNode only): assert the call throws /
+4. If the vector carries `expectedError` (advanceNode and chooseChoice only): assert the call throws /
    returns an error whose message contains that substring, and stop — there is no output
    state to compare.
 5. Otherwise, serialize the output state (if any) back to `{ ..., inventory: string[] }`

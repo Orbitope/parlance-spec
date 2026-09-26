@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "missing required field 'manaCost'",
+      "severity": "error"
+    }
+  ]
+}

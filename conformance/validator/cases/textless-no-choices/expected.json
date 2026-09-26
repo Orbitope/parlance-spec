@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "FLOW",
+      "contains": "no text and no choices",
+      "severity": "error"
+    }
+  ]
+}

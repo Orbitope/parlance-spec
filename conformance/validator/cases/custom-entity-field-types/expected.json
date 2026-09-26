@@ -1,0 +1,29 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "field 'manaCost' expected number",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "field 'ritual' expected boolean",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "field 'element' invalid value 'water'",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "field 'incantation' expected string",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "field 'reagents' expected array",
+      "severity": "error"
+    }
+  ]
+}

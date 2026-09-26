@@ -71,6 +71,57 @@ def blank_yarn_headers(text):
     return "\n".join(out)
 
 
+def strip_hash_comment(line, quote=None):
+    """(code, quote still open at end of line) — Ren'Py's `#` comment, outside strings.
+
+    `define s = Character("Sylvie", color="#c8ffc8")` is the case that makes the
+    string tracking necessary: a blanket `#…$` rule would cut every Character
+    definition in half and count the rest as neither prose nor syntax. The quote
+    state carries across lines because a say statement's string may.
+    """
+    out, i = [], 0
+    while i < len(line):
+        c = line[i]
+        if quote:
+            if c == "\\":
+                # An escape consumes the NEXT character whatever it is, so a
+                # run of backslashes pairs up: `"C:\\"` closes, `"\""` does
+                # not. Looking only at the one character before a quote got
+                # the first wrong and left the string open across lines.
+                out.append(line[i:i + 2])
+                i += 2
+                continue
+            if line.startswith(quote, i):
+                out.append(quote)
+                i += len(quote)
+                quote = None
+                continue
+            out.append(c)
+            i += 1
+            continue
+        if c == "#":
+            break
+        for q in ('"""', "'''", '"', "'"):
+            if line.startswith(q, i):
+                quote = q
+                out.append(q)
+                i += len(q)
+                break
+        else:
+            out.append(c)
+            i += 1
+    return "".join(out), quote
+
+
+def blank_hash_comments(text):
+    """Ren'Py comments blanked, newlines kept (residue reports by line)."""
+    out, quote = [], None
+    for raw in text.split("\n"):
+        code, quote = strip_hash_comment(raw, quote)
+        out.append(code + " " * (len(raw) - len(code)))
+    return "\n".join(out)
+
+
 def _words(s):
     return WORD.findall(s or "")
 
@@ -171,6 +222,54 @@ MARKUP = {
         # reported lost on the strength of one apostrophe.
         r"\$\w+(?:['’]\w+)?",
     ],
+    # Ren'Py: comments are blanked structurally (blank_hash_comments), because a
+    # `#` inside a string — `color="#c8ffc8"` — is not one. Text tags are NOT
+    # stripped here: the parser records every tag it removes in `unmapped`, so a
+    # pattern for them would only be a hole. Statements the parser recognised are
+    # accounted by the parser line by line. What is left is the one piece of
+    # string syntax that glues itself onto a word: an escape. `Hello\nWorld`
+    # reads as the words `Hello` and `nWorld` without this.
+    "renpy": [
+        r"\\[nt]",
+    ],
+    # Arcweave: the residue text is the parser's PROJECTION of the export — one
+    # line per string leaf of the JSON — not the raw file, because a JSON export
+    # has no lines worth reporting against. HTML tags and entities are the
+    # markup of element content and connection labels. A tag's attributes name
+    # ids and classes, never prose; the text BETWEEN tags stays required.
+    "arcweave": [
+        r"<[^<>\n]*>",
+        r"&(?:[A-Za-z]+|#\d+|#x[0-9A-Fa-f]+);",
+    ],
+    # SugarCube. Like Twine's set: ONLY macro heads and closers are stripped —
+    # a macro's arguments can hold prose (`<<link "Go in">>`), so the parser
+    # accounts for them itself, per line. HTML tags come AFTER the macro heads:
+    # `<<set $x to 1>>` contains `<set $x to 1>`, which the tag pattern would
+    # otherwise eat whole, arguments and all. Variables are NOT stripped: a
+    # naked `$name` is kept verbatim in the unit that carries its line.
+    "sugarcube": [
+        r"^\s*::.*$",                          # passage headers
+        r"<</?(?:[A-Za-z][\w-]*|=|-)",          # macro heads and closers
+        r">>",
+        r"</?[A-Za-z!][^<>\n]*>",              # HTML tags (attributes are not prose)
+    ],
+    # ChoiceScript. A command line is `*name args`: only the `*name` is
+    # stripped, and every argument the parser recognises it records itself.
+    # `*comment` is the one command whose whole line is not the story's.
+    "choicescript": [
+        r"^\s*\*comment\b.*$",
+        r"^\s*\*[a-z_]+",                      # the command word
+        r"#",                                  # an option marker
+    ],
+}
+
+# Formats whose `//` is NOT a comment. SugarCube's `//text//` is italics and a
+# ChoiceScript line may say `and/or // whatever` as prose: blanking from `//`
+# there would remove the rest of a writer's line from the count — exactly the
+# hole this module exists to close. Their block comments are blanked instead.
+BLOCK_ONLY = {
+    "sugarcube": re.compile(r"/\*.*?\*/|/%.*?%/|<!--.*?-->", re.S),
+    "choicescript": None,
 }
 
 
@@ -208,7 +307,18 @@ def find_residue(source_text, units, unmapped=(), extra_accounted=(), fmt=None):
     # Comments are not player-facing prose and the parsers already skip them, so
     # counting their words reported the parser as having lost lines nobody wrote
     # for a player. Blanked rather than deleted: residue reports by line number.
-    blanked = blank_comments(source_text)
+    if fmt in BLOCK_ONLY:
+        pat = BLOCK_ONLY[fmt]
+        blanked = source_text if pat is None else pat.sub(
+            lambda m: "".join(c if c == "\n" else " " for c in m.group(0)), source_text)
+    elif fmt == "renpy":
+        # `#` comments only — a `//` or `/* */` inside a Ren'Py string is prose,
+        # and blanking it here would hide the parser dropping it.
+        blanked = blank_hash_comments(source_text)
+    elif fmt == "arcweave":
+        blanked = source_text           # a projection of JSON strings: no comments
+    else:
+        blanked = blank_comments(source_text)
     if fmt == "yarn":
         blanked = blank_yarn_headers(blanked)
     for i, raw in enumerate(blanked.splitlines(), 1):

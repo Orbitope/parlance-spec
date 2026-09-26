@@ -365,14 +365,34 @@
       "text": "\"Work that will be rather difficult for you to do, don't you think?\" Harris interrupts."
     },
     {
-      "id": "n_intercept_missing_reel",
-      "next": "n_intercept_missing_reel_2",
+      "choices": [
+        {
+          "goto": "n_intercept_missing_reel_3",
+          "id": "c_intercept_the_stolen_component",
+          "text": "The stolen component..."
+        },
+        {
+          "goto": "n_intercept_missing_reel_2",
+          "id": "c_intercept_shrug",
+          "text": "Shrug"
+        }
+      ],
+      "id": "n_intercept_missing_reel"
+    },
+    {
+      "id": "n_intercept_missing_reel_2",
+      "next": "n_intercept_harris_demands_component",
+      "text": "I shrug."
+    },
+    {
+      "id": "n_intercept_missing_reel_3",
+      "next": "n_intercept_missing_reel_4",
       "text": "The reel went missing from the Bombe this afternoon. The four of us were in the Hut, working on the latest German intercept. The results were garbage. It was Russell who found the gap in the plugboard."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_missing_reel_3",
+          "goto": "n_intercept_missing_reel_5",
           "id": "c_intercept_panic",
           "showIf": {
             "counter": "forceful",
@@ -383,12 +403,12 @@
           "text": "Panic"
         },
         {
-          "goto": "n_intercept_missing_reel_4",
+          "goto": "n_intercept_missing_reel_6",
           "id": "c_intercept_calculate",
           "text": "Calculate"
         },
         {
-          "goto": "n_intercept_missing_reel_5",
+          "goto": "n_intercept_missing_reel_7",
           "id": "c_intercept_deny",
           "showIf": {
             "counter": "evasive",
@@ -399,21 +419,21 @@
           "text": "Deny"
         }
       ],
-      "id": "n_intercept_missing_reel_2",
+      "id": "n_intercept_missing_reel_4",
       "text": "Any of us could have taken it; and no one else would have known its worth."
     },
     {
-      "id": "n_intercept_missing_reel_3",
+      "id": "n_intercept_missing_reel_5",
       "next": "n_intercept_harris_demands_component",
       "text": "They will pin it on me. They need a scapegoat so that the work can continue. I'm a likely target. Weaker than the rest."
     },
     {
-      "id": "n_intercept_missing_reel_4",
+      "id": "n_intercept_missing_reel_6",
       "next": "n_intercept_harris_demands_component",
       "text": "My odds, then, are one in four. Not bad; although the stakes themselves are higher than I would like."
     },
     {
-      "id": "n_intercept_missing_reel_5",
+      "id": "n_intercept_missing_reel_7",
       "next": "n_intercept_harris_demands_component",
       "text": "But this is still a mere formality. The work will not stop. A replacement component will be made and we will all be put back to work. We are too valuable to shoot."
     },
@@ -611,14 +631,95 @@
       "text": "\"How should I know?\" I reply, defensively. { teacup :I set the teacup back on the table.}"
     },
     {
-      "id": "n_intercept_harris_demands_component",
-      "next": "n_intercept_harris_demands_component_2",
+      "choices": [
+        {
+          "goto": "n_intercept_harris_demands_component_2",
+          "id": "c_intercept_yes_3",
+          "text": "Yes"
+        },
+        {
+          "goto": "n_intercept_harris_demands_component_3",
+          "id": "c_intercept_no_3",
+          "text": "No"
+        },
+        {
+          "goto": "n_intercept_harris_demands_component",
+          "id": "c_intercept_lie_5",
+          "text": "Lie"
+        },
+        {
+          "goto": "n_intercept_harris_demands_component_4",
+          "id": "c_intercept_evade_5",
+          "text": "Evade"
+        }
+      ],
+      "id": "n_intercept_harris_demands_component"
+    },
+    {
+      "id": "n_intercept_harris_demands_component_2",
+      "next": "n_intercept_admitted_to_something",
+      "text": "\"I do.\""
+    },
+    {
+      "id": "n_intercept_harris_demands_component_3",
+      "next": "n_intercept_harris_demands_component_9",
+      "text": "\"I have no idea.\""
+    },
+    {
+      "id": "n_intercept_harris_demands_component_4",
+      "next": "n_intercept_harris_demands_component_5",
+      "text": "\"The component?\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_harris_demands_component_6",
+          "id": "c_intercept_co_operate_2",
+          "text": "Co-operate"
+        },
+        {
+          "goto": "n_intercept_harris_demands_component_7",
+          "id": "c_intercept_delay",
+          "text": "Delay"
+        },
+        {
+          "goto": "n_intercept_harris_demands_component_5",
+          "id": "c_intercept_lie_6",
+          "text": "Lie"
+        },
+        {
+          "goto": "n_intercept_harris_demands_component_8",
+          "id": "c_intercept_evade_6",
+          "text": "Evade"
+        }
+      ],
+      "id": "n_intercept_harris_demands_component_5",
+      "text": "\"Don't play stupid,\" he replies. \"{ not missing_reel:The component that went missing this afternoon. }Where is it?\""
+    },
+    {
+      "id": "n_intercept_harris_demands_component_6",
+      "next": "n_intercept_admitted_to_something",
+      "text": "\"I know where it is.\""
+    },
+    {
+      "id": "n_intercept_harris_demands_component_7",
+      "next": "n_intercept_harris_demands_component_9",
+      "text": "\"I know nothing about it.\" My voice shakes{ forceful > 0: with anger|; I'm unaccustomed to facing off against men with holstered guns}."
+    },
+    {
+      "id": "n_intercept_harris_demands_component_8",
+      "next": "n_intercept_harris_demands_component_10",
+      "text": "\"This is time of war,\" Harris answers.  \"And by God, if I have to shoot you to recover the component, I will. Understand?\" He points at the mug,"
+    },
+    {
+      "id": "n_intercept_harris_demands_component_9",
+      "next": "n_intercept_harris_demands_component_10",
       "text": "There's an icy silence. { forceful > 2:I've cracked him a little.|{ evasive > 2:He's tiring of my evasiveness.}}"
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_harris_demands_component_4",
+          "goto": "n_intercept_harris_demands_component_12",
           "id": "c_intercept_drink_2",
           "showIf": {
             "flag": "teacup",
@@ -628,7 +729,7 @@
           "text": "Drink"
         },
         {
-          "goto": "n_intercept_harris_demands_component_3",
+          "goto": "n_intercept_harris_demands_component_11",
           "id": "c_intercept_put_the_cup_down",
           "showIf": {
             "flag": "teacup",
@@ -638,7 +739,7 @@
           "text": "Put the cup down"
         },
         {
-          "goto": "n_intercept_harris_demands_component_4",
+          "goto": "n_intercept_harris_demands_component_12",
           "id": "c_intercept_take_the_cup",
           "showIf": {
             "flag": "teacup",
@@ -648,7 +749,7 @@
           "text": "Take the cup"
         },
         {
-          "goto": "n_intercept_harris_demands_component_5",
+          "goto": "n_intercept_harris_demands_component_13",
           "id": "c_intercept_don_t_take_it_2",
           "showIf": {
             "flag": "teacup",
@@ -658,12 +759,12 @@
           "text": "Don't take it"
         }
       ],
-      "id": "n_intercept_harris_demands_component_2",
+      "id": "n_intercept_harris_demands_component_10",
       "text": "\"Now drink your tea and talk.\""
     },
     {
-      "id": "n_intercept_harris_demands_component_3",
-      "next": "n_intercept_harris_demands_component_6",
+      "id": "n_intercept_harris_demands_component_11",
+      "next": "n_intercept_harris_demands_component_14",
       "onEnter": [
         {
           "flag": "teacup",
@@ -674,8 +775,8 @@
       "text": "I set the cup carefully down on the table once more."
     },
     {
-      "id": "n_intercept_harris_demands_component_4",
-      "next": "n_intercept_harris_demands_component_7",
+      "id": "n_intercept_harris_demands_component_12",
+      "next": "n_intercept_harris_demands_component_15",
       "onEnter": [
         {
           "flag": "drugged",
@@ -691,24 +792,24 @@
       "text": "I lift the cup { teacup :to my lips }and sip. He waits for me to swallow before speaking again."
     },
     {
-      "id": "n_intercept_harris_demands_component_5",
-      "next": "n_intercept_harris_demands_component_6",
+      "id": "n_intercept_harris_demands_component_13",
+      "next": "n_intercept_harris_demands_component_14",
       "text": "I leave the cup where it is."
     },
     {
-      "id": "n_intercept_harris_demands_component_6",
-      "next": "n_intercept_harris_demands_component_7",
+      "id": "n_intercept_harris_demands_component_14",
+      "next": "n_intercept_harris_demands_component_15",
       "text": "\"Why?\" I ask coldly. \"What's in it?\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_harris_demands_component_8",
+          "goto": "n_intercept_harris_demands_component_16",
           "id": "c_intercept_agree_2",
           "text": "Agree"
         },
         {
-          "goto": "n_intercept_harris_demands_component_9",
+          "goto": "n_intercept_harris_demands_component_17",
           "id": "c_intercept_disagree_2",
           "showIf": {
             "flag": "drugged",
@@ -718,7 +819,7 @@
           "text": "Disagree"
         },
         {
-          "goto": "n_intercept_harris_demands_component_10",
+          "goto": "n_intercept_harris_demands_component_18",
           "id": "c_intercept_disagree_3",
           "showIf": {
             "flag": "drugged",
@@ -728,8 +829,8 @@
           "text": "Disagree"
         },
         {
-          "goto": "n_intercept_harris_demands_component_7",
-          "id": "c_intercept_lie_5",
+          "goto": "n_intercept_harris_demands_component_15",
+          "id": "c_intercept_lie_7",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -738,8 +839,8 @@
           "text": "Lie"
         },
         {
-          "goto": "n_intercept_harris_demands_component_7",
-          "id": "c_intercept_lie_6",
+          "goto": "n_intercept_harris_demands_component_15",
+          "id": "c_intercept_lie_8",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -748,8 +849,8 @@
           "text": "Lie"
         },
         {
-          "goto": "n_intercept_harris_demands_component_7",
-          "id": "c_intercept_evade_5",
+          "goto": "n_intercept_harris_demands_component_15",
+          "id": "c_intercept_evade_7",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -758,8 +859,8 @@
           "text": "Evade"
         },
         {
-          "goto": "n_intercept_harris_demands_component_11",
-          "id": "c_intercept_evade_6",
+          "goto": "n_intercept_harris_demands_component_19",
+          "id": "c_intercept_evade_8",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -768,26 +869,26 @@
           "text": "Evade"
         }
       ],
-      "id": "n_intercept_harris_demands_component_7",
+      "id": "n_intercept_harris_demands_component_15",
       "text": "\"Lapsang Souchong,\" he {drinkfromcup:remarks|replies}, placing his own cup back on the table untouched. \"Such a curious flavour. It might almost not be tea at all. You might say it hides a multitude of sins. As do you. Isn't that right?\""
     },
     {
-      "id": "n_intercept_harris_demands_component_8",
+      "id": "n_intercept_harris_demands_component_16",
       "next": "n_intercept_harris_presses_for_details",
       "text": "\"I suppose so,\" I reply. \"I've done things I shouldn't have done.\""
     },
     {
-      "id": "n_intercept_harris_demands_component_9",
+      "id": "n_intercept_harris_demands_component_17",
       "next": "n_intercept_harris_asks_for_theory",
       "text": "\"I've done nothing that I'm ashamed of.\""
     },
     {
-      "id": "n_intercept_harris_demands_component_10",
+      "id": "n_intercept_harris_demands_component_18",
       "next": "n_intercept_admitted_to_something_ive_done_things",
       "text": "I open my mouth to disagree, but the words I want won't come. It is like Harris has taken a screwdriver to the sides of my jaw."
     },
     {
-      "id": "n_intercept_harris_demands_component_11",
+      "id": "n_intercept_harris_demands_component_19",
       "next": "n_intercept_harris_asks_for_theory",
       "text": "He appears to consider the offer."
     },
@@ -795,12 +896,12 @@
       "choices": [
         {
           "goto": "n_intercept_harris_presses_for_details_admit_open_to_pressure",
-          "id": "c_intercept_yes_3",
+          "id": "c_intercept_yes_4",
           "text": "Yes"
         },
         {
           "goto": "n_intercept_harris_presses_for_details_2",
-          "id": "c_intercept_no_3",
+          "id": "c_intercept_no_4",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -810,7 +911,7 @@
         },
         {
           "goto": "n_intercept_harris_presses_for_details_3",
-          "id": "c_intercept_no_4",
+          "id": "c_intercept_no_5",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -820,7 +921,7 @@
         },
         {
           "goto": "n_intercept_harris_presses_for_details_7",
-          "id": "c_intercept_evade_7",
+          "id": "c_intercept_evade_9",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -830,7 +931,7 @@
         },
         {
           "goto": "n_intercept_harris_presses_for_details_5",
-          "id": "c_intercept_evade_8",
+          "id": "c_intercept_evade_10",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -943,7 +1044,7 @@
         },
         {
           "goto": "n_intercept_claim_hooper_took_component",
-          "id": "c_intercept_lie_8",
+          "id": "c_intercept_lie_10",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -953,7 +1054,7 @@
         },
         {
           "goto": "n_intercept_admitted_to_something_8",
-          "id": "c_intercept_evade_9",
+          "id": "c_intercept_evade_11",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -994,7 +1095,7 @@
         },
         {
           "goto": "n_intercept_claim_hooper_took_component",
-          "id": "c_intercept_lie_7",
+          "id": "c_intercept_lie_9",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -1071,12 +1172,12 @@
       "choices": [
         {
           "goto": "n_intercept_harris_asks_for_theory_an_accident_5",
-          "id": "c_intercept_co_operate_2",
+          "id": "c_intercept_co_operate_3",
           "text": "Co-operate"
         },
         {
           "goto": "n_intercept_harris_asks_for_theory_an_accident_6",
-          "id": "c_intercept_evade_10",
+          "id": "c_intercept_evade_12",
           "showIf": {
             "counter": "evasive",
             "op": ">",
@@ -1176,7 +1277,7 @@
         },
         {
           "goto": "n_intercept_harris_has_seen_it_before_7",
-          "id": "c_intercept_lie_9",
+          "id": "c_intercept_lie_11",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -1305,71 +1406,86 @@
       "text": "\"I can imagine how it starts,\" he replies."
     },
     {
-      "id": "n_intercept_i_met_a_young_man",
-      "next": "n_intercept_i_met_a_young_man_2",
+      "choices": [
+        {
+          "goto": "n_intercept_i_met_a_young_man_2",
+          "id": "c_intercept_talk",
+          "text": "Talk"
+        }
+      ],
+      "id": "n_intercept_i_met_a_young_man"
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_2",
+      "next": "n_intercept_i_met_a_young_man_3",
+      "text": "\"There was a young man. I met him in the town. A few months ago now. We got to talking. Not about work. And I used my cover story, but he seemed to know it wasn't true. That got me wondering if he might be one of us.\""
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_3",
+      "next": "n_intercept_i_met_a_young_man_4",
       "text": "Harris is not letting me off any more."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_i_met_a_young_man_3",
-          "id": "c_intercept_yes_4",
+          "goto": "n_intercept_i_met_a_young_man_5",
+          "id": "c_intercept_yes_5",
           "text": "Yes"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_4",
-          "id": "c_intercept_no_5",
+          "goto": "n_intercept_i_met_a_young_man_6",
+          "id": "c_intercept_no_6",
           "text": "No"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_7",
-          "id": "c_intercept_lie_10",
+          "goto": "n_intercept_i_met_a_young_man_9",
+          "id": "c_intercept_lie_12",
           "text": "Lie"
         }
       ],
-      "id": "n_intercept_i_met_a_young_man_2",
+      "id": "n_intercept_i_met_a_young_man_4",
       "text": "\"You seriously entertained that possibility?\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_3",
-      "next": "n_intercept_i_met_a_young_man_8",
+      "id": "n_intercept_i_met_a_young_man_5",
+      "next": "n_intercept_i_met_a_young_man_10",
       "text": "\"Yes, I considered it."
     },
     {
-      "id": "n_intercept_i_met_a_young_man_4",
-      "next": "n_intercept_i_met_a_young_man_5",
-      "text": "\"No. Not for more than a moment, of course. Everyone here is marked out by how little we would be willing to say about it.\""
-    },
-    {
-      "id": "n_intercept_i_met_a_young_man_5",
-      "next": "n_intercept_i_met_a_young_man_6",
-      "text": "\"Only you told this young man more than a little, didn't you?\""
-    },
-    {
       "id": "n_intercept_i_met_a_young_man_6",
-      "next": "n_intercept_i_met_a_young_man_8",
-      "text": "I nod. \""
+      "next": "n_intercept_i_met_a_young_man_7",
+      "text": "\"No. Not for more than a moment, of course. Everyone here is marked out by how little we would be willing to say about it.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_7",
       "next": "n_intercept_i_met_a_young_man_8",
-      "text": "\"I was quite certain, after a while. After we'd been talking."
+      "text": "\"Only you told this young man more than a little, didn't you?\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_8",
-      "next": "n_intercept_i_met_a_young_man_9",
+      "next": "n_intercept_i_met_a_young_man_10",
+      "text": "I nod. \""
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_9",
+      "next": "n_intercept_i_met_a_young_man_10",
+      "text": "\"I was quite certain, after a while. After we'd been talking."
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_10",
+      "next": "n_intercept_i_met_a_young_man_11",
       "text": "He seemed to know all about me. He... he was quite enchanted by my achievements.\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_i_met_a_young_man_10",
-          "id": "c_intercept_yes_5",
+          "goto": "n_intercept_i_met_a_young_man_12",
+          "id": "c_intercept_yes_6",
           "text": "Yes"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_17",
-          "id": "c_intercept_no_6",
+          "goto": "n_intercept_i_met_a_young_man_19",
+          "id": "c_intercept_no_7",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -1378,8 +1494,8 @@
           "text": "No"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_19",
-          "id": "c_intercept_no_7",
+          "goto": "n_intercept_i_met_a_young_man_21",
+          "id": "c_intercept_no_8",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -1388,8 +1504,8 @@
           "text": "No"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_9",
-          "id": "c_intercept_lie_11",
+          "goto": "n_intercept_i_met_a_young_man_11",
+          "id": "c_intercept_lie_13",
           "showIf": {
             "flag": "drugged",
             "type": "flag",
@@ -1398,120 +1514,150 @@
           "text": "Lie"
         }
       ],
-      "id": "n_intercept_i_met_a_young_man_9",
+      "id": "n_intercept_i_met_a_young_man_11",
       "text": "The way Harris is staring I expect him to strike me, but he does not. He replies, \"I can see how that must have been attractive to you,\" with such plain—spokeness that I think I must have misheard."
     },
     {
-      "id": "n_intercept_i_met_a_young_man_10",
-      "next": "n_intercept_i_met_a_young_man_11",
+      "id": "n_intercept_i_met_a_young_man_12",
+      "next": "n_intercept_i_met_a_young_man_13",
       "text": "\"It's a lonely life in this place,\" I reply. \"Lonely - and still one never gets a moment to oneself.\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_i_met_a_young_man_12",
+          "goto": "n_intercept_i_met_a_young_man_14",
           "id": "c_intercept_argue",
           "text": "Argue"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_14",
+          "goto": "n_intercept_i_met_a_young_man_16",
           "id": "c_intercept_agree_4",
           "text": "Agree"
         }
       ],
-      "id": "n_intercept_i_met_a_young_man_11",
-      "text": "\"That's how it is in the Service,\" Harris answers."
-    },
-    {
-      "id": "n_intercept_i_met_a_young_man_12",
-      "next": "n_intercept_i_met_a_young_man_13",
-      "text": "\"I'm not in the Service.\""
-    },
-    {
       "id": "n_intercept_i_met_a_young_man_13",
-      "next": "n_intercept_i_met_a_young_man_16",
-      "text": "Harris shakes his head. \"Yes, you are.\""
+      "text": "\"That's how it is in the Service,\" Harris answers."
     },
     {
       "id": "n_intercept_i_met_a_young_man_14",
       "next": "n_intercept_i_met_a_young_man_15",
-      "text": "\"Perhaps. But I didn't choose this life.\""
+      "text": "\"I'm not in the Service.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_15",
-      "next": "n_intercept_i_met_a_young_man_16",
-      "text": "Harris shakes his head. \"No. And there's plenty of others who didn't who are suffering far worse.\""
+      "next": "n_intercept_i_met_a_young_man_18",
+      "text": "Harris shakes his head. \"Yes, you are.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_16",
-      "next": "n_intercept_i_met_a_young_man_21",
-      "text": "Then he waves the thought aside."
+      "next": "n_intercept_i_met_a_young_man_17",
+      "text": "\"Perhaps. But I didn't choose this life.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_17",
       "next": "n_intercept_i_met_a_young_man_18",
-      "text": "\"The boy was a pretty simpleton. Quite inferior. His good opinion meant nothing to be. Harris, do not misunderstand. I was simply after his body.\""
+      "text": "Harris shakes his head. \"No. And there's plenty of others who didn't who are suffering far worse.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_18",
-      "next": "n_intercept_i_met_a_young_man_21",
-      "text": "Harris, to his credit, doesn't flinch; but I can see he will have nightmares of this moment later tonight. I'm tempted to reach out and take his hand to worsen it for him."
+      "next": "n_intercept_i_met_a_young_man_23",
+      "text": "Then he waves the thought aside."
     },
     {
       "id": "n_intercept_i_met_a_young_man_19",
       "next": "n_intercept_i_met_a_young_man_20",
-      "text": "\"It wasn't,\" I reply. \"But I doubt you'd understand.\""
+      "text": "\"The boy was a pretty simpleton. Quite inferior. His good opinion meant nothing to be. Harris, do not misunderstand. I was simply after his body.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_20",
-      "next": "n_intercept_i_met_a_young_man_21",
-      "text": "He simply nods."
+      "next": "n_intercept_i_met_a_young_man_23",
+      "text": "Harris, to his credit, doesn't flinch; but I can see he will have nightmares of this moment later tonight. I'm tempted to reach out and take his hand to worsen it for him."
     },
     {
       "id": "n_intercept_i_met_a_young_man_21",
       "next": "n_intercept_i_met_a_young_man_22",
-      "text": "\"Go on with your confession.\""
+      "text": "\"It wasn't,\" I reply. \"But I doubt you'd understand.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_22",
       "next": "n_intercept_i_met_a_young_man_23",
-      "text": "\"There's not much else to say. I took the part from Bombe computing device. You seem to know that already. I had to. He was going to expose me if I didn't.\""
+      "text": "He simply nods."
     },
     {
-      "choices": [
-        {
-          "goto": "n_intercept_i_met_a_young_man_24",
-          "id": "c_intercept_yes_6",
-          "text": "Yes"
-        },
-        {
-          "goto": "n_intercept_i_met_a_young_man_27",
-          "id": "c_intercept_no_8",
-          "text": "No"
-        },
-        {
-          "goto": "n_intercept_i_met_a_young_man_23",
-          "id": "c_intercept_tell_the_truth_2",
-          "text": "Tell the truth"
-        },
-        {
-          "goto": "n_intercept_i_met_a_young_man_23",
-          "id": "c_intercept_lie_15",
-          "text": "Lie"
-        }
-      ],
       "id": "n_intercept_i_met_a_young_man_23",
-      "text": "\"This young man was blackmailing you over your affair?\""
+      "next": "n_intercept_i_met_a_young_man_24",
+      "text": "\"Go on with your confession.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_24",
       "next": "n_intercept_i_met_a_young_man_25",
+      "text": "\"There's not much else to say. I took the part from Bombe computing device. You seem to know that already. I had to. He was going to expose me if I didn't.\""
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_25",
+      "next": "n_intercept_i_met_a_young_man_26",
+      "text": "\"This young man was blackmailing you over your affair?\""
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_26",
+      "next": "n_intercept_i_met_a_young_man_27",
+      "showIf": {
+        "flag": "drugged",
+        "type": "flag",
+        "value": true
+      },
+      "text": "~ drugged = false"
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_27",
+      "next": "n_intercept_i_met_a_young_man_28",
+      "showIf": {
+        "flag": "drugged",
+        "type": "flag",
+        "value": true
+      },
+      "text": "As Harris speaks I find myself suddenly sharply aware, as if waking from a long sleep. The table, the corrugated walls of the hut, everything seems suddenly more tangible than a moment before."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_i_met_a_young_man_29",
+          "id": "c_intercept_yes_7",
+          "text": "Yes"
+        },
+        {
+          "goto": "n_intercept_i_met_a_young_man_32",
+          "id": "c_intercept_no_9",
+          "text": "No"
+        },
+        {
+          "goto": "n_intercept_i_met_a_young_man_28",
+          "id": "c_intercept_tell_the_truth_2",
+          "text": "Tell the truth"
+        },
+        {
+          "goto": "n_intercept_i_met_a_young_man_28",
+          "id": "c_intercept_lie_17",
+          "text": "Lie"
+        }
+      ],
+      "id": "n_intercept_i_met_a_young_man_28",
+      "showIf": {
+        "flag": "drugged",
+        "type": "flag",
+        "value": true
+      },
+      "text": "Whatever it was they put in my drink is wearing off."
+    },
+    {
+      "id": "n_intercept_i_met_a_young_man_29",
+      "next": "n_intercept_i_met_a_young_man_30",
       "text": "\"Yes. I suppose he was their agent. I should have realised but I didn't. Then he threatened to tell you. I thought you would have me locked up: I couldn't bear the thought of it. I love working here. I've never been so happy, so successful, anywhere before. I didn't want to lose it.\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_i_met_a_young_man_26",
+          "goto": "n_intercept_i_met_a_young_man_31",
           "id": "c_intercept_i_have_it",
           "text": "I have it"
         },
@@ -1521,32 +1667,32 @@
           "text": "I don't have it"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_25",
-          "id": "c_intercept_lie_12",
+          "goto": "n_intercept_i_met_a_young_man_30",
+          "id": "c_intercept_lie_14",
           "text": "Lie"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_25",
+          "goto": "n_intercept_i_met_a_young_man_30",
           "id": "c_intercept_tell_the_truth",
           "text": "Tell the truth"
         }
       ],
-      "id": "n_intercept_i_met_a_young_man_25",
+      "id": "n_intercept_i_met_a_young_man_30",
       "text": "\"So what did you do with the component?\" Harris talks urgently. He grips his gloves tightly in one hand, perhaps prepared to lift them and strike if it is required. \"Have you passed it to this man already? Have you left it somewhere for him to find?\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_26",
+      "id": "n_intercept_i_met_a_young_man_31",
       "isEnd": true,
       "text": "\"I still have it. Not on me, of course."
     },
     {
-      "id": "n_intercept_i_met_a_young_man_27",
-      "next": "n_intercept_i_met_a_young_man_28",
+      "id": "n_intercept_i_met_a_young_man_32",
+      "next": "n_intercept_i_met_a_young_man_33",
       "text": "\"No, Harris. The young man wasn't blackmailing me.\" I take a deep breath. \"It was Hooper.\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_28",
-      "next": "n_intercept_i_met_a_young_man_29",
+      "id": "n_intercept_i_met_a_young_man_33",
+      "next": "n_intercept_i_met_a_young_man_34",
       "showIf": {
         "flag": "hooper_mentioned",
         "type": "flag",
@@ -1555,8 +1701,8 @@
       "text": "\"Hooper!\" Harris exclaims, in surprise. {harris_thinks_youre_drugged:He does not doubt me for a moment.}"
     },
     {
-      "id": "n_intercept_i_met_a_young_man_29",
-      "next": "n_intercept_i_met_a_young_man_30",
+      "id": "n_intercept_i_met_a_young_man_34",
+      "next": "n_intercept_i_met_a_young_man_35",
       "showIf": {
         "flag": "hooper_mentioned",
         "type": "flag",
@@ -1565,8 +1711,8 @@
       "text": "\"Now look here,\" Harris interrupts. \"Don't start that again.\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_30",
-      "next": "n_intercept_i_met_a_young_man_31",
+      "id": "n_intercept_i_met_a_young_man_35",
+      "next": "n_intercept_i_met_a_young_man_36",
       "onEnter": [
         {
           "flag": "revealedhooperasculprit",
@@ -1579,72 +1725,72 @@
     {
       "choices": [
         {
-          "goto": "n_intercept_i_met_a_young_man_32",
-          "id": "c_intercept_yes_7",
+          "goto": "n_intercept_i_met_a_young_man_37",
+          "id": "c_intercept_yes_8",
           "text": "Yes"
         },
         {
           "goto": "n_intercept_i_met_a_young_man_passed_onto_hooper",
-          "id": "c_intercept_no_9",
+          "id": "c_intercept_no_10",
           "text": "No"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_31",
-          "id": "c_intercept_lie_13",
+          "goto": "n_intercept_i_met_a_young_man_36",
+          "id": "c_intercept_lie_15",
           "text": "Lie"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_33",
-          "id": "c_intercept_evade_11",
+          "goto": "n_intercept_i_met_a_young_man_38",
+          "id": "c_intercept_evade_13",
           "text": "Evade"
         }
       ],
-      "id": "n_intercept_i_met_a_young_man_31",
+      "id": "n_intercept_i_met_a_young_man_36",
       "text": "\"Which you did.\" Harris leans forward. \"And then what? You still have it? You've stashed it somewhere?\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_32",
+      "id": "n_intercept_i_met_a_young_man_37",
       "isEnd": true,
       "text": "\"Yes. I only had a moment."
     },
     {
-      "id": "n_intercept_i_met_a_young_man_33",
-      "next": "n_intercept_i_met_a_young_man_34",
+      "id": "n_intercept_i_met_a_young_man_38",
+      "next": "n_intercept_i_met_a_young_man_39",
       "text": "\"I can't remember.\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_34",
-      "next": "n_intercept_i_met_a_young_man_35",
+      "id": "n_intercept_i_met_a_young_man_39",
+      "next": "n_intercept_i_met_a_young_man_40",
       "text": "He draws his gun and lays it lightly on the field table."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_i_met_a_young_man_31",
-          "id": "c_intercept_yes_8",
+          "goto": "n_intercept_i_met_a_young_man_36",
+          "id": "c_intercept_yes_9",
           "text": "Yes"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_36",
-          "id": "c_intercept_no_10",
+          "goto": "n_intercept_i_met_a_young_man_41",
+          "id": "c_intercept_no_11",
           "text": "No"
         },
         {
-          "goto": "n_intercept_i_met_a_young_man_35",
-          "id": "c_intercept_lie_14",
+          "goto": "n_intercept_i_met_a_young_man_40",
+          "id": "c_intercept_lie_16",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_i_met_a_young_man_i_dont_have_it",
-          "id": "c_intercept_evade_12",
+          "id": "c_intercept_evade_14",
           "text": "Evade"
         }
       ],
-      "id": "n_intercept_i_met_a_young_man_35",
+      "id": "n_intercept_i_met_a_young_man_40",
       "text": "\"I'm sorry to threaten you, friend. But His Majesty needs that brain of yours, and that brain alone. There are plenty of other parts to you that our country could do better without. Now I'll ask you again. Did you hide the component?\""
     },
     {
-      "id": "n_intercept_i_met_a_young_man_36",
+      "id": "n_intercept_i_met_a_young_man_41",
       "next": "n_intercept_i_met_a_young_man_passed_onto_hooper",
       "text": "\"Very well then.\" I swallow nervously, to make it look more genuine."
     },
@@ -1698,7 +1844,7 @@
       "choices": [
         {
           "goto": "n_intercept_i_met_a_young_man_passed_onto_hooper_3",
-          "id": "c_intercept_evade_13",
+          "id": "c_intercept_evade_15",
           "text": "Evade"
         },
         {
@@ -1708,7 +1854,7 @@
         },
         {
           "goto": "n_intercept_i_met_a_young_man_passed_onto_hooper_7",
-          "id": "c_intercept_lie_16",
+          "id": "c_intercept_lie_18",
           "text": "Lie"
         }
       ],
@@ -1729,7 +1875,7 @@
         },
         {
           "goto": "n_intercept_claim_hooper_took_component_its_your_problem",
-          "id": "c_intercept_shrug",
+          "id": "c_intercept_shrug_2",
           "text": "Shrug"
         }
       ],
@@ -1738,12 +1884,12 @@
     },
     {
       "id": "n_intercept_i_met_a_young_man_passed_onto_hooper_5",
-      "isEnd": true,
+      "next": "n_intercept_claim_hooper_took_component_harris_being_convinced",
       "text": "\"Well, then,\" I answer, nervously. \"What would he do? Either get rid of it straight away — or if that wasn't possible, which it probably wouldn't be, since he'd have to arrange things with his contacts — so most likely, he'd hide it somewhere and wait, until you had the rope around my neck and he could be sure he was safe.\""
     },
     {
       "id": "n_intercept_i_met_a_young_man_passed_onto_hooper_6",
-      "isEnd": true,
+      "next": "n_intercept_claim_hooper_took_component_harris_being_convinced",
       "text": "\"I don't think Hooper could have planned this in advance. So he'd need to get word to whoever he's working with, and that would take time. So I think he would have hidden it somewhere, and be waiting to make sure I soundly take the fall. That way, if anything goes wrong, he can arrange for the part to be conveniently re—found.\""
     },
     {
@@ -2006,7 +2152,7 @@
       "choices": [
         {
           "goto": "n_intercept_claim_hooper_took_component_33",
-          "id": "c_intercept_co_operate_3",
+          "id": "c_intercept_co_operate_4",
           "text": "Co-operate"
         },
         {
@@ -2079,7 +2225,7 @@
       "choices": [
         {
           "goto": "n_intercept_claim_hooper_took_component_40",
-          "id": "c_intercept_yes_9",
+          "id": "c_intercept_yes_10",
           "text": "\"Yes.\""
         },
         {
@@ -2141,6 +2287,62 @@
       "id": "n_intercept_claim_hooper_took_component_47",
       "next": "n_intercept_claim_hooper_took_component_putmein",
       "text": "\"You're right. Let me talk to him, then. As a colleague. Maybe I can get something useful out of him.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_claim_hooper_took_component_harris_being_convinced_2",
+          "id": "c_intercept_offer_to_help",
+          "text": "Offer to help"
+        },
+        {
+          "goto": "n_intercept_claim_hooper_took_component_harris_being_convinced_7",
+          "id": "c_intercept_don_t_offer_to",
+          "text": "Don't offer to help"
+        }
+      ],
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced"
+    },
+    {
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced_2",
+      "next": "n_intercept_claim_hooper_took_component_harris_being_convinced_3",
+      "text": "\"Maybe I can help with that.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_claim_hooper_took_component_harris_being_convinced_4",
+          "id": "c_intercept_i_ll_talk_to",
+          "text": "\"I'll talk to him.\""
+        },
+        {
+          "goto": "n_intercept_claim_hooper_took_component_harris_being_convinced_6",
+          "id": "c_intercept_we_ll_fool_him",
+          "text": "\"We'll fool him.\""
+        }
+      ],
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced_3",
+      "text": "\"Oh, yes? And how, exactly?\""
+    },
+    {
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced_4",
+      "next": "n_intercept_claim_hooper_took_component_harris_being_convinced_5",
+      "text": "\"What?\""
+    },
+    {
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced_5",
+      "next": "n_intercept_claim_hooper_took_component_putmein",
+      "text": "\"Put me in with Hooper with him. Maybe I can get something useful out of him.\""
+    },
+    {
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced_6",
+      "next": "n_intercept_harris_takes_you_to_hooper",
+      "text": "\"We'll fool him. He's waiting to be sure that I've been strung up for this, so let's give him what he wants. If he sees me taken away, clapped in irons — he'll go straight to that component and set about getting rid of it.\""
+    },
+    {
+      "id": "n_intercept_claim_hooper_took_component_harris_being_convinced_7",
+      "next": "n_intercept_claim_hooper_took_component_its_your_problem",
+      "text": "I lean back."
     },
     {
       "id": "n_intercept_claim_hooper_took_component_putmein",
@@ -2253,17 +2455,17 @@
       "choices": [
         {
           "goto": "n_intercept_claim_hooper_took_component_go_in_alone_9",
-          "id": "c_intercept_yes_10",
+          "id": "c_intercept_yes_11",
           "text": "Yes"
         },
         {
           "goto": "n_intercept_claim_hooper_took_component_go_in_alone_10",
-          "id": "c_intercept_no_11",
+          "id": "c_intercept_no_12",
           "text": "No"
         },
         {
           "goto": "n_intercept_claim_hooper_took_component_go_in_alone_8",
-          "id": "c_intercept_lie_17",
+          "id": "c_intercept_lie_19",
           "text": "Lie"
         }
       ],
@@ -2437,7 +2639,7 @@
         },
         {
           "goto": "n_intercept_harris_takes_you_to_hooper_25",
-          "id": "c_intercept_evade_14",
+          "id": "c_intercept_evade_16",
           "text": "Evade"
         },
         {
@@ -2519,12 +2721,12 @@
         },
         {
           "goto": "n_intercept_inside_hoopers_hut_8",
-          "id": "c_intercept_lie_18",
+          "id": "c_intercept_lie_20",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_inside_hoopers_hut_9",
-          "id": "c_intercept_evade_15",
+          "id": "c_intercept_evade_17",
           "text": "Evade"
         }
       ],
@@ -2570,22 +2772,22 @@
       "choices": [
         {
           "goto": "n_intercept_inside_hoopers_hut_13",
-          "id": "c_intercept_yes_11",
+          "id": "c_intercept_yes_12",
           "text": "Yes"
         },
         {
           "goto": "n_intercept_inside_hoopers_hut_14",
-          "id": "c_intercept_no_12",
+          "id": "c_intercept_no_13",
           "text": "No"
         },
         {
           "goto": "n_intercept_inside_hoopers_hut_15",
-          "id": "c_intercept_lie_19",
+          "id": "c_intercept_lie_21",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_inside_hoopers_hut_12",
-          "id": "c_intercept_evade_16",
+          "id": "c_intercept_evade_18",
           "text": "Evade"
         }
       ],
@@ -2626,7 +2828,7 @@
         },
         {
           "goto": "n_intercept_inside_hoopers_hut_20",
-          "id": "c_intercept_evade_17",
+          "id": "c_intercept_evade_19",
           "text": "Evade"
         }
       ],
@@ -2684,6 +2886,58 @@
       "text": "\"Just be sure to let him out,\" I reply. \"And then see where he goes.\""
     },
     {
+      "id": "n_intercept_slam_door_shut_and_gone",
+      "next": "n_intercept_slam_door_shut_and_gone_2",
+      "text": "Then they slam the door shut, and it locks."
+    },
+    {
+      "id": "n_intercept_slam_door_shut_and_gone_2",
+      "next": "n_intercept_slam_door_shut_and_gone_3",
+      "showIf": {
+        "counter": "hoopercluetype",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "How am I supposed to manage anything from in here?"
+    },
+    {
+      "id": "n_intercept_slam_door_shut_and_gone_3",
+      "next": "n_intercept_slam_door_shut_and_gone_4",
+      "showIf": {
+        "counter": "hoopercluetype",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "*   [Try the door]"
+    },
+    {
+      "id": "n_intercept_slam_door_shut_and_gone_4",
+      "next": "n_intercept_slam_door_shut_and_gone_5",
+      "showIf": {
+        "counter": "hoopercluetype",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "* \t[Try the windows]"
+    },
+    {
+      "id": "n_intercept_slam_door_shut_and_gone_5",
+      "next": "n_intercept_slam_door_shut_and_gone_6",
+      "showIf": {
+        "of": {
+          "counter": "hoopercluetype",
+          "op": "==",
+          "type": "counter",
+          "value": 0
+        },
+        "type": "not"
+      },
+      "text": "I can only hope that Hooper bites. If he thinks I'm bitter enough to have framed him, and arrogant enough to have taunted him with {hooperClueType > STRAIGHT:a clue to} where the damning evidence is hidden..."
+    },
+    {
       "choices": [
         {
           "goto": "n_intercept_night_falls",
@@ -2691,8 +2945,17 @@
           "text": "Wait"
         }
       ],
-      "id": "n_intercept_slam_door_shut_and_gone",
-      "text": "Then they slam the door shut, and it locks."
+      "id": "n_intercept_slam_door_shut_and_gone_6",
+      "showIf": {
+        "of": {
+          "counter": "hoopercluetype",
+          "op": "==",
+          "type": "counter",
+          "value": 0
+        },
+        "type": "not"
+      },
+      "text": "If he hates me enough, and is paranoid enough, then he might {hooperClueType > STRAIGHT:unravel my little riddle and} go searching around Hut 2."
     },
     {
       "id": "n_intercept_slam_door_shut_and_gone_try_the_door",
@@ -2780,7 +3043,7 @@
     {
       "choices": [
         {
-          "goto": "n_intercept_slam_door_shut_and_gone_find_something_to_smash_window",
+          "goto": "n_intercept_slam_door_shut_and_gone_try_to_smash_the_window_8",
           "id": "c_intercept_work_slowly",
           "text": "Work slowly"
         },
@@ -2792,6 +3055,21 @@
       ],
       "id": "n_intercept_slam_door_shut_and_gone_try_to_smash_the_window_7",
       "text": "And the noise would be terrible. There must be a way of making this easier. I'm supposed to be a thief now. What would a burglar do?"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now",
+          "id": "c_intercept_just_do_it",
+          "text": "Just do it"
+        },
+        {
+          "goto": "n_intercept_slam_door_shut_and_gone_find_something_to_smash_window",
+          "id": "c_intercept_look_around_for_something",
+          "text": "Look around for something"
+        }
+      ],
+      "id": "n_intercept_slam_door_shut_and_gone_try_to_smash_the_window_8"
     },
     {
       "id": "n_intercept_slam_door_shut_and_gone_time_to_move_now",
@@ -2843,12 +3121,12 @@
         },
         {
           "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now_8",
-          "id": "c_intercept_lie_20",
+          "id": "c_intercept_lie_22",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now_9",
-          "id": "c_intercept_evade_18",
+          "id": "c_intercept_evade_20",
           "text": "Evade"
         }
       ],
@@ -2874,22 +3152,22 @@
       "choices": [
         {
           "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now_12",
-          "id": "c_intercept_yes_12",
+          "id": "c_intercept_yes_13",
           "text": "Yes"
         },
         {
           "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now_13",
-          "id": "c_intercept_no_13",
+          "id": "c_intercept_no_14",
           "text": "No"
         },
         {
           "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now_11",
-          "id": "c_intercept_lie_21",
+          "id": "c_intercept_lie_23",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_slam_door_shut_and_gone_time_to_move_now_14",
-          "id": "c_intercept_evade_19",
+          "id": "c_intercept_evade_21",
           "text": "Evade"
         }
       ],
@@ -3026,55 +3304,98 @@
       "text": "The bucket? Hardly. The bucket might do some good if I wanted to sweep up the glass afterwards, but it won't help me smash the glass quietly."
     },
     {
-      "id": "n_intercept_smash_the_window",
-      "next": "n_intercept_smash_the_window_2",
+      "choices": [
+        {
+          "goto": "n_intercept_smash_the_window_2",
+          "id": "c_intercept_smash",
+          "text": "Smash!"
+        }
+      ],
+      "id": "n_intercept_smash_the_window"
+    },
+    {
+      "id": "n_intercept_smash_the_window_2",
+      "next": "n_intercept_smash_the_window_3",
       "text": "The sound of the impact is muffled. With my arm still covered, I sweep out the remaining glass in the frame."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_smash_the_window_3",
+          "goto": "n_intercept_smash_the_window_4",
           "id": "c_intercept_wait_7",
           "text": "Wait"
         },
         {
-          "goto": "n_intercept_smash_the_window_4",
+          "goto": "n_intercept_smash_the_window_5",
           "id": "c_intercept_slip_out",
           "text": "Slip out"
         }
       ],
-      "id": "n_intercept_smash_the_window_2",
+      "id": "n_intercept_smash_the_window_3",
       "text": "I'm ready to escape. The only trouble is — when they look in on me in the morning, there will be no question what has happened. It won't help me one jot with shifting suspicion off my back."
     },
     {
-      "id": "n_intercept_smash_the_window_3",
+      "id": "n_intercept_smash_the_window_4",
       "next": "n_intercept_night_passes",
       "text": "So perhaps I should wait it out, after all. Who knows? I might have a better opportunity later."
-    },
-    {
-      "id": "n_intercept_smash_the_window_4",
-      "next": "n_intercept_smash_the_window_5",
-      "text": "Moving quickly and quietly, I hoist myself up onto the window—frame and worm my way outside into the freezing night air. Then I am away, slipping down the paths between the Huts, sticking to the shadows, on my way to Hut 2."
     },
     {
       "choices": [
         {
           "goto": "n_intercept_smash_the_window_6",
+          "id": "c_intercept_go_the_shortest_way",
+          "text": "Go the shortest way"
+        },
+        {
+          "goto": "n_intercept_smash_the_window_7",
+          "id": "c_intercept_take_a_longer_route",
+          "text": "Take a longer route"
+        }
+      ],
+      "id": "n_intercept_smash_the_window_5",
+      "text": "Moving quickly and quietly, I hoist myself up onto the window—frame and worm my way outside into the freezing night air. Then I am away, slipping down the paths between the Huts, sticking to the shadows, on my way to Hut 2."
+    },
+    {
+      "id": "n_intercept_smash_the_window_6",
+      "next": "n_intercept_smash_the_window_9",
+      "text": "There's no time to lose. Throwing caution to the wind I make my way quickly to Hut 2, and around the back. I don't think I've been seen but if I have it is too late. My actions are suspicious enough for the noose. I have no choice but to follow through."
+    },
+    {
+      "id": "n_intercept_smash_the_window_7",
+      "next": "n_intercept_smash_the_window_8",
+      "onEnter": [
+        {
+          "flag": "muddyshoes",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "In case I'm being followed, I divert around the perimeter of the compound. It's a much longer path, and it takes me across some terrain that's difficult to negotiate in the dark — muddy, and thick with thistles and nestles."
+    },
+    {
+      "id": "n_intercept_smash_the_window_8",
+      "next": "n_intercept_smash_the_window_9",
+      "text": "Still, I can be confident no—one is behind me. I crouch down behind the rear wall of Hut 2."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_smash_the_window_10",
           "id": "c_intercept_take_it_2",
           "text": "Take it"
         },
         {
-          "goto": "n_intercept_smash_the_window_7",
+          "goto": "n_intercept_smash_the_window_11",
           "id": "c_intercept_leave_it",
           "text": "Leave it"
         }
       ],
-      "id": "n_intercept_smash_the_window_5",
+      "id": "n_intercept_smash_the_window_9",
       "text": "The component is still there, wrapped in a tea—towel and shoved into a cavity in a breeze—block at the base of the Hut wall."
     },
     {
-      "id": "n_intercept_smash_the_window_6",
-      "next": "n_intercept_smash_the_window_8",
+      "id": "n_intercept_smash_the_window_10",
+      "next": "n_intercept_smash_the_window_12",
       "onEnter": [
         {
           "flag": "gotcomponent",
@@ -3085,8 +3406,8 @@
       "text": "Quickly, I pull it free, and slip it into the pocket of my jacket."
     },
     {
-      "id": "n_intercept_smash_the_window_7",
-      "next": "n_intercept_smash_the_window_8",
+      "id": "n_intercept_smash_the_window_11",
+      "next": "n_intercept_smash_the_window_12",
       "text": "Still there means no—one has found it, which means it is probably well—hidden. And short of skipping the compound now, I can afford to leave it hidden there a while longer. So I leave it in place."
     },
     {
@@ -3107,12 +3428,12 @@
           "text": "Go to Hooper's dorm"
         },
         {
-          "goto": "n_intercept_smash_the_window_9",
+          "goto": "n_intercept_smash_the_window_13",
           "id": "c_intercept_escape_the_compound",
           "text": "Escape the compound"
         }
       ],
-      "id": "n_intercept_smash_the_window_8",
+      "id": "n_intercept_smash_the_window_12",
       "text": "Where now?"
     },
     {
@@ -3123,12 +3444,12 @@
           "text": "Go"
         },
         {
-          "goto": "n_intercept_smash_the_window_10",
+          "goto": "n_intercept_smash_the_window_14",
           "id": "c_intercept_don_t_go",
           "text": "Don't go"
         }
       ],
-      "id": "n_intercept_smash_the_window_9",
+      "id": "n_intercept_smash_the_window_13",
       "text": "Enough of this place. Time for me to get moving. I can get to the train station on foot, catch the postal train to Scotland and be somewhere else before anyone realises that I'm gone."
     },
     {
@@ -3139,7 +3460,7 @@
           "text": "Back to the barracks"
         }
       ],
-      "id": "n_intercept_smash_the_window_10",
+      "id": "n_intercept_smash_the_window_14",
       "text": "It's no good. That's only half a solution. I couldn't be happy with that."
     },
     {
@@ -3512,7 +3833,7 @@
         },
         {
           "goto": "n_intercept_night_passes_put_component_inside_tent_7",
-          "id": "c_intercept_evade_20",
+          "id": "c_intercept_evade_22",
           "text": "Evade"
         }
       ],
@@ -3815,66 +4136,77 @@
       "text": "I do as he says. Outside the barrack, the air has never smelt sweeter."
     },
     {
+      "id": "n_intercept_night_falls",
+      "next": "n_intercept_night_falls_2",
+      "text": "Night falls. The clockwork of the heavens keeps turning, whatever state I might be in. No—one can steal the components that make the sun go down and the stars come out. I watch it performing its operations. I can't sleep."
+    },
+    {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_2",
+          "goto": "n_intercept_night_falls_3",
           "id": "c_intercept_look_of_out_the",
           "text": "Look of out the window"
         },
         {
-          "goto": "n_intercept_night_falls_3",
+          "goto": "n_intercept_night_falls_4",
           "id": "c_intercept_listen_at_the_door",
           "text": "Listen at the door"
         },
         {
-          "goto": "n_intercept_night_falls_6",
+          "goto": "n_intercept_night_falls_7",
           "id": "c_intercept_wait_9",
           "text": "Wait"
         }
       ],
-      "id": "n_intercept_night_falls",
-      "text": "Night falls. The clockwork of the heavens keeps turning, whatever state I might be in. No—one can steal the components that make the sun go down and the stars come out. I watch it performing its operations. I can't sleep."
+      "id": "n_intercept_night_falls_2",
+      "showIf": {
+        "counter": "hoopercluetype",
+        "op": ">",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "Has Hooper taken my bait?"
     },
     {
-      "id": "n_intercept_night_falls_2",
-      "next": "n_intercept_night_falls_7",
+      "id": "n_intercept_night_falls_3",
+      "next": "n_intercept_night_falls_8",
       "text": "I peer out of the window, but it looks out onto the little brook at the back of the compound, with no view of the other huts or the House. Who knows if there are men up, searching the base of Hut 2, following one another with flashlights..."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_4",
+          "goto": "n_intercept_night_falls_5",
           "id": "c_intercept_try_it",
           "text": "Try it"
         },
         {
-          "goto": "n_intercept_night_falls_5",
+          "goto": "n_intercept_night_falls_6",
           "id": "c_intercept_leave_it_2",
           "text": "Leave it"
         }
       ],
-      "id": "n_intercept_night_falls_3",
+      "id": "n_intercept_night_falls_4",
       "text": "Perhaps the door is unlocked and they left me to sleep?"
     },
     {
-      "id": "n_intercept_night_falls_4",
-      "next": "n_intercept_night_falls_7",
+      "id": "n_intercept_night_falls_5",
+      "next": "n_intercept_night_falls_8",
       "text": "I try the handle. No such luck."
     },
     {
-      "id": "n_intercept_night_falls_5",
-      "next": "n_intercept_night_falls_7",
+      "id": "n_intercept_night_falls_6",
+      "next": "n_intercept_night_falls_8",
       "text": "I don't touch it. I don't want anyone outside thinking I'm trying to escape."
     },
     {
-      "id": "n_intercept_night_falls_6",
-      "next": "n_intercept_night_falls_7",
+      "id": "n_intercept_night_falls_7",
+      "next": "n_intercept_night_falls_8",
       "text": "There is nothing I can do to speed up time."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_8",
+          "goto": "n_intercept_night_falls_9",
           "id": "c_intercept_wait_10",
           "showIf": {
             "counter": "hoopercluetype",
@@ -3896,183 +4228,183 @@
           "text": "Wait"
         }
       ],
-      "id": "n_intercept_night_falls_7",
+      "id": "n_intercept_night_falls_8",
       "text": "The night moves at its own pace. I suppose by morning I will know my fate."
     },
     {
-      "id": "n_intercept_night_falls_8",
-      "next": "n_intercept_night_falls_9",
+      "id": "n_intercept_night_falls_9",
+      "next": "n_intercept_night_falls_10",
       "text": "Morning comes. I'm woken by a rooster calling from the yard behind the House. I must have slept after all. I pull myself up from the bunk, shivering slightly. There is condensation on the inside of the window. I have probably given myself a chill."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_10",
+          "goto": "n_intercept_night_falls_11",
           "id": "c_intercept_be_friendly",
           "text": "Be friendly"
         },
         {
-          "goto": "n_intercept_night_falls_12",
+          "goto": "n_intercept_night_falls_13",
           "id": "c_intercept_be_cold",
           "text": "Be cold"
         }
       ],
-      "id": "n_intercept_night_falls_9",
+      "id": "n_intercept_night_falls_10",
       "text": "Without knocking, Harris comes inside. \"You're up,\" he remarks, and then, \"You smell like an animal.\""
     },
     {
-      "id": "n_intercept_night_falls_10",
-      "next": "n_intercept_night_falls_11",
+      "id": "n_intercept_night_falls_11",
+      "next": "n_intercept_night_falls_12",
       "text": "\"I suppose I do rather.\" I laugh, but Harris does not."
     },
     {
-      "id": "n_intercept_night_falls_11",
-      "next": "n_intercept_night_falls_15",
-      "text": "\"This damn business gets worse and worse,\" he says, talking as he goes over to unlock and throw open the window."
-    },
-    {
       "id": "n_intercept_night_falls_12",
-      "next": "n_intercept_night_falls_13",
-      "text": "\"So would you,\" I reply tartly. Harris shrugs."
+      "next": "n_intercept_night_falls_16",
+      "text": "\"This damn business gets worse and worse,\" he says, talking as he goes over to unlock and throw open the window."
     },
     {
       "id": "n_intercept_night_falls_13",
       "next": "n_intercept_night_falls_14",
-      "text": "\"I've been through worse than this,\" he replies matter—of—factly. \"It's hardly my fault if you sleep in your clothes.\""
+      "text": "\"So would you,\" I reply tartly. Harris shrugs."
     },
     {
       "id": "n_intercept_night_falls_14",
       "next": "n_intercept_night_falls_15",
+      "text": "\"I've been through worse than this,\" he replies matter—of—factly. \"It's hardly my fault if you sleep in your clothes.\""
+    },
+    {
+      "id": "n_intercept_night_falls_15",
+      "next": "n_intercept_night_falls_16",
       "text": "I glare back. He goes over to the window, unlocks it and throws it open, relishing the fresh air from outside."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_16",
+          "goto": "n_intercept_night_falls_17",
           "id": "c_intercept_be_eager",
           "text": "Be eager"
         },
         {
-          "goto": "n_intercept_night_falls_18",
+          "goto": "n_intercept_night_falls_19",
           "id": "c_intercept_be_cautious",
           "text": "Be cautious"
         }
       ],
-      "id": "n_intercept_night_falls_15",
+      "id": "n_intercept_night_falls_16",
       "text": "\"Hooper's confessed, you know.\""
     },
     {
-      "id": "n_intercept_night_falls_16",
-      "next": "n_intercept_night_falls_17",
+      "id": "n_intercept_night_falls_17",
+      "next": "n_intercept_night_falls_18",
       "text": "\"He has? I knew he would. The worm.\""
     },
     {
-      "id": "n_intercept_night_falls_17",
-      "next": "n_intercept_night_falls_20",
-      "text": "\"Steady now. Matters aren't over yet."
-    },
-    {
       "id": "n_intercept_night_falls_18",
-      "next": "n_intercept_night_falls_19",
-      "text": "\"Oh, yes?\""
+      "next": "n_intercept_night_falls_21",
+      "text": "\"Steady now. Matters aren't over yet."
     },
     {
       "id": "n_intercept_night_falls_19",
       "next": "n_intercept_night_falls_20",
-      "text": "\"Yes. For what that's worth."
+      "text": "\"Oh, yes?\""
     },
     {
       "id": "n_intercept_night_falls_20",
       "next": "n_intercept_night_falls_21",
+      "text": "\"Yes. For what that's worth."
+    },
+    {
+      "id": "n_intercept_night_falls_21",
+      "next": "n_intercept_night_falls_22",
       "text": "There's still the issue of the component. It hasn't turned up. He didn't lead us to it. I guess he figured you must have had something on him. I don't know.\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_22",
+          "goto": "n_intercept_night_falls_23",
           "id": "c_intercept_be_interested_2",
           "text": "Be interested"
         },
         {
-          "goto": "n_intercept_night_falls_23",
+          "goto": "n_intercept_night_falls_24",
           "id": "c_intercept_be_disinterested",
           "text": "Be disinterested"
         }
       ],
-      "id": "n_intercept_night_falls_21",
+      "id": "n_intercept_night_falls_22",
       "text": "He looks quite put out by the whole affair. He is not the kind of man to deal well with probabilities."
     },
     {
-      "id": "n_intercept_night_falls_22",
-      "next": "n_intercept_night_falls_24",
-      "text": "\"You mean he confessed of his own accord? You didn't catch him?\""
-    },
-    {
       "id": "n_intercept_night_falls_23",
-      "next": "n_intercept_night_falls_24",
-      "text": "\"Well, I'm glad his conscience finally caught up with him,\" I reply dismissively."
+      "next": "n_intercept_night_falls_25",
+      "text": "\"You mean he confessed of his own accord? You didn't catch him?\""
     },
     {
       "id": "n_intercept_night_falls_24",
       "next": "n_intercept_night_falls_25",
+      "text": "\"Well, I'm glad his conscience finally caught up with him,\" I reply dismissively."
+    },
+    {
+      "id": "n_intercept_night_falls_25",
+      "next": "n_intercept_night_falls_26",
       "text": "\"The Captain went back into that hut and he confessed immediately. We were so surprised we didn't let you go.\" He wrinkles his nose. \"I'm rather sorry about that now. I suggest you have a wash.\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_37",
+          "goto": "n_intercept_night_falls_38",
           "id": "c_intercept_go_2",
           "text": "Go"
         },
         {
-          "goto": "n_intercept_night_falls_26",
+          "goto": "n_intercept_night_falls_27",
           "id": "c_intercept_wait_11",
           "text": "Wait"
         }
       ],
-      "id": "n_intercept_night_falls_25",
+      "id": "n_intercept_night_falls_26",
       "text": "And with that he gestures to the doorway."
     },
     {
-      "id": "n_intercept_night_falls_26",
-      "next": "n_intercept_night_falls_27",
+      "id": "n_intercept_night_falls_27",
+      "next": "n_intercept_night_falls_28",
       "text": "I hang back a moment. Something does not seem quite right. After all, Hooper did not steal the component. He has no reason to confess to anything. Perhaps this is another trap?"
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_28",
+          "goto": "n_intercept_night_falls_29",
           "id": "c_intercept_confess_3",
           "text": "Confess"
         },
         {
-          "goto": "n_intercept_night_falls_35",
+          "goto": "n_intercept_night_falls_36",
           "id": "c_intercept_don_t_confess_3",
           "text": "Don't confess"
         }
       ],
-      "id": "n_intercept_night_falls_27",
+      "id": "n_intercept_night_falls_28",
       "text": "\"Well?\" Harris asks. \"What are you waiting for? Please don't tell me <i>you</i> want to confess now as well, I don't think my head could stand it.\""
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_29",
+          "goto": "n_intercept_night_falls_30",
           "id": "c_intercept_confess_4",
           "text": "Confess"
         },
         {
-          "goto": "n_intercept_night_falls_35",
+          "goto": "n_intercept_night_falls_36",
           "id": "c_intercept_don_t_confess_2",
           "text": "Don't confess"
         }
       ],
-      "id": "n_intercept_night_falls_28",
+      "id": "n_intercept_night_falls_29",
       "text": "After a chance like this? A chance — however real — to save my neck? To hand it over — what, to save Hooper's worthless skin?"
     },
     {
-      "id": "n_intercept_night_falls_29",
-      "next": "n_intercept_night_falls_30",
+      "id": "n_intercept_night_falls_30",
+      "next": "n_intercept_night_falls_31",
       "onEnter": [
         {
           "flag": "hooperconfessed",
@@ -4085,36 +4417,36 @@
     {
       "choices": [
         {
-          "goto": "n_intercept_night_falls_31",
+          "goto": "n_intercept_night_falls_32",
           "id": "c_intercept_confess_5",
           "text": "Confess"
         },
         {
-          "goto": "n_intercept_night_falls_35",
+          "goto": "n_intercept_night_falls_36",
           "id": "c_intercept_don_t_confess",
           "text": "Don't confess"
         }
       ],
-      "id": "n_intercept_night_falls_30",
-      "text": "Hardly sporting, of course."
-    },
-    {
       "id": "n_intercept_night_falls_31",
-      "next": "n_intercept_night_falls_32",
-      "text": "Well, then. I suppose this must be what it feels like to have a conscience. I suppose I had always wondered."
+      "text": "Hardly sporting, of course."
     },
     {
       "id": "n_intercept_night_falls_32",
       "next": "n_intercept_night_falls_33",
-      "text": "\"Harris, sir. I don't know what Hooper's playing at, sir. But I can't let him do this.\""
+      "text": "Well, then. I suppose this must be what it feels like to have a conscience. I suppose I had always wondered."
     },
     {
       "id": "n_intercept_night_falls_33",
       "next": "n_intercept_night_falls_34",
-      "text": "\"Do what?\""
+      "text": "\"Harris, sir. I don't know what Hooper's playing at, sir. But I can't let him do this.\""
     },
     {
       "id": "n_intercept_night_falls_34",
+      "next": "n_intercept_night_falls_35",
+      "text": "\"Do what?\""
+    },
+    {
+      "id": "n_intercept_night_falls_35",
       "isEnd": true,
       "onEnter": [
         {
@@ -4131,23 +4463,23 @@
       "text": "\"Take the rope for this. I took it, sir."
     },
     {
-      "id": "n_intercept_night_falls_35",
-      "next": "n_intercept_night_falls_36",
-      "text": "\"I certainly don't. But still, I'm surprised. I had Hooper down for a full—blown double agent, a traitor. He knows he'll face the rope, doesn't he?\""
-    },
-    {
       "id": "n_intercept_night_falls_36",
       "next": "n_intercept_night_falls_37",
-      "text": "\"Don't ask me to explain why he did what he did,\" Harris sighs. \"Just be grateful that he did, and you're now off the hook.\""
+      "text": "\"I certainly don't. But still, I'm surprised. I had Hooper down for a full—blown double agent, a traitor. He knows he'll face the rope, doesn't he?\""
     },
     {
       "id": "n_intercept_night_falls_37",
       "next": "n_intercept_night_falls_38",
-      "text": "Curiouser and curiouser. I nod once to Harris and slip outside into the cold morning air."
+      "text": "\"Don't ask me to explain why he did what he did,\" Harris sighs. \"Just be grateful that he did, and you're now off the hook.\""
     },
     {
       "id": "n_intercept_night_falls_38",
       "next": "n_intercept_night_falls_39",
+      "text": "Curiouser and curiouser. I nod once to Harris and slip outside into the cold morning air."
+    },
+    {
+      "id": "n_intercept_night_falls_39",
+      "next": "n_intercept_night_falls_40",
       "showIf": {
         "counter": "hoopercluetype",
         "op": "==",
@@ -4157,8 +4489,8 @@
       "text": "Hooper's confession only makes sense in one fashion{ hooperConfessed :, and that is his being dim—witted and slow| — if I successfully implied to him that I had him framed, but he did not unpack my little clue well enough to go looking for the component. Well, I had figured him for a more intelligent opponent, but a resignation from the game will suffice}. Or perhaps he knew he would be followed if he went to check, and decided he would be doomed either way."
     },
     {
-      "id": "n_intercept_night_falls_39",
-      "next": "n_intercept_night_falls_40",
+      "id": "n_intercept_night_falls_40",
+      "next": "n_intercept_night_falls_41",
       "showIf": {
         "of": {
           "counter": "hoopercluetype",
@@ -4171,8 +4503,8 @@
       "text": "Hooper's confession only makes sense in one way — and that's that he believed me. He reasoned that he would be followed. To try and uncover the component would have got him arrested, and to confess was the same."
     },
     {
-      "id": "n_intercept_night_falls_40",
-      "next": "n_intercept_night_falls_41",
+      "id": "n_intercept_night_falls_41",
+      "next": "n_intercept_night_falls_42",
       "showIf": {
         "of": {
           "counter": "hoopercluetype",
@@ -4192,21 +4524,21 @@
           "text": "Check"
         },
         {
-          "goto": "n_intercept_night_falls_42",
+          "goto": "n_intercept_night_falls_43",
           "id": "c_intercept_don_t_check",
           "text": "Don't check"
         }
       ],
-      "id": "n_intercept_night_falls_41",
+      "id": "n_intercept_night_falls_42",
       "text": "Of course, however, there is only one way to be certain that Harris is telling the truth, and that is to check the breeze—block at the back of Hut 2."
     },
     {
-      "id": "n_intercept_night_falls_42",
-      "next": "n_intercept_night_falls_43",
+      "id": "n_intercept_night_falls_43",
+      "next": "n_intercept_night_falls_44",
       "text": "But there will time for that later. If there is nothing there, then Hooper discovered the component after all and Harris' men will have swooped on him, and the story about his confession is just a ruse to test me out."
     },
     {
-      "id": "n_intercept_night_falls_43",
+      "id": "n_intercept_night_falls_44",
       "next": "n_intercept_head_for_my_dorm_free",
       "text": "And if the component is still there — well. It will be just as valuable to my contact in a week's time, and his deadline of the 31st is not yet upon us."
     },
@@ -4287,22 +4619,22 @@
       "choices": [
         {
           "goto": "n_intercept_head_for_my_dorm_free_5",
-          "id": "c_intercept_yes_13",
+          "id": "c_intercept_yes_14",
           "text": "Yes"
         },
         {
           "goto": "n_intercept_head_for_my_dorm_free_8",
-          "id": "c_intercept_no_14",
+          "id": "c_intercept_no_15",
           "text": "No"
         },
         {
           "goto": "n_intercept_head_for_my_dorm_free_10",
-          "id": "c_intercept_lie_22",
+          "id": "c_intercept_lie_24",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_head_for_my_dorm_free_11",
-          "id": "c_intercept_evade_21",
+          "id": "c_intercept_evade_23",
           "text": "Evade"
         }
       ],
@@ -4350,6 +4682,11 @@
       "text": "\"Oh, of course. Worked all night, did you? Well, you'll hear soon enough. Can hardly hide the fact there'll only be three of us from now on.\""
     },
     {
+      "id": "n_intercept_head_for_my_dorm_free_13",
+      "next": "n_intercept_head_for_my_dorm_free_14",
+      "text": "I wave to him and move away, my thoughts turning to the young man in the village. My lover. My contact. My blackmailer. Hooper may have taken the fall for the missing component, but { not framedhooper :if he did recover it from Hut 2 then | its recovery does mean }I have nothing to sell to save my reputation{ i_met_a_young_man :, if I have any left}."
+    },
+    {
       "choices": [
         {
           "goto": "n_intercept_go_to_where_component_is_hidden",
@@ -4371,17 +4708,22 @@
           "text": "Leave it"
         },
         {
-          "goto": "n_intercept_head_for_my_dorm_free_14",
+          "goto": "n_intercept_head_for_my_dorm_free_15",
           "id": "c_intercept_act_normal",
           "text": "Act normal"
         }
       ],
-      "id": "n_intercept_head_for_my_dorm_free_13",
+      "id": "n_intercept_head_for_my_dorm_free_14",
       "isEnd": true,
-      "text": "I wave to him and move away, my thoughts turning to the young man in the village. My lover. My contact. My blackmailer. Hooper may have taken the fall for the missing component, but { not framedhooper :if he did recover it from Hut 2 then | its recovery does mean }I have nothing to sell to save my reputation{ i_met_a_young_man :, if I have any left}."
+      "showIf": {
+        "flag": "framedhooper",
+        "type": "flag",
+        "value": false
+      },
+      "text": "If he didn't, of course, and Harris was telling the truth about his sudden confession, then I will be able to buy my freedom once and for all."
     },
     {
-      "id": "n_intercept_head_for_my_dorm_free_14",
+      "id": "n_intercept_head_for_my_dorm_free_15",
       "next": "n_intercept_ending_return_to_normal",
       "text": "But there is nothing to be done about it."
     },
@@ -4389,7 +4731,7 @@
       "choices": [
         {
           "goto": "n_intercept_ending_return_to_normal_2",
-          "id": "c_intercept_co_operate_4",
+          "id": "c_intercept_co_operate_5",
           "text": "Co-operate"
         },
         {
@@ -4399,12 +4741,12 @@
         },
         {
           "goto": "n_intercept_ending_return_to_normal_7",
-          "id": "c_intercept_lie_23",
+          "id": "c_intercept_lie_25",
           "text": "Lie"
         },
         {
           "goto": "n_intercept_ending_return_to_normal_8",
-          "id": "c_intercept_evade_22",
+          "id": "c_intercept_evade_24",
           "text": "Evade"
         }
       ],
@@ -4563,10 +4905,81 @@
     {
       "id": "n_intercept_go_to_where_component_is_hidden_13",
       "next": "n_intercept_go_to_where_component_is_hidden_14",
+      "showIf": {
+        "counter": "hoopercluetype",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "\"{ hooperClueType == CHESS:Queen to rook two|Messy without one missing whatever it was},\" he declares. \"I wouldn't have fathomed it but Hooper did. Explained it right after we sprung him doing what you're doing now. We weren't sure what to believe but now, you seem to have resolved that for us.\""
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_intercept_go_to_where_component_is_hidden_15",
+          "id": "c_intercept_agree_6",
+          "text": "Agree"
+        },
+        {
+          "goto": "n_intercept_go_to_where_component_is_hidden_17",
+          "id": "c_intercept_lie_26",
+          "text": "Lie"
+        },
+        {
+          "goto": "n_intercept_go_to_where_component_is_hidden_18",
+          "id": "c_intercept_evade_25",
+          "text": "Evade"
+        }
+      ],
+      "id": "n_intercept_go_to_where_component_is_hidden_14",
+      "showIf": {
+        "of": {
+          "counter": "hoopercluetype",
+          "op": ">",
+          "type": "counter",
+          "value": 1
+        },
+        "type": "not"
+      },
+      "text": "\"Hooper said you'd told him where to look. I didn't believe him. Or, well. I wasn't sure what to believe. Now I rather think you've settled it.\""
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_15",
+      "next": "n_intercept_go_to_where_component_is_hidden_16",
+      "text": "\"I have, rather.\" I put my hands into my pockets. \"I seem to have done exactly that.\""
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_16",
+      "next": "n_intercept_go_to_where_component_is_hidden_22",
+      "text": "\"I'm afraid my little story about Hooper confessing wasn't true. I wanted to see if you'd go to retrieve the part.\" Harris gestures me to start walking. \"You were close, Manning, I'll give you that. I wanted to believe you. But I'm glad I didn't.\""
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_17",
+      "next": "n_intercept_go_to_where_component_is_hidden_21",
+      "text": "\"I spoke to Russell. He said he saw Hooper doing something round here. I wanted to see what it was.\""
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_18",
+      "next": "n_intercept_go_to_where_component_is_hidden_19",
+      "text": "\"Harris, you'd better watch out. He's planted a time—bomb here.\""
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_19",
+      "next": "n_intercept_go_to_where_component_is_hidden_20",
+      "text": "Harris stares at me for a moment, then laughs. \"Oh, goodness. That's rich.\""
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_20",
+      "next": "n_intercept_go_to_where_component_is_hidden_21",
+      "text": "I almost wish I had a way to make the hut explode, but of course I don't."
+    },
+    {
+      "id": "n_intercept_go_to_where_component_is_hidden_21",
+      "next": "n_intercept_go_to_where_component_is_hidden_22",
       "text": "\"Enough.\" Harris gestures for me to start walking. \"This story couldn't be simpler. You took it to cover your back. You hid it. You lied to get Hooper into trouble, and when you thought you'd won, you came to scoop your prize. A good hand but ultimately, { hooperClueType <= STRAIGHT  :if it hadn't have been you who hid the component, then you wouldn't be here now|you told Hooper where to look with your little riddle}.\""
     },
     {
-      "id": "n_intercept_go_to_where_component_is_hidden_14",
+      "id": "n_intercept_go_to_where_component_is_hidden_22",
       "isEnd": true,
       "text": "He leads me across the yard. Back towards Hut 5 to be decoded, and taken to pieces, once again."
     },
@@ -4678,6 +5091,65 @@
       "text": "\"No. I didn't.\""
     },
     {
+      "choices": [
+        {
+          "goto": "n_intercept_harris_threatens_lynching_13",
+          "id": "c_intercept_confess_7",
+          "showIf": {
+            "flag": "throwncomponentaway",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Confess"
+        },
+        {
+          "goto": "n_intercept_harris_threatens_lynching_14",
+          "id": "c_intercept_frame_hooper",
+          "showIf": {
+            "flag": "throwncomponentaway",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Frame Hooper"
+        }
+      ],
+      "id": "n_intercept_harris_threatens_lynching_12"
+    },
+    {
+      "id": "n_intercept_harris_threatens_lynching_13",
+      "next": "n_intercept_reveal_location_of_component_harris_believes",
+      "onEnter": [
+        {
+          "flag": "piecereturned",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "\"I don't need twelve minutes. The component is in the long grass behind Hooper's tent. I threw it there hoping to somehow frame him, but now I see that won't be possible. I was naive, I suppose.\""
+    },
+    {
+      "id": "n_intercept_harris_threatens_lynching_14",
+      "next": "n_intercept_harris_threatens_lynching_15",
+      "onEnter": [
+        {
+          "flag": "longgrasshooperframe",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "flag": "piecereturned",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "\"Look, I know where it is. The missing piece of the Bombe is in the long grasses behind Hooper's tent. I saw him throw it there right after we finished work. He knew you'd scour the camp but I suppose he thought you'd more obvious places first. I suppose he was right about that. Look there. That <i>proves</i> his guilt.\""
+    },
+    {
+      "id": "n_intercept_harris_threatens_lynching_15",
+      "next": "n_intercept_left_alone",
+      "text": "\"That doesn't prove anything,\" Harris returns sharply. \"But we'll check what you say, all the same.\" He gets to his feet and heads out of the door."
+    },
+    {
       "id": "n_intercept_reveal_location_of_component_harris_believes",
       "next": "n_intercept_left_alone",
       "text": "Harris stands, and slips away smartly."
@@ -4730,13 +5202,23 @@
       "text": "{ slam_door_shut_and_gone.time_to_move_now :The Commander holds the door for his superior, and follows him out.} Then the door closes. I am alone again, as I have been for most of my short life."
     },
     {
-      "id": "n_intercept_make_your_peace",
-      "next": "n_intercept_make_your_peace_2",
-      "text": "I am waiting again. I have no God to make my peace with. I find it difficult to believe in goodness of any kind, in a world such as this."
+      "choices": [
+        {
+          "goto": "n_intercept_make_your_peace_2",
+          "id": "c_intercept_make_your_peace",
+          "text": "Make your peace"
+        }
+      ],
+      "id": "n_intercept_make_your_peace"
     },
     {
       "id": "n_intercept_make_your_peace_2",
       "next": "n_intercept_make_your_peace_3",
+      "text": "I am waiting again. I have no God to make my peace with. I find it difficult to believe in goodness of any kind, in a world such as this."
+    },
+    {
+      "id": "n_intercept_make_your_peace_3",
+      "next": "n_intercept_make_your_peace_4",
       "showIf": {
         "flag": "notraitor",
         "type": "flag",
@@ -4745,8 +5227,8 @@
       "text": "~ notraitor  = true"
     },
     {
-      "id": "n_intercept_make_your_peace_3",
-      "next": "n_intercept_make_your_peace_4",
+      "id": "n_intercept_make_your_peace_4",
+      "next": "n_intercept_make_your_peace_5",
       "showIf": {
         "flag": "notraitor",
         "type": "flag",
@@ -4757,104 +5239,104 @@
     {
       "choices": [
         {
-          "goto": "n_intercept_make_your_peace_6",
+          "goto": "n_intercept_make_your_peace_7",
           "id": "c_intercept_i_must_seem_very",
           "text": "I must seem very calm."
         },
         {
-          "goto": "n_intercept_make_your_peace_5",
+          "goto": "n_intercept_make_your_peace_6",
           "id": "c_intercept_perhaps_i_should_try",
           "text": "Perhaps I should try to escape."
         }
       ],
-      "id": "n_intercept_make_your_peace_4",
-      "text": "I have no place here. No way to fit. I am caught, in the middle, cryptic and understood only thinly, through my machines."
-    },
-    {
       "id": "n_intercept_make_your_peace_5",
-      "next": "n_intercept_make_your_peace_6",
-      "text": "Perhaps I should try to escape. But escape to where? I am already a prisoner. Jail would be a blessing."
+      "text": "I have no place here. No way to fit. I am caught, in the middle, cryptic and understood only thinly, through my machines."
     },
     {
       "id": "n_intercept_make_your_peace_6",
       "next": "n_intercept_make_your_peace_7",
-      "text": "I suppose I do not believe they will hang me. They will lock me up and continue to use my brain, if they can. I wonder what they will tell the world — perhaps that I have taken my own life. That would be simplest. The few who know me would believe it."
+      "text": "Perhaps I should try to escape. But escape to where? I am already a prisoner. Jail would be a blessing."
     },
     {
       "id": "n_intercept_make_your_peace_7",
       "next": "n_intercept_make_your_peace_8",
-      "text": "Well, then. Not a bad existence, in prison. Removed from temptation."
+      "text": "I suppose I do not believe they will hang me. They will lock me up and continue to use my brain, if they can. I wonder what they will tell the world — perhaps that I have taken my own life. That would be simplest. The few who know me would believe it."
     },
     {
       "id": "n_intercept_make_your_peace_8",
       "next": "n_intercept_make_your_peace_9",
+      "text": "Well, then. Not a bad existence, in prison. Removed from temptation."
+    },
+    {
+      "id": "n_intercept_make_your_peace_9",
+      "next": "n_intercept_make_your_peace_10",
       "text": "A monastic life, with plenty of problems to keep me going."
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_make_your_peace_10",
+          "goto": "n_intercept_make_your_peace_11",
           "id": "c_intercept_the_door_is_opening",
           "text": "The door is opening."
         }
       ],
-      "id": "n_intercept_make_your_peace_9",
+      "id": "n_intercept_make_your_peace_10",
       "text": "I wonder what else I might yet unravel before I'm done?"
     },
     {
-      "id": "n_intercept_make_your_peace_10",
-      "next": "n_intercept_make_your_peace_11",
+      "id": "n_intercept_make_your_peace_11",
+      "next": "n_intercept_make_your_peace_12",
       "text": "The door is opening. Harris is returning. Our little calculation here is complete. { not piecereturned: I can only hope one of the others will be able to explain to him that the part I stole will mean nothing to the Germans.|We are just pieces in this machine; interchangeable and prone to wear.}"
     },
     {
       "choices": [
         {
-          "goto": "n_intercept_make_your_peace_17",
-          "id": "c_intercept_yes_14",
+          "goto": "n_intercept_make_your_peace_18",
+          "id": "c_intercept_yes_15",
           "text": "Yes"
         },
         {
-          "goto": "n_intercept_make_your_peace_12",
-          "id": "c_intercept_no_15",
+          "goto": "n_intercept_make_your_peace_13",
+          "id": "c_intercept_no_16",
           "text": "No"
         },
         {
-          "goto": "n_intercept_make_your_peace_13",
-          "id": "c_intercept_lie_24",
+          "goto": "n_intercept_make_your_peace_14",
+          "id": "c_intercept_lie_27",
           "text": "Lie"
         },
         {
-          "goto": "n_intercept_make_your_peace_15",
-          "id": "c_intercept_evade_23",
+          "goto": "n_intercept_make_your_peace_16",
+          "id": "c_intercept_evade_26",
           "text": "Evade"
         }
       ],
-      "id": "n_intercept_make_your_peace_11",
+      "id": "n_intercept_make_your_peace_12",
       "text": "That is the true secret of the calculating engine, and the source of its power. It is not the components that matter, they are quite repetitive. What matters is how they are wired; the diversity of the patterns and structures they can form. Much like people — it is how they connect that determines our victories and tragedies, and not their genius."
     },
     {
-      "id": "n_intercept_make_your_peace_12",
-      "next": "n_intercept_make_your_peace_17",
+      "id": "n_intercept_make_your_peace_13",
+      "next": "n_intercept_make_your_peace_18",
       "text": "No. What would be the use? He will be long gone, and the name he told me is no doubt hokum. No: I was alone before in guilt, and I am thus alone again."
     },
     {
-      "id": "n_intercept_make_your_peace_13",
-      "next": "n_intercept_make_your_peace_14",
+      "id": "n_intercept_make_your_peace_14",
+      "next": "n_intercept_make_your_peace_15",
       "text": "No. Why would I? He is no doubt an innocent himself, trapped by some dire circumstance. Forced to act the way he did. I have every sympathy for him."
     },
     {
-      "id": "n_intercept_make_your_peace_14",
-      "next": "n_intercept_make_your_peace_17",
-      "text": "Of course I do."
-    },
-    {
       "id": "n_intercept_make_your_peace_15",
-      "next": "n_intercept_make_your_peace_16",
-      "text": "It depends, perhaps, on what his name his worth. If it were to prove valuable, well; perhaps I can concoct a few more such lovers with which to ease my later days."
+      "next": "n_intercept_make_your_peace_18",
+      "text": "Of course I do."
     },
     {
       "id": "n_intercept_make_your_peace_16",
       "next": "n_intercept_make_your_peace_17",
+      "text": "It depends, perhaps, on what his name his worth. If it were to prove valuable, well; perhaps I can concoct a few more such lovers with which to ease my later days."
+    },
+    {
+      "id": "n_intercept_make_your_peace_17",
+      "next": "n_intercept_make_your_peace_18",
       "showIf": {
         "flag": "hooper_mentioned",
         "type": "flag",
@@ -4863,8 +5345,8 @@
       "text": "Hooper, perhaps. He wouldn't like that."
     },
     {
-      "id": "n_intercept_make_your_peace_17",
-      "next": "n_intercept_make_your_peace_18",
+      "id": "n_intercept_make_your_peace_18",
+      "next": "n_intercept_make_your_peace_19",
       "showIf": {
         "flag": "longgrasshooperframe",
         "type": "flag",
@@ -4873,8 +5355,8 @@
       "text": "Harris put the cuffs around my wrists. \"I still have the intercept in my pocket,\" I remark. \"Wherever we're going, could I have a pencil?\""
     },
     {
-      "id": "n_intercept_make_your_peace_18",
-      "next": "n_intercept_make_your_peace_19",
+      "id": "n_intercept_make_your_peace_19",
+      "next": "n_intercept_make_your_peace_20",
       "onEnter": [
         {
           "flag": "piecereturned",
@@ -4890,8 +5372,8 @@
       "text": "\"We recovered the part, just where you said it was,\" Harris reports, as he puts the cuffs around my wrists. \"Of course, a couple of the men swear blind they searched there yesterday, so I'm afraid, what with the broken window... we've formed a perfectly good theory which doesn't bode well for you.\""
     },
     {
-      "id": "n_intercept_make_your_peace_19",
-      "next": "n_intercept_make_your_peace_20",
+      "id": "n_intercept_make_your_peace_20",
+      "next": "n_intercept_make_your_peace_21",
       "showIf": {
         "flag": "longgrasshooperframe",
         "type": "flag",
@@ -4900,13 +5382,13 @@
       "text": "\"I see.\" It doesn't seem worth arguing any further. \"I still have the intercept in my pocket,\" I remark. \"Wherever we're going, could I have a pencil?\""
     },
     {
-      "id": "n_intercept_make_your_peace_20",
-      "next": "n_intercept_make_your_peace_21",
+      "id": "n_intercept_make_your_peace_21",
+      "next": "n_intercept_make_your_peace_22",
       "text": "He looks me in the eye."
     },
     {
-      "id": "n_intercept_make_your_peace_21",
-      "next": "n_intercept_make_your_peace_22",
+      "id": "n_intercept_make_your_peace_22",
+      "next": "n_intercept_make_your_peace_23",
       "showIf": {
         "flag": "losttemper",
         "type": "flag",
@@ -4915,8 +5397,8 @@
       "text": "\"Of course. And one of your computing things, if I get my way. And when we're old, and smoking pipes together in The Rag like heroes, I'll explain to you the way that decent men have affairs."
     },
     {
-      "id": "n_intercept_make_your_peace_22",
-      "next": "n_intercept_make_your_peace_23",
+      "id": "n_intercept_make_your_peace_23",
+      "next": "n_intercept_make_your_peace_24",
       "showIf": {
         "flag": "losttemper",
         "type": "flag",
@@ -4925,22 +5407,22 @@
       "text": "\"I'll give you a stone to chisel notches in the wall. And that's all the calculations you'll be doing. And as you sit there, pissing into a bucket and growing a beard down to your toes, you have a think about how a <i>smart</i> man would conduct his illicit affairs. With a bit of due decorum you could have learnt off any squaddie."
     },
     {
-      "id": "n_intercept_make_your_peace_23",
-      "next": "n_intercept_make_your_peace_24",
-      "text": "You scientists.\""
-    },
-    {
       "id": "n_intercept_make_your_peace_24",
       "next": "n_intercept_make_your_peace_25",
-      "text": "He drags me up to my feet."
+      "text": "You scientists.\""
     },
     {
       "id": "n_intercept_make_your_peace_25",
       "next": "n_intercept_make_your_peace_26",
-      "text": "\"You think you have to re—invent everything.\""
+      "text": "He drags me up to my feet."
     },
     {
       "id": "n_intercept_make_your_peace_26",
+      "next": "n_intercept_make_your_peace_27",
+      "text": "\"You think you have to re—invent everything.\""
+    },
+    {
+      "id": "n_intercept_make_your_peace_27",
       "isEnd": true,
       "text": "With that, he hustles me out of the door and I can't help thinking that, with a little more strategy, I could still have won the day. But too late now, of course."
     }

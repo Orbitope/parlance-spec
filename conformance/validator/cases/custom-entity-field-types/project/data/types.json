@@ -1,0 +1,30 @@
+{
+  "spell": {
+    "fields": {
+      "element": {
+        "options": [
+          "fire",
+          "ice"
+        ],
+        "type": "enum"
+      },
+      "incantation": {
+        "type": "string"
+      },
+      "manaCost": {
+        "type": "number"
+      },
+      "reagents": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "ritual": {
+        "type": "boolean"
+      }
+    },
+    "name": "Spell",
+    "plural": "spells"
+  }
+}

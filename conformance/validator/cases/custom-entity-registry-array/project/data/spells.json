@@ -1,0 +1,12 @@
+{
+  "spells": [
+    {
+      "grantedBy": "npc_keeper",
+      "id": "fireball"
+    },
+    {
+      "grantedBy": "npc_gone",
+      "id": "frostbite"
+    }
+  ]
+}

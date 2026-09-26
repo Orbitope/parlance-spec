@@ -58,10 +58,12 @@ for `clean-minimal`), so a failure names the rule directly.
   the loader on the TypeScript side, because `validate()` there is handed an
   id-keyed project in which duplicates have already collapsed.
 
-Codes are the shared vocabulary: `CHECK`, `CODEX`, `COVERAGE`, `CUT`, `DUP`,
-`ENDING`, `FLAG`, `FLOW`, `GATE`, `LOC`, `LOGIC`, `LORE`, `MIGRATE`, `OBJ`,
-`OFFER`, `PORT`, `PROG`, `QUEST`, `REACH`, `REF`, `REL`, `REP`, `ROUTE`, `RULES`,
-`SCHEMA`, `SNAP`, `TEXT`, `XP`. When the two validators disagree on a code
+Codes are the shared vocabulary: `CHECK`, `CODEX`, `COND`, `COVERAGE`, `CUT`,
+`DUP`, `ENDING`, `ENGINE`, `FLAG`, `FLOW`, `GATE`, `LOC`, `LOGIC`, `LORE`,
+`MIGRATE`, `OBJ`, `OFFER`, `PORT`, `PROG`, `QUEST`, `REACH`, `REF`, `REL`, `REP`,
+`ROUTE`, `RULES`, `SCHEMA`, `SNAP`, `TEXT`, `XP` — plus `BIND`, which only the
+Python reference emits (asset bindings are not in the editor's project model).
+When the two validators disagree on a code
 today, the TypeScript one is the target — the editor is where an author sees
 the message.
 
@@ -74,10 +76,17 @@ XP advisory keyed on its own message text). Keep the coverage total.
 
 `known_divergences.json` is the authoritative list: every (case, side, issue)
 where the two implementations legitimately differ, each with a reason, and
-both harnesses fail if an entry goes stale or a difference is not listed. The
-prose below explains the two TypeScript-side ones; the third (registry
-duplicate ids) is a loader-layer difference the case's own `validators` key
-already records.
+both harnesses fail if an entry goes stale or a difference is not listed. It
+holds five. Two are layer differences the case's own `validators` key already
+records, both Python-side:
+
+- `dup-id-registry` — registry duplicate-id detection lives in the loader on
+  the TypeScript side, so only the Python reference reports the `DUP`.
+- `binding-vo-dangling` — asset bindings live only in the Python reference;
+  the TypeScript `validate()` never reads `data/bindings/`, so the `BIND`
+  warning is Python-only by construction.
+
+The other three are real differences in behaviour:
 
 - `duplicate-node-id` — the TypeScript validator keys nodes into a `Map`
   (last wins) before walking reachability, so it also reports the *first*
@@ -86,8 +95,14 @@ already records.
   data that already fails on the `DUP` error.
 - `project-rules-bad-dice` — the Python validator JSON-Schema-checks
   `rules.json` and `progression.json`; the TypeScript one has no zod schema for
-  either, so a malformed singleton is a `SCHEMA` error in CI and silent in the
-  editor.
+  either, so a malformed singleton is reported twice in CI (`SCHEMA` and
+  `RULES`) and once, from `RULES` alone, in the editor.
+- `choice-when-locked-invalid` — the seeded dialogue fails the schema on
+  `choice.whenLocked`. The Python reference drops a schema-invalid file from
+  every later rule; the TypeScript guard keeps a shape-safe entity in the pass
+  beside its `SCHEMA` error, so it also reports an `OFFER` warning for a spoken
+  dialogue nothing offers. Both report the one `SCHEMA` error the case is
+  about.
 
 ## Adding a case
 

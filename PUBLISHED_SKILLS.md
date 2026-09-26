@@ -12,8 +12,10 @@ your own project is the point, and a licence that withholds that makes them usel
   documented pitfall.
 - **[`importers/`](importers/IMPORTERS.md)** — format migration. They move a story you
   already wrote out of another tool and into Parlance, then verify nothing was lost.
-  [`importers/examples/`](importers/examples/README.md) holds three real migrations
-  — one per format — each with the author's original file beside the result.
+  [`importers/examples/`](importers/examples/README.md) holds real migrations
+  — Ink, Yarn, Twine, SugarCube and Ren'Py; one per format that could be sourced
+  under a redistributable licence — each with the author's original file beside
+  the result.
 
 They are optional and separate. Nothing here is part of the editor, and nothing here
 is installed with it. Take one skill, take all of them, take none.
@@ -69,7 +71,7 @@ self-contained: no shared state, no configuration, no network calls, no telemetr
 
 These read the Parlance data contract — `dialogues`, `characters`, `quests`,
 `locations`, `variables`, and the condition/effect vocabulary. They target contract
-**0.12.x**. After a contract bump, re-check them: a renamed field will usually reduce a
+**0.15.x**. After a contract bump, re-check them: a renamed field will usually reduce a
 tool to finding nothing, which looks exactly like a clean project.
 
 That is not a formality. This line said **0.9.x** for three releases after the fact,

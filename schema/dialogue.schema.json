@@ -56,7 +56,8 @@
             "description": "overrides the dialogue's default speaker for this line — a character or skill id; omit for narration"
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "The line shown at this node. Optional ONLY on a node with non-empty 'choices' (a text-less choice node presents just its options); every other node must carry it — enforced by the validator (FLOW), since a schema-level conditional would reject valid nodes here."
           },
           "onEnter": {
             "type": "array",
@@ -67,7 +68,7 @@
           },
           "showIf": {
             "$ref": "common.schema.json#/definitions/condition",
-            "description": "Optional gate on this node's DISPLAY. When it fails the node is skipped and resolution continues at 'next': its text is not shown and its onEnter effects DO NOT fire. Requires 'next'; mutually exclusive with 'choices' and 'isEnd', which confines this to interstitial narration and makes skipping unambiguous. A 'next' chain must terminate at a node with no showIf."
+            "description": "Optional gate on this node's DISPLAY. On an interstitial node (one with 'next', no choices, not isEnd) a failed gate SKIPS the node: resolution continues at 'next', its text is not shown and its onEnter effects DO NOT fire; such a node requires 'next', and a 'next' chain must terminate at a node with no showIf. On a node with 'choices' or 'isEnd' a failed gate hides only the LINE: the node is still reached, its choices are still offered (or the dialogue still ends) and its onEnter effects still fire — the step reports textHidden. A showIf on a node with no text is an error either way (nothing to hide)."
           },
           "isEnd": {
             "type": "boolean",
@@ -104,6 +105,23 @@
                 "goto": {
                   "$ref": "common.schema.json#/definitions/id",
                   "description": "next node id (omit if check provides onSuccess/onFailure, or if choice ends convo)"
+                },
+                "fallback": {
+                  "type": "boolean",
+                  "description": "true: this choice is offered ONLY when no non-fallback choice on the node is visible (its own showIf, if any, must still pass) — Ink's '* ->', Yarn's fallthrough. A node with an ungated fallback can never strand the player, so the validator drops its 'may be stuck' warning; more than one fallback, or a fallback beside no gated sibling, is a warning."
+                },
+                "whenLocked": {
+                  "type": "string",
+                  "enum": ["hide", "show"],
+                  "description": "What the player sees when this choice's showIf FAILS. 'hide' (the engine default, overridable by rules.choices.whenLockedDefault) drops it from the step entirely; 'show' returns it in stepDialogue's lockedChoices so the engine can present it greyed out. It is never selectable either way."
+                },
+                "lockedText": {
+                  "type": "string",
+                  "description": "Optional replacement text for a choice presented locked (whenLocked 'show'), e.g. '[Requires Engineering 3]'. Localizable, never voiced. Omit to show the choice's own text."
+                },
+                "tags": {
+                  "$ref": "common.schema.json#/definitions/tags",
+                  "description": "Opaque per-choice labels (e.g. 'mood:angry'). Pass-through: the runtime returns them on the visible choice and never reads them."
                 }
               },
               "required": [
@@ -120,11 +138,14 @@
           "notes": {
             "type": "string",
             "description": "Author-only annotation. Never shown to the player; ignored by the runtime."
+          },
+          "tags": {
+            "$ref": "common.schema.json#/definitions/tags",
+            "description": "Opaque per-line labels (e.g. 'mood:angry', 'sfx:door') an engine hangs animation, audio or camera work off. Pass-through: the runtime returns them on the step's node and never reads them; no validator rule reads them either."
           }
         },
         "required": [
-          "id",
-          "text"
+          "id"
         ],
         "additionalProperties": false
       }

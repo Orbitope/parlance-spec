@@ -1,0 +1,8 @@
+{
+  "archetype": "keeper",
+  "id": "npc_keeper",
+  "loreRef": {
+    "file": "lore/café.md"
+  },
+  "name": "The Keeper"
+}

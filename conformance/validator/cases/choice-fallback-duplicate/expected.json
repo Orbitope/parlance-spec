@@ -1,0 +1,15 @@
+{
+  "must": [
+    {
+      "code": "FLOW",
+      "contains": "fallback choices",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "FLOW",
+      "contains": "may be stuck"
+    }
+  ]
+}

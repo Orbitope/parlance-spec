@@ -1,0 +1,18 @@
+{
+  "must": [
+    {
+      "code": "BIND",
+      "contains": "dangling VO binding 'dialogue/dlg_meet/nodes/node_ghost/text'",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "BIND",
+      "contains": "dangling VO binding 'dialogue/dlg_meet/nodes/node_open"
+    }
+  ],
+  "validators": [
+    "python"
+  ]
+}

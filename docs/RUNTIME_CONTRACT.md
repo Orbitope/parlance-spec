@@ -100,6 +100,7 @@ All calls return a **new** immutable `GameState`; the input is never mutated.
 | `set_active_dialogue` | `flags["active_dialogue__" + character] = true` (feed model — no separate `activeDialogues` map). A forced dialogue carries a tier-1 `offer` gated on this flag; the effect's `dialogue` field is metadata for tooling/validation. Clear it with a normal `set_flag … false` (or `clearActiveDialogue`) to fall through again. |
 | `play_cutscene` | `pendingCutscene = cutscene`. The runtime only records the request — it never plays a cutscene. See "Cutscene playback" below. |
 | `set_text` | `texts[variable] = value`, last-write-wins. `value` is always a literal — capturing free-text player input is the engine's job, which calls this effect with whatever string it collected. See "Text interpolation" below. |
+| `engine` | **No state change** — return the input state unchanged. `{ "type": "engine", "command": "shake", "args": [0.5] }` is an opaque command for the host engine (camera shake, a sound cue, an animation trigger). **The runtime never interprets it.** It reaches the engine the way every other effect does, in order inside `onEnterEffects` or a choice's `effects`, and the engine dispatches on `command`. `args` is an optional list of string / number / boolean literals. The runtime does not validate a command against `rules.engine.commands`; that is the validator's job (ENGINE). |
 
 **Multiple effects** are applied left-to-right, threading state through each call.
 
@@ -189,10 +190,20 @@ not all of them renders hidden text at the rest:
 4. a check's `onSuccess` / `onFailure`.
 
 1. Locate the node by the current id; **throw** if not found.
-2. If it has no `showIf`, or `evaluate(node.showIf, state, project)` is true, return it.
+2. If it has no `showIf`, or it is **not skippable** (it has non-empty `choices`, or
+   `isEnd` — see below), or `evaluate(node.showIf, state, project)` is true, return it.
 3. Otherwise the node is **skipped**: set the current id to `node.next` and repeat.
 4. **Throw** on a repeated id (a ring of conditional nodes), or if a skipped node has no
    `next`.
+
+**Only an interstitial node is ever skipped (0.15).** A node is *skippable* when it has
+no `choices` (or an empty list) and is not `isEnd`. A gated node with `choices` or `isEnd`
+is **never skipped** — skipping it would have nowhere to go and would strand the player.
+When its gate fails only its **line** is hidden: `resolveNode` returns it, its `onEnter`
+fires on arrival exactly as for any node (hiding is presentation; effects are state), its
+choices are offered, and an `isEnd` node still ends the dialogue. `stepDialogue` reports
+this as `textHidden` (below). Before 0.15 the validator refused both shapes (`COND`), so no
+0.14-valid project behaves differently.
 
 **A skipped node is inert.** Its text is not shown, its `onEnter` effects **DO NOT fire**,
 it produces no transcript entry, and neither its speaker nor its portrait is resolved. A
@@ -200,9 +211,8 @@ skipped node did not happen. This is the single
 most likely place for a port to diverge, so the conformance vectors cover it directly.
 
 The two throws are validator-guaranteed impossibilities, not runtime policy: `COND` makes
-a node carrying `showIf` require `next`, forbids it alongside `choices` or `isEnd`, and
-rejects both a `next` chain ending at a conditional node and a cycle made only of
-conditional nodes. The runtime may therefore assume termination; if it does not hold, the
+a skippable node carrying `showIf` require `next`, and rejects both a `next` chain ending at
+a skippable conditional node and a cycle made only of them. The runtime may therefore assume termination; if it does not hold, the
 data never passed validation and silence would hide that.
 
 ### The arrival sequence — resolve once, and only once
@@ -212,6 +222,12 @@ is most likely to get wrong, because both obvious readings of the function list 
 incorrect. On every arrival, in this order:
 
 1. **Resolve**, against the state as it is on arrival — **before** any `onEnter` is applied.
+   This is where **both** kinds of node gate are evaluated, **once**: the skip gate on an
+   interstitial node (skip it or not) and the line-only gate on a node with `choices` or
+   `isEnd` (hide its line or not — `textHidden`). Neither is re-read after `onEnter`. A
+   node whose own `onEnter` would fail its own `showIf` (a greeting shown only to a
+   stranger, which records the meeting) still shows its line; judging the line gate
+   against post-`onEnter` state would hide exactly that line.
 2. **Apply** the resolved node's `onEnter` effects (and any quest resolution they trigger).
 3. **Present** against the post-`onEnter` state: filter `choices` by their `showIf`, and
    interpolate the node text and the visible choice text.
@@ -232,14 +248,51 @@ re-resolving is a second, different answer to a question already answered.
 `stepDialogue` below performs steps 1 and 3 together against a single state, which is
 correct only when no effects are applied between them. A caller that applies `onEnter`
 between the two needs a presentation-only entry point that takes an already-resolved node,
-so that step 3 can use post-effect state without re-running step 1.
+so that step 3 can use post-effect state without re-running step 1 — and such a caller
+takes `textHidden` from the ARRIVAL state (the one step 1 used), not the post-effect one:
+the line gate is part of step 1's answer, only choice filtering and interpolation belong
+to step 3.
 
 ## stepDialogue(dialogue, nodeId, state, project): StepResult
 
 1. **Resolve** the node via `resolveNode` above; throw if not found.
-2. Filter `node.choices` to those where `!choice.showIf || evaluate(choice.showIf, state, project)`.
-3. Interpolate `node.text` and each visible choice's `text` (see "Text interpolation").
-4. Return `{ node, visibleChoices, onEnterEffects: node.onEnter ?? [] }`.
+2. **Partition the choices** (`partitionChoices`). A choice *passes* when
+   `!choice.showIf || evaluate(choice.showIf, state, project)`.
+   - `visibleChoices` — the passing choices that are **not** `fallback`; or, **only when that
+     set is empty**, the passing choices that **are** `fallback` (a fallback with its own
+     `showIf` must pass it too). Authored order.
+   - `lockedChoices` — the choices that do **not** pass and whose `whenLocked` resolves to
+     `"show"`: `choice.whenLocked ?? rules.choices.whenLockedDefault ?? "hide"`
+     (`resolveWhenLocked`). Authored order. A locked fallback is listed like any other.
+3. **Line gate.** `textHidden = node.showIf present && node not skippable && !evaluate(node.showIf, …)`.
+   When `textHidden`, the returned `node.text` is `""`; the node's `choices`, `isEnd` and
+   `onEnter` are untouched.
+4. Interpolate `node.text` (when not hidden and present), and each returned choice's `text`
+   and `lockedText` (see "Text interpolation").
+5. Return `{ node, visibleChoices, lockedChoices, textHidden, onEnterEffects: node.onEnter ?? [] }`.
+
+**A text-less node (0.15).** A node with non-empty `choices` may omit `text`. It presents
+only its options: `node.text` stays absent (not `""`), `textHidden` is `false` (nothing was
+withheld), and an engine renders no line. A node with neither `text` nor `choices` is a
+validator error (`FLOW`).
+
+**Locked choices are opt-in on both sides.** An author opts a choice in with
+`whenLocked: "show"` (or the project default); an engine opts in by reading
+`lockedChoices`. `visibleChoices` keeps its exact pre-0.15 meaning, so an engine that
+ignores the new list hides a locked choice, as it always did. Present a locked choice
+greyed out, with `lockedText` in place of `text` when set; it is **never selectable**.
+
+**Passive checks are unchanged.** A passive check's reveal (`passiveCheckPasses`) is the
+engine's own display rule and is not part of the partition above: a passive-check choice
+is in `visibleChoices` when its `showIf` passes, whatever the reveal says. If its
+`showIf` fails and `whenLocked` resolves to `"show"`, it is in `lockedChoices` like any
+other choice. The two never combine into a new state.
+
+**Tags are passed through untouched.** `node.tags` and each visible choice's `tags`
+(0.15) come back exactly as authored, as opaque free strings such as `mood:angry` or
+`sfx:door`. The runtime never reads them, and neither does any validator rule or
+condition. An engine hangs animation, audio or camera work off them, the way Ink's
+`# tag` and Yarn's `#hashtag` are used. A port must not strip, sort or dedupe them.
 
 **The node returned may not be the node whose id was requested.** When the requested node
 is skipped, the resolved one is returned instead — so a caller tracking "where the player
@@ -257,6 +310,10 @@ when to apply them (on first arrival; not on replay). Call `applyEffects(onEnter
 
 ## chooseChoice(dialogue, nodeId, choiceId, state, project, rng): ChoiceOutcome
 
+0. **Throw** unless the choice is in `visibleChoices` for this node at `state` (the same
+   partition as `stepDialogue`): a hidden choice, a locked choice, and a fallback while a
+   non-fallback choice is visible are all **not selectable** (0.15). The message contains
+   `not selectable`; `choose_choice.json` carries these as `expectedError` vectors.
 1. Apply `choice.effects` to state via `applyEffects`.
 2. If `choice.check.mode === "active"`: call `resolveCheck`, advance to `onSuccess` / `onFailure`.
 3. If `choice.goto` present (including passive check choices): advance to `goto` node.
@@ -517,6 +574,10 @@ These are choices made here that a runtime must implement consistently:
 | Unadvanced quest in a `quest` condition | Sits **before every stage**: `<` / `<=` true, `>=` / `>` / `==` false. So "not started yet" is `< <firstStage>` and "started" is `>= <firstStage>`. |
 | Unknown quest or stage in a `quest` condition | **False for every op**, never throws. The validator reports both as REF errors at author time; the runtime stays total so a save naming a since-deleted stage degrades to unstarted rather than crashing. |
 | Passive check destination | Uses `choice.goto`, never `onSuccess`/`onFailure`. Reveal threshold `passiveCheckPasses`: `skill + Σbonus ≥ difficulty` |
+| Line-only gate (0.15) | `node.showIf` on a node with `choices` or `isEnd` never skips it; a failed gate sets `textHidden` and returns `text: ""`. Evaluated once, on arrival, before `onEnter` — like the skip gate. `onEnter` still fires — hiding is presentation, effects are state |
+| Text-less node (0.15) | `text` optional only with non-empty `choices`; returned with `text` absent and `textHidden: false` |
+| Fallback choice (0.15) | `choice.fallback: true` is visible only when no non-fallback choice is; its own `showIf` still applies. Not selectable otherwise |
+| Locked choice (0.15) | `whenLocked` → `rules.choices.whenLockedDefault` → `"hide"`. `"show"` puts a failing choice in `lockedChoices`, interpolated, never selectable; `chooseChoice` throws on it |
 | `onEnter` application timing | First arrival only; caller responsibility |
 | Portrait resolution | `node.portrait` > `character.portrait` > `null`; no shared-base fallback |
 | Character dialogue resolution | `resolveCharacterDialogue`: gather the character's OFFERS, drop failed `when` and visited non-replayable ones, pick by (priority tier, condition specificity, then lowest id); `null` if none. Order-independent |
@@ -525,6 +586,8 @@ These are choices made here that a runtime must implement consistently:
 | Quest resolution | `resolveQuests`: condition-gated stage/outcome effects fire once when true, recorded in `questFired`; fixpoint; deterministic order; never writes `questStages` |
 | `Check.kind` | Authoring/validation tag only — runtime does not branch on it; both `priced` and `oneshot` resolve through the same `resolveCheck` |
 | `play_cutscene` | Writes `pendingCutscene = cutscene`; does not play anything. Re-firing overwrites (last write wins). Never auto-cleared by the runtime — the host/UI must call `clearPendingCutscene` |
+| `engine` effect | Changes no state and is never interpreted. It is returned in order among the other effects, and the host engine dispatches on `command` |
+| `node.tags` / `choice.tags` | Opaque pass-through on the step. The runtime and every rule ignore them; they are not a Condition site |
 
 ---
 
@@ -644,8 +707,9 @@ from are not mutated.
 |---|---|
 | `DialogueNode.text` | ids of any kind |
 | `Choice.text` | `name`, `title`, `summary`, `description` on entities |
-| `Objective.text` | `notes` and other author-only annotations |
-| `Stage.description` | anything else |
+| `Choice.lockedText` (0.15) | `notes` and other author-only annotations |
+| `Objective.text` | anything else |
+| `Stage.description` | |
 | `Quest.journalName` | |
 
 A brace in an authoring-facing field is just a brace — the TEXT validator does not scan

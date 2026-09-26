@@ -1,0 +1,11 @@
+{
+  "mustNot": [
+    {
+      "code": "FLOW"
+    },
+    {
+      "code": "SCHEMA"
+    }
+  ],
+  "noErrors": true
+}

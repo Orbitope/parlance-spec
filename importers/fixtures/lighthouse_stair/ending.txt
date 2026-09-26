@@ -1,0 +1,4 @@
+At the top, the lamp room is warm and bright.
+*if strength >= 10
+  You could stay here all night.
+*ending

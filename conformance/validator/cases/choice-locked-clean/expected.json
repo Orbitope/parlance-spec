@@ -1,0 +1,17 @@
+{
+  "mustNot": [
+    {
+      "code": "FLOW"
+    },
+    {
+      "code": "TEXT"
+    },
+    {
+      "code": "RULES"
+    },
+    {
+      "code": "SCHEMA"
+    }
+  ],
+  "noErrors": true
+}

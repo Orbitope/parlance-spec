@@ -108,28 +108,12 @@ KNOWN = ("jump", "set", "if", "elseif", "else", "endif", "declare", "stop")
 ASSIGN = re.compile(r"^(?:set|declare)\s+\$(\w+)\s*(?:to|=|(\+=)|(-=))\s*(.+)$")
 COMPARE = re.compile(r"\$(\w+)\s*(?:==|!=|>=|<=|>|<)\s*([^\s()&|]+)")
 
-# A guard this importer will not carry. Each names the specific reason, because
-# "conditional narration" as a blanket reason told the author nothing about
-# whether the loss was theirs to fix.
-WHY_CHOICE_HOST = (
-    "conditional narration immediately before a choice list. The line would have to "
-    "be the node that hosts those choices, and a Parlance node may not carry showIf "
-    "and choices together (validator rule COND) — a conditional node is interstitial "
-    "narration, and there is no text-less node to hang the choices on instead")
-WHY_NO_HOST = (
-    "a choice list with no narration line to host it — these options follow another "
-    "option block directly. A Parlance choice hangs off a node and every node requires "
-    "text, so there is nothing for them to attach to. Duplicating them onto the tail of "
-    "each preceding branch would read correctly to a player but put the same string in "
-    "the data several times, which the content check counts as invented prose. One line "
-    "of narration before them in the source makes them importable")
-WHY_ORPHAN_BODY = ("body of a choice that is itself unmappable, so it can never be "
-                   "reached")
-WHY_COND_TERMINAL = (
-    "conditional narration as the last beat of the conversation. The node would have to "
-    "carry showIf and isEnd together, which the validator refuses (rule COND): a "
-    "dialogue's termination must not be conditional, or a player who fails the gate has "
-    "nowhere to go. A line after it in the source, or a jump onwards, makes it importable")
+# Until the 0.15 contract three POSITIONS were declared loss here — a guarded
+# line before a choice list, a guarded line as the conversation's last beat, and
+# a choice list with no narration line to host it. All three are expressible
+# now: `showIf` on a node with `choices` or `isEnd` hides only the line, and a
+# node may carry choices with no `text` at all. The importer emits those shapes
+# (see build_yarn_example.py), so nothing positional is declared any more.
 
 
 def literal_kind(val):
@@ -199,91 +183,6 @@ def declare(node, item, why, unmapped, construct):
     item.pop("showIf", None)
     unmapped.append({"node": node["title"], "lineno": item["lineno"],
                      "command": construct, "text": item["text"], "why": why})
-
-
-def mark_structural_losses(node, unmapped, lo=0, hi=None, terminal=True, empty=()):
-    """Everything a guard or a choice list cannot be carried INTO, structurally.
-
-    Three cases, one walk, because they interact and separate passes disagreed
-    with each other and with the importer:
-
-    * a choice list with no narration line to host it (WHY_NO_HOST);
-    * a guarded line that would end up hosting one (WHY_CHOICE_HOST) — showIf and
-      choices are mutually exclusive;
-    * a guarded line that would end up as the conversation's last beat
-      (WHY_COND_TERMINAL) — so is showIf with isEnd.
-
-    Two things make it fiddly enough to be worth spelling out. It has to run AFTER
-    the guard pass, because a line that turned out to be declared loss is not a
-    host and is not a last beat. And it has to look PAST declared-loss lines the
-    way the importer does, since those are not emitted at all: adjacency in the
-    source is not adjacency in the output, and checking the immediate neighbour
-    let a guarded line host choices anyway.
-    """
-    items = node["items"]
-    hi = len(items) if hi is None else hi
-    host = None                 # last mappable line that could host a choice list
-    guarded = []                # mappable guarded lines since that host
-    i = lo
-    while i < hi:
-        it = items[i]
-
-        if it["kind"] == "line" and it.get("text") and not it.get("unmappable"):
-            if it.get("showIf"):
-                guarded.append(it)
-            else:
-                host, guarded = it, []
-            i += 1
-            continue
-
-        if it["kind"] != "option":
-            i += 1
-            continue
-
-        indent = it["indent"]
-        groups = []
-        j = i
-        while j < hi and items[j]["kind"] == "option" and items[j]["indent"] == indent:
-            body = j + 1
-            while body < hi and items[body]["indent"] > indent:
-                body += 1
-            groups.append((j, body))
-            j = body
-
-        # Every guarded line between the host and the list has to go: whichever
-        # of them the importer emitted last would BE the host.
-        for g in guarded:
-            declare(node, g, WHY_CHOICE_HOST, unmapped, "if-guarded line before a choice list")
-        if host is None:
-            for k in range(i, j):
-                dead = items[k]
-                why = (WHY_NO_HOST if dead["kind"] == "option" and dead["indent"] == indent
-                       else WHY_ORPHAN_BODY)
-                declare(node, dead, why, unmapped, "choice list with no host")
-        else:
-            # An option body continues after the block — so its last line is the
-            # conversation's last beat only when nothing follows the block either.
-            after_lives = any(
-                items[k].get("text") and not items[k].get("unmappable")
-                for k in range(j, hi)) or any(
-                head_of(c) == "jump" and c.split()[-1] not in empty
-                for k in range(j, hi) for c in items[k]["commands"])
-            for oi, bend in groups:
-                mark_structural_losses(node, unmapped, oi + 1, bend,
-                                       terminal and not after_lives, empty)
-        host, guarded = None, []
-        i = j
-
-    # Running off the end of a Yarn node ends the conversation, unless it jumps
-    # on — and a jump to a node whose every line is declared loss goes nowhere,
-    # so it does not count. `empty` is the set of those, which is why this whole
-    # pass runs to a fixpoint: declaring one node's lines can empty it, which
-    # turns a jump into a dead end, which makes another node's tail terminal.
-    if terminal and guarded and not any(
-            head_of(c) == "jump" and c.split()[-1] not in empty
-            for k in range(lo, hi) for c in items[k]["commands"]):
-        for g in guarded:
-            declare(node, g, WHY_COND_TERMINAL, unmapped, "if-guarded line ending the node")
 
 
 def analyse(nodes):
@@ -366,24 +265,19 @@ def analyse(nodes):
                 elif head == "if" or head == "elseif":
                     for m in re.finditer(r"\$(\w+)", c):
                         variables.add(m.group(1))
-                if head not in KNOWN:
+                if head not in KNOWN and it["kind"] == "line":
+                    # A custom command on its own line or on an option is
+                    # carried as an `engine` effect (0.15) — the engine decides
+                    # what `<<shake 0.5>>` means. One sitting INLINE on a
+                    # narration line has no effect list to ride in the
+                    # mapping, so it is still declared.
                     unmapped.append({"node": n["title"], "lineno": it["lineno"],
                                      "command": c,
-                                     "why": "Yarn command with no Parlance equivalent"})
-    # AFTER the guard pass, not before: a line that turned out to be declared
-    # loss is not a line anything can hang choices on, and running this first
-    # counted one as a host. The two then disagreed — the parser said the choices
-    # were fine and the importer found nothing to attach them to.
-    def yields_nothing(n):
-        return not any(it.get("text") and not it.get("unmappable") for it in n["items"])
-
-    while True:
-        before = len(unmapped)
-        empty = {n["title"] for n in nodes if yields_nothing(n)}
-        for n in nodes:
-            mark_structural_losses(n, unmapped, empty=empty)
-        if len(unmapped) == before:
-            break
+                                     "why": "Yarn command inline on a narration line — carried "
+                                            "as an engine effect only on its own line or an option"})
+    # No structural pass any more: a guarded line may host a choice list or end
+    # the conversation (the gate hides only its line), and a choice list with no
+    # line to hang off gets a text-less node — all 0.15 shapes.
     return sorted(variables), jumps, unmapped, kinds
 
 

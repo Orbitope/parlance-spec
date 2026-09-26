@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Cellar Door</title>
+</head>
+<body>
+<tw-storydata name="Cellar Door" startnode="4" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="7C1B2D34-5E6F-4A70-8B91-A2B3C4D5E6F7" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="StoryInit" tags="" position="0,0" size="100,100">&lt;&lt;set $lantern to false&gt;&gt;
+&lt;&lt;set $matches to 3&gt;&gt;
+&lt;&lt;set $name to &quot;stranger&quot;&gt;&gt;</tw-passagedata><tw-passagedata pid="2" name="StoryCaption" tags="" position="0,0" size="100,100">Matches left: $matches</tw-passagedata><tw-passagedata pid="3" name="Widgets" tags="widget" position="0,0" size="100,100">&lt;&lt;widget &quot;creak&quot;&gt;&gt;The boards creak underfoot.&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="4" name="Stairs" tags="" position="0,0" size="100,100">/* The opening passage. */
+&lt;&lt;playSound &quot;wind&quot; 0.4&gt;&gt;
+The cellar stairs go down further than the house is tall.
+Someone has chalked a word on the wall, //twice//: $name.
+&lt;&lt;if $lantern&gt;&gt;
+The lantern throws your shadow ahead of you.
+&lt;&lt;elseif $matches gte 2&gt;&gt;
+You still have matches enough for the way back.
+&lt;&lt;else&gt;&gt;
+It is very dark.
+&lt;&lt;/if&gt;&gt;
+[[Go down|Landing][$matches -= 1]]
+&lt;&lt;link &quot;Light the lantern&quot; &quot;Stairs&quot;&gt;&gt;&lt;&lt;set $lantern to true&gt;&gt;The match flares.&lt;&lt;/link&gt;&gt;
+&lt;&lt;if $matches is 0&gt;&gt;[[Give up|Outside]]&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="Landing" tags="" position="0,0" size="100,100">&lt;&lt;set $knocked to true&gt;&gt;
+&lt;&lt;creak&gt;&gt;
+A door waits at the bottom, painted the colour of old tea.
+You have &lt;&lt;print $matches&gt;&gt; matches left.
+&lt;&lt;textbox &quot;$name&quot; &quot;stranger&quot;&gt;&gt;
+&lt;&lt;switch $matches&gt;&gt;
+&lt;&lt;case 0&gt;&gt;
+You will have to find the handle by touch.
+&lt;&lt;case 1 2&gt;&gt;
+One more match, maybe two.
+&lt;&lt;default&gt;&gt;
+Plenty of light, for now.
+&lt;&lt;/switch&gt;&gt;
+&lt;&lt;notify&gt;&gt;The door is not locked.&lt;&lt;/notify&gt;&gt;
+&lt;&lt;set $matches to 5&gt;&gt;
+&lt;&lt;if $lantern&gt;&gt;&lt;&lt;goto &quot;Cellar&quot;&gt;&gt;&lt;&lt;/if&gt;&gt;
+[[Open the door|Cellar]]
+[[Go back up|Stairs]]</tw-passagedata><tw-passagedata pid="6" name="Cellar" tags="" position="0,0" size="100,100">&lt;&lt;set _count to 2&gt;&gt;
+&lt;&lt;set $name to &quot;the one who opened the door&quot;&gt;&gt;
+Shelves, jars, and a smell of apples.
+&lt;&lt;if $knocked&gt;&gt;Nobody answered your knock, and nobody is here.&lt;&lt;/if&gt;&gt;
+&lt;&lt;back&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Outside" tags="" position="0,0" size="100,100">The night air is cold and the house is quiet behind you.
+[[Try again|Crossroads]]</tw-passagedata><tw-passagedata pid="8" name="Crossroads" tags="" position="0,0" size="100,100">&lt;&lt;set $lantern to false&gt;&gt;
+[[Stairs]]
+[[Take the short way|Shortcut]]</tw-passagedata><tw-passagedata pid="9" name="Shortcut" tags="" position="0,0" size="100,100">&lt;&lt;goto &quot;Outside&quot;&gt;&gt;</tw-passagedata></tw-storydata>
+<script>/* the SugarCube engine is inlined here in a real build */</script>
+</body>
+</html>

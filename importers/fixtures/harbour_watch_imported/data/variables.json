@@ -1,0 +1,28 @@
+{
+  "variables": [
+    {
+      "default": 2,
+      "description": "Arcweave variable coins",
+      "id": "coins",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "Arcweave variable luck",
+      "id": "luck",
+      "kind": "counter"
+    },
+    {
+      "default": "Gannet",
+      "description": "Arcweave variable ship_name",
+      "id": "ship_name",
+      "kind": "text"
+    },
+    {
+      "default": false,
+      "description": "Arcweave variable visited_pier",
+      "id": "visited_pier",
+      "kind": "flag"
+    }
+  ]
+}

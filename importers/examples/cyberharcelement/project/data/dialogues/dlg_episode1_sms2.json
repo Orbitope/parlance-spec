@@ -1,0 +1,54 @@
+{
+  "entry": "n_episode1_sms2",
+  "id": "dlg_episode1_sms2",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "flag": "didwritehakim",
+              "type": "set_flag",
+              "value": true
+            },
+            {
+              "counter": "score",
+              "delta": 1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_episode1_sms2_2",
+          "id": "c_episode1_ecrire_hakim",
+          "text": "Ecrire à Hakim"
+        },
+        {
+          "effects": [
+            {
+              "counter": "score",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "id": "c_episode1_ne_pas_crire",
+          "text": "Ne pas écrire"
+        }
+      ],
+      "id": "n_episode1_sms2",
+      "isEnd": true
+    },
+    {
+      "id": "n_episode1_sms2_2",
+      "next": "n_episode1_sms2_3",
+      "speakerId": "char_you",
+      "text": "Salut ! Tu pourrais donner des nouvelles, mec 😉"
+    },
+    {
+      "id": "n_episode1_sms2_3",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "Ça fait un bail qu'on t'a pas vu en cours."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms2"
+}

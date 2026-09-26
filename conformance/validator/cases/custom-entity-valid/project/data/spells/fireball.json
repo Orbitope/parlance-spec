@@ -1,0 +1,7 @@
+{
+  "element": "fire",
+  "grantedBy": "npc_keeper",
+  "id": "fireball",
+  "manaCost": 15,
+  "name": "Fireball"
+}

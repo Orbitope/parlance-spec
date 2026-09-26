@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "spells 'frostbite' field 'grantedBy': unknown character 'npc_gone'",
+      "severity": "error"
+    },
+    {
+      "code": "REF",
+      "contains": "runes 'ember' field 'carvedBy': unknown character 'npc_lost'",
+      "severity": "error"
+    }
+  ]
+}

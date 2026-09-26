@@ -1,0 +1,22 @@
+{
+  "rumour": {
+    "fields": {},
+    "name": "Rumour",
+    "plural": "dialogues"
+  },
+  "rune": {
+    "fields": {},
+    "name": "Rune",
+    "plural": "glyphs"
+  },
+  "sigil": {
+    "fields": {},
+    "name": "Sigil",
+    "plural": "glyphs"
+  },
+  "spell": {
+    "fields": {},
+    "name": "Spell",
+    "plural": "../escape"
+  }
+}

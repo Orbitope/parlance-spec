@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "unknown character 'npc_missing'",
+      "severity": "error"
+    }
+  ]
+}

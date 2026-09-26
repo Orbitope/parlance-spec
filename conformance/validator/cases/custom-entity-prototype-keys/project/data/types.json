@@ -1,0 +1,12 @@
+{
+  "__proto__": {
+    "fields": {
+      "owner": {
+        "target": "character",
+        "type": "reference"
+      }
+    },
+    "name": "Proto",
+    "plural": "protos"
+  }
+}

@@ -1,9 +1,11 @@
 {
-  "must": [
+  "mustNot": [
     {
-      "code": "COND",
-      "contains": "'choices'",
-      "severity": "error"
+      "code": "COND"
+    },
+    {
+      "code": "FLOW"
     }
-  ]
+  ],
+  "noErrors": true
 }

@@ -1,0 +1,11 @@
+{
+  "mustNot": [
+    {
+      "code": "BIND"
+    }
+  ],
+  "noErrors": true,
+  "validators": [
+    "python"
+  ]
+}

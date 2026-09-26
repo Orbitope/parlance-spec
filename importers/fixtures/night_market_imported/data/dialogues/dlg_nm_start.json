@@ -1,0 +1,159 @@
+{
+  "entry": "n_nm_start",
+  "id": "dlg_nm_start",
+  "nodes": [
+    {
+      "id": "n_nm_start",
+      "next": "n_nm_start_2",
+      "onEnter": [
+        {
+          "args": [
+            "bg",
+            "market"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "fade"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "The night market opens when the tide goes out."
+    },
+    {
+      "id": "n_nm_start_2",
+      "next": "n_nm_start_3",
+      "speakerId": "v",
+      "text": "Welcome to {stall}. Mind the puddles — they are deeper than they look."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_nm_start_4",
+          "id": "c_nm_start",
+          "showIf": {
+            "counter": "coins",
+            "op": ">=",
+            "type": "counter",
+            "value": 2
+          },
+          "text": "Buy the lamp",
+          "whenLocked": "show"
+        },
+        {
+          "goto": "n_nm_start_5",
+          "id": "c_nm_start_2",
+          "text": "Ask about the tide"
+        },
+        {
+          "goto": "n_nm_leaving",
+          "id": "c_nm_start_3",
+          "text": "Leave"
+        }
+      ],
+      "id": "n_nm_start_3",
+      "speakerId": "v",
+      "text": "What will it be?"
+    },
+    {
+      "id": "n_nm_start_4",
+      "next": "n_nm_start_6",
+      "onEnter": [
+        {
+          "counter": "coins",
+          "delta": -2,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "has_lamp",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "speakerId": "v",
+      "text": "A good lamp. It will not go out in rain."
+    },
+    {
+      "id": "n_nm_start_5",
+      "next": "n_nm_start_6",
+      "speakerId": "v",
+      "text": "It turns at the second bell. Nobody sells after that."
+    },
+    {
+      "id": "n_nm_start_6",
+      "next": "n_nm_start_7",
+      "showIf": {
+        "flag": "has_lamp",
+        "type": "flag",
+        "value": true
+      },
+      "text": "The lamp swings from your hand, bright as a coin."
+    },
+    {
+      "id": "n_nm_start_7",
+      "next": "n_nm_start_8",
+      "showIf": {
+        "of": [
+          {
+            "flag": "has_lamp",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "coins",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Your pockets are empty and the path is dark."
+    },
+    {
+      "id": "n_nm_start_8",
+      "next": "n_nm_leaving",
+      "onEnter": [
+        {
+          "args": [
+            "vendor",
+            "smile",
+            "at",
+            "right"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "v",
+      "text": "Come back when the tide is out again. Say \"hello\" to the ferryman."
+    },
+    {
+      "id": "n_nm_leaving",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "sound",
+            "bell.ogg"
+          ],
+          "command": "play",
+          "type": "engine"
+        }
+      ],
+      "text": "A bell rings somewhere out on the flats. The stalls fold up one by one."
+    }
+  ],
+  "offer": {
+    "character": "v"
+  },
+  "replayable": false,
+  "title": "start"
+}

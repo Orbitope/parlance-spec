@@ -1,0 +1,13 @@
+{
+  "engine": {
+    "commands": {
+      "sfx": {
+        "args": "any"
+      },
+      "shake": {
+        "args": 1,
+        "description": "camera shake (intensity)"
+      }
+    }
+  }
+}

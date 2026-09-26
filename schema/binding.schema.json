@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "binding.schema.json",
+  "title": "Asset Binding",
+  "description": "Mapping from asset ids (portraits, VO keys, cutscene assets) to locations per target/profile.",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "type": "string",
+      "description": "Identifier for the target profile (e.g., 'godot', 'editor', 'web')."
+    },
+    "portraits": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Mapping of portrait IDs to engine paths or URLs."
+    },
+    "vo": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Mapping of VO keys to engine paths or URLs."
+    },
+    "cutscenes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Mapping of cutscene asset IDs to engine paths or URLs."
+    }
+  },
+  "required": ["profile"],
+  "additionalProperties": false
+}

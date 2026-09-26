@@ -16,7 +16,7 @@
         },
         "criticals": {
           "type": "boolean",
-          "description": "Critical rolls (snake-eyes / boxcars). When true, every die showing its minimum ALWAYS fails and every die showing its maximum ALWAYS succeeds, regardless of skill or difficulty. Defaults to false \u2014 enabling it changes every check outcome, so it is an explicit per-project opt-in."
+          "description": "Critical rolls (snake-eyes / boxcars). When true, every die showing its minimum ALWAYS fails and every die showing its maximum ALWAYS succeeds, regardless of skill or difficulty. Defaults to false — enabling it changes every check outcome, so it is an explicit per-project opt-in."
         }
       },
       "additionalProperties": false
@@ -27,8 +27,78 @@
       "properties": {
         "tagVocabulary": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Controlled vocabulary for Quest.tags. Journal UIs group and prioritise quests from these, so a typo'd tag silently drops out of the grouping — declaring the vocabulary here turns that into an OBJ warning. Omit the field and any tag is accepted."
+        }
+      },
+      "additionalProperties": false
+    },
+    "choices": {
+      "type": "object",
+      "description": "Choice presentation rules.",
+      "properties": {
+        "whenLockedDefault": {
+          "type": "string",
+          "enum": [
+            "hide",
+            "show"
+          ],
+          "description": "Project-wide default for a choice's 'whenLocked' when the choice does not set it. 'hide' (the engine default) keeps the classic behaviour — a choice whose showIf fails is dropped from the step; 'show' returns it in stepDialogue's lockedChoices for greyed-out presentation. A per-choice 'whenLocked' overrides this."
+        }
+      },
+      "additionalProperties": false
+    },
+    "engine": {
+      "type": "object",
+      "description": "Engine-command rules (the 'engine' effect).",
+      "properties": {
+        "commands": {
+          "type": "object",
+          "description": "Declared engine command names, keyed by command. Declaring the set turns an undeclared command in an 'engine' effect into an ENGINE warning (a typo is otherwise a silent no-op at runtime). Omit the field and any name is accepted.",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "args": {
+                "description": "Expected argument count, or \"any\". When a number, an effect whose args length differs is an ENGINE warning.",
+                "oneOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "const": "any"
+                  }
+                ]
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "flag": {
+      "type": "object",
+      "description": "Flag authoring rules.",
+      "properties": {
+        "exclusiveGroups": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2
+          },
+          "description": "Lists of flags that are mutually exclusive. A validator rule enforces that no single effect sequence sets more than one flag in a group to true."
         }
       },
       "additionalProperties": false

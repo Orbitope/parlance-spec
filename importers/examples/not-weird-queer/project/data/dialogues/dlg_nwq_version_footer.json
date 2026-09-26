@@ -14,8 +14,18 @@
     },
     {
       "id": "n_nwq_version_footer_3",
-      "isEnd": true,
+      "next": "n_nwq_version_footer_4",
       "text": "^^version $version - <a href= \"https://forms.gle/mc2JKRCaoz9jvtki9\" target=\"_blank\" rel=\"noopener noreferrer\">feedback</a>^^"
+    },
+    {
+      "id": "n_nwq_version_footer_4",
+      "isEnd": true,
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": true
+      },
+      "text": "<br />"
     }
   ],
   "replayable": false,

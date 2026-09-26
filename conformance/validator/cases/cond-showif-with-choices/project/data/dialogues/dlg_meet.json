@@ -11,7 +11,6 @@
         }
       ],
       "id": "node_open",
-      "next": "node_close",
       "onEnter": [
         {
           "flag": "met_keeper",

@@ -473,6 +473,32 @@
             "value"
           ],
           "additionalProperties": false
+        },
+        {
+          "description": "An engine command: an opaque name plus literal arguments, handed to the host engine in order among the other effects (camera shake, a sound cue, an animation trigger). The runtime changes NO state for it — it is returned in the step's effect list and the engine decides what it means. 'command' must be lowercase snake_case (validator rule ENGINE); a project may declare its commands in rules.engine.commands so a typo is a warning rather than a silent no-op.",
+          "properties": {
+            "type": {
+              "const": "engine"
+            },
+            "command": {
+              "type": "string"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              }
+            }
+          },
+          "required": [
+            "type",
+            "command"
+          ],
+          "additionalProperties": false
         }
       ]
     },

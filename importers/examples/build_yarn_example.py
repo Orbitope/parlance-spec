@@ -46,13 +46,56 @@ def ir_of(path):
     return json.loads(p.stdout)
 
 
+# Yarn's own control flow and state commands; every other head is a custom
+# command the host game registered (mirrors KNOWN in lib/parse_yarn.py).
+YARN_BUILTIN = ("jump", "set", "if", "elseif", "else", "endif", "declare", "stop")
+
+
+def engine_command_name(head):
+    """`addForegroundImage` -> `add_foreground_image`: the validator requires an
+    engine command to be lowercase snake_case. Deterministic and documented in
+    the report — a spelling of the source's own name, not a new one."""
+    snake = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", head).lower()
+    snake = re.sub(r"[^a-z0-9_]+", "_", snake).strip("_")
+    return snake if re.match(r"^[a-z]", snake) else "cmd_" + snake
+
+
+def engine_arg(tok):
+    """A Yarn command argument, typed as the source wrote it."""
+    if len(tok) >= 2 and tok[0] == tok[-1] == '"':
+        return tok[1:-1]
+    if re.match(r"^-?\d+$", tok):
+        return int(tok)
+    if re.match(r"^-?\d+\.\d+$", tok):
+        return float(tok)
+    if tok in ("true", "false"):
+        return tok == "true"
+    return tok
+
+
+def engine_of(command):
+    """A custom Yarn command (`<<addForegroundImage student-group-1 30 440>>`)
+    as a Parlance `engine` effect: the runtime hands it to the game in order,
+    the way Yarn's dialogue runner hands it to a registered command handler."""
+    toks = re.findall(r'"[^"]*"|\S+', command.strip())
+    eff = {"type": "engine", "command": engine_command_name(toks[0])}
+    if len(toks) > 1:
+        eff["args"] = [engine_arg(t) for t in toks[1:]]
+    return eff
+
+
 def effect_of(command, kinds):
     """A Yarn command as a Parlance effect, or None where there is no equivalent.
 
     None is not a silent drop — the parser has already listed the command under
     `unmapped` and the report carries it. It only means this script will not
     invent an effect to stand in for one.
+
+    A custom command (any head Yarn itself does not define) becomes an
+    `engine` effect; the parser no longer declares those as loss.
     """
+    if head_of(command) and head_of(command) not in YARN_BUILTIN:
+        return engine_of(command)
     if head_of(command) != "set":
         # `<<declare>>` states a variable's INITIAL value. That is the registry
         # entry's `default`, not something that happens during the story.
@@ -105,6 +148,8 @@ class Builder:
         self.seen_ids = {}
         self.speakers = {}
         self.owner = {}          # parlance node id -> source Yarn node title
+        self.engine_src = {}     # id(engine effect) -> (title, lineno, command), while pending
+        self.stranded = []       # custom commands with no node to carry them
 
     # -- ids, all derived -------------------------------------------------
     def uid(self, base):
@@ -160,6 +205,10 @@ class Builder:
                         continue
                     eff = effect_of(c, self.kinds)
                     if eff:
+                        if eff["type"] == "engine":
+                            # Remembered while pending so a stranded one can be
+                            # named in the notes; stripped once it has a host.
+                            self.engine_src[id(eff)] = (title, it["lineno"], c)
                         pending.append(eff)
                 if jump:
                     for t in ([prev] if prev else []) + waiting:
@@ -179,18 +228,39 @@ class Builder:
                         body_hi += 1
                     groups.append((j, body_lo, body_hi))
                     j = body_hi
-                # The parser declares a choice list that has no narration line to
-                # hang off (WHY_NO_HOST) along with everything under it. Skipped
-                # here rather than approximated — the report carries it.
+                # An option whose own guard the parser declared (a function
+                # call, an untyped variable) is skipped along with its body — the
+                # report carries it.
+                for g in groups:
+                    if items[g[0]].get("unmappable"):
+                        # The whole group is declared loss, so the custom
+                        # commands under it go nowhere either — say so.
+                        for k in range(g[0], g[2]):
+                            for c in items[k]["commands"]:
+                                if head_of(c) and head_of(c) not in YARN_BUILTIN:
+                                    self.stranded.append((title, items[k]["lineno"], c, "under a choice that is declared loss"))
                 groups = [g for g in groups if not items[g[0]].get("unmappable")]
                 if not groups:
                     i = j
                     continue
                 if prev is None:
-                    raise SystemExit(
-                        f"{title}: a choice list with no line to host it (source line "
-                        f"{it['lineno']}), which the parser did not declare.")
-                host, body_tails = prev, []
+                    # No narration line to hang the options off — they follow
+                    # another option block, or open the Yarn node. Since 0.15 a
+                    # node may carry choices with no `text`: the option-block
+                    # shape, exactly what the source wrote.
+                    host = {"id": self.node_id(title)}
+                    if pending:
+                        host["onEnter"] = pending
+                        pending = []
+                    self.nodes[host["id"]] = host
+                    self.owner[host["id"]] = title
+                    for t in waiting:
+                        self.terminate(t, host["id"])
+                    waiting = []
+                    entry = entry or host["id"]
+                else:
+                    host = prev
+                body_tails = []
                 host["choices"] = []
                 for oi, blo, bhi in groups:
                     host["choices"].append(self.build_choice(title, items, oi, blo, bhi,
@@ -234,6 +304,14 @@ class Builder:
             # node rather than dropped; it fires as that line is entered rather
             # than after it, which is a timing difference the report names.
             prev.setdefault("onEnter", []).extend(pending)
+        elif pending:
+            # No line in this chain to host them: a Yarn node made only of
+            # commands, or commands after a jump or an option block. Engine
+            # commands are NAMED here rather than dropped without a word.
+            for e in pending:
+                if e["type"] == "engine" and id(e) in self.engine_src:
+                    t, ln, c = self.engine_src[id(e)]
+                    self.stranded.append((t, ln, c, "no narration line after it in its Yarn node to carry it"))
         tails = ([prev] if prev is not None else []) + waiting
         return entry, tails
 
@@ -298,13 +376,8 @@ class Builder:
             return
         if node.get("choices") or node.get("next"):
             return
-        if node.get("showIf"):
-            # showIf and isEnd are mutually exclusive (validator rule COND), and
-            # quietly dropping the guard would show a gated line unconditionally
-            # — a change no string comparison could see. The parser declares this
-            # shape (WHY_COND_TERMINAL); reaching it here means the two disagree.
-            raise SystemExit(f"node '{node['id']}' ends the conversation but carries a "
-                             f"guard the parser did not declare")
+        # A guarded last beat is fine since 0.15: `showIf` with `isEnd` hides
+        # the line when the gate fails and the conversation still ends.
         node["isEnd"] = True
 
 
@@ -401,6 +474,10 @@ def build_one(ir, ns):
     if orphans:
         raise SystemExit(f"{ns}: {len(orphans)} nodes belong to no dialogue — they would "
                          f"be dropped silently: {orphans[:5]}")
+    # A custom command becomes an `engine` effect only where a node can carry
+    # it. The rest are named, one per command, never dropped without a word.
+    for title, lineno, command, why in b.stranded:
+        notes.append(f"engine command <<{command}>> in '{title}' (line {lineno}) not carried — {why}")
     return b, out, notes
 
 

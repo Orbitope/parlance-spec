@@ -1,0 +1,750 @@
+{
+  "entry": "n_tq_start",
+  "id": "dlg_tq_start",
+  "nodes": [
+    {
+      "id": "n_tq_start",
+      "next": "n_tq_start_2",
+      "onEnter": [
+        {
+          "args": [
+            "music",
+            "illurock.opus"
+          ],
+          "command": "play",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "bg",
+            "lecturehall"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "fade"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "It's only when I hear the sounds of shuffling feet and supplies being put away that I realize that the lecture's over."
+    },
+    {
+      "id": "n_tq_start_2",
+      "next": "n_tq_start_3",
+      "text": "Professor Eileen's lectures are usually interesting, but today I just couldn't concentrate on it."
+    },
+    {
+      "id": "n_tq_start_3",
+      "next": "n_tq_start_4",
+      "text": "I've had a lot of other thoughts on my mind...thoughts that culminate in a question."
+    },
+    {
+      "id": "n_tq_start_4",
+      "next": "n_tq_start_5",
+      "text": "It's a question that I've been meaning to ask a certain someone."
+    },
+    {
+      "id": "n_tq_start_5",
+      "next": "n_tq_start_6",
+      "onEnter": [
+        {
+          "args": [
+            "bg",
+            "uni"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "fade"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "When we come out of the university, I spot her right away."
+    },
+    {
+      "id": "n_tq_start_6",
+      "next": "n_tq_start_7",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "normal"
+          ],
+          "command": "show",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "I've known Sylvie since we were kids. She's got a big heart and she's always been a good friend to me."
+    },
+    {
+      "id": "n_tq_start_7",
+      "next": "n_tq_start_8",
+      "text": "But recently... I've felt that I want something more."
+    },
+    {
+      "id": "n_tq_start_8",
+      "next": "n_tq_start_9",
+      "text": "More than just talking, more than just walking home together when our classes end."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_tq_rightaway",
+          "id": "c_tq_start",
+          "text": "To ask her right away."
+        },
+        {
+          "goto": "n_tq_later",
+          "id": "c_tq_start_2",
+          "text": "To ask her later."
+        }
+      ],
+      "id": "n_tq_start_9",
+      "text": "As soon as she catches my eye, I decide..."
+    },
+    {
+      "id": "n_tq_rightaway",
+      "next": "n_tq_rightaway_2",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "smile"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Hi there! How was class?"
+    },
+    {
+      "id": "n_tq_rightaway_2",
+      "next": "n_tq_rightaway_3",
+      "speakerId": "m",
+      "text": "Good..."
+    },
+    {
+      "id": "n_tq_rightaway_3",
+      "next": "n_tq_rightaway_4",
+      "text": "I can't bring myself to admit that it all went in one ear and out the other."
+    },
+    {
+      "id": "n_tq_rightaway_4",
+      "next": "n_tq_rightaway_5",
+      "speakerId": "m",
+      "text": "Are you going home now? Wanna walk back with me?"
+    },
+    {
+      "id": "n_tq_rightaway_5",
+      "next": "n_tq_rightaway_6",
+      "speakerId": "s",
+      "text": "Sure!"
+    },
+    {
+      "id": "n_tq_rightaway_6",
+      "next": "n_tq_rightaway_7",
+      "onEnter": [
+        {
+          "args": [
+            "bg",
+            "meadow"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "fade"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "After a short while, we reach the meadows just outside the neighborhood where we both live."
+    },
+    {
+      "id": "n_tq_rightaway_7",
+      "next": "n_tq_rightaway_8",
+      "text": "It's a scenic view I've grown used to. Autumn is especially beautiful here."
+    },
+    {
+      "id": "n_tq_rightaway_8",
+      "next": "n_tq_rightaway_9",
+      "text": "When we were children, we played in these meadows a lot, so they're full of memories."
+    },
+    {
+      "id": "n_tq_rightaway_9",
+      "next": "n_tq_rightaway_10",
+      "speakerId": "m",
+      "text": "Hey... Umm..."
+    },
+    {
+      "id": "n_tq_rightaway_10",
+      "next": "n_tq_rightaway_11",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "smile"
+          ],
+          "command": "show",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "She turns to me and smiles. She looks so welcoming that I feel my nervousness melt away."
+    },
+    {
+      "id": "n_tq_rightaway_11",
+      "next": "n_tq_rightaway_12",
+      "text": "I'll ask her...!"
+    },
+    {
+      "id": "n_tq_rightaway_12",
+      "next": "n_tq_rightaway_13",
+      "speakerId": "m",
+      "text": "Ummm... Will you..."
+    },
+    {
+      "id": "n_tq_rightaway_13",
+      "next": "n_tq_rightaway_14",
+      "speakerId": "m",
+      "text": "Will you be my artist for a visual novel?"
+    },
+    {
+      "id": "n_tq_rightaway_14",
+      "next": "n_tq_rightaway_15",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "surprised"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "text": "Silence."
+    },
+    {
+      "id": "n_tq_rightaway_15",
+      "next": "n_tq_rightaway_16",
+      "text": "She looks so shocked that I begin to fear the worst. But then..."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_tq_game",
+          "id": "c_tq_rightaway",
+          "text": "It's a videogame."
+        },
+        {
+          "goto": "n_tq_book",
+          "id": "c_tq_rightaway_2",
+          "text": "It's an interactive book."
+        }
+      ],
+      "id": "n_tq_rightaway_16",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "smile"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Sure, but what's a \"visual novel?\""
+    },
+    {
+      "id": "n_tq_game",
+      "next": "n_tq_game_2",
+      "speakerId": "m",
+      "text": "It's a kind of videogame you can play on your computer or a console."
+    },
+    {
+      "id": "n_tq_game_2",
+      "next": "n_tq_game_3",
+      "speakerId": "m",
+      "text": "Visual novels tell a story with pictures and music."
+    },
+    {
+      "id": "n_tq_game_3",
+      "next": "n_tq_game_4",
+      "speakerId": "m",
+      "text": "Sometimes, you also get to make choices that affect the outcome of the story."
+    },
+    {
+      "id": "n_tq_game_4",
+      "next": "n_tq_game_5",
+      "speakerId": "s",
+      "text": "So it's like those choose-your-adventure books?"
+    },
+    {
+      "id": "n_tq_game_5",
+      "next": "n_tq_game_6",
+      "speakerId": "m",
+      "text": "Exactly! I've got lots of different ideas that I think would work."
+    },
+    {
+      "id": "n_tq_game_6",
+      "next": "n_tq_game_7",
+      "speakerId": "m",
+      "text": "And I thought maybe you could help me...since I know how you like to draw."
+    },
+    {
+      "id": "n_tq_game_7",
+      "next": "n_tq_game_8",
+      "speakerId": "m",
+      "text": "It'd be hard for me to make a visual novel alone."
+    },
+    {
+      "id": "n_tq_game_8",
+      "next": "n_tq_game_9",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "normal"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Well, sure! I can try. I just hope I don't disappoint you."
+    },
+    {
+      "id": "n_tq_game_9",
+      "next": "n_tq_marry",
+      "speakerId": "m",
+      "text": "You know you could never disappoint me, Sylvie."
+    },
+    {
+      "id": "n_tq_book",
+      "next": "n_tq_book_2",
+      "onEnter": [
+        {
+          "flag": "book",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "speakerId": "m",
+      "text": "It's like an interactive book that you can read on a computer or a console."
+    },
+    {
+      "id": "n_tq_book_2",
+      "next": "n_tq_book_3",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "surprised"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Interactive?"
+    },
+    {
+      "id": "n_tq_book_3",
+      "next": "n_tq_book_4",
+      "speakerId": "m",
+      "text": "You can make choices that lead to different events and endings in the story."
+    },
+    {
+      "id": "n_tq_book_4",
+      "next": "n_tq_book_5",
+      "speakerId": "s",
+      "text": "So where does the \"visual\" part come in?"
+    },
+    {
+      "id": "n_tq_book_5",
+      "next": "n_tq_book_6",
+      "speakerId": "m",
+      "text": "Visual novels have pictures and even music, sound effects, and sometimes voice acting to go along with the text."
+    },
+    {
+      "id": "n_tq_book_6",
+      "next": "n_tq_book_7",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "green",
+            "smile"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "I see! That certainly sounds like fun. I actually used to make webcomics way back when, so I've got lots of story ideas."
+    },
+    {
+      "id": "n_tq_book_7",
+      "next": "n_tq_book_8",
+      "speakerId": "m",
+      "text": "That's great! So...would you be interested in working with me as an artist?"
+    },
+    {
+      "id": "n_tq_book_8",
+      "next": "n_tq_marry",
+      "speakerId": "s",
+      "text": "I'd love to!"
+    },
+    {
+      "id": "n_tq_marry",
+      "next": "n_tq_marry_2",
+      "onEnter": [
+        {
+          "args": [
+            "black"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "And so, we become a visual novel creating duo."
+    },
+    {
+      "id": "n_tq_marry_2",
+      "next": "n_tq_marry_3",
+      "onEnter": [
+        {
+          "args": [
+            "bg",
+            "club"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "Over the years, we make lots of games and have a lot of fun making them."
+    },
+    {
+      "id": "n_tq_marry_3",
+      "next": "n_tq_marry_4",
+      "showIf": {
+        "flag": "book",
+        "type": "flag",
+        "value": true
+      },
+      "text": "Our first game is based on one of Sylvie's ideas, but afterwards I get to come up with stories of my own, too."
+    },
+    {
+      "id": "n_tq_marry_4",
+      "next": "n_tq_marry_5",
+      "text": "We take turns coming up with stories and characters and support each other to make some great games!"
+    },
+    {
+      "id": "n_tq_marry_5",
+      "next": "n_tq_marry_6",
+      "text": "And one day..."
+    },
+    {
+      "id": "n_tq_marry_6",
+      "next": "n_tq_marry_7",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "normal"
+          ],
+          "command": "show",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Hey..."
+    },
+    {
+      "id": "n_tq_marry_7",
+      "next": "n_tq_marry_8",
+      "speakerId": "m",
+      "text": "Yes?"
+    },
+    {
+      "id": "n_tq_marry_8",
+      "next": "n_tq_marry_9",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "giggle"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Will you marry me?"
+    },
+    {
+      "id": "n_tq_marry_9",
+      "next": "n_tq_marry_10",
+      "speakerId": "m",
+      "text": "What? Where did this come from?"
+    },
+    {
+      "id": "n_tq_marry_10",
+      "next": "n_tq_marry_11",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "surprised"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "Come on, how long have we been dating?"
+    },
+    {
+      "id": "n_tq_marry_11",
+      "next": "n_tq_marry_12",
+      "speakerId": "m",
+      "text": "A while..."
+    },
+    {
+      "id": "n_tq_marry_12",
+      "next": "n_tq_marry_13",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "smile"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "These last few years we've been making visual novels together, spending time together, helping each other..."
+    },
+    {
+      "id": "n_tq_marry_13",
+      "next": "n_tq_marry_14",
+      "speakerId": "s",
+      "text": "I've gotten to know you and care about you better than anyone else. And I think the same goes for you, right?"
+    },
+    {
+      "id": "n_tq_marry_14",
+      "next": "n_tq_marry_15",
+      "speakerId": "m",
+      "text": "Sylvie..."
+    },
+    {
+      "id": "n_tq_marry_15",
+      "next": "n_tq_marry_16",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "giggle"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "But I know you're the indecisive type. If I held back, who knows when you'd propose?"
+    },
+    {
+      "id": "n_tq_marry_16",
+      "next": "n_tq_marry_17",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "normal"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "So will you marry me?"
+    },
+    {
+      "id": "n_tq_marry_17",
+      "next": "n_tq_marry_18",
+      "speakerId": "m",
+      "text": "Of course I will! I've actually been meaning to propose, honest!"
+    },
+    {
+      "id": "n_tq_marry_18",
+      "next": "n_tq_marry_19",
+      "speakerId": "s",
+      "text": "I know, I know."
+    },
+    {
+      "id": "n_tq_marry_19",
+      "next": "n_tq_marry_20",
+      "speakerId": "m",
+      "text": "I guess... I was too worried about timing. I wanted to ask the right question at the right time."
+    },
+    {
+      "id": "n_tq_marry_20",
+      "next": "n_tq_marry_21",
+      "onEnter": [
+        {
+          "args": [
+            "sylvie",
+            "blue",
+            "giggle"
+          ],
+          "command": "show",
+          "type": "engine"
+        }
+      ],
+      "speakerId": "s",
+      "text": "You worry too much. If only this were a visual novel and I could pick an option to give you more courage!"
+    },
+    {
+      "id": "n_tq_marry_21",
+      "next": "n_tq_marry_22",
+      "onEnter": [
+        {
+          "args": [
+            "black"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "We get married shortly after that."
+    },
+    {
+      "id": "n_tq_marry_22",
+      "next": "n_tq_marry_23",
+      "text": "Our visual novel duo lives on even after we're married...and I try my best to be more decisive."
+    },
+    {
+      "id": "n_tq_marry_23",
+      "next": "n_tq_marry_24",
+      "text": "Together, we live happily ever after even now."
+    },
+    {
+      "id": "n_tq_marry_24",
+      "isEnd": true,
+      "text": "Good Ending."
+    },
+    {
+      "id": "n_tq_later",
+      "next": "n_tq_later_2",
+      "text": "I can't get up the nerve to ask right now. With a gulp, I decide to ask her later."
+    },
+    {
+      "id": "n_tq_later_2",
+      "next": "n_tq_later_3",
+      "onEnter": [
+        {
+          "args": [
+            "black"
+          ],
+          "command": "scene",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "dissolve"
+          ],
+          "command": "with",
+          "type": "engine"
+        }
+      ],
+      "text": "But I'm an indecisive person."
+    },
+    {
+      "id": "n_tq_later_3",
+      "next": "n_tq_later_4",
+      "text": "I couldn't ask her that day and I end up never being able to ask her."
+    },
+    {
+      "id": "n_tq_later_4",
+      "next": "n_tq_later_5",
+      "text": "I guess I'll never know the answer to my question now..."
+    },
+    {
+      "id": "n_tq_later_5",
+      "isEnd": true,
+      "text": "Bad Ending."
+    }
+  ],
+  "offer": {
+    "character": "m"
+  },
+  "replayable": false,
+  "title": "start"
+}

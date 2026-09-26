@@ -1,0 +1,249 @@
+{
+  "name": "Harbour Watch",
+  "cover": null,
+  "startingElement": "e-pier",
+  "boards": {
+    "b-root": {
+      "name": "Root",
+      "root": true,
+      "children": ["b-harbour"]
+    },
+    "b-harbour": {
+      "name": "Harbour",
+      "elements": ["e-pier", "e-ship", "e-board", "e-short", "e-stay", "e-swim"],
+      "connections": ["cn-ask", "cn-pay", "cn-back", "cn-rich", "cn-poor", "cn-auto", "cn-seen", "cn-unseen"],
+      "notes": ["n-todo"],
+      "jumpers": ["j-pier"],
+      "branches": ["br-fare", "br-seen"]
+    }
+  },
+  "notes": {
+    "n-todo": {
+      "theme": "default",
+      "content": "<p>Storm scene still to write.</p>"
+    }
+  },
+  "elements": {
+    "e-pier": {
+      "theme": "default",
+      "title": "<p>Pier</p>",
+      "content": "<p>Fog rolls across the pier.</p><p><span class=\"mention\" data-type=\"components\" data-id=\"c-ada\">Ada</span> lifts her lantern &amp; waits.</p><pre><code>visited_pier = true</code></pre>",
+      "outputs": ["cn-ask", "cn-pay"],
+      "components": ["c-ada"],
+      "attributes": [],
+      "assets": {}
+    },
+    "e-ship": {
+      "theme": "default",
+      "title": "<p>The ship</p>",
+      "content": "<pre><code>if visited_pier</code></pre><p>The <em>Gannet</em> sails at dawn, as I told you.</p><pre><code>else</code></pre><p>The <em>Gannet</em> sails at dawn.</p><pre><code>endif</code></pre><pre><code>coins += 1</code></pre><p>Here, for your trouble.</p>",
+      "outputs": ["cn-back"],
+      "components": ["c-ada"],
+      "attributes": [],
+      "assets": {}
+    },
+    "e-board": {
+      "theme": "default",
+      "title": "<p>Boarding</p>",
+      "content": "<pre><code>coins -= 3\nluck = random(1, 6)</code></pre><p>You climb aboard as the lines are cast off.</p>",
+      "outputs": [],
+      "components": [],
+      "attributes": [],
+      "assets": {}
+    },
+    "e-short": {
+      "theme": "default",
+      "title": "<p>Short of coin</p>",
+      "content": "<p>You count your coins twice. It is not enough.</p>",
+      "outputs": ["cn-auto"],
+      "components": [],
+      "attributes": [],
+      "assets": {}
+    },
+    "e-stay": {
+      "theme": "default",
+      "title": "<p>Stay</p>",
+      "content": "<p>You find a bench out of the wind.</p>",
+      "outputs": [],
+      "components": [],
+      "attributes": [],
+      "assets": {}
+    },
+    "e-swim": {
+      "theme": "default",
+      "title": "<p>Swim</p>",
+      "content": "<p>The water is colder than it looks.</p>",
+      "outputs": [],
+      "components": [],
+      "attributes": [],
+      "assets": {}
+    }
+  },
+  "jumpers": {
+    "j-pier": {
+      "elementId": "e-pier"
+    }
+  },
+  "connections": {
+    "cn-ask": {
+      "type": "Bezier",
+      "label": "<p>Ask about the ship</p>",
+      "theme": "default",
+      "sourceid": "e-pier",
+      "targetid": "e-ship",
+      "sourceType": "elements",
+      "targetType": "elements"
+    },
+    "cn-pay": {
+      "type": "Bezier",
+      "label": "<p>Pay for passage</p>",
+      "theme": "default",
+      "sourceid": "e-pier",
+      "targetid": "br-fare",
+      "sourceType": "elements",
+      "targetType": "branches"
+    },
+    "cn-back": {
+      "type": "Bezier",
+      "label": null,
+      "theme": "default",
+      "sourceid": "e-ship",
+      "targetid": "j-pier",
+      "sourceType": "elements",
+      "targetType": "jumpers"
+    },
+    "cn-rich": {
+      "type": "Bezier",
+      "label": null,
+      "theme": "default",
+      "sourceid": "cd-rich",
+      "targetid": "e-board",
+      "sourceType": "conditions",
+      "targetType": "elements"
+    },
+    "cn-poor": {
+      "type": "Bezier",
+      "label": null,
+      "theme": "default",
+      "sourceid": "cd-poor",
+      "targetid": "e-short",
+      "sourceType": "conditions",
+      "targetType": "elements"
+    },
+    "cn-auto": {
+      "type": "Bezier",
+      "label": null,
+      "theme": "default",
+      "sourceid": "e-short",
+      "targetid": "br-seen",
+      "sourceType": "elements",
+      "targetType": "branches"
+    },
+    "cn-seen": {
+      "type": "Bezier",
+      "label": null,
+      "theme": "default",
+      "sourceid": "cd-seen",
+      "targetid": "e-stay",
+      "sourceType": "conditions",
+      "targetType": "elements"
+    },
+    "cn-unseen": {
+      "type": "Bezier",
+      "label": null,
+      "theme": "default",
+      "sourceid": "cd-unseen",
+      "targetid": "e-swim",
+      "sourceType": "conditions",
+      "targetType": "elements"
+    }
+  },
+  "branches": {
+    "br-fare": {
+      "theme": "default",
+      "conditions": {
+        "ifCondition": "cd-rich",
+        "elseIfConditions": [],
+        "elseCondition": "cd-poor"
+      }
+    },
+    "br-seen": {
+      "theme": "default",
+      "conditions": {
+        "ifCondition": "cd-seen",
+        "elseIfConditions": [],
+        "elseCondition": "cd-unseen"
+      }
+    }
+  },
+  "conditions": {
+    "cd-rich": {
+      "output": "cn-rich",
+      "script": "<pre><code>coins &gt;= 3</code></pre>"
+    },
+    "cd-poor": {
+      "output": "cn-poor",
+      "script": null
+    },
+    "cd-seen": {
+      "output": "cn-seen",
+      "script": "<pre><code>visits(e-ship) &gt; 0</code></pre>"
+    },
+    "cd-unseen": {
+      "output": "cn-unseen",
+      "script": null
+    }
+  },
+  "components": {
+    "c-root": {
+      "name": "Characters",
+      "root": true,
+      "children": ["c-ada"]
+    },
+    "c-ada": {
+      "name": "Ada",
+      "attributes": ["at-role"],
+      "assets": {}
+    }
+  },
+  "attributes": {
+    "at-role": {
+      "name": "Role",
+      "value": {
+        "data": "<p>Keeper of the harbour light</p>",
+        "type": "string",
+        "plain": false
+      },
+      "cId": "c-ada",
+      "cType": "components"
+    }
+  },
+  "variables": {
+    "v-root": {
+      "name": "Global Variables",
+      "root": true,
+      "children": ["v-coins", "v-pier", "v-ship", "v-luck"]
+    },
+    "v-coins": {
+      "name": "coins",
+      "type": "integer",
+      "value": 2
+    },
+    "v-pier": {
+      "name": "visited_pier",
+      "type": "boolean",
+      "value": false
+    },
+    "v-ship": {
+      "name": "ship_name",
+      "type": "string",
+      "value": "Gannet"
+    },
+    "v-luck": {
+      "name": "luck",
+      "type": "integer",
+      "value": 0
+    }
+  },
+  "assets": {}
+}

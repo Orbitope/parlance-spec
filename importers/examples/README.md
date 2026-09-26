@@ -1,14 +1,16 @@
 # Worked migrations
 
-Three real stories, by other people, imported into Parlance — with the author's
+Five real stories, by other people, imported into Parlance — with the author's
 original file sitting next to the result so you can check the claim rather than
 believe it.
 
 | Example | Format | Source | Lines carried | Declared loss | Reachable |
 |---|---|---|---|---|---|
-| [`the-intercept`](the-intercept/) | Ink | [inkle](https://github.com/inkle/the-intercept), MIT | 546 lines, 300 options | 120 units | 387 / 546 |
-| [`cyberharcelement`](cyberharcelement/) | Yarn Spinner | [Play Curious](https://github.com/play-curious/cyberharcelement), MIT | 544 lines, 95 options | 101 units | 446 / 544 |
-| [`not-weird-queer`](not-weird-queer/) | Twine / Harlowe | [Jake Kao](https://github.com/PyrrhicShadow/Pyrrhic-s-Twinery), MIT | 1,003 lines, 176 links | 182 units | 454 / 1,003 |
+| [`the-intercept`](the-intercept/) | Ink | [inkle](https://github.com/inkle/the-intercept), MIT | 585 lines, 326 options | 67 units | 436 / 593 |
+| [`cyberharcelement`](cyberharcelement/) | Yarn Spinner | [Play Curious](https://github.com/play-curious/cyberharcelement), MIT | 591 lines, 110 options | 37 units | 516 / 596 |
+| [`not-weird-queer`](not-weird-queer/) | Twine / Harlowe | [Jake Kao](https://github.com/PyrrhicShadow/Pyrrhic-s-Twinery), MIT | 1,051 lines, 178 links | 145 units | 500 / 1,051 |
+| [`the-question`](the-question/) | Ren'Py | [Ren'Py](https://github.com/renpy/renpy) sample game, MIT | 71 lines, 4 choices | 0 units | 71 / 71 — the easy case; see its REPORT §3 |
+| [`aesthetics-over-plot`](aesthetics-over-plot/) | Twine / SugarCube | [ronynn](https://github.com/ronynn/Game-Jam-Submissions), GPL-3.0 | 333 lines, 62 links | 11 units | 333 / 333 |
 
 Each directory holds the vendored source, the imported `project/`, the
 `import.py` that produced it, a `SOURCE.md` recording the commit and the licence,
@@ -42,20 +44,21 @@ could not carry, and which of those losses an author could fix by moving one lin
 
 ### Read the last column
 
-All three converge. All three carry every word of their source, provably
+All five converge. All five carry every word of their source, provably
 unaltered. What differs is how much of each story a player can still walk, and
 that number turned out to be the most informative thing here — including about
-our own mistakes.
+our own mistakes. The Ren'Py and SugarCube stories are walkable end to end; the
+other three are not:
 
-- **Ink** — 71%. What is cut off sits behind eight diverts into knots whose every
+- **Ink** — 74%. What is cut off sits behind eight diverts into knots whose every
   line is declared loss; five of them behind a single sentence containing an
   inline conditional alternative (`{cond: a|b}` mid-line), which a node cannot
   hold.
-- **Twine** — 45%. Links gated on conditions Parlance cannot express: read
+- **Twine** — 48%. Links gated on conditions Parlance cannot express: read
   counts (`visits`), text comparisons, and variables the story assigns as two
   different kinds. In Harlowe every forward motion is a link, so a guard that
   does not map takes everything behind it.
-- **Yarn** — 82%. No single break; its unreachable 98 are scenes routed by custom
+- **Yarn** — 87%. No single break; its unreachable 80 are scenes routed by custom
   commands driving the game's own inbox UI.
 
 None of these is a defect in the conversion, and **none is visible to a content
@@ -71,12 +74,12 @@ ordinary edges. Reading it as unexpressible had severed the trunk and produced a
 confident conclusion that the format needed a new control-flow construct. It does
 not. What it would gain from one is the ability to express an *ambiguous* tunnel
 without duplicating the scene — which is a much narrower claim, and one none of
-these three stories establishes.
+these stories establishes.
 
 Two things they show that a synthetic fixture cannot:
 
-- **What a real migration actually costs.** All three converge, and all three lose
-  something. Much of what they lose is *positional* — a line one place further on
+- **What a real migration actually costs.** All five converge, and every one but
+  the Ren'Py sample loses something. Much of what they lose is *positional* — a line one place further on
   in the source would import — and each report says which of its losses an author
   could fix and which are real gaps in the format.
 - **That the parsers survive contact with real prose.** They did not, at first.
@@ -101,6 +104,9 @@ terms and no others, and records in `SOURCE.md` the commit it came from and the
 upstream's own words about what the licence covers. `spec_lint.py` refuses to pass
 an example missing any of those three files.
 
-Both sources are MIT. Neither upstream requires attribution; both get it anyway,
-because a worked example that did not say whose writing it was showing would be a
+The Ink, Yarn and Harlowe sources are MIT. *Aesthetics Over Plot* is GPL-3.0,
+and so is its imported `project/`, a work based on it; its directory carries that
+licence verbatim and nothing in it is offered on other terms. MIT requires no
+attribution and GPL requires only the notices it ships with; every example gets
+attribution anyway, because a worked example that did not say whose writing it was showing would be a
 poor one.

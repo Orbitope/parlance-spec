@@ -1,0 +1,292 @@
+{
+  "entry": "n_cellar_stairs",
+  "id": "dlg_cellar_stairs",
+  "nodes": [
+    {
+      "id": "n_cellar_stairs",
+      "next": "n_cellar_stairs_2",
+      "onEnter": [
+        {
+          "args": [
+            "wind",
+            0.4
+          ],
+          "command": "play_sound",
+          "type": "engine"
+        }
+      ],
+      "text": "The cellar stairs go down further than the house is tall."
+    },
+    {
+      "id": "n_cellar_stairs_2",
+      "next": "n_cellar_stairs_3",
+      "text": "Someone has chalked a word on the wall, //twice//: {name}."
+    },
+    {
+      "id": "n_cellar_stairs_3",
+      "next": "n_cellar_stairs_4",
+      "showIf": {
+        "flag": "lantern",
+        "type": "flag",
+        "value": true
+      },
+      "text": "The lantern throws your shadow ahead of you."
+    },
+    {
+      "id": "n_cellar_stairs_4",
+      "next": "n_cellar_stairs_5",
+      "showIf": {
+        "of": [
+          {
+            "flag": "lantern",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "counter": "matches",
+            "op": ">=",
+            "type": "counter",
+            "value": 2
+          }
+        ],
+        "type": "all"
+      },
+      "text": "You still have matches enough for the way back."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "counter": "matches",
+              "delta": -1,
+              "type": "adjust_counter"
+            }
+          ],
+          "goto": "n_cellar_landing",
+          "id": "c_cellar_go_down",
+          "text": "Go down"
+        },
+        {
+          "effects": [
+            {
+              "flag": "lantern",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_cellar_stairs",
+          "id": "c_cellar_light_the_lantern",
+          "text": "Light the lantern"
+        },
+        {
+          "goto": "n_cellar_outside",
+          "id": "c_cellar_give_up",
+          "showIf": {
+            "counter": "matches",
+            "op": "==",
+            "type": "counter",
+            "value": 0
+          },
+          "text": "Give up"
+        }
+      ],
+      "id": "n_cellar_stairs_5",
+      "showIf": {
+        "of": [
+          {
+            "flag": "lantern",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "matches",
+              "op": ">=",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "It is very dark."
+    },
+    {
+      "id": "n_cellar_landing",
+      "next": "n_cellar_landing_2",
+      "onEnter": [
+        {
+          "flag": "knocked",
+          "type": "set_flag",
+          "value": true
+        },
+        {
+          "command": "creak",
+          "type": "engine"
+        }
+      ],
+      "text": "A door waits at the bottom, painted the colour of old tea."
+    },
+    {
+      "id": "n_cellar_landing_2",
+      "next": "n_cellar_landing_3",
+      "showIf": {
+        "counter": "matches",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "You will have to find the handle by touch."
+    },
+    {
+      "id": "n_cellar_landing_3",
+      "next": "n_cellar_landing_4",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "matches",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "of": [
+              {
+                "counter": "matches",
+                "op": "==",
+                "type": "counter",
+                "value": 1
+              },
+              {
+                "counter": "matches",
+                "op": "==",
+                "type": "counter",
+                "value": 2
+              }
+            ],
+            "type": "any"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "One more match, maybe two."
+    },
+    {
+      "id": "n_cellar_landing_4",
+      "next": "n_cellar_landing_5",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "matches",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "of": [
+                {
+                  "counter": "matches",
+                  "op": "==",
+                  "type": "counter",
+                  "value": 1
+                },
+                {
+                  "counter": "matches",
+                  "op": "==",
+                  "type": "counter",
+                  "value": 2
+                }
+              ],
+              "type": "any"
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Plenty of light, for now."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_cellar_cellar",
+          "id": "c_cellar_open_the_door",
+          "text": "Open the door"
+        },
+        {
+          "goto": "n_cellar_stairs",
+          "id": "c_cellar_go_back_up",
+          "text": "Go back up"
+        }
+      ],
+      "id": "n_cellar_landing_5",
+      "text": "The door is not locked."
+    },
+    {
+      "id": "n_cellar_cellar",
+      "next": "n_cellar_cellar_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "the one who opened the door",
+          "variable": "name"
+        }
+      ],
+      "text": "Shelves, jars, and a smell of apples."
+    },
+    {
+      "id": "n_cellar_cellar_2",
+      "isEnd": true,
+      "showIf": {
+        "flag": "knocked",
+        "type": "flag",
+        "value": true
+      },
+      "text": "Nobody answered your knock, and nobody is here."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_cellar_crossroads",
+          "id": "c_cellar_try_again",
+          "text": "Try again"
+        }
+      ],
+      "id": "n_cellar_outside",
+      "text": "The night air is cold and the house is quiet behind you."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_cellar_stairs",
+          "id": "c_cellar_stairs",
+          "text": "Stairs"
+        },
+        {
+          "goto": "n_cellar_outside",
+          "id": "c_cellar_take_the_short_way",
+          "text": "Take the short way"
+        }
+      ],
+      "id": "n_cellar_crossroads",
+      "onEnter": [
+        {
+          "flag": "lantern",
+          "type": "set_flag",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "replayable": false,
+  "title": "Stairs"
+}

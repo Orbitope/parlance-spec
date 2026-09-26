@@ -10,12 +10,12 @@ validator error.
 
 | | source | output |
 |---|---|---|
-| narration lines carried | 546 | 546 |
-| options carried | 300 | 300 |
-| lines under a `showIf` | — | 78 |
+| narration lines carried | 585 | 585 |
+| options carried | 326 | 326 |
+| lines and options under a `showIf` | — | 92 |
 | dialogues | 63 containers | 1 |
-| declared loss | 120 units | — |
-| nodes a player can reach | — | **387 of 546** |
+| declared loss | 67 units | — |
+| nodes a player can reach | — | **436 of 593** |
 
 Reproduce both halves from this directory:
 
@@ -32,26 +32,32 @@ the project against it. It is the whole claim of this example: you do not have t
 believe that no prose was rewritten, because the check refuses to converge if any
 was.
 
-**One dialogue, 546 nodes.** Every container is reachable from every other by a
+**One dialogue, 593 nodes.** Every container is reachable from every other by a
 divert, and a Parlance `goto` is within-dialogue only — so the story is one
 dialogue by the rule, not by preference. It is also one *character*: The Intercept
 is written in the first person with its dialogue inside quotation marks, so almost
 no line carries a `Speaker:` prefix for the parser to derive a character from.
 
-## 2. Declared loss — 120 units
+## 2. Declared loss — 67 units
 
 Lead with this. Every one is reported with its source line in the manifest's
 `unmapped`.
 
 | n | what | can the author fix it? |
 |---|---|---|
-| 40 | **Body of a choice that is itself unmappable**, so it can never be reached. | Follows from the rows below; fix the choice and the body returns. |
 | 26 | **Gated on a read count** — `{opts > 1}`, `{not shouted}`, `{claim_hooper_took_component.hoopers_hut_3}`. Ink can test how many times a knot, stitch or *labelled choice* has been visited. Parlance has no read-count condition at all. | Only by restructuring: set a flag where the visit happens and gate on that. |
 | 25 | **Inline conditional alternative** — `{not think:What I am is\|I am} a problem—solver.` Two variants of PART of a line. The condition maps perfectly well; a Parlance node holds one authored string, so carrying this needs the sentence split at the brace, and the pieces either side are fragments rather than beats. | Yes: write it as two whole lines under a `{cond:` block. |
-| 12 | **A choice list with no narration line to host it** — options that open a container, or follow a line that is itself declared loss. | Yes: one line of narration before them. |
-| 12 | **Conditional narration immediately before a choice list.** That line would have to host the choices, and `showIf` and `choices` are mutually exclusive. | Yes: swap the order, or add a line. |
-| 4 | **Conditional narration as the last beat** of the conversation — `showIf` and `isEnd` are mutually exclusive too. | Yes: a line after it, or a divert onwards. |
+| 11 | **Body of a choice that is itself unmappable**, so it can never be reached. | Follows from the rows above; fix the choice and the body returns. |
+| 4 | **Conditional narration ending a container whose only way onward is a conditional divert** — the debug prologue's `{DEBUG: … - else: -> start}`. The divert is declared (Parlance's `next`/`goto` are unconditional), so emitting the guarded lines would make them the conversation's last beat and end the story on its first screen. | Yes: move the divert out of the conditional block. |
 | 1 | **Variable text** — `{\|I rattle my fingers on the field table.\|}`, a sequence Ink picks between. A node holds one authored string. | No. |
+
+**0.15 removed the positional losses.** Three rows this table used to lead with —
+a guarded line immediately before a choice list, a guarded line as the last beat,
+and a choice list with no narration line to host it — are gone. Parlance 0.15
+lets `showIf` on a node with `choices` or `isEnd` hide only the LINE (the choices
+still show, the conversation still ends), and lets a node carry choices with no
+`text` at all. The importer now emits those shapes as the source wrote them, so
+none of it is declared, and none of it needed a line the source did not contain.
 
 Also reported in `unmapped` without costing a line: 41 expression assignments
 (`~ lower(forceful)` — function calls the effect vocabulary cannot make), 37 glue
@@ -61,9 +67,8 @@ markers, 6 `CONST` declarations, 5 conditional diverts, and the tunnel below.
 measured this story at ~20% of narration lines under a condition — 126 instances,
 every one of them lost before `DialogueNode.showIf` existed. 78 of them now come
 across as real gates, including each `- else:` branch under the negation of its
-`if`. What remains conditional-shaped is the 25 inline alternatives and the 12+4
-positional cases above, which are a different problem: the guard maps, the
-*place* does not.
+`if`. What remains conditional-shaped is the 25 inline alternatives, which are a
+different problem: the guard maps, the *sentence* does not.
 
 ## 3. Open questions for the author
 
@@ -83,22 +88,22 @@ positional cases above, which are a different problem: the guard maps, the
 
 ## 4. Validator state
 
-**Zero errors.** 172 warnings:
+**Zero errors.** 170 warnings:
 
 | n | code | why |
 |---|---|---|
-| 159 | `REACH` | Nodes a player can no longer reach. See below — eight diverts, not a hundred problems. |
+| 157 | `REACH` | Nodes a player can no longer reach. See below — eight diverts, not a hundred problems. |
 | 8 | `FLAG` | Downstream of the dropped `raise`/`lower` calls: flags set but never read, and one read but never set. |
-| 4 | `FLOW` | A node where every choice has a `showIf` — the player may be stuck if none passes. True of the source too, where a read-count fallback covered it. |
+| 5 | `FLOW` | A node where every choice has a `showIf` — the player may be stuck if none passes. True of the source too, where a read-count fallback covered it (the fallback is a read-count gate, so it cannot become a `choice.fallback`). One more than before 0.15, because a choice list that used to be declared loss is now carried. |
 | 1 | `COND` | A conditional node carries `onEnter` effects, which do not fire when it is skipped (advisory). |
 
 The source gave the one character no conditions, so its single dialogue converts to a
 plain fallback `offer` (no `when`) — the offer model expresses "always available" directly,
 with no finding, where the old ladder reported it as a first-rung-wins-forever `LADDER`.
 
-### What a player can reach — 387 of 546
+### What a player can reach — 436 of 593
 
-71% of the story is walkable. That number was **43** in the first version of this
+74% of the story is walkable (71% before 0.15 removed the positional losses). That number was **43** in the first version of this
 import, and the whole difference is one construct read correctly. It is worth
 setting out, because the wrong reading produced a confident and completely wrong
 conclusion about the format.
@@ -131,7 +136,7 @@ not about Parlance.
 
 ### What still severs the story
 
-The remaining 159 unreachable nodes sit behind **eight diverts** pointing at
+The remaining 157 unreachable nodes sit behind **eight diverts** pointing at
 containers that produce no node at all, every line in them declared loss. Five of
 the eight point at `reveal_location_of_component`, a one-line knot whose only line
 reads:

@@ -14,6 +14,176 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.15.0 — node shapes, fallback and locked choices, line tags, engine commands; custom entity types, bindings, exclusive flag groups; BOM and Unicode-form loading
+
+0.15.0 is a contract release. **Every project valid under 0.14.0 stays valid and behaves
+identically**: shapes the validator used to reject become legal, and new optional fields
+appear. Nothing needs migrating in a project. **Runtimes must upgrade**, because a 0.14
+runtime handed a 0.15 shape plays it wrong with no error: it skips a guarded node that
+carries choices (stranding the player), shows a fallback choice beside the choices it was
+meant to replace, and may throw on the new `engine` effect. **Validator ports owe new
+rules too:** `ENGINE`, the new `FLOW` findings, the `FLAG` exclusive-group error, the
+`types.json` and custom-row checks, and loading a byte-order-marked file and a `loreRef` in
+either Unicode form. Each item lists what a port must do.
+
+(Strictly, a 0.14 project stays valid unless it happens to carry a `data/types.json` or
+`data/bindings/` that 0.14 ignored and 0.15 now checks.)
+
+### Node shapes and choices
+
+- **`showIf` on a node with `choices` or `isEnd` hides the line, not the node.** Until
+  now `COND` refused both shapes. A failed gate on such a node no longer skips it:
+  `resolveNode` returns it, its `onEnter` fires (hiding is presentation, effects are
+  state), its choices are offered, and an `isEnd` node still ends the dialogue.
+  `stepDialogue` returns the new `textHidden: true` and `node.text === ""`. An
+  *interstitial* gated node (no choices, not `isEnd`) is skipped exactly as before and
+  still needs `next`. The `COND` "showIf together with 'choices'/'isEnd'" errors are
+  gone, the onEnter advisory and the ring check apply only to skippable nodes, and a gate
+  on a node with no line is still an error on every shape.
+  The line gate is judged **once, on arrival, before `onEnter`** — the same moment as the
+  skip gate — so a node whose own `onEnter` would fail its own `showIf` still shows its
+  line. The editor's play session briefly judged it after `onEnter` (Play, the play
+  build and `resumeSession` hid such a line that `stepDialogue` showed); fixed before
+  release, and pinned by a new `step_dialogue.json` vector.
+  *Port:* return a gated node with choices/isEnd from `resolveNode`, and add `textHidden`,
+  evaluated against the arrival state.
+- **`text` is optional on a node with non-empty `choices`** (schema `required` is now just
+  `id`). A text-less node presents only its options. The validator adds `FLOW` error "no
+  text and no choices" for a node that has neither. *Port:* tolerate an absent `text`.
+- **`choice.fallback: true`.** Offered only when no non-fallback choice on the node is
+  visible; its own `showIf` still applies. A node with an ungated fallback no longer gets
+  the `FLOW` "may be stuck" warning. New `FLOW` warnings: more than one fallback on a
+  node, and a fallback with no gated sibling. *Port:* apply the partition in
+  `stepDialogue`, and reject a fallback in `chooseChoice` while it is not offered.
+- **Locked choices, opt-in on both sides.** `choice.whenLocked: "hide" | "show"` (default
+  `rules.choices.whenLockedDefault`, then `"hide"`) and `choice.lockedText` (localizable
+  under `…/choices/<id>/lockedText`, never voiced; its placeholders are checked by `TEXT`).
+  `stepDialogue` returns the new `lockedChoices`: failing choices whose `whenLocked` is
+  `"show"`. `visibleChoices` keeps its exact meaning, so an engine that ignores the list
+  behaves as before. New `FLOW` warning: `whenLocked`/`lockedText` on a choice with no
+  `showIf`. *Port:* return `lockedChoices`. Optionally render them greyed out.
+- **`chooseChoice` throws on a choice that is not selectable** — hidden, locked, or an
+  unoffered fallback. Previously it applied any choice id it was handed.
+- **New rules keys** (across this release): `rules.choices.whenLockedDefault`, `rules.engine.commands` and
+  `rules.flag.exclusiveGroups`.
+- **Conformance:** `step_dialogue.json` (24 with the tag and self-clearing-gate vectors; every vector now states `lockedChoiceIds`,
+  new ones state `textHidden`/`text`), `choose_choice.json` (17, with `expectedError`
+  vectors), `advance.json` (14). New validator cases: `cond-showif-with-choices` (now
+  clean), `cond-showif-isend-clean`, `cond-empty-text-with-choices`,
+  `textless-choices-clean`, `textless-no-choices`, `choice-fallback-*` (4),
+  `choice-locked-*` (3) and `choice-when-locked-invalid`. `cond-showif-without-next` now
+  seeds an interstitial node.
+- **Importers** carry the three positional loss classes (a guarded line before a choice
+  list, a guarded last beat, a choice list with no host line) instead of declaring them.
+  Declared loss in the worked examples: The Intercept 120 → 67, Cyberharcèlement
+  101 → 37, Not Weird. Queer 182 → 145.
+
+### Tags on lines and choices, and engine commands
+Additive, but not safe for a runtime to ignore. No project needs migrating: every 0.14 project is valid and behaves
+identically. A port must ship both before it can claim 0.15 conformance.
+
+- **`node.tags` / `choice.tags`** (`common.schema.json#/definitions/tags`, the shape
+  `dialogue.tags` already has). *What changed:* two new optional fields. *Runtime:* pure
+  pass-through. `stepDialogue` must return them unchanged on the node and on each visible
+  choice. A port that rebuilds node or choice objects must copy them, and one that uses
+  a strict decoder must accept them. *Validators:* no rule reads them, and they are not a
+  Condition site. *Text view:* a node-scoped `~ tags: a, b` line under the node header,
+  and trailing `#tag` / `#"quoted tag"` tokens on a choice line. *Vectors:*
+  `step_dialogue.json` gains `nodeTags` / `visibleChoiceTags`.
+- **The `engine` effect** `{ "type": "engine", "command": string, "args"?: (string |
+  number | boolean)[] }`. *What changed:* a new member of the effect union. *Runtime:*
+  `applyEffect` returns the state **unchanged**. The effect is returned in order inside
+  `onEnterEffects` / a choice's `effects` and the host dispatches on `command`, so a
+  port that throws on an unknown effect type must add this case. *Validators (both):*
+  new issue code **`ENGINE`**. A command that is not lowercase snake_case is an error;
+  with the new optional `rules.engine.commands` (`{ name: { args?: n | "any",
+  description? } }`) declared, an undeclared command or a wrong `args` count is a
+  warning. *Text view:* `+ engine <command> [args…]`. *Vectors:* `apply_effect.json`
+  (state unchanged), `step_dialogue.json` / `choose_choice.json` (in order among the
+  other effects), and conformance cases `engine-command-*` and `tags-on-lines-clean`.
+- **Importers:** the Yarn importer maps custom commands (`<<shakeCamera 0.5>>`) to
+  `engine` effects instead of declaring them lost (Cyberharcèlement: 71 carried, 27 named
+  as unplaceable. The engine mapping moves no declared loss — commands were never
+  prose — so the 101 → 37 there is the node shapes above).
+
+**Exactly what to run.** Nothing for a project. For a port, add the `engine` case to your
+effect switch (state unchanged), make sure tags survive `stepDialogue`, add the `ENGINE`
+rule if you ship a validator, and re-run the vectors.
+
+### Custom entity types, bindings, flag groups, and loading fixes
+
+- **Asset bindings (`schema/binding.schema.json`, #117).** An optional
+  `data/bindings/*.json` maps portrait ids, VO keys and cutscene ids to engine paths per
+  `profile` (the one required field). The reference validator (`tooling/validate.py`, the
+  only implementation, since bindings are not in the editor's project model) checks each
+  file against the schema. It warns `BIND` on a used portrait, voiceable line or
+  triggered cutscene left unbound, and on a binding naming a portrait, cutscene or VO key
+  that does not exist. A VO key is `dialogue/<id>/nodes/<id>/text` for every node with
+  text, matching `extractLocStrings`. Additive: a project without `bindings/` is
+  unaffected. Cases: `binding-clean` and `binding-vo-dangling`, both
+  `"validators": ["python"]`, with a matching `known_divergences.json` entry.
+- **Exclusive flag groups (`rules.flag.exclusiveGroups`, #118).** A list of flag-id
+  groups, each of at least two flags, that must never be true together. Both validators
+  report `FLAG` error "sets mutually-exclusive flags simultaneously" when one effect list
+  sets two flags of a group to `true`. Additive: absent means no groups. Cases:
+  `flag-exclusive-group-set-together` and `flag-exclusive-group-set-apart`.
+- **Custom entity types (`data/types.json`).** A project may declare its own entity types
+  (`fields` of type `string`/`number`/`boolean`/`enum`/`reference`, and `array` with an
+  `items` field). Rows are stored one file per row under `data/<plural>/` (nested
+  folders allowed), or in a `data/<plural>.json` registry, either as
+  `{ "<plural>": [ … ] }` or as an object keyed by anything with each row carrying its
+  `id`. `plural` defaults to `<id>s` when absent **or empty**. A `reference` may target a
+  built-in type (`skill`, `faction`, `character`, `variable`, `item`, `dialogue`,
+  `quest`, `location`, `cutscene`) or another custom type by its id. Missing required
+  fields and mistyped values are `SCHEMA` errors, and a dangling `reference` (including
+  one list item) is a `REF` error. Additive: the file is optional, and no runtime function
+  reads these entities. The reference validator also reports a row id repeated within one
+  type as a `DUP` error (a loader-layer check, as for built-in registries; the TypeScript
+  validator receives rows already keyed by id). Nine conformance cases pin the storage
+  shapes and field kinds (`custom-entity-valid`, `-missing-field`, `-bad-reference`,
+  `-registry-array`, `-registry-keyed`, `-nested-directory`, `-default-plural`,
+  `-cross-type-reference`, `-field-types`). Writing them found one
+  reference-validator bug, fixed here: an empty `plural` made `tooling/validate.py` read
+  every JSON file under `data/` as a row of that type. The TypeScript validator already
+  used `<id>s`.
+- **`types.json` declarations are checked (`SCHEMA`, entity type `types`).** Both
+  validators now report a declaration that is not an object; a type id that is a built-in
+  reference target (references to it would resolve to the built-in); a `plural` that is
+  not a plain name (letters, digits, `_`, `-` — its rows are not loaded, so `../x` can no
+  longer steer a read outside `data/`), that names a built-in folder or file, or that
+  another type already uses; `fields` that is not an object; and a field with an unknown
+  `type`, an enum with no options, or a reference with no or an unknown target. Row ids
+  and type ids named after `Object.prototype` members (`__proto__`, `constructor`) are
+  ordinary data. A project the editor wrote is unaffected — its type editor already
+  refused all of these. Plurals are compared **case-insensitively**, since on macOS and
+  Windows `Drinks` and `drinks` (or `Dialogues` and the built-in `dialogues/`) are one
+  file, and a Windows device name (`con`, `prn`, `aux`, `nul`, `com1`–`9`, `lpt1`–`9`) is
+  refused as a plural. *Port:* if you ship a validator, add the checks, matching a plain
+  name against the WHOLE string (a `$`-anchored regex admits a trailing newline); five
+  vectors pin them (`types-declaration-plurals`, `-plural-portability`, `-fields`,
+  `-not-object`, `custom-entity-prototype-keys`).
+- **A UTF-8 byte-order mark is not an error.** A JSON file that starts with U+FEFF —
+  what Windows PowerShell 5.1 and older Notepad write — now loads in both validators
+  (`tooling/validate.py` reads files as `utf-8-sig`; the editor strips it before
+  parsing), and so does such a `parlance.config.json`. Before, the reference validator
+  rejected the file as invalid JSON, and the editor silently dropped it from the project.
+  Additive: nothing that validated before changes. *Port:* strip one leading U+FEFF
+  before parsing. Vector: `utf8-bom-loaded`.
+- **A `loreRef` matches its file in either Unicode normalization form.** macOS can
+  report an accented name decomposed (NFD) where git and Linux/Windows store it composed
+  (NFC); the reference read as missing everywhere but on the Mac that wrote it, and on
+  macOS the two validators disagreed. Both now accept a reference whose NFC or NFD form
+  names an existing file. Additive: only references that were wrongly `LORE` errors
+  change. *Port:* compare the reference in both forms before reporting it missing.
+  Vector: `loreref-unicode-form`.
+- **A `resolveQuests` vector that needs a second pass.** `resolve_quests.json` goes from
+  6 to 7 vectors. The only cascade vector used to order its quests so one in-order pass
+  reached the fixpoint, so a port that made one pass and stopped passed all six. The new
+  vector reverses the dependency. *Port:* iterate `resolveQuests` to the fixpoint, as the
+  contract already said; a one-pass implementation now fails.
+
+---
+
 ## 0.14.0 — dialogue offers replace the ladder; checks gain conditional modifiers
 
 0.14.0 bundles two contract changes. Do both when you move a project or a port to it:

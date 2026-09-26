@@ -38,6 +38,18 @@ STATE = ".parlance-import-state.json"
 MAX_REWRITE_LEN = 8
 MAX_REWRITES = 8
 
+# `$name` -> `{name}`: SugarCube's naked variable re-spelled as a Parlance
+# placeholder. The id side must be the source name lowercased and nothing else
+# (the importers' one id derivation, conditions.var_id), so the swap can carry
+# no words of its own. Anything looser is an ordinary, capped rewrite.
+SIGIL = re.compile(r"^\$([A-Za-z_]\w*)$")
+
+
+def is_sigil_swap(a, b):
+    m = SIGIL.match(a or "")
+    return bool(m) and re.match(r"^[a-z][a-z0-9_]*$", m.group(1).lower() or "") is not None \
+        and b == "{" + m.group(1).lower() + "}"
+
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import manifest as _manifest
@@ -266,10 +278,15 @@ def main():
     man = merge_manifests(parts)
 
     rewrites = [tuple(r) for r in man["rewrites"]]
-    if len(rewrites) > MAX_REWRITES:
-        print(f"TOO MANY REWRITES ({len(rewrites)} > {MAX_REWRITES}).", file=sys.stderr)
+    # A sigil swap (`$name` -> `{name}`) is exempt from both caps: it is one
+    # variable token re-spelled in Parlance's interpolation syntax, provably
+    # unable to turn one sentence into another — and a story interpolates as
+    # many variables as it has, with names longer than eight characters.
+    capped = [r for r in rewrites if not is_sigil_swap(*r)]
+    if len(capped) > MAX_REWRITES:
+        print(f"TOO MANY REWRITES ({len(capped)} > {MAX_REWRITES}).", file=sys.stderr)
         return 2
-    for a_, b_ in rewrites:
+    for a_, b_ in capped:
         if len(a_) > MAX_REWRITE_LEN or len(b_) > MAX_REWRITE_LEN:
             print(f"REWRITE TOO WIDE: {a_!r} -> {b_!r}. A rewrite covers a format token "
                   f"(max {MAX_REWRITE_LEN} chars), never a phrase — a wide rewrite can "

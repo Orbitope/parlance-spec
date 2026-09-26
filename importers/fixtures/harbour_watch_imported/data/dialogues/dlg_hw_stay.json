@@ -1,0 +1,13 @@
+{
+  "entry": "n_hw_stay",
+  "id": "dlg_hw_stay",
+  "nodes": [
+    {
+      "id": "n_hw_stay",
+      "isEnd": true,
+      "text": "You find a bench out of the wind."
+    }
+  ],
+  "replayable": false,
+  "title": "Stay"
+}

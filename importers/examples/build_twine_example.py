@@ -130,11 +130,17 @@ class Builder:
             entry = entry or node["id"]
             prev = node
 
+        if links and prev is None:
+            # The passage opens with its links, or every line before them is
+            # declared loss. Since 0.15 a node may carry choices with no `text`.
+            prev = {"id": self.node_id(title)}
+            if pending:
+                prev["onEnter"] = pending
+                pending = []
+            self.nodes[prev["id"]] = prev
+            self.owner[prev["id"]] = title
+            entry = entry or prev["id"]
         for it in links:
-            if prev is None:
-                raise SystemExit(
-                    f"{title}: a link with no line to host it (source line "
-                    f"{it['lineno']}), which the parser did not declare")
             choice = {"id": self.choice_id(it["text"]), "text": it["text"],
                       "goto": "@" + it["target"]}
             if it.get("showIf"):
@@ -167,9 +173,8 @@ def build(ir, ns):
     # A passage with no live link out ends the conversation.
     for n in b.nodes.values():
         if not n.get("next") and not n.get("choices"):
-            if n.get("showIf"):
-                raise SystemExit(f"node '{n['id']}' ends the conversation but carries a "
-                                 f"guard the parser did not declare")
+            # A guarded last beat is legal since 0.15: the line hides, the
+            # conversation still ends.
             n["isEnd"] = True
 
     # Passages joined by a link become ONE dialogue: a Parlance `goto` is

@@ -23,6 +23,15 @@
     {
       "id": "n_episode1_sms5d_4",
       "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "Email5b"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_you",
       "text": "Ok, ça marche"
     }

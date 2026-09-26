@@ -1,0 +1,10 @@
+{
+  "fb": {
+    "grantedBy": "npc_keeper",
+    "id": "fireball"
+  },
+  "fr": {
+    "grantedBy": "npc_gone",
+    "id": "frostbite"
+  }
+}

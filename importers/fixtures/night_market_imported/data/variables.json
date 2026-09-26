@@ -1,0 +1,22 @@
+{
+  "variables": [
+    {
+      "default": 2,
+      "description": "Ren'Py default coins",
+      "id": "coins",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "Ren'Py default has_lamp",
+      "id": "has_lamp",
+      "kind": "flag"
+    },
+    {
+      "default": "the lantern stall",
+      "description": "Ren'Py default stall",
+      "id": "stall",
+      "kind": "text"
+    }
+  ]
+}

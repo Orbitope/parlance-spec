@@ -1,0 +1,35 @@
+{
+  "character": {
+    "fields": {},
+    "name": "Hero",
+    "plural": "heroes"
+  },
+  "spell": {
+    "fields": {
+      "caster": {
+        "type": "reference"
+      },
+      "combos": {
+        "items": {
+          "target": "combo",
+          "type": "reference"
+        },
+        "type": "array"
+      },
+      "element": {
+        "options": [],
+        "type": "enum"
+      },
+      "notes": "text",
+      "power": {
+        "type": "float"
+      },
+      "school": {
+        "target": "school",
+        "type": "reference"
+      }
+    },
+    "name": "Spell",
+    "plural": "spells"
+  }
+}

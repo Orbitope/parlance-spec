@@ -1,0 +1,10 @@
+{
+  "rune": {
+    "fields": [
+      "power"
+    ],
+    "name": "Rune",
+    "plural": "runes"
+  },
+  "spell": "a spell"
+}

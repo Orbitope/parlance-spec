@@ -1,0 +1,65 @@
+{
+  "variables": [
+    {
+      "default": 0,
+      "description": "SugarCube $book",
+      "id": "book",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "SugarCube $chicken",
+      "id": "chicken",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "SugarCube $dignity",
+      "id": "dignity",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "SugarCube $donk",
+      "id": "donk",
+      "kind": "counter"
+    },
+    {
+      "default": "",
+      "description": "SugarCube $dress",
+      "id": "dress",
+      "kind": "text"
+    },
+    {
+      "default": 0,
+      "description": "SugarCube $flirt",
+      "id": "flirt",
+      "kind": "counter"
+    },
+    {
+      "default": "",
+      "description": "SugarCube $password",
+      "id": "password",
+      "kind": "text",
+      "writtenBy": "engine"
+    },
+    {
+      "default": "",
+      "description": "SugarCube $talking",
+      "id": "talking",
+      "kind": "text"
+    },
+    {
+      "default": 0,
+      "description": "SugarCube $w",
+      "id": "w",
+      "kind": "counter"
+    },
+    {
+      "default": 0,
+      "description": "SugarCube $witty",
+      "id": "witty",
+      "kind": "counter"
+    }
+  ]
+}

@@ -10,6 +10,43 @@
     {
       "id": "n_episode1_testproof_2",
       "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "Proof1"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Proof2"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Proof3"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Proof4"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Proof5"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        }
+      ],
       "text": "You have 5 pieces of evidence"
     }
   ],

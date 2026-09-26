@@ -116,5 +116,29 @@
       "state": { "flags": { "step_one": true, "step_two": true }, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {}, "xp": 50, "skillPointsSpent": {}, "questFired": ["q_a/outcome/out_a", "q_b/outcome/out_b"] },
       "firings": [{ "quest": "q_a", "kind": "outcome", "id": "out_a" }, { "quest": "q_b", "kind": "outcome", "id": "out_b" }]
     }
+  },
+  {
+    "fn": "resolveQuests",
+    "description": "cascade needs a second pass: an earlier quest (by id) is satisfied only by a later quest's firing, so a single in-order pass stops short of the fixpoint",
+    "state": { "flags": { "step_one": true }, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {}, "xp": 0, "skillPointsSpent": {} },
+    "project": {
+      "factions": {},
+      "quests": {
+        "q_a": {
+          "id": "q_a", "name": "A", "summary": "s",
+          "stages": [{ "id": "s1", "order": 1, "description": "d" }],
+          "outcomes": [{ "id": "out_a", "kind": "success", "description": "d", "reachedWhen": { "type": "flag", "flag": "step_two", "value": true }, "effects": [{ "type": "grant_xp", "amount": 50 }] }]
+        },
+        "q_b": {
+          "id": "q_b", "name": "B", "summary": "s",
+          "stages": [{ "id": "s1", "order": 1, "description": "d" }],
+          "outcomes": [{ "id": "out_b", "kind": "success", "description": "d", "reachedWhen": { "type": "flag", "flag": "step_one", "value": true }, "effects": [{ "type": "set_flag", "flag": "step_two", "value": true }] }]
+        }
+      }
+    },
+    "expected": {
+      "state": { "flags": { "step_one": true, "step_two": true }, "reputation": {}, "skills": {}, "counters": {}, "inventory": [], "questStages": {}, "xp": 50, "skillPointsSpent": {}, "questFired": ["q_a/outcome/out_a", "q_b/outcome/out_b"] },
+      "firings": [{ "quest": "q_b", "kind": "outcome", "id": "out_b" }, { "quest": "q_a", "kind": "outcome", "id": "out_a" }]
+    }
   }
 ]

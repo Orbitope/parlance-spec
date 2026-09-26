@@ -194,6 +194,47 @@ Variables use descriptive `snake_case`. Choose a naming pattern based on what th
 
 Flags should be past-tense or state-describing, **not** future-tense or imperative. `met_mira` ✓ vs `meet_mira` ✗.
 
+### Engine commands *(no prefix)*
+
+The `command` of an `engine` effect is lowercase `snake_case`, starting with a letter:
+`shake_camera`, `play_sfx`, `add_message`. This one is enforced — anything else is an
+`ENGINE` error in both validators. Name the action the engine takes, as a verb phrase.
+If the project declares `rules.engine.commands`, a command missing from it is an
+`ENGINE` warning, so the declaration doubles as the list of names in use.
+
+### Custom types (`data/types.json`)
+
+A custom type's id is its key in `data/types.json`; its `plural` names the file or folder
+its rows live in (`<id>s` when absent). Use lowercase `snake_case` for both, singular for
+the id and plural for the plural: `drink` / `drinks`. That is what the editor's type
+editor writes and requires.
+
+The validators are looser, and what they enforce is the part that matters for loading:
+
+- the type id is not a built-in reference target (`skill`, `faction`, `character`,
+  `variable`, `item`, `dialogue`, `quest`, `location`, `cutscene`);
+- the plural is a plain name — letters, digits, `_` and `-` only;
+- no two types share a plural, compared case-insensitively (`Drinks` and `drinks` are one
+  file on macOS and Windows);
+- the plural is not a built-in folder or file (`dialogues`, `items`, `rules`, …) — also
+  case-insensitively — and not a Windows device name (`con`, `prn`, `aux`, `nul`,
+  `com1`–`9`, `lpt1`–`9`).
+
+Row ids follow the general rules above. There is no prefix convention for custom types.
+
+### Tags
+
+Tags (`dialogue.tags`, and since 0.15 `node.tags` and `choice.tags`) are free strings. No
+validator rule reads them, so none of what follows is enforced. The examples throughout
+the schema and the cookbook use `key:value` — `mood:angry`, `sfx:door` — and that is the
+recommended style: lowercase, a namespace your engine dispatches on, a colon, a value.
+Keep the namespace list short and write it down, because a misspelled tag is silently
+inert.
+
+Two tags elsewhere are read. `rules.quest.tagVocabulary`, when declared, lists the
+allowed quest tags, and one outside it is an `OBJ` warning. A location tagged `start` is
+exempt from the `LOC` "unreachable — no exit points here" warning.
+
 ---
 
 ## Importing from an external tool

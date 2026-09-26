@@ -1,0 +1,8 @@
+{
+  "element": "water",
+  "id": "fireball",
+  "incantation": 7,
+  "manaCost": "15",
+  "reagents": "ash",
+  "ritual": 1
+}

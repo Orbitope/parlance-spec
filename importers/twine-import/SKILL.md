@@ -39,7 +39,8 @@ Twine is a tool, not a language. SugarCube writes `<<set $x to 1>>` and Harlowe
 writes `(set: $x to 1)`; they share no syntax. `parse_twine.py` refuses a story
 that is not Harlowe, because parsing one with the other's parser does not fail —
 it quietly produces a project whose prose is full of unparsed macros, and no
-downstream check would call that wrong.
+downstream check would call that wrong. A SugarCube story has its own skill,
+[`sugarcube-import`](../sugarcube-import/SKILL.md), and the refusal says so.
 
 ## The pipeline
 
@@ -196,8 +197,6 @@ Everything here is reported, never approximated.
 | `(live:)`, `(after:)`, `(event:)` | time-driven; a Parlance node is advanced by the player |
 | `(link-goto:)`, `(goto:)` | flow computed at play time rather than an authored edge |
 | a link inside a hook whose guard does not map | the choice would be offered in states the author gated it out of |
-| a conditional line immediately before a link | that line would have to host the choices, and `showIf` and `choices` are mutually exclusive (`COND`) |
-| a conditional line as the last beat of a passage with no link out | `showIf` and `isEnd` are mutually exclusive too |
 
 ## The report
 

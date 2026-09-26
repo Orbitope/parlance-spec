@@ -1067,6 +1067,11 @@
       "text": ". $ally's voice shakes slightly as $sbj reads, something that surprises $name as $ally is usually such a fearless, outgoing person."
     },
     {
+      "id": "n_nwq_ryan_shares_3",
+      "next": "n_nwq_ryan_shares_4",
+      "text": "$name snaps enthusiastically for $pos friend, but notices that $ally is right about the other club members.  Even though $name thought that $ally's poem was great, the other club members just aren't snapping as loudly for $ally."
+    },
+    {
       "choices": [
         {
           "goto": "n_nwq_after_ryan_shares",
@@ -1074,8 +1079,13 @@
           "text": "Talk to $ally"
         }
       ],
-      "id": "n_nwq_ryan_shares_3",
-      "text": "$name snaps enthusiastically for $pos friend, but notices that $ally is right about the other club members.  Even though $name thought that $ally's poem was great, the other club members just aren't snapping as loudly for $ally."
+      "id": "n_nwq_ryan_shares_4",
+      "showIf": {
+        "flag": "share",
+        "type": "flag",
+        "value": false
+      },
+      "text": "$name regrets not sharing $pos story, if only for $ally's sake."
     },
     {
       "id": "n_nwq_story_sharing_day_11",

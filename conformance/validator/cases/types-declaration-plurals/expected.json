@@ -1,0 +1,19 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell': plural '../escape' is not a plain name",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'rumour': plural 'dialogues' is a built-in folder or file",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'sigil': plural 'glyphs' is also used by type 'rune'",
+      "severity": "error"
+    }
+  ]
+}

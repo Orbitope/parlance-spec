@@ -10,12 +10,13 @@ validator error.
 
 | | source | output |
 |---|---|---|
-| narration lines carried | 544 | 544 |
-| options carried | 95 | 95 |
-| lines under a `showIf` | — | 40 |
-| dialogues | 96 Yarn nodes | 43 |
+| narration lines carried | 591 | 591 |
+| options carried | 110 | 110 |
+| lines under a `showIf` | — | 47 |
+| dialogues | 96 Yarn nodes | 47 |
 | characters | — | 17 |
-| declared loss | 101 units | — |
+| declared loss | 37 units | — |
+| nodes a player can reach | — | **516 of 596** |
 
 Reproduce both halves from this directory:
 
@@ -32,22 +33,44 @@ the project against it. It is the whole claim of this example: you do not have t
 believe that no prose was rewritten, because the check refuses to converge if any
 was.
 
-## 2. Declared loss — 101 units
+## 2. Declared loss — 37 units
 
 Lead with this, because it is the part an author has to decide about. Every one
 is reported with its source line in the manifest's `unmapped`.
 
 | n | what | can the author fix it? |
 |---|---|---|
-| 40 | **Guarded on a function call** — `visited("Chat1")`, `hasMessage("Proof3")`, `visitedAllNodeOptions()`. A Parlance condition compares registered state against a literal and calls nothing; there is no read-count condition at all. | Only by restructuring: set a flag where the visit happens and gate on the flag. |
-| 24 | **Conditional narration as the last beat of a conversation.** The node would need `showIf` and `isEnd` together, which the validator refuses — a player who fails the gate would have nowhere to go. | Yes: one line after it, or a jump onwards. |
-| 17 | **Body of a choice that is itself unmappable**, so it can never be reached. | Follows from the two rows below it. |
-| 12 | **A choice list with no narration line to host it** — options directly after another option block. A Parlance choice hangs off a node and every node needs text. | Yes: one line of narration before them. |
-| 8 | **Conditional narration immediately before a choice list.** That line would have to host the choices, and `showIf` and `choices` are mutually exclusive. | Yes: swap the order, or add a line. |
-
-Four of the five are ordering, not expressiveness — a line moved or added in the
-source makes them importable. The first is not: read counts are a real gap
+| 37 | **Guarded on a function call** — `visited("Chat1")`, `hasMessage("Proof3")`, `visitedAllNodeOptions()`. A Parlance condition compares registered state against a literal and calls nothing; there is no read-count condition at all. | Only by restructuring: set a flag where the visit happens and gate on the flag. |
+That is the only row left, and it is not ordering: read counts are a real gap
 between what Yarn can test and what Parlance can.
+
+**0.15 removed the positional losses.** Four rows this table used to carry (64 units) —
+a guarded line immediately before a choice list, a guarded line as the last beat,
+and a choice list with no narration line to host it, and the unreachable bodies behind those — are gone. Parlance 0.15
+lets `showIf` on a node with `choices` or `isEnd` hide only the LINE (the choices
+still show, the conversation still ends), and lets a node carry choices with no
+`text` at all. The importer now emits those shapes as the source wrote them, so
+none of it is declared, and none of it needed a line the source did not contain.
+
+**Custom commands are carried, not declared (0.15).** The story drives its own
+UI through 98 custom Yarn commands — `<<addMessage Email1>>`,
+`<<addNodeOption Chat1>>`, `<<addForegroundImage student-group-1 30 440>>` and
+nine other names. Before Parlance had an `engine` effect every one was listed
+in `unmapped` as a command with no equivalent. Now **71** come across as
+`{"type": "engine", "command": "add_message", "args": ["Email1"]}`. The name is
+snake_cased because the validator requires that (`addMessage` becomes
+`add_message`, and nothing else about it changes), and the args are typed as
+the source wrote them. They sit in the node's `onEnter`, or on a choice, in
+source order (five more than with the 0.14 node shapes: a line or option
+block that used to be declared for its position is now emitted, so the
+commands beside it have a node to ride on). The
+other **27** have no line after them in their Yarn node to
+ride on: mostly nodes made only of commands, such as `Bedroom1`'s
+`addMessage`/`addNodeOption` block, and one under a declared-loss choice.
+`import.py` names each of those in a `note:` line with its source line. None of
+the 98 was ever a line of prose, so the declared-loss count above does not move.
+The manifest's `unmapped` list shrinks from 202 entries to 42 — the engine
+mapping and the 0.15 node shapes together.
 
 **The single biggest gain is invisible here, because it no longer happens.** 40
 guarded lines came across as `node.showIf`, including every `<<else>>` branch
@@ -71,12 +94,12 @@ were declared loss too.
 
 ## 4. Validator state
 
-**Zero errors.** 104 warnings, none of them a defect in the conversion:
+**Zero errors.** 83 warnings, none of them a defect in the conversion:
 
 | n | code | why |
 |---|---|---|
-| 98 | `REACH` | Nodes reachable only through `addMessage` / `addNodeOption` — custom Yarn commands driving the game's own inbox UI. Parlance has no equivalent, so those scenes are in the project but nothing routes to them. |
-| 4 | `FLAG` | Downstream of the dropped absolute-counter and function-call gates: `didsharebad` and `didsharegood` are read but never set. |
+| 80 | `REACH` | Nodes reachable only through `addMessage` / `addNodeOption` — custom Yarn commands driving the game's own inbox UI. They are now carried as `engine` effects (`add_message`, `add_node_option`), but an engine command is opaque to the runtime by design: it hands the name to the game and draws no edge, so those scenes are in the project and nothing in the data routes to them. |
+| 1 | `FLAG` | Downstream of the dropped function-call gates: `didshowbackpackvideo` is set but its only reader is a `visited(...)` gate. (Before 0.15 three more were downstream of lines that were declared for position alone; they are carried now.) |
 | 2 | `TEXT` | `bg` and `time` are set by the story and never interpolated into a line — they drive the game's backdrop, not its prose. |
 
 The source gave the characters' dialogues no conditions. The importer marks one dialogue
@@ -97,7 +120,7 @@ author's review.
 
 Specifically unverified here:
 
-- **43 dialogues from 96 Yarn nodes**, grouped by `<<jump>>` connectivity. That is
+- **47 dialogues from 96 Yarn nodes**, grouped by `<<jump>>` connectivity. That is
   the rule the skill states, and it is mechanical; whether those are the right
   *scenes* is an editorial question nobody has answered.
 - **17 characters**, one per distinct speaker name. `You`, `Narrator` and the game's

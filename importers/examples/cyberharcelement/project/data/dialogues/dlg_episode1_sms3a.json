@@ -1,0 +1,326 @@
+{
+  "entry": "n_episode1_sms3a",
+  "id": "dlg_episode1_sms3a",
+  "nodes": [
+    {
+      "id": "n_episode1_sms3a",
+      "next": "n_episode1_sms3a_2",
+      "showIf": {
+        "flag": "didsharebad",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_sophie",
+      "text": "Tu me déçois franchement ! Tes actes et remarques sont cruels !"
+    },
+    {
+      "id": "n_episode1_sms3a_2",
+      "next": "n_episode1_sms3a_3",
+      "showIf": {
+        "flag": "didsharebad",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_sophie",
+      "text": "Pas la peine de me répondre, mais il fallait que tu en prennes conscience."
+    },
+    {
+      "id": "n_episode1_sms3a_3",
+      "next": "n_episode1_sms3a_4",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Salut ! Je comprends ce que tu as voulu faire avec ta vidéo sur le groupe de tchat."
+    },
+    {
+      "id": "n_episode1_sms3a_4",
+      "next": "n_episode1_sms3a_5",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Seulement, tu ne fais qu'exposer encore plus ceux qui en sont victimes. Ta vidéo risque d'être partagée, et pas par les bonnes personnes..."
+    },
+    {
+      "id": "n_episode1_sms3a_5",
+      "next": "n_episode1_sms3a_6",
+      "showIf": {
+        "of": [
+          {
+            "counter": "score",
+            "op": "<",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Tu me déçois franchement en ce moment ..."
+    },
+    {
+      "id": "n_episode1_sms3a_6",
+      "next": "n_episode1_sms3a_7",
+      "showIf": {
+        "of": [
+          {
+            "counter": "score",
+            "op": "<",
+            "type": "counter",
+            "value": -1
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Pas la peine de me répondre, mais il fallait que tu en prennes conscience."
+    },
+    {
+      "id": "n_episode1_sms3a_7",
+      "next": "n_episode1_sms3a_8",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "score",
+              "op": "<",
+              "type": "counter",
+              "value": -1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Salut ! Je vois que nous sommes sur la même longueur d'onde."
+    },
+    {
+      "id": "n_episode1_sms3a_8",
+      "next": "n_episode1_sms3a_9",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "score",
+              "op": "<",
+              "type": "counter",
+              "value": -1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Je crois sincèrement que Hakim est victime de cyberharcèlement."
+    },
+    {
+      "id": "n_episode1_sms3a_9",
+      "next": "n_episode1_sms3a_10",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "score",
+              "op": "<",
+              "type": "counter",
+              "value": -1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Faut pas qu'on le laisse seul avec ça..."
+    },
+    {
+      "id": "n_episode1_sms3a_10",
+      "next": "n_episode1_sms3a_11",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "score",
+              "op": "<",
+              "type": "counter",
+              "value": -1
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_sophie",
+      "text": "Tu lui as écrit ? Il t'a répondu ?"
+    },
+    {
+      "id": "n_episode1_sms3a_11",
+      "next": "n_episode1_sms3a_12",
+      "showIf": {
+        "of": [
+          {
+            "of": [
+              {
+                "flag": "didsharebad",
+                "type": "flag",
+                "value": false
+              },
+              {
+                "flag": "didsharegood",
+                "type": "flag",
+                "value": false
+              },
+              {
+                "of": {
+                  "counter": "score",
+                  "op": "<",
+                  "type": "counter",
+                  "value": -1
+                },
+                "type": "not"
+              }
+            ],
+            "type": "all"
+          },
+          {
+            "flag": "didwritehakim",
+            "type": "flag",
+            "value": true
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_you",
+      "text": "Oui, mais il n'a pas répondu. Je lui écris à nouveau."
+    },
+    {
+      "id": "n_episode1_sms3a_12",
+      "isEnd": true,
+      "showIf": {
+        "of": [
+          {
+            "of": [
+              {
+                "flag": "didsharebad",
+                "type": "flag",
+                "value": false
+              },
+              {
+                "flag": "didsharegood",
+                "type": "flag",
+                "value": false
+              },
+              {
+                "of": {
+                  "counter": "score",
+                  "op": "<",
+                  "type": "counter",
+                  "value": -1
+                },
+                "type": "not"
+              }
+            ],
+            "type": "all"
+          },
+          {
+            "flag": "didwritehakim",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_you",
+      "text": "Oui, mais il n'a pas répondu. Je ne vais plus le déranger."
+    }
+  ],
+  "replayable": false,
+  "title": "Sms3a"
+}

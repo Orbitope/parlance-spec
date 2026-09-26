@@ -1,0 +1,29 @@
+{
+  "entry": "n1",
+  "id": "dlg_extra",
+  "nodes": [
+    {
+      "choices": [
+        {
+          "id": "c_ok",
+          "text": "Fine."
+        },
+        {
+          "id": "c_locked",
+          "showIf": {
+            "flag": "met_keeper",
+            "type": "flag",
+            "value": true
+          },
+          "text": "Tell me.",
+          "whenLocked": "grey"
+        }
+      ],
+      "id": "n1",
+      "isEnd": true,
+      "text": "Well?"
+    }
+  ],
+  "speakerId": "npc_keeper",
+  "title": "Extra"
+}

@@ -29,6 +29,15 @@
     {
       "choices": [
         {
+          "effects": [
+            {
+              "args": [
+                "Proof2"
+              ],
+              "command": "add_message",
+              "type": "engine"
+            }
+          ],
           "goto": "n_episode1_chat2_6",
           "id": "c_episode1_faire_un_screenshot_de",
           "text": "Faire un screenshot de la conversation"

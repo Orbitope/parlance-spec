@@ -1,0 +1,39 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "types 'character': a custom type cannot be named after the built-in type 'character'",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell' field 'element': an enum needs at least one option",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell' field 'power': unknown type 'float'",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell' field 'caster': a reference needs a target",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell' field 'school': unknown reference target 'school'",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell' field 'combos[]': unknown reference target 'combo'",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell' field 'notes': must be an object",
+      "severity": "error"
+    }
+  ]
+}

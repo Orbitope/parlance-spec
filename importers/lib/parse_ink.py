@@ -67,11 +67,6 @@ TERMINAL = ("END", "DONE")
 WHY_SWITCH = ("conditional narration: a switch on a value ({ x: - 0: … - 1: … }) whose "
               "branch heads are not literals, so the equality test each branch stands "
               "for cannot be written down without guessing what the head means")
-WHY_CHOICE_HOST = (
-    "conditional narration immediately before a choice list. The line would have to be "
-    "the node that hosts those choices, and a Parlance node may not carry showIf and "
-    "choices together (validator rule COND) — a conditional node is interstitial "
-    "narration, and there is no text-less node to hang the choices on instead")
 WHY_VAR_TEXT = ("variable text: an alternative/sequence/shuffle ({a|b}) has no Parlance "
                 "equivalent — a node holds one authored string")
 WHY_COND_ALTERNATIVE = (
@@ -86,22 +81,25 @@ WHY_READ_COUNT = ("gated on a read count (how many times a knot has been visited
 WHY_LIST_COND = ("gated on a LIST value; Parlance variables are flags, counters and text "
                  "slots — there is no set-valued type to test")
 WHY_ORPHAN_BODY = "body of a choice that is itself unmappable, so it can never be reached"
-WHY_NO_HOST = (
-    "a choice list with no narration line to host it — the options open a container, or "
-    "follow a line that is itself declared loss. A Parlance choice hangs off a node and "
-    "every node requires text, so there is nothing for them to attach to. Duplicating "
-    "them onto the tail of each preceding branch would read correctly to a player but "
-    "put the same string in the data several times, which the content check counts as "
-    "invented prose. One line of narration before them makes them importable")
 WHY_COND_DIVERT = (
     "a divert inside a conditional block — the story goes somewhere else only when the "
     "condition holds. A Parlance `next` and `goto` are unconditional; `showIf` gates "
     "whether a NODE is shown, not where the conversation goes next")
-WHY_COND_TERMINAL = (
-    "conditional narration as the last beat of the conversation. The node would have to "
-    "carry showIf and isEnd together, which the validator refuses (rule COND): a "
-    "dialogue's termination must not be conditional, or a player who fails the gate has "
-    "nowhere to go. A line after it, or a divert onwards, makes it importable")
+# Until the 0.15 contract three POSITIONS were declared loss here (a guarded
+# line before a choice list, a guarded last beat, a choice list with no line to
+# host it). All are expressible now: `showIf` on a node with choices or isEnd
+# hides only the line, and a node may carry choices with no `text`.
+#
+# One guarded-tail case stays declared, and it is not about position: a guarded
+# last beat whose container continues ONLY through a conditional divert (`{c:
+# … - else: -> onward}`). The divert is declared (WHY_COND_DIVERT), so emitting
+# the tail as `isEnd` would end a story the source goes on with — for The
+# Intercept, on its first beat. Declaring the tail keeps the loss honest.
+WHY_TAIL_OF_COND_DIVERT = (
+    "conditional narration at the end of a container whose only way onward is a "
+    "conditional divert, which Parlance cannot carry. Imported, the line would become "
+    "the conversation's last beat and end a story the source continues. Moving the "
+    "divert out of the conditional block makes it importable")
 WHY_THREAD_ONLY = ("reachable only through a thread (<-), which weaves a second flow into "
                    "the current one; a Parlance dialogue has a single point of control")
 WHY_TUNNEL_AMBIGUOUS = (
@@ -803,127 +801,6 @@ def declare(container, item, why, unmapped, construct):
                      "construct": construct, "text": item["text"], "why": why})
 
 
-def mark_structural_losses(container, unmapped, lo=0, hi=None, terminal=True, empty=()):
-    """Everything a guard or a choice list cannot be carried INTO, structurally.
-
-    The Ink counterpart of the pass in `parse_yarn.py`, and the same three cases:
-    a choice list with no narration line to host it, a guarded line that would end
-    up hosting one, and a guarded line that would end up as the conversation's
-    last beat. `showIf` is mutually exclusive with both `choices` and `isEnd`.
-
-    It runs AFTER the guard pass and looks PAST declared-loss lines, because those
-    are never emitted — adjacency in the source is not adjacency in the output.
-    The Intercept opens a choice set right under `{|I rattle my fingers…|}`, which
-    is variable text and therefore not carried; the choices have no host at all.
-    """
-    items = container["items"]
-    hi = len(items) if hi is None else hi
-    host = None
-    guarded = []
-    i = lo
-    while i < hi:
-        it = items[i]
-
-        if it["kind"] in ("line", "gather") and it.get("text") \
-                and not it.get("unmappable"):
-            if it.get("showIf"):
-                guarded.append(it)
-            else:
-                host, guarded = it, []
-            i += 1
-            continue
-
-        if it["kind"] != "option":
-            i += 1
-            continue
-
-        level = it["level"]
-        run, j = [], i
-        while j < hi and items[j]["kind"] == "option" and items[j]["level"] == level:
-            b0 = j + 1
-            b1 = hi
-            for k in range(b0, hi):
-                if items[k]["kind"] in ("option", "gather") and items[k]["level"] <= level:
-                    b1 = k
-                    break
-            run.append((j, b0, b1))
-            j = b1
-
-        for g in guarded:
-            declare(container, g, WHY_CHOICE_HOST, unmapped,
-                    "guarded line before a choice list")
-        before_run = host
-        if host is None:
-            for k in range(i, j):
-                dead = items[k]
-                why = (WHY_NO_HOST if dead["kind"] == "option" and dead["level"] == level
-                       else WHY_ORPHAN_BODY)
-                declare(container, dead, why, unmapped, "choice list with no host")
-        else:
-            after_lives = any(
-                items[k].get("text") and not items[k].get("unmappable")
-                for k in range(j, hi)) or any(
-                not items[k].get("conditionalDivert")
-                and _goes_somewhere(items[k].get("divert"), empty)
-                for k in range(j, hi))
-            for oi, b0, b1 in run:
-                # An option that diverts sends the story on, so its body does not
-                # end the conversation — but only then. Skipping the body wholesale
-                # left a guarded last line in it undeclared.
-                onward = _goes_somewhere(items[oi].get("divert"), empty)
-                mark_structural_losses(container, unmapped, b0, b1,
-                                       terminal and not after_lives and not onward,
-                                       empty)
-        host, guarded = single_branch_host(items, run, j, before_run), []
-        i = j
-
-    if terminal and guarded and not any(
-            not items[k].get("conditionalDivert")
-            and _goes_somewhere(items[k].get("divert"), empty)
-            for k in range(lo, hi)):
-        for g in guarded:
-            declare(container, g, WHY_COND_TERMINAL, unmapped,
-                    "guarded line ending the container")
-
-
-def single_branch_host(items, run, after, before_run):
-    """What can host a choice list that comes straight after this option run.
-
-    A bare Ink gather is a join with no text, and Parlance has no text-less node —
-    so a choice set arriving right after one has nothing to hang off unless the
-    join has exactly ONE live branch, in which case that branch's last beat is
-    unambiguously the line the player just read. With several branches the beat
-    differs per path, and the only ways to express it would be duplicating the
-    choices onto each tail (which the content check counts as invented prose) or
-    inventing a line. So: one branch, reuse it; more, declare.
-
-    It matters more than the count suggests. In The Intercept a single variable-
-    text line sits between a gather and the story's main choice set; without this,
-    that set is dropped and 535 of 539 nodes become unreachable — the whole story
-    after the first four lines.
-    """
-    live = [(oi, b0, b1) for oi, b0, b1 in run if not items[oi].get("unmappable")]
-    if len(live) != 1:
-        return None
-    _oi, b0, b1 = live[0]
-    for k in range(b1 - 1, b0 - 1, -1):
-        it = items[k]
-        if it["kind"] == "option":
-            return None         # the branch ends in a nested choice set of its own
-        if it["kind"] in ("line", "gather") and it.get("text") and not it.get("unmappable"):
-            return it
-    return before_run
-
-
-def _goes_somewhere(div, empty):
-    """A divert that leads to prose. `-> END` does not, nor does one whose target
-    is a container every line of which is declared loss."""
-    if not div or div["kind"] == "terminal":
-        return False
-    target = div.get("resolved") or (div.get("resolvedLabel") or [None])[0]
-    return bool(target) and target not in empty
-
-
 def analyse(parsed):
     containers = parsed["containers"]
     titles = [c["title"] for c in containers]
@@ -1080,18 +957,27 @@ def analyse(parsed):
                                  "why": WHY_COND_DIVERT})
                 it["conditionalDivert"] = True
 
-    def yields_nothing(c):
-        return not any(it.get("text") and not it.get("unmappable") for it in c["items"])
+    # A guarded tail whose container's only onward path is a (declared)
+    # conditional divert: see WHY_TAIL_OF_COND_DIVERT. Walk back from the end
+    # over guarded lines and non-prose items; stop at anything that carries on.
+    for c in containers:
+        items = c["items"]
+        if not any(it.get("conditionalDivert") for it in items):
+            continue
+        if any(it.get("divert") and not it.get("conditionalDivert")
+               and it["divert"]["kind"] != "terminal" for it in items):
+            continue
+        for it in reversed(items):
+            if it["kind"] == "option":
+                break
+            if it.get("text") and not it.get("unmappable"):
+                if not it.get("showIf"):
+                    break
+                declare(c, it, WHY_TAIL_OF_COND_DIVERT, unmapped,
+                        "guarded line ending a container that continues only conditionally")
 
-    # To a fixpoint: declaring one container's lines can empty it, which turns a
-    # divert into a dead end, which makes another container's tail terminal.
-    while True:
-        before = len(unmapped)
-        empty = {c["title"] for c in containers if yields_nothing(c)}
-        for c in containers:
-            mark_structural_losses(c, unmapped, empty=empty)
-        if len(unmapped) == before:
-            break
+    # No structural pass since 0.15: a guarded line may host choices or end the
+    # conversation, and a choice list with no line gets a text-less node.
 
     # --- tunnels -------------------------------------------------------------
     # `-> knot -> onward` is a call. Where every call site agrees on where the

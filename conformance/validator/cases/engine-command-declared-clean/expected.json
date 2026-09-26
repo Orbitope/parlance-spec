@@ -1,0 +1,14 @@
+{
+  "mustNot": [
+    {
+      "code": "ENGINE"
+    },
+    {
+      "code": "SCHEMA"
+    },
+    {
+      "code": "FLAG"
+    }
+  ],
+  "noErrors": true
+}

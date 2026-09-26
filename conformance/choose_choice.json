@@ -1,716 +1,1791 @@
 [
- {
-  "fn": "chooseChoice",
-  "description": "goto: advances to target node, state unchanged",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_goto",
-       "text": "Proceed.",
-       "goto": "node_end"
-      }
-     ]
-    },
-    {
-     "id": "node_end",
-     "isEnd": true,
-     "text": "End.",
-     "choices": [
-      {
-       "id": "ch_terminal",
-       "text": "Done."
-      }
-     ]
-    }
-   ]
-  },
-  "nodeId": "node_start",
-  "choiceId": "ch_goto",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {},
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "expected": {
-   "nextNodeId": "node_end",
-   "newState": {
-    "flags": {},
-    "reputation": {},
-    "skills": {},
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "goto with effects: effect applied before advancing",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_flag_goto",
-       "text": "Flag and go.",
-       "goto": "node_end",
-       "effects": [
+  {
+    "fn": "chooseChoice",
+    "description": "goto: advances to target node, state unchanged",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
         {
-         "type": "set_flag",
-         "flag": "took_path",
-         "value": true
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "id": "node_end",
-     "isEnd": true,
-     "text": "End."
-    }
-   ]
-  },
-  "nodeId": "node_start",
-  "choiceId": "ch_flag_goto",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {},
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "expected": {
-   "nextNodeId": "node_end",
-   "newState": {
-    "flags": {
-     "took_path": true
-    },
-    "reputation": {},
-    "skills": {},
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "active check pass: rng=0.2, roll=5, wit=5, total=10, DC=10 → success branch",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_check",
-       "text": "Roll.",
-       "check": {
-        "mode": "active",
-        "skill": "wit",
-        "difficulty": 10,
-        "onSuccess": "node_win",
-        "onFailure": "node_lose"
-       }
-      }
-     ]
-    },
-    {
-     "id": "node_win",
-     "isEnd": true,
-     "text": "Won."
-    },
-    {
-     "id": "node_lose",
-     "isEnd": true,
-     "text": "Lost."
-    }
-   ]
-  },
-  "nodeId": "node_start",
-  "choiceId": "ch_check",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {
-    "wit": 5
-   },
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "rng": 0.2,
-  "expected": {
-   "nextNodeId": "node_win",
-   "newState": {
-    "flags": {},
-    "reputation": {},
-    "skills": {
-     "wit": 5
-    },
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   },
-   "checkResult": {
-    "passed": true,
-    "roll": 5,
-    "total": 10,
-    "skillValue": 5,
-    "dice": "1d20"
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "active check fail: rng=0.0, roll=1, wit=0, total=1, DC=10 → failure branch",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_check",
-       "text": "Roll.",
-       "check": {
-        "mode": "active",
-        "skill": "wit",
-        "difficulty": 10,
-        "onSuccess": "node_win",
-        "onFailure": "node_lose"
-       }
-      }
-     ]
-    },
-    {
-     "id": "node_win",
-     "isEnd": true,
-     "text": "Won."
-    },
-    {
-     "id": "node_lose",
-     "isEnd": true,
-     "text": "Lost."
-    }
-   ]
-  },
-  "nodeId": "node_start",
-  "choiceId": "ch_check",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {
-    "wit": 0
-   },
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "rng": 0,
-  "expected": {
-   "nextNodeId": "node_lose",
-   "newState": {
-    "flags": {},
-    "reputation": {},
-    "skills": {
-     "wit": 0
-    },
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   },
-   "checkResult": {
-    "passed": false,
-    "roll": 1,
-    "total": 1,
-    "skillValue": 0,
-    "dice": "1d20"
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "active check with pre-choice effect: effect applied before roll, skill read from post-effect state",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_effect_then_check",
-       "text": "Buff and roll.",
-       "effects": [
-        {
-         "type": "set_flag",
-         "flag": "prepared",
-         "value": true
-        }
-       ],
-       "check": {
-        "mode": "active",
-        "skill": "wit",
-        "difficulty": 10,
-        "onSuccess": "node_win",
-        "onFailure": "node_lose"
-       }
-      }
-     ]
-    },
-    {
-     "id": "node_win",
-     "isEnd": true,
-     "text": "Won."
-    },
-    {
-     "id": "node_lose",
-     "isEnd": true,
-     "text": "Lost."
-    }
-   ]
-  },
-  "nodeId": "node_start",
-  "choiceId": "ch_effect_then_check",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {
-    "wit": 5
-   },
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "rng": 0.2,
-  "expected": {
-   "nextNodeId": "node_win",
-   "newState": {
-    "flags": {
-     "prepared": true
-    },
-    "reputation": {},
-    "skills": {
-     "wit": 5
-    },
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   },
-   "checkResult": {
-    "passed": true,
-    "roll": 5,
-    "total": 10,
-    "skillValue": 5,
-    "dice": "1d20"
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "passive check: treated as plain goto, no roll, no checkResult",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_passive",
-       "text": "Passive.",
-       "goto": "node_win",
-       "check": {
-        "mode": "passive",
-        "skill": "wit",
-        "difficulty": 5
-       }
-      }
-     ]
-    },
-    {
-     "id": "node_win",
-     "isEnd": true,
-     "text": "Won."
-    }
-   ]
-  },
-  "nodeId": "node_start",
-  "choiceId": "ch_passive",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {
-    "wit": 0
-   },
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "expected": {
-   "nextNodeId": "node_win",
-   "newState": {
-    "flags": {},
-    "reputation": {},
-    "skills": {
-     "wit": 0
-    },
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "terminal choice (no goto, no check on isEnd node): nextNodeId is null",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_end",
-   "nodes": [
-    {
-     "id": "node_end",
-     "isEnd": true,
-     "text": "End.",
-     "choices": [
-      {
-       "id": "ch_terminal",
-       "text": "Done."
-      }
-     ]
-    }
-   ]
-  },
-  "nodeId": "node_end",
-  "choiceId": "ch_terminal",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {},
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "expected": {
-   "nextNodeId": null,
-   "newState": {
-    "flags": {},
-    "reputation": {},
-    "skills": {},
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "multiple effects threaded in order: flag then reputation",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_multi_effect",
-       "text": "Two effects.",
-       "goto": "node_end",
-       "effects": [
-        {
-         "type": "set_flag",
-         "flag": "done",
-         "value": true
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_goto",
+              "text": "Proceed.",
+              "goto": "node_end"
+            }
+          ]
         },
         {
-         "type": "adjust_reputation",
-         "faction": "guild",
-         "delta": 2
+          "id": "node_end",
+          "isEnd": true,
+          "text": "End.",
+          "choices": [
+            {
+              "id": "ch_terminal",
+              "text": "Done."
+            }
+          ]
         }
-       ]
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_goto",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_end",
+      "newState": {
+        "flags": {},
+        "reputation": {},
+        "skills": {},
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
       }
-     ]
-    },
-    {
-     "id": "node_end",
-     "isEnd": true,
-     "text": "End."
     }
-   ]
   },
-  "nodeId": "node_start",
-  "choiceId": "ch_multi_effect",
-  "state": {
-   "flags": {},
-   "reputation": {
-    "guild": 0
-   },
-   "skills": {},
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {
-    "guild": {
-     "id": "guild",
-     "name": "Guild",
-     "summary": "s",
-     "reputationRange": {
-      "min": -10,
-      "max": 10
-     }
-    }
-   }
-  },
-  "expected": {
-   "nextNodeId": "node_end",
-   "newState": {
-    "flags": {
-     "done": true
-    },
-    "reputation": {
-     "guild": 2
-    },
-    "skills": {},
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "give_item effect: item appears in inventory after choice",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_loot",
-       "text": "Take the key.",
-       "goto": "node_end",
-       "effects": [
+  {
+    "fn": "chooseChoice",
+    "description": "goto with effects: effect applied before advancing",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
         {
-         "type": "give_item",
-         "item": "key_card"
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_flag_goto",
+              "text": "Flag and go.",
+              "goto": "node_end",
+              "effects": [
+                {
+                  "type": "set_flag",
+                  "flag": "took_path",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "node_end",
+          "isEnd": true,
+          "text": "End."
         }
-       ]
-      }
-     ]
+      ]
     },
-    {
-     "id": "node_end",
-     "isEnd": true,
-     "text": "End."
+    "nodeId": "node_start",
+    "choiceId": "ch_flag_goto",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_end",
+      "newState": {
+        "flags": {
+          "took_path": true
+        },
+        "reputation": {},
+        "skills": {},
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      }
     }
-   ]
   },
-  "nodeId": "node_start",
-  "choiceId": "ch_loot",
-  "state": {
-   "flags": {},
-   "reputation": {},
-   "skills": {},
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
+  {
+    "fn": "chooseChoice",
+    "description": "active check pass: rng=0.2, roll=5, wit=5, total=10, DC=10 → success branch",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_check",
+              "text": "Roll.",
+              "check": {
+                "mode": "active",
+                "skill": "wit",
+                "difficulty": 10,
+                "onSuccess": "node_win",
+                "onFailure": "node_lose"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node_win",
+          "isEnd": true,
+          "text": "Won."
+        },
+        {
+          "id": "node_lose",
+          "isEnd": true,
+          "text": "Lost."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_check",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {
+        "wit": 5
+      },
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "rng": 0.2,
+    "expected": {
+      "nextNodeId": "node_win",
+      "newState": {
+        "flags": {},
+        "reputation": {},
+        "skills": {
+          "wit": 5
+        },
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      },
+      "checkResult": {
+        "passed": true,
+        "roll": 5,
+        "total": 10,
+        "skillValue": 5,
+        "dice": "1d20"
+      }
+    }
   },
-  "project": {
-   "factions": {}
+  {
+    "fn": "chooseChoice",
+    "description": "active check fail: rng=0.0, roll=1, wit=0, total=1, DC=10 → failure branch",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_check",
+              "text": "Roll.",
+              "check": {
+                "mode": "active",
+                "skill": "wit",
+                "difficulty": 10,
+                "onSuccess": "node_win",
+                "onFailure": "node_lose"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node_win",
+          "isEnd": true,
+          "text": "Won."
+        },
+        {
+          "id": "node_lose",
+          "isEnd": true,
+          "text": "Lost."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_check",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {
+        "wit": 0
+      },
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "rng": 0,
+    "expected": {
+      "nextNodeId": "node_lose",
+      "newState": {
+        "flags": {},
+        "reputation": {},
+        "skills": {
+          "wit": 0
+        },
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      },
+      "checkResult": {
+        "passed": false,
+        "roll": 1,
+        "total": 1,
+        "skillValue": 0,
+        "dice": "1d20"
+      }
+    }
   },
-  "expected": {
-   "nextNodeId": "node_end",
-   "newState": {
-    "flags": {},
-    "reputation": {},
-    "skills": {},
-    "counters": {},
-    "inventory": [
-     "key_card"
-    ],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   }
-  }
- },
- {
-  "fn": "chooseChoice",
-  "description": "a check modifier flips the branch: roll=5 wit=5 base 10 < DC 15, +6 primed -> 16 -> success",
-  "dialogue": {
-   "id": "dlg_conformance",
-   "entry": "node_start",
-   "nodes": [
-    {
-     "id": "node_start",
-     "text": "Start.",
-     "choices": [
-      {
-       "id": "ch_check",
-       "text": "Roll.",
-       "check": {
-        "mode": "active",
-        "skill": "wit",
-        "difficulty": 15,
-        "onSuccess": "node_win",
-        "onFailure": "node_lose",
-        "modifiers": [
-         {
-          "when": {
-           "type": "flag",
-           "flag": "primed",
-           "value": true
-          },
-          "bonus": 6
-         }
+  {
+    "fn": "chooseChoice",
+    "description": "active check with pre-choice effect: effect applied before roll, skill read from post-effect state",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_effect_then_check",
+              "text": "Buff and roll.",
+              "effects": [
+                {
+                  "type": "set_flag",
+                  "flag": "prepared",
+                  "value": true
+                }
+              ],
+              "check": {
+                "mode": "active",
+                "skill": "wit",
+                "difficulty": 10,
+                "onSuccess": "node_win",
+                "onFailure": "node_lose"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node_win",
+          "isEnd": true,
+          "text": "Won."
+        },
+        {
+          "id": "node_lose",
+          "isEnd": true,
+          "text": "Lost."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_effect_then_check",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {
+        "wit": 5
+      },
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "rng": 0.2,
+    "expected": {
+      "nextNodeId": "node_win",
+      "newState": {
+        "flags": {
+          "prepared": true
+        },
+        "reputation": {},
+        "skills": {
+          "wit": 5
+        },
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      },
+      "checkResult": {
+        "passed": true,
+        "roll": 5,
+        "total": 10,
+        "skillValue": 5,
+        "dice": "1d20"
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "passive check: treated as plain goto, no roll, no checkResult",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_passive",
+              "text": "Passive.",
+              "goto": "node_win",
+              "check": {
+                "mode": "passive",
+                "skill": "wit",
+                "difficulty": 5
+              }
+            }
+          ]
+        },
+        {
+          "id": "node_win",
+          "isEnd": true,
+          "text": "Won."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_passive",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {
+        "wit": 0
+      },
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_win",
+      "newState": {
+        "flags": {},
+        "reputation": {},
+        "skills": {
+          "wit": 0
+        },
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "terminal choice (no goto, no check on isEnd node): nextNodeId is null",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_end",
+      "nodes": [
+        {
+          "id": "node_end",
+          "isEnd": true,
+          "text": "End.",
+          "choices": [
+            {
+              "id": "ch_terminal",
+              "text": "Done."
+            }
+          ]
+        }
+      ]
+    },
+    "nodeId": "node_end",
+    "choiceId": "ch_terminal",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": null,
+      "newState": {
+        "flags": {},
+        "reputation": {},
+        "skills": {},
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "multiple effects threaded in order: flag then reputation",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_multi_effect",
+              "text": "Two effects.",
+              "goto": "node_end",
+              "effects": [
+                {
+                  "type": "set_flag",
+                  "flag": "done",
+                  "value": true
+                },
+                {
+                  "type": "adjust_reputation",
+                  "faction": "guild",
+                  "delta": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "node_end",
+          "isEnd": true,
+          "text": "End."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_multi_effect",
+    "state": {
+      "flags": {},
+      "reputation": {
+        "guild": 0
+      },
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {
+        "guild": {
+          "id": "guild",
+          "name": "Guild",
+          "summary": "s",
+          "reputationRange": {
+            "min": -10,
+            "max": 10
+          }
+        }
+      }
+    },
+    "expected": {
+      "nextNodeId": "node_end",
+      "newState": {
+        "flags": {
+          "done": true
+        },
+        "reputation": {
+          "guild": 2
+        },
+        "skills": {},
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "give_item effect: item appears in inventory after choice",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_loot",
+              "text": "Take the key.",
+              "goto": "node_end",
+              "effects": [
+                {
+                  "type": "give_item",
+                  "item": "key_card"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "node_end",
+          "isEnd": true,
+          "text": "End."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_loot",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_end",
+      "newState": {
+        "flags": {},
+        "reputation": {},
+        "skills": {},
+        "counters": {},
+        "inventory": [
+          "key_card"
+        ],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "a check modifier flips the branch: roll=5 wit=5 base 10 < DC 15, +6 primed -> 16 -> success",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_check",
+              "text": "Roll.",
+              "check": {
+                "mode": "active",
+                "skill": "wit",
+                "difficulty": 15,
+                "onSuccess": "node_win",
+                "onFailure": "node_lose",
+                "modifiers": [
+                  {
+                    "when": {
+                      "type": "flag",
+                      "flag": "primed",
+                      "value": true
+                    },
+                    "bonus": 6
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node_win",
+          "isEnd": true,
+          "text": "Won."
+        },
+        {
+          "id": "node_lose",
+          "isEnd": true,
+          "text": "Lost."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_check",
+    "state": {
+      "flags": {
+        "primed": true
+      },
+      "reputation": {},
+      "skills": {
+        "wit": 5
+      },
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "rng": 0.2,
+    "expected": {
+      "nextNodeId": "node_win",
+      "newState": {
+        "flags": {
+          "primed": true
+        },
+        "reputation": {},
+        "skills": {
+          "wit": 5
+        },
+        "counters": {},
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      },
+      "checkResult": {
+        "passed": true,
+        "roll": 5,
+        "total": 16,
+        "skillValue": 5,
+        "dice": "1d20",
+        "bonus": 6,
+        "appliedModifiers": [
+          0
         ]
-       }
       }
-     ]
-    },
-    {
-     "id": "node_win",
-     "isEnd": true,
-     "text": "Won."
-    },
-    {
-     "id": "node_lose",
-     "isEnd": true,
-     "text": "Lost."
     }
-   ]
   },
-  "nodeId": "node_start",
-  "choiceId": "ch_check",
-  "state": {
-   "flags": {
-    "primed": true
-   },
-   "reputation": {},
-   "skills": {
-    "wit": 5
-   },
-   "counters": {},
-   "inventory": [],
-   "questStages": {},
-   "xp": 0,
-   "skillPointsSpent": {}
-  },
-  "project": {
-   "factions": {}
-  },
-  "rng": 0.2,
-  "expected": {
-   "nextNodeId": "node_win",
-   "newState": {
-    "flags": {
-     "primed": true
+  {
+    "fn": "chooseChoice",
+    "description": "locked (0.15): choosing a choice whose showIf fails throws — locked (whenLocked show) is never selectable",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "id": "node_open",
+          "text": "And you've seen the ledger. I can tell.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ]
+        },
+        {
+          "id": "node_options",
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ]
+        },
+        {
+          "id": "node_door",
+          "text": "The door.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show",
+              "lockedText": "[Requires the key]"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ]
+        },
+        {
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ]
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "text": "You think of the cup, still warm.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "node_hop",
+          "text": "A beat.",
+          "next": "node_last"
+        },
+        {
+          "id": "node_hop_open",
+          "text": "Another beat.",
+          "next": "node_open"
+        }
+      ]
     },
-    "reputation": {},
-    "skills": {
-     "wit": 5
+    "nodeId": "node_door",
+    "choiceId": "ch_unlock",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
     },
-    "counters": {},
-    "inventory": [],
-    "questStages": {},
-    "xp": 0,
-    "skillPointsSpent": {}
-   },
-   "checkResult": {
-    "passed": true,
-    "roll": 5,
-    "total": 16,
-    "skillValue": 5,
-    "dice": "1d20",
-    "bonus": 6,
-    "appliedModifiers": [
-     0
-    ]
-   }
+    "project": {
+      "factions": {}
+    },
+    "expectedError": "not selectable"
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "hidden: choosing a choice whose showIf fails throws — same rule whether hidden or locked",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "id": "node_open",
+          "text": "And you've seen the ledger. I can tell.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ]
+        },
+        {
+          "id": "node_options",
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ]
+        },
+        {
+          "id": "node_door",
+          "text": "The door.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show",
+              "lockedText": "[Requires the key]"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ]
+        },
+        {
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ]
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "text": "You think of the cup, still warm.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "node_hop",
+          "text": "A beat.",
+          "next": "node_last"
+        },
+        {
+          "id": "node_hop_open",
+          "text": "Another beat.",
+          "next": "node_open"
+        }
+      ]
+    },
+    "nodeId": "node_door",
+    "choiceId": "ch_force",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    },
+    "project": {
+      "factions": {},
+      "rules": {
+        "choices": {
+          "whenLockedDefault": "show"
+        }
+      }
+    },
+    "expectedError": "not selectable"
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "fallback: choosing the fallback while a non-fallback choice is visible throws — it was not offered",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "id": "node_open",
+          "text": "And you've seen the ledger. I can tell.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ]
+        },
+        {
+          "id": "node_options",
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ]
+        },
+        {
+          "id": "node_door",
+          "text": "The door.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show",
+              "lockedText": "[Requires the key]"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ]
+        },
+        {
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ]
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "text": "You think of the cup, still warm.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "node_hop",
+          "text": "A beat.",
+          "next": "node_last"
+        },
+        {
+          "id": "node_hop_open",
+          "text": "Another beat.",
+          "next": "node_open"
+        }
+      ]
+    },
+    "nodeId": "node_door",
+    "choiceId": "ch_walk",
+    "state": {
+      "counters": {},
+      "flags": {
+        "has_key": true
+      },
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    },
+    "project": {
+      "factions": {}
+    },
+    "expectedError": "not selectable"
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "fallback: choosing the fallback when nothing else is visible advances normally",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "id": "node_open",
+          "text": "And you've seen the ledger. I can tell.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ]
+        },
+        {
+          "id": "node_options",
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ]
+        },
+        {
+          "id": "node_door",
+          "text": "The door.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show",
+              "lockedText": "[Requires the key]"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ]
+        },
+        {
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ]
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "text": "You think of the cup, still warm.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "node_hop",
+          "text": "A beat.",
+          "next": "node_last"
+        },
+        {
+          "id": "node_hop_open",
+          "text": "Another beat.",
+          "next": "node_open"
+        }
+      ]
+    },
+    "nodeId": "node_door",
+    "choiceId": "ch_walk",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_last",
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "text-less node: choices on a node with no text are chosen like any other",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "id": "node_open",
+          "text": "And you've seen the ledger. I can tell.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ]
+        },
+        {
+          "id": "node_options",
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ]
+        },
+        {
+          "id": "node_door",
+          "text": "The door.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show",
+              "lockedText": "[Requires the key]"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ]
+        },
+        {
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ]
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "text": "You think of the cup, still warm.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "node_hop",
+          "text": "A beat.",
+          "next": "node_last"
+        },
+        {
+          "id": "node_hop_open",
+          "text": "Another beat.",
+          "next": "node_open"
+        }
+      ]
+    },
+    "nodeId": "node_options",
+    "choiceId": "ch_door",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_door",
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "hidden-line node: choices on a node whose line is hidden are chosen like any other (the node was reached, only its line was withheld)",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "id": "node_open",
+          "text": "And you've seen the ledger. I can tell.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ]
+        },
+        {
+          "id": "node_options",
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ]
+        },
+        {
+          "id": "node_door",
+          "text": "The door.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show",
+              "lockedText": "[Requires the key]"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ]
+        },
+        {
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing.",
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ]
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "text": "You think of the cup, still warm.",
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "node_hop",
+          "text": "A beat.",
+          "next": "node_last"
+        },
+        {
+          "id": "node_hop_open",
+          "text": "Another beat.",
+          "next": "node_open"
+        }
+      ]
+    },
+    "nodeId": "node_open",
+    "choiceId": "ch_ship",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_options",
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      }
+    }
+  },
+  {
+    "fn": "chooseChoice",
+    "description": "engine: a choice's effects apply in order around an engine command, which itself changes nothing",
+    "dialogue": {
+      "id": "dlg_conformance",
+      "entry": "node_start",
+      "nodes": [
+        {
+          "id": "node_start",
+          "text": "Start.",
+          "choices": [
+            {
+              "id": "ch_engine",
+              "text": "Kick.",
+              "goto": "node_end",
+              "effects": [
+                {
+                  "type": "set_flag",
+                  "flag": "kicked",
+                  "value": true
+                },
+                {
+                  "type": "engine",
+                  "command": "play_sfx",
+                  "args": [
+                    "door_kick",
+                    0.8
+                  ]
+                },
+                {
+                  "type": "adjust_counter",
+                  "counter": "noise",
+                  "delta": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "node_end",
+          "isEnd": true,
+          "text": "End."
+        }
+      ]
+    },
+    "nodeId": "node_start",
+    "choiceId": "ch_engine",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "nextNodeId": "node_end",
+      "newState": {
+        "flags": {
+          "kicked": true
+        },
+        "reputation": {},
+        "skills": {},
+        "counters": {
+          "noise": 2
+        },
+        "inventory": [],
+        "questStages": {},
+        "xp": 0,
+        "skillPointsSpent": {}
+      }
+    }
   }
- }
 ]

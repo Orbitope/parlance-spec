@@ -10,7 +10,10 @@
 ## Purpose
 
 This folder defines the *contract* that all game data obeys. Every JSON file under
-`/data` must validate against one of these schemas. The validator (in `/tooling`)
+`/data` must validate against one of these schemas, with one exception: a project's
+custom entity types (`data/types.json` and the rows it declares — see
+[Custom entity types](#custom-entity-types-datatypesjson)) have no schema file, because
+their shape is whatever the project declares. The validator (in `/tooling`)
 enforces both the shape of each file (schema validation) and the relationships
 *between* files (consistency validation) — e.g. "every faction a dialogue references
 must actually exist."
@@ -37,6 +40,52 @@ an anchor within it). This keeps prose and data from silently drifting apart.
 | Item        | `item.schema.json`      | A thing the player can carry. Possession is runtime state; this gives it a name. |
 | Ending      | `ending.schema.json`    | A final outcome and the conditions that unlock it.  |
 | Codex       | `codex.schema.json`     | A player-facing knowledge entry, optionally unlocked by a condition. |
+| Binding     | `binding.schema.json`   | Optional (`data/bindings/<profile>.json`): maps portrait ids, VO keys and cutscene ids to engine paths for one `profile`. Checked only by `tooling/validate.py` (`BIND` warnings). |
+
+## Custom entity types (`data/types.json`)
+
+A project may declare entity types of its own. `data/types.json` is optional, and is one
+object keyed by type id:
+
+```json
+{
+  "drink": {
+    "name": "Drink",
+    "plural": "drinks",
+    "fields": {
+      "price":    { "type": "number", "required": true },
+      "strength": { "type": "enum", "options": ["small", "house", "strong"], "default": "house" },
+      "servedBy": { "type": "reference", "target": "character" },
+      "ingredients": { "type": "array", "items": { "type": "string" } }
+    }
+  }
+}
+```
+
+A field's `type` is `string`, `number`, `boolean`, `enum` (needs a non-empty `options`),
+`reference` (needs a `target`: a built-in type — `skill`, `faction`, `character`,
+`variable`, `item`, `dialogue`, `quest`, `location`, `cutscene` — or another custom
+type's id), or `array` with an `items` field (itself any kind but `array`). `required`
+and `default` are optional on any field.
+
+**Storage.** Rows live under `plural`, which defaults to `<id>s` when absent or empty:
+one file per row under `data/<plural>/` (nested folders allowed), or a single
+`data/<plural>.json` registry — either `{ "<plural>": [ … ] }` or an object keyed by
+anything, each row carrying its `id`. Every row has an `id`.
+
+**What both validators check** (all `SCHEMA` errors unless noted):
+
+- the declarations: each is an object; the type id is not a built-in reference target;
+  `plural` is a plain name (letters, digits, `_`, `-`), is not a built-in folder or file,
+  is not a Windows device name (`con`, `prn`, `aux`, `nul`, `com1`–`9`, `lpt1`–`9`), and
+  is not used by another type — plurals are compared case-insensitively; `fields` is an
+  object; each field has a known `type`, an enum has options, a reference has a known
+  target.
+- the rows: a missing `required` field, and a value of the wrong kind for its field
+  (including an enum value outside its options). A `reference` — or one item of an array
+  of references — naming an entity that does not exist is a `REF` error.
+
+No runtime function reads custom entities; they exist for the engine's own code.
 
 ## The shared vocabulary: Conditions and Effects
 
@@ -59,6 +108,12 @@ triggers, ending unlocks — is expressed with the *same* two structures, define
 - `{ "type": "adjust_relationship", "character": "npc_wren", "delta": 1 }`
 - `{ "type": "give_item", "item": "item_lantern" }`
 - `{ "type": "set_text", "variable": "player_name", "value": "Wren" }`
+- `{ "type": "engine", "command": "shake", "args": [0.5] }` (an opaque command for the
+  game engine; it changes no state and names no id. Since 0.15)
+
+Dialogue nodes and choices may carry `tags` (0.15), the same free-string list dialogues
+carry. They are opaque labels such as `mood:angry` that the runtime passes through and
+nothing reads.
 
 Because conditions and effects only ever reference IDs from the variable registry,
 the factions list, the skills list, etc., the validator can check that *every*
@@ -121,8 +176,8 @@ arithmetic.
 
 **Where placeholders are substituted** — player-facing strings only:
 
-`DialogueNode.text` · `Choice.text` · `Objective.text` · `Stage.description` ·
-`Quest.journalName`
+`DialogueNode.text` · `Choice.text` · `Choice.lockedText` · `Objective.text` ·
+`Stage.description` · `Quest.journalName`
 
 Ids, `name`, `summary`, `notes`, and every other authoring-facing field are left alone; a
 brace there is just a brace.

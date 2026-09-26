@@ -1,0 +1,128 @@
+{
+  "entry": "n_episode1_sms3b",
+  "id": "dlg_episode1_sms3b",
+  "nodes": [
+    {
+      "id": "n_episode1_sms3b",
+      "next": "n_episode1_sms3b_2",
+      "showIf": {
+        "flag": "didsharebad",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_ryan",
+      "text": "Trop bien la vidéo ! Avec le \\# en plus !"
+    },
+    {
+      "id": "n_episode1_sms3b_2",
+      "next": "n_episode1_sms3b_3",
+      "showIf": {
+        "flag": "didsharebad",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_ryan",
+      "text": "T'es clairement pas un fragile, toi !"
+    },
+    {
+      "id": "n_episode1_sms3b_3",
+      "next": "n_episode1_sms3b_4",
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_ryan",
+      "text": "J'ai vu ta vidéo et ton commentaire..."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "flag": "didsharebad",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "id": "c_episode1_partager",
+          "text": "Partager"
+        },
+        {
+          "effects": [
+            {
+              "flag": "didsharegood",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "id": "c_episode1_partager_en_d_non",
+          "text": "Partager en dénonçant"
+        },
+        {
+          "goto": "n_episode1_sms3b_5",
+          "id": "c_episode1_non_je_ne_le",
+          "text": "Non, je ne le ferai pas."
+        }
+      ],
+      "id": "n_episode1_sms3b_4",
+      "isEnd": true,
+      "showIf": {
+        "of": [
+          {
+            "flag": "didsharegood",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "didsharebad",
+            "type": "flag",
+            "value": false
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_ryan",
+      "text": "Je sens que l'on a trouvé quelqu'un pour les épreuves de la \\#teamfragile !"
+    },
+    {
+      "choices": [
+        {
+          "id": "c_episode1_ok_la_voici",
+          "text": "Ok, la voici."
+        },
+        {
+          "id": "c_episode1_non_je_n_approuve",
+          "text": "Non, je n'approuve pas ce que tu fais avec tes potes !"
+        },
+        {
+          "effects": [
+            {
+              "args": [
+                "Proof4"
+              ],
+              "command": "add_message",
+              "type": "engine"
+            }
+          ],
+          "id": "c_episode1_faire_une_capture_d",
+          "text": "Faire une capture d'écran"
+        }
+      ],
+      "id": "n_episode1_sms3b_5",
+      "isEnd": true
+    }
+  ],
+  "replayable": false,
+  "title": "Sms3b"
+}

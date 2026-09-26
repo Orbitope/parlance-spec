@@ -39,7 +39,15 @@ data/
     codex_the_accord.json
   items.json           { "items": [ { "id": "item_lantern", "name": "Stable Lantern" }, ... ] }
   portraits.json       { "portraits": [ ... ] }
+  types.json           optional — the project's own entity types (see schema/README.md)
+  <plural>.json        rows of a custom type as one registry, or …
+  <plural>/            … one file per row (nested folders allowed)
+  bindings/
+    godot.json         optional — asset paths per engine profile (see Asset Bindings)
 ```
+
+No runtime function reads custom-type rows or bindings; they are there for your
+engine's own code and your build pipeline.
 
 **A shipping game loads `data/` and nothing else.** Route and snapshot fixtures live
 in a sibling directory, because they are regression tests rather than story:
@@ -162,6 +170,10 @@ nothing else — it does not evaluate `completeWhen` or fire outcome effects (th
 condition reads `questStages`, so a port that treats `advance_quest` as a no-op will
 silently evaluate every quest condition as false.
 
+**`engine` changes nothing.** `{ type: "engine", command, args? }` is a command for
+*your* engine. `applyEffect` returns the state unchanged, and your code dispatches on
+`command` when it walks the effect list (see Hook model).
+
 ### `applyEffects(effects, state, project) → GameState`
 
 Apply a list of effects in left-to-right order, threading state through each call.
@@ -214,10 +226,14 @@ type CheckResult = {
 
 ### `resolveNode(dialogue, nodeId, state, project) → DialogueNode`
 
-Walk past nodes whose **`showIf`** fails, following `next`, and return the first node that
-is actually shown. A `DialogueNode` may carry a display gate, and **a skipped node is
-inert**: its text is not shown, its `onEnter` effects do **not** fire, and it produces no
-transcript entry. A skipped node did not happen.
+Walk past *interstitial* nodes (no `choices`, not `isEnd`) whose **`showIf`** fails,
+following `next`, and return the first node that is actually shown. A `DialogueNode` may
+carry a display gate, and **a skipped node is inert**: its text is not shown, its `onEnter`
+effects do **not** fire, and it produces no transcript entry. A skipped node did not happen.
+
+Since 0.15 a gated node that carries `choices` or `isEnd` is never skipped: `resolveNode`
+returns it whatever its gate says, and `stepDialogue` reports the failed gate as
+`textHidden` (only the line is hidden — see below).
 
 Call it at **every arrival at a node** — the dialogue's `entry`, a `next` advance, a choice
 `goto`, and a check's `onSuccess`/`onFailure`. A runtime that resolves at some but not all
@@ -230,7 +246,7 @@ its own effects have run can return a different node and mix one node's text wit
 choices. The full ordering is the "arrival sequence" in `RUNTIME_CONTRACT.md`, and it is
 worth reading before writing this call.
 
-**Throws** on a ring of conditional nodes, on a skipped node with no `next`, and on a
+**Throws** on a ring of conditional nodes, on a skipped (interstitial) node with no `next`, and on a
 dangling `next` anywhere in the chain. All three are states the validator's `COND` rules
 reject, so they indicate unvalidated data rather than a case to handle.
 
@@ -242,8 +258,24 @@ Returns `onEnterEffects` but does **not** apply them — call `applyEffects(onEn
 state, project)` on first arrival (not on replay).
 
 ```ts
-type StepResult = { node: DialogueNode; visibleChoices: Choice[]; onEnterEffects: Effect[] };
+type StepResult = {
+  node: DialogueNode;          // text is "" when textHidden; absent on a text-less node
+  visibleChoices: Choice[];    // selectable: showIf passes; a fallback only when nothing else is
+  lockedChoices: Choice[];     // 0.15: showIf failed but whenLocked resolves to "show"
+  textHidden: boolean;         // 0.15: a gated node with choices/isEnd whose gate failed
+  onEnterEffects: Effect[];
+};
 ```
+
+Since 0.15 a gated node with `choices` or `isEnd` is never skipped: when its gate fails
+the step comes back with `textHidden: true` — render no line, but still show its choices
+(or end the dialogue) and still apply its `onEnter`. A node may also carry `choices` with
+no `text` at all; render just the options. `lockedChoices` is opt-in: render them greyed
+out with `lockedText ?? text`, never selectable. Ignore it and they stay hidden, exactly as
+before.
+
+`node.tags` and each visible choice's `tags` (0.15) come back as authored. They are
+opaque strings the runtime never reads. See Hook model for how an engine uses them.
 
 ### `chooseChoice(dialogue, nodeId, choiceId, state, project, rng?) → ChoiceOutcome`
 
@@ -252,6 +284,11 @@ return the next node id and updated state. **`nextNodeId` is not resolved** — 
 `advanceNode`'s, it is the requested target, which may be a node that will be skipped. Pass
 it through `resolveNode` before recording it anywhere (transcript, save, route log). Passive checks follow `choice.goto` without
 rolling. Terminal choices (no `goto`, no `check`) return `nextNodeId: null`.
+
+**Throws** (0.15) if the choice is not selectable at `state`: hidden by its `showIf`,
+shown locked (`whenLocked: "show"`), or a `fallback` that is not offered because a
+non-fallback sibling is visible. Offer the player only `visibleChoices` and this never
+fires. Before 0.15 it applied any choice id it was handed.
 
 ```ts
 type ChoiceOutcome = {
@@ -292,9 +329,9 @@ semantics), see [`RUNTIME_CONTRACT.md`](RUNTIME_CONTRACT.md).
 `tooling/conformance/` contains one JSON array per function (`advance.json` is
 `advanceNode`'s). Load each file, run your implementation against the vectors, and compare
 outputs. Per-file counts live in that directory's README — `jq 'length' <file>.json` is
-authoritative. `advance.json` is the one file where some vectors carry `expectedError`
-instead of `expected` — see its README section before assuming every vector is an
-equality check.
+authoritative. `advance.json` and `choose_choice.json` are the two files where some
+vectors carry `expectedError` instead of `expected` — see their README sections before
+assuming every vector is an equality check.
 
 See [`tooling/conformance/README.md`](conformance/README.md) for:
 - The vector format
@@ -326,17 +363,21 @@ Releases are a `chore(release): X.Y.Z` commit plus a `vX.Y.Z` tag; the version o
 ## Hook model
 
 `@parlance/core` is pure: it returns new states but fires no events. Your game engine
-is responsible for reacting to state changes. The following events are the natural wiring
+is responsible for reacting to state changes. The two data-level hand-offs to the engine
+are `engine` effects (a command, in order among the other effects) and line/choice
+`tags`. Core returns both and interprets neither. The following events are the natural wiring
 points:
 
 | When | What your engine should do |
 |---|---|
-| After `stepDialogue` | Render `node.text` and `visibleChoices` to the player; call `applyEffects(onEnterEffects, ...)` on first arrival |
+| After `stepDialogue` | Render `node.text` (unless `textHidden`, or absent) and `visibleChoices` to the player, plus `lockedChoices` greyed out if you support them; call `applyEffects(onEnterEffects, ...)` on first arrival |
 | After `resolveCheck` | Show dice-roll UI: display `roll`, `skillValue`, `total`, `passed` |
 | After `applyEffect` / `applyEffects` | Sync the changed state back to your game world (update inventory UI, reputation bar, etc.) |
 | After `advance_quest` | The runtime has already written `questStages[quest]`; mirror it into your own quest UI if you keep one. Then call `resolveQuests` so stage/outcome effects fire |
 | When `chooseChoice` returns `nextNodeId: null` | The dialogue is over; dismiss the dialogue UI |
 | When the current node has `next` set | Render no choice list — offer a single "continue" input instead; on activation call `advanceNode`, then apply the target's `onEnter` exactly as you would after a `goto` arrival |
+| While walking `onEnterEffects` / a choice's `effects` | For each `{ type: "engine" }` entry, dispatch `command` with `args` to your own handler, at that position in the list (so `set_flag`, then `shake`, then `advance_quest` fire in authored order). `applyEffect` leaves state unchanged for it. An unknown command should be logged and ignored, never thrown on. The validator warns when a project declares `rules.engine.commands` and uses a name outside it |
+| After `stepDialogue`, reading tags | `node.tags` (and a choice's `tags` when you render it) are yours to interpret, e.g. `mood:angry` selects a portrait expression and `sfx:door` plays a one-shot. Unity: split each tag on the first `:` into a key/value dictionary and route it through a `DialogueTagHandler` your views subscribe to. Godot: emit a `line_tags(tags)` signal from the dialogue controller. Parlance attaches no meaning to them |
 
 **`resolveQuests` is the one thing the runtime will not do for you.** `advance_quest`
 records the stage; the effects authored on stages (`onComplete`) and outcomes (`effects`)
@@ -440,8 +481,9 @@ let currentState = state;
 const step = stepDialogue(dlg, nodeId, currentState);
 currentState = applyEffects(step.onEnterEffects, currentState, project);
 
-console.log(step.node.text);
+if (step.node.text && !step.textHidden) console.log(step.node.text);
 for (const c of step.visibleChoices) console.log(`  [${c.id}] ${c.text}`);
+for (const c of step.lockedChoices) console.log(`  (locked) ${c.lockedText ?? c.text}`);
 
 // 4. Player picks a choice
 const outcome = chooseChoice(dlg, nodeId, "ch_wit_bluff", currentState, project, Math.random);
@@ -449,3 +491,36 @@ currentState = outcome.newState;
 if (outcome.nextNodeId) nodeId = outcome.nextNodeId;
 ```
 
+
+## Asset Bindings
+
+Parlance data intentionally uses string IDs for assets (e.g. `portrait_bragg` or `dialogue/dlg_id/nodes/node_id/text`) rather than dictating file locations, keeping the runtime agnostic to where and how a target engine manages its files (Resources, Addressables, loose files).
+
+To map these IDs to engine locations, a project defines one or more **Binding Profiles** in `data/bindings/<profile>.json`.
+
+The `validate.py` validator reads all `.json` files in `data/bindings/`, checks each against
+`schema/binding.schema.json`, and verifies coverage. Each finding below is a `BIND` warning:
+- A `portrait` used in dialogue has no binding.
+- A node with text has no VO key binding.
+- A triggered `cutscene` has no binding.
+- A binding is "dangling" (maps a portrait, cutscene or VO key that does not exist).
+
+Only the reference validator checks bindings; the editor's validator does not read
+`data/bindings/`. A project without that directory is unaffected.
+
+### Example Binding File
+
+```json
+{
+  "profile": "godot",
+  "portraits": {
+    "portrait_bragg": "res://assets/portraits/bragg.png"
+  },
+  "vo": {
+    "dialogue/dlg_bragg_first/nodes/node_lantern/text": "res://assets/vo/dlg_bragg_first_node_lantern.ogg"
+  },
+  "cutscenes": {}
+}
+```
+
+The game runtime (like the Godot addon) reads this file at startup to map the raw string IDs emitted by the narrative flow into loadable engine assets.

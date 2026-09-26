@@ -5,6 +5,29 @@
     {
       "id": "n_episode1_testsms",
       "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "Sms1"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms1"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms2"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        }
+      ],
       "text": "SKIP"
     }
   ],

@@ -1,0 +1,21 @@
+{
+  "rune": {
+    "fields": {
+      "carvedBy": {
+        "target": "character",
+        "type": "reference"
+      }
+    },
+    "name": "Rune",
+    "plural": ""
+  },
+  "spell": {
+    "fields": {
+      "grantedBy": {
+        "target": "character",
+        "type": "reference"
+      }
+    },
+    "name": "Spell"
+  }
+}

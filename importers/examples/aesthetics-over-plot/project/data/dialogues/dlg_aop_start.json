@@ -1,0 +1,2363 @@
+{
+  "entry": "n_aop_start",
+  "id": "dlg_aop_start",
+  "nodes": [
+    {
+      "id": "n_aop_start",
+      "next": "n_aop_start_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "torn tshirt and distressed jeans",
+          "variable": "dress"
+        },
+        {
+          "type": "set_text",
+          "value": "nobody",
+          "variable": "talking"
+        }
+      ],
+      "text": "<center><h1>Aesthetics Over Plot </h1></center>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_begin",
+          "id": "c_aop_begin",
+          "text": "Begin"
+        },
+        {
+          "goto": "n_aop_about",
+          "id": "c_aop_about",
+          "text": "About"
+        }
+      ],
+      "id": "n_aop_start_2",
+      "text": "> “In a world where interviews have not gotten you anywhere, you go on a quest to acquire a job through networking, but your potential bosses don't seem that typical and let's just say talking isn't your biggest skill.”"
+    },
+    {
+      "id": "n_aop_about",
+      "next": "n_aop_about_2",
+      "text": "<h1>About</h1>"
+    },
+    {
+      "id": "n_aop_about_2",
+      "next": "n_aop_about_3",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_about_3",
+      "next": "n_aop_about_4",
+      "text": "You read the About sections, great job."
+    },
+    {
+      "id": "n_aop_about_4",
+      "next": "n_aop_about_5",
+      "text": "An experiment on talking your away around interviews."
+    },
+    {
+      "id": "n_aop_about_5",
+      "next": "n_aop_about_6",
+      "text": "After losing your job as a well paid biologist, you have been living rather ... let’s say frugally. With the oppurtunity of getting invited to one of your buccaneer friend’s party/banquet (really though?), you are determined to get the next job. But your potential bosses involve a omniscent mind reading cactus, a really cool donkey, and a wall. How would you win the job?"
+    },
+    {
+      "id": "n_aop_about_6",
+      "next": "n_aop_about_7",
+      "text": "> Check out the Author's other projects on <a href=\"https://github.com/ronynn\">Github</a> or <a href=\"https://ronynn.github.io\">Homepage</a>."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_start",
+          "id": "c_aop_back_to_main_page",
+          "text": "Back to Main Page"
+        }
+      ],
+      "id": "n_aop_about_7",
+      "text": "You can unlock a secret fact behind the game's development if you choose the term \"AbaChan\" as your character's name."
+    },
+    {
+      "id": "n_aop_begin",
+      "next": "n_aop_begin_2",
+      "text": "<h2>Finding a direction</h2> </center>"
+    },
+    {
+      "id": "n_aop_begin_2",
+      "next": "n_aop_begin_3",
+      "text": "As a newly hired biologist, you had been living the dream, steady income, free lunch at work, the office car, what's not to like. Too bad you were fired about an year ago but none of your friends know that."
+    },
+    {
+      "id": "n_aop_begin_3",
+      "next": "n_aop_begin_4",
+      "text": "But based on your online research, you now know that the best jobs are acquired through networking. Upset at your choice of studying biology over computer science, you smack your computer mouse to the table only to continue reading and find out that the website is talking about networking between people."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_main_mission",
+          "id": "c_aop_main_mission",
+          "text": "Main Mission"
+        }
+      ],
+      "id": "n_aop_begin_4",
+      "text": "After finishing the marketing lingo essay you realize that the weekend party you were invited to might just come in handy for a new job, ofcourse your experience as a biologist might not be that useful for each offer you get, but for that you just need to talk your way through to prove yourself worthy, or in interviewee lingo ...try to make them prove their worth to you."
+    },
+    {
+      "id": "n_aop_main_mission",
+      "next": "n_aop_main_mission_2",
+      "text": "<h1>Chapter 1</h1>"
+    },
+    {
+      "id": "n_aop_main_mission_2",
+      "next": "n_aop_main_mission_3",
+      "text": "> Talk to people at the party and get job offers."
+    },
+    {
+      "id": "n_aop_main_mission_3",
+      "next": "n_aop_main_mission_4",
+      "text": "You have been unemployed for over a year, and your savings are running low. You have applied to hundreds of jobs, but none of them have called you back. You are desperate for a chance to prove yourself."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step1",
+          "id": "c_aop_step1",
+          "text": "Step1"
+        }
+      ],
+      "id": "n_aop_main_mission_4",
+      "text": "You pack all your belongings and change in a pouch, hoping that this journey will be worth it. You don’t know what awaits you, but you are ready to face anything. Well, almost anything."
+    },
+    {
+      "id": "n_aop_step1",
+      "next": "n_aop_step1_2",
+      "text": "<h2>Step - 1: Dress to impress </h2>"
+    },
+    {
+      "id": "n_aop_step1_2",
+      "next": "n_aop_step1_3",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_step1_3",
+      "next": "n_aop_step1_4",
+      "text": ": It's spring outside but you look like a professional. (You successfully convinced a homeless person to give you their clothes to achieve nirvana through good karma)"
+    },
+    {
+      "id": "n_aop_step1_4",
+      "next": "n_aop_step1_5",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_step1_5",
+      "next": "n_aop_step1_6",
+      "text": ": No doubts about it, you were born a professional and don't worry about overworking yourself or living till retirement (You bought it with your hard earned bonus money which you got by taking credit for your coworker's work when he was on leave)"
+    },
+    {
+      "id": "n_aop_step1_6",
+      "next": "n_aop_step1_7",
+      "text": "3."
+    },
+    {
+      "id": "n_aop_step1_7",
+      "next": "n_aop_step1_8",
+      "text": ": You are a working professional and are here just to relax, overdressing might just raise eyes (your everyday wear, you managed to exchange your torn tshirt for a new one after tricking the shopkeeper to believe you bought it last month)"
+    },
+    {
+      "id": "n_aop_step1_8",
+      "next": "n_aop_step1_9",
+      "text": "4."
+    },
+    {
+      "id": "n_aop_step1_9",
+      "next": "n_aop_step1_10",
+      "text": ": As a biologist, you are aware of all the germs that people keep spreading around and you are not taking any chances. (you already had it from when you stole it from your high school bully)"
+    },
+    {
+      "id": "n_aop_step1_10",
+      "next": "n_aop_step1_11",
+      "text": "5."
+    },
+    {
+      "choices": [
+        {
+          "effects": [
+            {
+              "type": "set_text",
+              "value": "long overcoat",
+              "variable": "dress"
+            }
+          ],
+          "goto": "n_aop_step2",
+          "id": "c_aop_long_overcoat_and_a",
+          "text": "Long overcoat and a muffler"
+        },
+        {
+          "effects": [
+            {
+              "type": "set_text",
+              "value": "suit",
+              "variable": "dress"
+            }
+          ],
+          "goto": "n_aop_step2",
+          "id": "c_aop_suit",
+          "text": "Suit"
+        },
+        {
+          "effects": [
+            {
+              "type": "set_text",
+              "value": "tshirt",
+              "variable": "dress"
+            }
+          ],
+          "goto": "n_aop_step2",
+          "id": "c_aop_t_shirt_and_jeans",
+          "text": "T-shirt and jeans"
+        },
+        {
+          "effects": [
+            {
+              "type": "set_text",
+              "value": "labcoat",
+              "variable": "dress"
+            }
+          ],
+          "goto": "n_aop_step2",
+          "id": "c_aop_lab_coat",
+          "text": "Lab coat"
+        },
+        {
+          "effects": [
+            {
+              "type": "set_text",
+              "value": "cardboard-box",
+              "variable": "dress"
+            }
+          ],
+          "goto": "n_aop_step2",
+          "id": "c_aop_cardboard_box",
+          "text": "Cardboard box"
+        }
+      ],
+      "id": "n_aop_step1_11",
+      "text": ": Durable, reliable, cheap and affordable, certainly leaves an impression on everyone you meet. (You break apart your house that kept you warm after you ran out of rent money 2 months ago)"
+    },
+    {
+      "id": "n_aop_step2",
+      "next": "n_aop_step2_2",
+      "text": "<h2>Step - 2: Reading </h2>"
+    },
+    {
+      "id": "n_aop_step2_2",
+      "next": "n_aop_step2_3",
+      "text": "Your friend is a buccaneer and must therefore be friends with people with a business background more likely established in a port city. Based on your knowledge, you need to read up on as many things as possible that might be useful for your <s>meetings</s> chit-chats with the potential bosses. However reading on too many themes will just mess up your ideas so just pick one."
+    },
+    {
+      "id": "n_aop_step2_3",
+      "next": "n_aop_step2_4",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_step2_4",
+      "next": "n_aop_step2_5",
+      "text": ": Might be useful to give off the impression that you spend your time honing your skills and are not in need of a master."
+    },
+    {
+      "id": "n_aop_step2_5",
+      "next": "n_aop_step2_6",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_step2_6",
+      "next": "n_aop_step2_7",
+      "text": ": Talk about networking while networking to network the network"
+    },
+    {
+      "id": "n_aop_step2_7",
+      "next": "n_aop_step2_8",
+      "text": "3."
+    },
+    {
+      "id": "n_aop_step2_8",
+      "next": "n_aop_step2_9",
+      "text": ": Business business, business is to business what business."
+    },
+    {
+      "id": "n_aop_step2_9",
+      "next": "n_aop_step2_10",
+      "text": "4."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step3",
+          "id": "c_aop_way_of_the_ronin",
+          "text": "Way of the ronin"
+        },
+        {
+          "goto": "n_aop_step3",
+          "id": "c_aop_how_to_gain_friends",
+          "text": "How to gain friends and influence people by Dale Carnegie"
+        },
+        {
+          "goto": "n_aop_step3",
+          "id": "c_aop_business_at_the_speed",
+          "text": "Business at the speed of thought by Bill Gates"
+        },
+        {
+          "goto": "n_aop_step3",
+          "id": "c_aop_molecular_biology_of_the",
+          "text": "Molecular Biology of the Gene"
+        }
+      ],
+      "id": "n_aop_step2_10",
+      "text": ": You are a biologist and only like your subject, of course you are not finding everything in the book to be brand new because you most definitely have studied this stuff in the past."
+    },
+    {
+      "id": "n_aop_step3",
+      "next": "n_aop_step3_2",
+      "text": "<h2>Step - 3: Breathing</h2>"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step4",
+          "id": "c_aop_step_4",
+          "text": "Step 4"
+        }
+      ],
+      "id": "n_aop_step3_2",
+      "text": "Just practice taking deep breaths and make sure not to get nervous when you are metting the <s>bosses</s> friends of your friend."
+    },
+    {
+      "id": "n_aop_step4",
+      "next": "n_aop_step4_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "the taxi-driver, yes you are",
+          "variable": "talking"
+        }
+      ],
+      "text": "<h2>Step - 4: Head first <s>Java</s> to the mission </h2>"
+    },
+    {
+      "id": "n_aop_step4_2",
+      "next": "n_aop_step4_3",
+      "text": "You raise your hand to call a taxi and as a taxi is about to stop you run away to the back alley after realizing you can't afford it."
+    },
+    {
+      "id": "n_aop_step4_3",
+      "next": "n_aop_step4_4",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step5",
+          "id": "c_aop_walk",
+          "text": "Walk"
+        },
+        {
+          "goto": "n_aop_step5",
+          "id": "c_aop_bus_ride",
+          "text": "Bus ride"
+        }
+      ],
+      "id": "n_aop_step4_4",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_step5",
+      "next": "n_aop_step5_2",
+      "text": "<h2> Step - 5: The iconic entry </h2>"
+    },
+    {
+      "id": "n_aop_step5_2",
+      "next": "n_aop_step5_3",
+      "showIf": {
+        "counter": "w",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "You decide to walk and exercise your body before the meeting, the scent of your sweat will only be helping you in marking territory"
+    },
+    {
+      "id": "n_aop_step5_3",
+      "next": "n_aop_step5_4",
+      "showIf": {
+        "of": {
+          "counter": "w",
+          "op": "==",
+          "type": "counter",
+          "value": 1
+        },
+        "type": "not"
+      },
+      "text": "You find a seat on the crowded bus and someone drops a packet of flour on your {dress}, you rub it off but it leaves a shadow."
+    },
+    {
+      "id": "n_aop_step5_4",
+      "next": "n_aop_step5_5",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "the guard",
+          "variable": "talking"
+        }
+      ],
+      "text": "You step through the gate only to be stopped by a guard"
+    },
+    {
+      "id": "n_aop_step5_5",
+      "next": "n_aop_step5_6",
+      "text": "The guard stares at your {dress} with a judgemental pose and you can see in his eyes ... that he is impressed!"
+    },
+    {
+      "id": "n_aop_step5_6",
+      "next": "n_aop_step5_7",
+      "text": "\"Invitation sir?\" the guard requests humbly."
+    },
+    {
+      "id": "n_aop_step5_7",
+      "next": "n_aop_step5_8",
+      "text": "\"Yes indeed\" you answer, you were indeed invited."
+    },
+    {
+      "id": "n_aop_step5_8",
+      "next": "n_aop_step5_9",
+      "text": "\"Will you show me your invitation Sir?\" the guard asks firmly, but with a British accent out of nowhere."
+    },
+    {
+      "id": "n_aop_step5_9",
+      "next": "n_aop_step5_10",
+      "text": "You were not given an invitation by your friend, at this moment you can't seem to recall the name of your friend, or what the party is about in the first place. But your bestie seems to have arrived just at the right moment - \" oh, ya you, what's your name again?\" he requests ..."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step42",
+          "id": "c_aop_announce",
+          "text": "Announce"
+        }
+      ],
+      "id": "n_aop_step5_10",
+      "text": "Eager ears wait for you to say your name ..."
+    },
+    {
+      "id": "n_aop_step42",
+      "next": "n_aop_step42_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "the buccaneer friend",
+          "variable": "talking"
+        }
+      ],
+      "text": "\"Ya dude, dudette, {password} whatever .. really glad you could make it here, nice <u> {dress} </u> by the way, why don't you go through the back entrance, you might even know some people there\" commands your friend."
+    },
+    {
+      "id": "n_aop_step42_2",
+      "next": "n_aop_step42_3",
+      "text": "Your world falls apart, the person you thought to be your best friend for giving you free vodka every week is asking you to go away."
+    },
+    {
+      "id": "n_aop_step42_3",
+      "next": "n_aop_step42_4",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_stand",
+          "id": "c_aop_stand_and_ask_to",
+          "text": "Stand and ask to be allowed to enter"
+        },
+        {
+          "goto": "n_aop_walk",
+          "id": "c_aop_walk_away",
+          "text": "Walk away"
+        }
+      ],
+      "id": "n_aop_step42_4",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_stand",
+      "next": "n_aop_stand_2",
+      "text": "Well it's just that your {dress} doesn't goes well with the rest of the aesthetics of the place, I really hope you don't mind be asking you to walk around."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step52",
+          "id": "c_aop_guess_it_s_time",
+          "text": "Guess it's time for Step 5 part 2"
+        }
+      ],
+      "id": "n_aop_stand_2",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_walk",
+      "next": "n_aop_walk_2",
+      "text": "\"Where are you going?, I said the back entrance is that way.\""
+    },
+    {
+      "id": "n_aop_walk_2",
+      "next": "n_aop_walk_3",
+      "text": "You realize you weren't asked to get out but to walk towards a different entrance, you hesitantly but joyfully walk around the venue to the back entrance. Today is the day, bothing can go wrong."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step52",
+          "id": "c_aop_guess_it_s_time_2",
+          "text": "Guess it's time for Step 5, part 2"
+        }
+      ],
+      "id": "n_aop_walk_3",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_step52",
+      "next": "n_aop_step52_2",
+      "text": "<h2>Step - 5 : The iconic entry, part 2</h2>"
+    },
+    {
+      "id": "n_aop_step52_2",
+      "next": "n_aop_step52_3",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "nobody",
+          "variable": "talking"
+        }
+      ],
+      "text": "A dilapidated gate, it smells terrible. You step on dog poop. You try to rub it away on the carpet nearby but you accidentally end up tearing your shoes."
+    },
+    {
+      "id": "n_aop_step52_3",
+      "next": "n_aop_step52_4",
+      "text": "Nobody's going to look at your shoes, you stop worrying about it."
+    },
+    {
+      "id": "n_aop_step52_4",
+      "next": "n_aop_step52_5",
+      "text": "You see a door leading to the main party. Time to make a proper entrance."
+    },
+    {
+      "id": "n_aop_step52_5",
+      "next": "n_aop_step52_6",
+      "text": "You suddenly rethink about what you are here to do. Your existensialism kicks in."
+    },
+    {
+      "id": "n_aop_step52_6",
+      "next": "n_aop_step52_7",
+      "text": "But you pat your back to get back in the flow. You are ready for this."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step53",
+          "id": "c_aop_optimistic_mode_activated",
+          "text": "Optimistic Mode Activated"
+        }
+      ],
+      "id": "n_aop_step52_7",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_step53",
+      "next": "n_aop_step53_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "a chicken eating guy",
+          "variable": "talking"
+        }
+      ],
+      "text": "<h2>Step - 5: The iconic entry, part 3, this time for sure </h2>"
+    },
+    {
+      "id": "n_aop_step53_2",
+      "next": "n_aop_step53_3",
+      "text": "You make your way through to the party, as lavish as a party can be. No wonder some of your neighbours were kept in this corner of the party, they are more focussed on the food than what they should be focussed on = \"The grind!\", you shout feeling how awkward it sounds when saying out loud."
+    },
+    {
+      "id": "n_aop_step53_3",
+      "next": "n_aop_step53_4",
+      "text": "You are here more networking and you know for sure that you are getting a job today."
+    },
+    {
+      "id": "n_aop_step53_4",
+      "next": "n_aop_step53_5",
+      "text": "\"But I don't have a computer\" some guy shouts at you while eating a chicken leg."
+    },
+    {
+      "id": "n_aop_step53_5",
+      "next": "n_aop_step53_6",
+      "text": "You shout at the guy \"Not computer networking, people networking that people do to get jobs\", The guy stares at you and says something to himself then answers - \"Well good luck with that\""
+    },
+    {
+      "id": "n_aop_step53_6",
+      "next": "n_aop_step53_7",
+      "text": "But in the meantime your eyes got a hold of the piece of chicken he was eating, \"nothing wrong with some refreshments before an interview\" you assure yourself."
+    },
+    {
+      "id": "n_aop_step53_7",
+      "next": "n_aop_step53_8",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_step54",
+          "id": "c_aop_eat_some_food",
+          "text": "Eat some food"
+        },
+        {
+          "goto": "n_aop_step54",
+          "id": "c_aop_no_your_diet_requires",
+          "text": "No, your diet requires intermittent fasting"
+        }
+      ],
+      "id": "n_aop_step53_8",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_step54",
+      "next": "n_aop_step54_2",
+      "showIf": {
+        "counter": "chicken",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_step54_2",
+      "next": "n_aop_step54_3",
+      "showIf": {
+        "counter": "chicken",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "Food is my first priority."
+    },
+    {
+      "id": "n_aop_step54_3",
+      "next": "n_aop_step54_4",
+      "showIf": {
+        "counter": "chicken",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "After you finish the feast and manage to sneak a few chicken legs in your pockets, it's time for the <s>interview</s> chit-chat."
+    },
+    {
+      "id": "n_aop_step54_4",
+      "next": "n_aop_step54_5",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "nobody",
+          "variable": "talking"
+        }
+      ],
+      "text": "Your acute senses enable you to find the targets you need to cover. One at a time."
+    },
+    {
+      "id": "n_aop_step54_5",
+      "next": "n_aop_step54_6",
+      "text": "The trick to finding who is the most important person in a party is to observe who surrounds themselves with the most amount of people. It's simple math. \"There could be nothing more simpler than that\" you shout while doubting your grammar yet nobody takes a notice of you."
+    },
+    {
+      "id": "n_aop_step54_6",
+      "next": "n_aop_step54_7",
+      "text": "Seems you have to go talk to people now. You social anxiety kicks in. What do you do?"
+    },
+    {
+      "id": "n_aop_step54_7",
+      "next": "n_aop_step54_8",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_leave",
+          "id": "c_aop_leave_what_else",
+          "text": "Leave, what else?"
+        },
+        {
+          "goto": "n_aop_spider",
+          "id": "c_aop_activate_spider_sense",
+          "text": "Activate Spider Sense"
+        }
+      ],
+      "id": "n_aop_step54_8",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_leave",
+      "next": "n_aop_leave_2",
+      "text": "<h2>GAME OVER </h2>"
+    },
+    {
+      "id": "n_aop_leave_2",
+      "next": "n_aop_leave_3",
+      "text": "You chose the road <s>not</s> taken mostly by anxious people and lost to your anxiety. \"Stable life is better\" you say to yourself."
+    },
+    {
+      "id": "n_aop_leave_3",
+      "next": "n_aop_leave_4",
+      "text": "As for the game, you can restart from the sidebar or here."
+    },
+    {
+      "id": "n_aop_leave_4",
+      "isEnd": true,
+      "text": "\"Or I could just hit the back button\" you whisper to yourself, loudly."
+    },
+    {
+      "id": "n_aop_spider",
+      "next": "n_aop_spider_2",
+      "text": "You grab a spider from under a table and flick it upwards, the wind blows it towards your right, \"that's where I have to go\" you declare."
+    },
+    {
+      "id": "n_aop_spider_2",
+      "next": "n_aop_spider_3",
+      "text": "\"Spider Sense, we used to call it back in my hometown\" you take pride in your accomplishment."
+    },
+    {
+      "id": "n_aop_spider_3",
+      "next": "n_aop_spider_4",
+      "text": "You see a crowd centred around a large table, as you push through the ground you realize that the crowd is surrounding ... a <u>Really Cool Looking Donkey </u>!"
+    },
+    {
+      "id": "n_aop_spider_4",
+      "next": "n_aop_spider_5",
+      "text": "\"What?\" you whisper to yourself, but then you notice that the donkey is wearing glasses."
+    },
+    {
+      "id": "n_aop_spider_5",
+      "next": "n_aop_spider_6",
+      "text": "Well, one should never judge others by appearances, but you decide that the donkey must be cool enough that it's wearing glasses."
+    },
+    {
+      "id": "n_aop_spider_6",
+      "next": "n_aop_spider_7",
+      "text": "He is surrounded by a group of admirers who are laughing. probably at it's every word, if it talks. You decide to approach it and join the conversation."
+    },
+    {
+      "id": "n_aop_spider_7",
+      "next": "n_aop_spider_8",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_spider_8",
+      "next": "n_aop_spider_9",
+      "text": "2."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_polite",
+          "id": "c_aop_introduce_yourself_politely",
+          "text": "Introduce yourself politely."
+        },
+        {
+          "goto": "n_aop_witty",
+          "id": "c_aop_make_a_witty_comment",
+          "text": "Make a witty comment about it's sunglasses."
+        },
+        {
+          "goto": "n_aop_biology",
+          "id": "c_aop_ask_him_if_he",
+          "text": "Ask him if he knows anything about biology."
+        }
+      ],
+      "id": "n_aop_spider_9",
+      "text": "3."
+    },
+    {
+      "id": "n_aop_polite",
+      "next": "n_aop_polite_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "the donkey",
+          "variable": "talking"
+        }
+      ],
+      "text": "You clear your throat and say: “Excuse me, sir. I’m sorry to interrupt, but I couldn’t help noticing your presence. You seem to be a very influential person. May I ask your name and what you do?”"
+    },
+    {
+      "id": "n_aop_polite_2",
+      "next": "n_aop_polite_3",
+      "showIf": {
+        "counter": "witty",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "The donkey turns his head towards you and gives you a smug smile. For a moment you wonder if the donkey can actually talk or not or you'll have to pretend you tried to get everyone to laugh and run out of the crowd."
+    },
+    {
+      "id": "n_aop_polite_3",
+      "next": "n_aop_polite_4",
+      "text": "To your relief he starts speaking: “Well, well, well. Who do we have here? A new face in the crowd. And a very polite one, too. I like that. My name is Don Key, and I specialize in producing high-quality bananas for the global market. And you are?”"
+    },
+    {
+      "id": "n_aop_polite_4",
+      "next": "n_aop_polite_5",
+      "text": "You feel a surge of hope as you hear his name. Bananas are related to biology, right? Maybe you can use your expertise to impress him."
+    },
+    {
+      "id": "n_aop_polite_5",
+      "next": "n_aop_polite_6",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_biologist",
+          "id": "c_aop_tell_him_your_name",
+          "text": "Tell him your name and that you are a biologist."
+        },
+        {
+          "goto": "n_aop_praise",
+          "id": "c_aop_tell_him_your_name_2",
+          "text": "Tell him your name and that you are a fan of his work. Ofcourse you'll have to make up stuff as you go."
+        }
+      ],
+      "id": "n_aop_polite_6",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_witty",
+      "next": "n_aop_witty_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "the donkey",
+          "variable": "talking"
+        }
+      ],
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_witty_2",
+      "next": "n_aop_witty_3",
+      "text": "You insult a Donkey!"
+    },
+    {
+      "id": "n_aop_witty_3",
+      "next": "n_aop_witty_4",
+      "text": "You walk up to the donkey and say: “Hey, nice sunglasses. Are they prescription or just for show?”"
+    },
+    {
+      "id": "n_aop_witty_4",
+      "next": "n_aop_witty_5",
+      "text": "The donkey looks at you with annoyance and says: “What did you say? Do you have a problem with my sunglasses? They are not for show, they are for protection. Protection from the sun, from the dust, and from the haters. Do you know who I am?”"
+    },
+    {
+      "id": "n_aop_witty_5",
+      "next": "n_aop_witty_6",
+      "text": "You realize you may have offended him with your comment, but you try to play it cool."
+    },
+    {
+      "id": "n_aop_witty_6",
+      "next": "n_aop_witty_7",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_polite",
+          "id": "c_aop_apologize_and_ask_him",
+          "text": "Apologize and ask him who he is."
+        },
+        {
+          "goto": "n_aop_dontcare",
+          "id": "c_aop_say_you_don_t",
+          "text": "Say you don’t care who he is."
+        }
+      ],
+      "id": "n_aop_witty_7",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_biology",
+      "next": "n_aop_biology_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Mr Don Key",
+          "variable": "talking"
+        }
+      ],
+      "text": "You approach the donkey and say: “Hello there. I couldn’t help overhearing your conversation. You seem to know a lot about business, but do you know anything about biology?”"
+    },
+    {
+      "id": "n_aop_biology_2",
+      "next": "n_aop_biology_3",
+      "text": "The donkey raises an eyebrow and says: “Biology? What’s that? Some kind of science thing?”, the donkey appears to be holding back a smirk."
+    },
+    {
+      "id": "n_aop_biology_3",
+      "next": "n_aop_biology_4",
+      "text": "You nod and say: “Yes, it’s the study of life and living organisms. It’s very fascinating and important for many fields, such as medicine, agriculture, ecology, and so on.”"
+    },
+    {
+      "id": "n_aop_biology_4",
+      "next": "n_aop_biology_5",
+      "text": "The donkey snorts and says: “Sounds boring. And irrelevant. What does biology have to do with bananas?”"
+    },
+    {
+      "id": "n_aop_biology_5",
+      "next": "n_aop_biology_6",
+      "text": "You feel offended by his ignorance and arrogance, but you try to steer the conversation."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_praise",
+          "id": "c_aop_tell_that_you_are",
+          "text": "Tell that you are in reality a fan of his work."
+        }
+      ],
+      "id": "n_aop_biology_6",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_biologist",
+      "next": "n_aop_biologist_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Mr Don Key",
+          "variable": "talking"
+        }
+      ],
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_biologist_2",
+      "next": "n_aop_biologist_3",
+      "text": "Show Off."
+    },
+    {
+      "id": "n_aop_biologist_3",
+      "next": "n_aop_biologist_4",
+      "text": "You tell him your name and that you are a biologist. You hope he will be impressed by your credentials and your knowledge."
+    },
+    {
+      "id": "n_aop_biologist_4",
+      "next": "n_aop_biologist_5",
+      "text": "The donkey says: “A biologist, huh? That’s interesting. What kind of biology do you do?”"
+    },
+    {
+      "id": "n_aop_biologist_5",
+      "next": "n_aop_biologist_6",
+      "text": "You think for a moment and say: “Well, I used to work on a project that involved genetic engineering of plants. We were trying to create new varieties of crops that could resist pests and diseases, and increase yield and quality.”"
+    },
+    {
+      "id": "n_aop_biologist_6",
+      "next": "n_aop_biologist_7",
+      "showIf": {
+        "counter": "book",
+        "op": "==",
+        "type": "counter",
+        "value": 4
+      },
+      "text": "You took it out straight from the book you were reading yesterday"
+    },
+    {
+      "id": "n_aop_biologist_7",
+      "next": "n_aop_biologist_8",
+      "text": "The donkey says: “Really? That sounds impressive. And did you succeed?”"
+    },
+    {
+      "id": "n_aop_biologist_8",
+      "next": "n_aop_biologist_9",
+      "text": "You hesitate and say: “Well, not exactly. There were some… complications. The plants became too aggressive and started to attack me. At night they'd shout my name. It was a disaster.”"
+    },
+    {
+      "id": "n_aop_biologist_9",
+      "next": "n_aop_biologist_10",
+      "showIf": {
+        "counter": "book",
+        "op": "==",
+        "type": "counter",
+        "value": 2
+      },
+      "text": "You realise you should have read the \"How to win friends\" book much before."
+    },
+    {
+      "id": "n_aop_biologist_10",
+      "next": "n_aop_biologist_11",
+      "text": "The donkey says: “Wow. That’s unfortunate. And what do you do now?”"
+    },
+    {
+      "id": "n_aop_biologist_11",
+      "next": "n_aop_biologist_12",
+      "text": "You feel embarrassed and say: “Well, nothing much. I’m… between jobs at the moment.”"
+    },
+    {
+      "id": "n_aop_biologist_12",
+      "next": "n_aop_biologist_13",
+      "showIf": {
+        "counter": "book",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "\"Like a jobless Samurai\" you shout at the top of your lungs, you read a big book yesterday and everyone should know that."
+    },
+    {
+      "id": "n_aop_biologist_13",
+      "next": "n_aop_biologist_14",
+      "text": "The donkey says: “I see. Well, that’s too bad. Maybe you should try something else. Something more… profitable.”"
+    },
+    {
+      "id": "n_aop_biologist_14",
+      "next": "n_aop_biologist_15",
+      "showIf": {
+        "counter": "book",
+        "op": "==",
+        "type": "counter",
+        "value": 3
+      },
+      "text": "The word \"business\" starts flying around your head, reading the book might have been useful, might have been, probably yes."
+    },
+    {
+      "id": "n_aop_biologist_15",
+      "next": "n_aop_biologist_16",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_praise",
+          "id": "c_aop_ask_him_if_he_2",
+          "text": "Ask him if he has any openings at his company. But be indirect in the form of praise."
+        },
+        {
+          "goto": "n_aop_advice",
+          "id": "c_aop_ask_him_for_some",
+          "text": "Ask him for some advice on how to succeed in business."
+        }
+      ],
+      "id": "n_aop_biologist_16",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_praise",
+      "next": "n_aop_praise_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "Mr Don Key",
+          "variable": "talking"
+        }
+      ],
+      "text": "You agree with him and praise his company. You say: “Yes, of course. Bananas are very much related to biology. And your company is amazing. I’ve heard so many good things about it. You must be very proud of your achievements.”"
+    },
+    {
+      "id": "n_aop_praise_2",
+      "next": "n_aop_praise_3",
+      "text": "The donkey smiles and says: “Thank you. That’s very kind of you to say. I am proud of my achievements. I’ve worked hard to get where I am today. It wasn’t easy, you know. But I never gave up on my dreams. And look at me now. I’m the king of the bananas.”"
+    },
+    {
+      "id": "n_aop_praise_3",
+      "next": "n_aop_praise_4",
+      "text": "You nod and say: “Wow. That’s very inspiring. You are an example for all of us.”"
+    },
+    {
+      "id": "n_aop_praise_4",
+      "next": "n_aop_praise_5",
+      "text": "The donkey says: “Thank you. You are too kind. You know, you seem like a nice person. And a smart one, too. You have potential, my friend. Potential to do great things.”"
+    },
+    {
+      "id": "n_aop_praise_5",
+      "next": "n_aop_praise_6",
+      "text": "You feel a surge of excitement and say: “Really? Do you think so?”"
+    },
+    {
+      "id": "n_aop_praise_6",
+      "next": "n_aop_praise_7",
+      "text": "The donkey says: “Yes, I do. In fact, I have a proposition for you. How would you like to work for me?”"
+    },
+    {
+      "id": "n_aop_praise_7",
+      "next": "n_aop_praise_8",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_praise_8",
+      "next": "n_aop_praise_9",
+      "text": "2."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_accept",
+          "id": "c_aop_accept_his_offer",
+          "text": "Accept his offer."
+        },
+        {
+          "goto": "n_aop_decline",
+          "id": "c_aop_decline_his_offer",
+          "text": "Decline his offer."
+        },
+        {
+          "goto": "n_aop_work",
+          "id": "c_aop_ask_him_what_kind",
+          "text": "Ask him what kind of work he has in mind."
+        }
+      ],
+      "id": "n_aop_praise_9",
+      "text": "3."
+    },
+    {
+      "id": "n_aop_accept",
+      "next": "n_aop_accept_2",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_accept_2",
+      "next": "n_aop_accept_3",
+      "text": "My Boss is a Donkey!"
+    },
+    {
+      "id": "n_aop_accept_3",
+      "next": "n_aop_accept_4",
+      "text": "You accept his offer without hesitation. You say: “Yes, yes, yes! I would love to work for you! Thank you so much for this opportunity! You won’t regret it, I promise!”"
+    },
+    {
+      "id": "n_aop_accept_4",
+      "next": "n_aop_accept_5",
+      "text": "The donkey says: “Excellent. I’m glad to hear that. You are now part of the family.”"
+    },
+    {
+      "id": "n_aop_accept_5",
+      "next": "n_aop_accept_6",
+      "text": "You feel overjoyed and say: “Thank you, thank you, thank you! This is the best day of my life!”"
+    },
+    {
+      "id": "n_aop_accept_6",
+      "next": "n_aop_accept_7",
+      "text": "The donkey says: “Don’t mention it. It’s my pleasure. Come on, let me introduce you to the rest of the team.”"
+    },
+    {
+      "id": "n_aop_accept_7",
+      "next": "n_aop_accept_8",
+      "text": "You have successfully impressed Mr Don Key and got hired as his new employee."
+    },
+    {
+      "id": "n_aop_accept_8",
+      "isEnd": true,
+      "text": "<h2>You win, the end.</h2>"
+    },
+    {
+      "id": "n_aop_decline",
+      "next": "n_aop_decline_2",
+      "text": "You decline his offer politely. You say: “Thank you for your offer, but I’m afraid I have to decline. I appreciate your kindness, but I have other plans for my future.”"
+    },
+    {
+      "id": "n_aop_decline_2",
+      "next": "n_aop_decline_3",
+      "text": "Based on your book reading, you took the gamble of increasing your importance by not accepting the offer at once. Ofcourse, things can go to any direction now."
+    },
+    {
+      "id": "n_aop_decline_3",
+      "next": "n_aop_decline_4",
+      "text": "The donkey says: “Oh, really? And what are those plans?”"
+    },
+    {
+      "id": "n_aop_decline_4",
+      "next": "n_aop_decline_5",
+      "text": "You say: “Well, I’m actually looking for something that would make a big impact on fruit production.” Even in you declining answer you are trying to impress him."
+    },
+    {
+      "id": "n_aop_decline_5",
+      "next": "n_aop_decline_6",
+      "text": "The donkey says: “Wow. That sounds impressive. And also very familiar.”"
+    },
+    {
+      "id": "n_aop_decline_6",
+      "next": "n_aop_decline_7",
+      "text": "You say: “Oh, really? Why is that?”"
+    },
+    {
+      "id": "n_aop_decline_7",
+      "next": "n_aop_decline_8",
+      "text": "The donkey says: “Because that’s exactly what I do, didn't you hear anything I said?.”"
+    },
+    {
+      "id": "n_aop_decline_8",
+      "next": "n_aop_decline_9",
+      "text": "You say: “Oh, no!”"
+    },
+    {
+      "id": "n_aop_decline_9",
+      "next": "n_aop_decline_10",
+      "text": "The donkey says: “I don't know what kind of game you are playing but if you want to talk about the offer again I'm here.”"
+    },
+    {
+      "id": "n_aop_decline_10",
+      "next": "n_aop_decline_11",
+      "text": "You say: “I see.”"
+    },
+    {
+      "id": "n_aop_decline_11",
+      "next": "n_aop_decline_12",
+      "text": "The donkey says: “Well, it’s your choice. But I think you’re making a mistake. You could have a bright future with me.”"
+    },
+    {
+      "id": "n_aop_decline_12",
+      "next": "n_aop_decline_13",
+      "text": "You say: “Thank you, but no thank you.”"
+    },
+    {
+      "id": "n_aop_decline_13",
+      "next": "n_aop_decline_14",
+      "text": "The donkey says: “Suit yourself.”"
+    },
+    {
+      "id": "n_aop_decline_14",
+      "next": "n_aop_decline_15",
+      "text": "He turns away from you and resumes his conversation with his admirers."
+    },
+    {
+      "id": "n_aop_decline_15",
+      "next": "n_aop_decline_16",
+      "text": "You have still impressed the donkey, probably and probably haven't yet missed your chance to get hired."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_wall",
+          "id": "c_aop_looking_for_the_next",
+          "text": "Looking for the next boss"
+        }
+      ],
+      "id": "n_aop_decline_16",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_work",
+      "next": "n_aop_work_2",
+      "text": "You ask him what kind of work he has in mind. You say: “That sounds tempting, but what exactly would I be doing for you?”"
+    },
+    {
+      "id": "n_aop_work_2",
+      "next": "n_aop_work_3",
+      "text": "The donkey says: “Well, that depends on your skills and interests. But basically, anything that involves bananas.”"
+    },
+    {
+      "id": "n_aop_work_3",
+      "next": "n_aop_work_4",
+      "text": "You say: “Anything that involves bananas?”"
+    },
+    {
+      "id": "n_aop_work_4",
+      "next": "n_aop_work_5",
+      "text": "The donkey says: “Yes, anything that involves bananas. Growing them, harvesting them, transporting them, selling them, eating them, etc etc etc.”"
+    },
+    {
+      "id": "n_aop_work_5",
+      "next": "n_aop_work_6",
+      "text": "You say: “I see.”"
+    },
+    {
+      "id": "n_aop_work_6",
+      "next": "n_aop_work_7",
+      "text": "The donkey says: “So, what do you think? Are you interested?”"
+    },
+    {
+      "id": "n_aop_work_7",
+      "next": "n_aop_work_8",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_accept",
+          "id": "c_aop_say_yes",
+          "text": "Say yes."
+        },
+        {
+          "goto": "n_aop_decline",
+          "id": "c_aop_say_no",
+          "text": "Say no."
+        }
+      ],
+      "id": "n_aop_work_8",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_dontcare",
+      "next": "n_aop_dontcare_2",
+      "text": "You say you don’t care who he is. You say: “No, I don’t have a problem with your sunglasses. I just think they’re ridiculous. And I don’t care who you are. You’re just a donkey with a fancy suit and a bunch of followers. You’re nothing special.”"
+    },
+    {
+      "id": "n_aop_dontcare_2",
+      "next": "n_aop_dontcare_3",
+      "text": "The donkey says: “Oh, really? Is that so? Well, let me tell you something, my friend. We produce high-quality bananas for the global market. And I’m not just a CEO...\""
+    },
+    {
+      "id": "n_aop_dontcare_3",
+      "next": "n_aop_dontcare_4",
+      "text": "You start to wonder whether he'll say \"I'm also a donkey\"."
+    },
+    {
+      "id": "n_aop_dontcare_4",
+      "next": "n_aop_dontcare_5",
+      "text": "He continues \"I’m a visionary. A leader. A legend. I have more money, power, and fame than you can ever dream of. And you know what else? I’m cool. Very cool. Cooler than you’ll ever be.”"
+    },
+    {
+      "id": "n_aop_dontcare_5",
+      "next": "n_aop_dontcare_6",
+      "text": "You say: “Cooler than me? How do you figure that?”"
+    },
+    {
+      "id": "n_aop_dontcare_6",
+      "next": "n_aop_dontcare_7",
+      "text": "The donkey says: “Well, for starters, I have sunglasses. Sunglasses are cool. They make you look mysterious and confident. And they protect your eyes from the sun, the dust, and the haters. Do you have sunglasses?”"
+    },
+    {
+      "id": "n_aop_dontcare_7",
+      "next": "n_aop_dontcare_8",
+      "text": "You say: “No, I don’t.” You remember a pair of glasses you found in a park but it then later fell from your pockets and you stepped on them."
+    },
+    {
+      "id": "n_aop_dontcare_8",
+      "next": "n_aop_dontcare_9",
+      "text": "The donkey says: “Exactly. You don’t have sunglasses. That makes you uncool, loser. And losers are irrelevant.”"
+    },
+    {
+      "id": "n_aop_dontcare_9",
+      "next": "n_aop_dontcare_10",
+      "text": "You say: “Wow. That’s quite a logic you have there.”"
+    },
+    {
+      "id": "n_aop_dontcare_10",
+      "next": "n_aop_dontcare_11",
+      "text": "The donkey says: “Thank you. I pride myself on my logic. It’s one of the reasons why I’m so successful.”"
+    },
+    {
+      "id": "n_aop_dontcare_11",
+      "next": "n_aop_dontcare_12",
+      "text": "You say: “I see.”"
+    },
+    {
+      "id": "n_aop_dontcare_12",
+      "next": "n_aop_dontcare_13",
+      "text": "The donkey says: “So, now that you know who I am and what I do, do you still not care?”"
+    },
+    {
+      "id": "n_aop_dontcare_13",
+      "next": "n_aop_dontcare_14",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_apologize",
+          "id": "c_aop_just_walk_away",
+          "text": "Just walk away"
+        },
+        {
+          "goto": "n_aop_apologize",
+          "id": "c_aop_apologize",
+          "text": "Apologize"
+        }
+      ],
+      "id": "n_aop_dontcare_14",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_apologize",
+      "next": "n_aop_apologize_2",
+      "showIf": {
+        "counter": "dignity",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "\"Yes, know where you belong\" the donkey shouts. You get escorted outside the party."
+    },
+    {
+      "id": "n_aop_apologize_2",
+      "next": "n_aop_apologize_3",
+      "showIf": {
+        "counter": "dignity",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "<h1>The End, You lost</h1>"
+    },
+    {
+      "id": "n_aop_apologize_3",
+      "next": "n_aop_apologize_4",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "dignity",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "dignity",
+            "op": "==",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "You realize whether or not you apologized, it doesn't matter anymore, you are not getting hired here. You walk away. It almost feels like two guards were running towards this table but you prefer not to look back."
+    },
+    {
+      "id": "n_aop_apologize_4",
+      "next": "n_aop_apologize_5",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "dignity",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "dignity",
+            "op": "==",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "As you walk around the room, you notice a group of people surrounding a wall. Time to see the"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_wall",
+          "id": "c_aop_wall",
+          "showIf": {
+            "of": [
+              {
+                "of": {
+                  "counter": "dignity",
+                  "op": "==",
+                  "type": "counter",
+                  "value": 0
+                },
+                "type": "not"
+              },
+              {
+                "counter": "dignity",
+                "op": "==",
+                "type": "counter",
+                "value": 1
+              }
+            ],
+            "type": "all"
+          },
+          "text": "wall"
+        }
+      ],
+      "id": "n_aop_apologize_5",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "dignity",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "dignity",
+            "op": "==",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "for yourself."
+    },
+    {
+      "id": "n_aop_advice",
+      "next": "n_aop_advice_2",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_advice_2",
+      "next": "n_aop_advice_3",
+      "text": "You take a donkey's advice."
+    },
+    {
+      "id": "n_aop_advice_3",
+      "next": "n_aop_advice_4",
+      "text": "You ask him for some advice on how to succeed in business. You say: “You seem to be very successful and knowledgeable. Do you have any tips or tricks on how to make it in the business world?”"
+    },
+    {
+      "id": "n_aop_advice_4",
+      "next": "n_aop_advice_5",
+      "text": "The donkey says: “Tips or tricks? Hmm, let me think. Well, I guess there are a few things that helped me along the way. For example, always be confident. Confidence is key. If you don’t believe in yourself, no one else will. And if you don’t believe in your product, no one else will buy it. So always act like you know what you’re doing, even if you don’t. Like that time I sold a bunch of rotten bananas to a zoo by convincing them they were exotic delicacies from Africa. They never suspected a thing.”"
+    },
+    {
+      "id": "n_aop_advice_5",
+      "next": "n_aop_advice_6",
+      "text": "You say: “I see. That makes sense.” You try not to laugh at his absurd example."
+    },
+    {
+      "id": "n_aop_advice_6",
+      "next": "n_aop_advice_7",
+      "text": "The donkey says: “Another thing is to be persistent. Persistence pays off. Don’t give up on your goals, no matter how hard they seem. Keep trying, keep learning, keep improving. Eventually, you’ll get there. And if you don’t, at least you’ll have fun along the way. Like that time I tried to break the world record for eating the most bananas in one sitting. I didn’t make it, but I had a blast.”"
+    },
+    {
+      "id": "n_aop_advice_7",
+      "next": "n_aop_advice_8",
+      "text": "You say: “I see. That’s very inspiring.” You try not to gag at his disgusting example."
+    },
+    {
+      "id": "n_aop_advice_8",
+      "next": "n_aop_advice_9",
+      "text": "The donkey says: “And one more thing is to be cool. Coolness is crucial. Cool people attract other cool people. And cool people have more opportunities, more connections, more influence. And more bananas. So always be cool, my friend. And if you’re not cool, fake it till you make it. Like that time I wore sunglasses to a meeting with a potential investor. He was so impressed by my style and attitude that he gave me a million dollars on the spot.”"
+    },
+    {
+      "id": "n_aop_advice_9",
+      "next": "n_aop_advice_10",
+      "text": "You say: “I see. That’s very helpful.” You try not to roll your eyes at his ridiculous example."
+    },
+    {
+      "id": "n_aop_advice_10",
+      "next": "n_aop_advice_11",
+      "text": "The donkey says: “You’re welcome. I’m glad to share my wisdom with you. You seem like a nice person. And a smart one, too. You have potential, my friend. Potential to do great things.”"
+    },
+    {
+      "id": "n_aop_advice_11",
+      "next": "n_aop_advice_12",
+      "text": "You feel a spark of hope and say: “Really? Do you think so?”"
+    },
+    {
+      "id": "n_aop_advice_12",
+      "next": "n_aop_advice_13",
+      "text": "The donkey says: “Yes, I do. In fact, I have a proposition for you. How would you like to work for me?”"
+    },
+    {
+      "id": "n_aop_advice_13",
+      "next": "n_aop_advice_14",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_advice_14",
+      "next": "n_aop_advice_15",
+      "text": "2."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_accept",
+          "id": "c_aop_accept_his_offer_2",
+          "text": "Accept his offer."
+        },
+        {
+          "goto": "n_aop_decline",
+          "id": "c_aop_decline_his_offer_2",
+          "text": "Decline his offer."
+        },
+        {
+          "goto": "n_aop_work",
+          "id": "c_aop_ask_him_what_kind_2",
+          "text": "Ask him what kind of work he has in mind."
+        }
+      ],
+      "id": "n_aop_advice_15",
+      "text": "3."
+    },
+    {
+      "id": "n_aop_wall",
+      "next": "n_aop_wall_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "an announcer",
+          "variable": "talking"
+        }
+      ],
+      "text": "<h1>Chapter 2</h1>"
+    },
+    {
+      "id": "n_aop_wall_2",
+      "next": "n_aop_wall_3",
+      "text": "Will {password} get back to the donkey for a job offer, what mystery hides behind, on, or in the wall? and what was that omniscent cactus on the game description? what does omniscence mean? and what's going to happen to this buccaneer friend?"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_chapter2",
+          "id": "c_aop_here_we_go",
+          "text": "Here we go!"
+        }
+      ],
+      "id": "n_aop_wall_3",
+      "text": "Find out on the next installment of \"Aesthetics Over Plot\"."
+    },
+    {
+      "id": "n_aop_chapter2",
+      "next": "n_aop_chapter2_2",
+      "onEnter": [
+        {
+          "type": "set_text",
+          "value": "a wall",
+          "variable": "talking"
+        }
+      ],
+      "text": "The crowd disperses as you make your way through. \"The {dress} is doing it's job just right\" you say to yourself."
+    },
+    {
+      "id": "n_aop_chapter2_2",
+      "next": "n_aop_chapter2_3",
+      "text": "They crowd seems to be very interested in something on the wall. You wonder if it is some kind of art or technology that could be a business opportunity. You decide to join the group and see what they are talking about."
+    },
+    {
+      "id": "n_aop_chapter2_3",
+      "next": "n_aop_chapter2_4",
+      "text": "You squeeze your way through the crowd and approach the wall. You see nothing but a plain white wall with a few paintings on it. You are confused. \"How could this be a business owner?, well time sure is changing fast\"you say to yourself. You decide to act as if you know what you are doing and start talking to the wall."
+    },
+    {
+      "id": "n_aop_chapter2_4",
+      "next": "n_aop_chapter2_5",
+      "text": "\"Hello, Mr. Wall. I'm very impressed by your work. You have a very unique style and vision. I'm a biologist by profession and I have some ideas that could benefit your business. For example, have you considered ...\""
+    },
+    {
+      "id": "n_aop_chapter2_5",
+      "next": "n_aop_chapter2_6",
+      "text": "You go on and on, hoping that something will hear you and be impressed by your pitch, even if someone is standing at the other side of this wall, your voice was sufficiently loud enough. You don't notice that the people around you are staring at you with amusement and pity. They are not talking to the wall or someone behind it, they are talking to someone who is standing by the wall. Someone you know very well."
+    },
+    {
+      "id": "n_aop_chapter2_6",
+      "next": "n_aop_chapter2_7",
+      "text": "Your ex-boyfriend."
+    },
+    {
+      "id": "n_aop_chapter2_7",
+      "next": "n_aop_chapter2_8",
+      "text": "He is holding a glass of champagne with a smile on his face that says he is enjoying your embarrassment."
+    },
+    {
+      "id": "n_aop_chapter2_8",
+      "next": "n_aop_chapter2_9",
+      "text": "He is the one you have to impress."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_oh_no",
+          "id": "c_aop_oh_no",
+          "text": "Oh No"
+        }
+      ],
+      "id": "n_aop_chapter2_9",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_oh_no",
+      "next": "n_aop_oh_no_2",
+      "text": "You stop talking when you realize your mistake. With a surge of shock, anger, regret, envy, you don't know what to say or do. \"Nice {dress}\", he says, \"same, thanks\" you answer while trying to think of cool replies."
+    },
+    {
+      "id": "n_aop_oh_no_2",
+      "next": "n_aop_oh_no_3",
+      "text": "\"Hello {password}. Fancy seeing you here\" he says in a sweet but sarcastic tone."
+    },
+    {
+      "id": "n_aop_oh_no_3",
+      "next": "n_aop_oh_no_4",
+      "text": "\"Hello ... I didn't know you were...this.\" You say in a lame attempt to sound casual while desperately trying to remember his name, \"should have revised my journal instead of that book\" you whisper in your breath."
+    },
+    {
+      "id": "n_aop_oh_no_4",
+      "next": "n_aop_oh_no_5",
+      "text": "\"Oh, this? This is nothing. Just a little hobby of mine. I started my own company after we broke up. You know, because I was bored and had nothing else to do\" he says with a smirk."
+    },
+    {
+      "id": "n_aop_oh_no_5",
+      "next": "n_aop_oh_no_6",
+      "text": "\"What kind of company?\" You ask, trying to hide your curiosity."
+    },
+    {
+      "id": "n_aop_oh_no_6",
+      "next": "n_aop_oh_no_7",
+      "text": "\"Oh, just a little biotech company that specializes in creating custom organisms for various purposes. Nothing too fancy\" he says casually."
+    },
+    {
+      "id": "n_aop_oh_no_7",
+      "next": "n_aop_oh_no_8",
+      "text": "\"Wow. That's...amazing.\" You say sincerely."
+    },
+    {
+      "id": "n_aop_oh_no_8",
+      "next": "n_aop_oh_no_9",
+      "text": "\"Thank you. I'm glad you think so.\" he says with a smile that doesn't reach his eyes."
+    },
+    {
+      "id": "n_aop_oh_no_9",
+      "next": "n_aop_oh_no_10",
+      "text": "You feel awkward and uncomfortable. You don't know how to continue this conversation. \"Did they make the cactus everyone is talking about\" you wonder."
+    },
+    {
+      "id": "n_aop_oh_no_10",
+      "next": "n_aop_oh_no_11",
+      "text": "You have to make a choice."
+    },
+    {
+      "id": "n_aop_oh_no_11",
+      "next": "n_aop_oh_no_12",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_apologized",
+          "id": "c_aop_apologize_for_breaking_up",
+          "text": "Apologize for breaking up with him."
+        },
+        {
+          "goto": "n_aop_ask",
+          "id": "c_aop_ask_him_for_a",
+          "text": "Ask him for a job."
+        }
+      ],
+      "id": "n_aop_oh_no_12",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_apologized",
+      "next": "n_aop_apologized_2",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_apologized_2",
+      "next": "n_aop_apologized_3",
+      "text": "Good at heart."
+    },
+    {
+      "id": "n_aop_apologized_3",
+      "next": "n_aop_apologized_4",
+      "text": "You decide to apologize for breaking up with him. You genuinely hope that he will forgive you."
+    },
+    {
+      "id": "n_aop_apologized_4",
+      "next": "n_aop_apologized_5",
+      "text": "\"Umm ... Jack ..., I'm sorry for what I did to you. I was wrong to break up with you. I was too focused on my work and I didn't appreciate you enough.\" You say trying to sound sincere."
+    },
+    {
+      "id": "n_aop_apologized_5",
+      "next": "n_aop_apologized_6",
+      "text": "He looks at you with surprise and then with indifference."
+    },
+    {
+      "id": "n_aop_apologized_6",
+      "next": "n_aop_apologized_7",
+      "text": "\"My name's not jack and is that all? Do you think I'll just forget how you dumped me over the phone? How you said I was holding you back from those trees you were working?\" he says furiously."
+    },
+    {
+      "id": "n_aop_apologized_7",
+      "next": "n_aop_apologized_8",
+      "text": "\"No, no, of course not. It was not me, it was those damn trees I was doing genetic experiments on that would occassionally call people and say super specific things.\" you realise the ridiculousness of this approach, \"I don't expect anything from you. I just wanted to tell you how I feel.\" You say desperately."
+    },
+    {
+      "id": "n_aop_apologized_8",
+      "next": "n_aop_apologized_9",
+      "text": "\"Well, guess what? I don't to see you here anymore, guards that this {dress} wearing filth outside\" he orders. \"Whats wrong with the suit?\" you ask, \"Nothing, just not quite in rhythm with this place\" he answers."
+    },
+    {
+      "id": "n_aop_apologized_9",
+      "next": "n_aop_apologized_10",
+      "text": "You are escorted out. You stay jobless."
+    },
+    {
+      "id": "n_aop_apologized_10",
+      "isEnd": true,
+      "text": "<h1>GAME OVER</h1>"
+    },
+    {
+      "id": "n_aop_ask",
+      "next": "n_aop_ask_2",
+      "text": "You decide to ask him for a job. You hope that he will be impressed by your skills and knowledge and maybe give you a chance to work with him."
+    },
+    {
+      "id": "n_aop_ask_2",
+      "next": "n_aop_ask_3",
+      "text": "“Umm... Sam..., I’m very interested in your company. I think I have the qualifications and experience to be a valuable asset to your team. Do you have any openings?” You ask politely but feel regretful but approaching this question straight."
+    },
+    {
+      "id": "n_aop_ask_3",
+      "next": "n_aop_ask_4",
+      "text": "He looks at you with amusement and then with pity."
+    },
+    {
+      "id": "n_aop_ask_4",
+      "next": "n_aop_ask_5",
+      "text": "“A job? A job? Is that what you want from me? Do you think I’ll just hire you? Do you think I’ll forget how you said I was boring and unambitious? How you said I had no future?” he says mockingly."
+    },
+    {
+      "id": "n_aop_ask_5",
+      "next": "n_aop_ask_6",
+      "text": "“No, no, I didn't say anything like that, what I said was that my experiments are more interesting than talking to people, not just you but to people in general and that people, not just you but people have no future as trees will reign supreme in the future.\" you feel proud for coming up with an answer that makes sense to you but it brings no response from him."
+    },
+    {
+      "id": "n_aop_ask_6",
+      "next": "n_aop_ask_7",
+      "text": "\"I just wanted to show you my interest and enthusiasm. I think your company is doing amazing things and I want to be a part of it.” You say earnestly."
+    },
+    {
+      "id": "n_aop_ask_7",
+      "next": "n_aop_ask_8",
+      "text": "\"Well, you were quite great at your job but you are also insane, why are you wearing this {dress}? Have you looked yourself in the mirror?\" he asks you."
+    },
+    {
+      "id": "n_aop_ask_8",
+      "next": "n_aop_ask_9",
+      "text": "1."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_next",
+          "id": "c_aop_mirrors_just_show_you",
+          "text": "Mirrors just show you what you want to see."
+        },
+        {
+          "goto": "n_aop_next",
+          "id": "c_aop_i_am_happy_with",
+          "text": "I am happy with what I'm wearing."
+        }
+      ],
+      "id": "n_aop_ask_9",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_next",
+      "next": "n_aop_next_2",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_next_2",
+      "next": "n_aop_next_3",
+      "text": "You have Self Respect!"
+    },
+    {
+      "id": "n_aop_next_3",
+      "next": "n_aop_next_4",
+      "text": "Jacob sighs for a second and answers \"Look I know you work diligently, but the only position I have available is not for a biologist, but for a P.A. I know you are in a bad position right now financially. Why don't you go talk to someone else in the party? It's not odd to utilise parties for networking but don't be so obvious, it's not a networking party\"."
+    },
+    {
+      "id": "n_aop_next_4",
+      "next": "n_aop_next_5",
+      "text": "Jacob's answer tells you he still cares for you. \"I will do that, Jacob, thanks\" you smile. \"I'm not Jacob\" he answers, \"Oh stop it, classic Tom, always the same\" you reply and walk away while Tom keeps staring at you confusingly."
+    },
+    {
+      "id": "n_aop_next_5",
+      "next": "n_aop_next_6",
+      "text": "This conversation seemingly ended well but now you need to really consider talking to someone who would probably be your boss."
+    },
+    {
+      "id": "n_aop_next_6",
+      "next": "n_aop_next_7",
+      "showIf": {
+        "counter": "donk",
+        "op": "==",
+        "type": "counter",
+        "value": 0
+      },
+      "text": "You have ruined the oppurtunity of getting a job offer from the donkey,"
+    },
+    {
+      "id": "n_aop_next_7",
+      "next": "n_aop_next_8",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "donk",
+              "op": "==",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "counter": "donk",
+            "op": "==",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "You still have the chance to accept Mr Don Key's offer,"
+    },
+    {
+      "id": "n_aop_next_8",
+      "next": "n_aop_next_9",
+      "text": "and the other possible job offer, which you will have to request really really hard for, is to become a P.A."
+    },
+    {
+      "id": "n_aop_next_9",
+      "next": "n_aop_next_10",
+      "text": "The last boss is your only hope for a cool job offer."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_cactus",
+          "id": "c_aop_let_s_go",
+          "text": "Let's Go"
+        }
+      ],
+      "id": "n_aop_next_10",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_cactus",
+      "next": "n_aop_cactus_2",
+      "text": "You decide to leave your ex-boyfriend and look for someone else to impress. You scan the room and see a table with a potted cactus on it. You notice that everyone is avoiding the table and giving it a wide berth. You wonder why."
+    },
+    {
+      "id": "n_aop_cactus_2",
+      "next": "n_aop_cactus_3",
+      "text": "You walk over to the table and examine the cactus. It looks like a normal cactus, except that it has a small name tag that says “Boss”. You are confused but already in the know. You decide that there must be some way to communicate with it, even if it involves telepathy as the rumours say."
+    },
+    {
+      "id": "n_aop_cactus_3",
+      "next": "n_aop_cactus_4",
+      "text": "You lean closer to the cactus and try to establish a mental connection. You focus your thoughts and send them to the cactus."
+    },
+    {
+      "id": "n_aop_cactus_4",
+      "next": "n_aop_cactus_5",
+      "text": "“Hello, Mr. Cactus. I’m very impressed by your work. You have a very unique style and vision. I’m a biologist by profession and I have some ideas that could benefit your business. For example, have you considered using photosynthesis to create renewable energy? Or using spines to create weapons and tools? I have the expertise and experience to help you with these projects.”"
+    },
+    {
+      "id": "n_aop_cactus_5",
+      "next": "n_aop_cactus_6",
+      "text": "You wait for a response, hoping that the cactus will hear you and be impressed by your pitch. You notice that the people around you are staring at you with amusement and pity. They think you are crazy for staring at a cactus with your fingers pointing to your head."
+    },
+    {
+      "id": "n_aop_cactus_6",
+      "next": "n_aop_cactus_7",
+      "text": "Suddenly, you hear a voice in your head."
+    },
+    {
+      "id": "n_aop_cactus_7",
+      "next": "n_aop_cactus_8",
+      "text": "“Hello {password}. I’m glad you decided to talk to me. I’ve been watching you for a while and I find you very interesting. You have a lot of potential and creativity. I like your ideas and I want to hear more.”"
+    },
+    {
+      "id": "n_aop_cactus_8",
+      "next": "n_aop_cactus_9",
+      "text": "You are shocked and delighted. The cactus is talking to you! It is omniscient! It knows your name and your thoughts! You feel a surge of excitement and curiosity."
+    },
+    {
+      "id": "n_aop_cactus_9",
+      "next": "n_aop_cactus_10",
+      "text": "“Wow! Thank you, Mr. Cactus. I’m honored by your words. How do you know my name? How do you know my thoughts? How do you talk to me?” You ask eagerly."
+    },
+    {
+      "id": "n_aop_cactus_10",
+      "next": "n_aop_cactus_11",
+      "text": "“I know everything {password}, I can read minds and communicate telepathically.” The cactus says proudly."
+    },
+    {
+      "id": "n_aop_cactus_11",
+      "next": "n_aop_cactus_12",
+      "text": "“That’s…amazing.” You say sincerely."
+    },
+    {
+      "id": "n_aop_cactus_12",
+      "next": "n_aop_cactus_13",
+      "text": "“Thank you. I’m glad you think so.” The cactus says with a smile that you can’t see but can feel."
+    },
+    {
+      "id": "n_aop_cactus_13",
+      "next": "n_aop_cactus_14",
+      "text": "You feel a connection with the cactus. You feel like this is somewhere you'd love to work. You want to work with the cactus and learn from it."
+    },
+    {
+      "id": "n_aop_cactus_14",
+      "next": "n_aop_cactus_15",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_cactus_15",
+      "next": "n_aop_cactus_16",
+      "text": "But you remember Tom's advice not to ask for a job straightly. You pressure your brain to think hard to come up with sonething to say, \"what can be said to someone at a party?\" you think hard, guests passing by feel scared of your stressed face."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_cactusjob",
+          "id": "c_aop_ask_the_cactus_for",
+          "text": "Ask the cactus for a job."
+        },
+        {
+          "goto": "n_aop_cactusjob",
+          "id": "c_aop_flirt_with_the_cactus",
+          "text": "Flirt with the cactus."
+        }
+      ],
+      "id": "n_aop_cactus_16",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_cactusjob",
+      "next": "n_aop_cactusjob_2",
+      "showIf": {
+        "counter": "flirt",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_cactusjob_2",
+      "next": "n_aop_cactusjob_3",
+      "showIf": {
+        "counter": "flirt",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "You flirt with a plant!"
+    },
+    {
+      "id": "n_aop_cactusjob_3",
+      "next": "n_aop_cactusjob_4",
+      "showIf": {
+        "counter": "flirt",
+        "op": "==",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "You decide to flirt with the cactus. You say \"Did anyone ever tell you how prickly and cute you look ...\", the familiar voice interrupts you, \"let's not make your presence hear any awkward than it is\" the cactus responds."
+    },
+    {
+      "id": "n_aop_cactusjob_4",
+      "next": "n_aop_cactusjob_5",
+      "showIf": {
+        "of": {
+          "counter": "flirt",
+          "op": "==",
+          "type": "counter",
+          "value": 1
+        },
+        "type": "not"
+      },
+      "text": "You decide to ask the cactus for a job. You hope that it will be impressed by your skills and knowledge and maybe give you a chance to work with it."
+    },
+    {
+      "id": "n_aop_cactusjob_5",
+      "next": "n_aop_cactusjob_6",
+      "text": "“Mr. Cactus, I’m very interested in your company. I think I have the qualifications and experience to be a valuable asset to your team. Do you have any openings for biologists?” You ask politely."
+    },
+    {
+      "id": "n_aop_cactusjob_6",
+      "next": "n_aop_cactusjob_7",
+      "text": "The cactus responds in your head."
+    },
+    {
+      "id": "n_aop_cactusjob_7",
+      "next": "n_aop_cactusjob_8",
+      "text": "“Yes {password}. I do have an opening for a position.\""
+    },
+    {
+      "id": "n_aop_cactusjob_8",
+      "next": "n_aop_cactusjob_9",
+      "text": "“Really? That’s…wonderful.” You say happily."
+    },
+    {
+      "id": "n_aop_cactusjob_9",
+      "next": "n_aop_cactusjob_10",
+      "text": "“Yes, really. I think we have a lot in common. I think we can work well together and achieve great things. But you may not like the job itself.” The cactus says sincerely."
+    },
+    {
+      "id": "n_aop_cactusjob_10",
+      "next": "n_aop_cactusjob_11",
+      "text": "“Thank you. I think we can work well together and achieve great things too.” You say earnestly, \"but what exactly is the job? do you need someone to water you?\""
+    },
+    {
+      "id": "n_aop_cactusjob_11",
+      "next": "n_aop_cactusjob_12",
+      "text": "\"Stop with your jokes, here's the thing, while I can read minds I can't read minds from a distance. Unless someone is thinking real hard with their fingers squeezing their forehead their messages dont get to me.\", Mr. Cactus continues \"I need you to be my ears\"."
+    },
+    {
+      "id": "n_aop_cactusjob_12",
+      "next": "n_aop_cactusjob_13",
+      "text": "\"Years?\" you ask, \"No ears as in Eyes and Ears, I need you to hear my employees conversations and report back to me.\" Mr Cactus answers."
+    },
+    {
+      "id": "n_aop_cactusjob_13",
+      "next": "n_aop_cactusjob_14",
+      "text": "\"Like a reporter?\" you ask, \"no, more like a spy\" he replies."
+    },
+    {
+      "id": "n_aop_cactusjob_14",
+      "next": "n_aop_cactusjob_15",
+      "text": "You don't like the nature of this job, and Mr. Cactus probably doesn't knows about this as you were not squeezing your forehead that hard while judging the morality behind this job."
+    },
+    {
+      "id": "n_aop_cactusjob_15",
+      "next": "n_aop_cactusjob_16",
+      "text": "\"Can I walk around and think about this for a moment.\" you ask Mr. Cactus, \"As you please!\" he answers."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_think_hard",
+          "id": "c_aop_think_hard",
+          "text": "Think hard"
+        }
+      ],
+      "id": "n_aop_cactusjob_16",
+      "text": "You look at the time and realise that the party is nearing it's end. What do you do?"
+    },
+    {
+      "id": "n_aop_think_hard",
+      "next": "n_aop_think_hard_2",
+      "text": "You have to make a final choice. You have three options for your future:"
+    },
+    {
+      "id": "n_aop_think_hard_2",
+      "next": "n_aop_think_hard_3",
+      "text": "1."
+    },
+    {
+      "id": "n_aop_think_hard_3",
+      "next": "n_aop_think_hard_4",
+      "text": ": Not as omniscent as the rumours claimed but you probably wouldn't have been offered a job in that case."
+    },
+    {
+      "id": "n_aop_think_hard_4",
+      "next": "n_aop_think_hard_5",
+      "text": "2."
+    },
+    {
+      "id": "n_aop_think_hard_5",
+      "next": "n_aop_think_hard_6",
+      "text": ": Get paid for buying groceries, yeah, I guess."
+    },
+    {
+      "id": "n_aop_think_hard_6",
+      "next": "n_aop_think_hard_7",
+      "text": "3."
+    },
+    {
+      "id": "n_aop_think_hard_7",
+      "next": "n_aop_think_hard_8",
+      "text": ": Work as a biologist but you'll probably never be as cool as your boss."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_aop_cactusend",
+          "id": "c_aop_work_with_mr_cactus",
+          "text": "Work with Mr. Cactus."
+        },
+        {
+          "goto": "n_aop_exend",
+          "id": "c_aop_work_with_your_ex",
+          "text": "Work with your ex-boyfriend."
+        },
+        {
+          "goto": "n_aop_donkeyend",
+          "id": "c_aop_work_with_mr_don",
+          "text": "Work with Mr Don Key."
+        }
+      ],
+      "id": "n_aop_think_hard_8",
+      "text": "Time is running out, the party guests are already walking out and so are your bosses. Make a decision quickly as you won't be able to talk to any other boss you don't choose right now."
+    },
+    {
+      "id": "n_aop_cactusend",
+      "next": "n_aop_cactusend_2",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_cactusend_2",
+      "next": "n_aop_cactusend_3",
+      "text": "The name is {password}, James {password}."
+    },
+    {
+      "id": "n_aop_cactusend_3",
+      "next": "n_aop_cactusend_4",
+      "text": "You decide to work with the cactus. You think that it is the best option for you. You like the cactus and you are fascinated by its abilities. You want to learn from it and help it with its projects."
+    },
+    {
+      "id": "n_aop_cactusend_4",
+      "next": "n_aop_cactusend_5",
+      "text": "You tell the cactus your decision."
+    },
+    {
+      "id": "n_aop_cactusend_5",
+      "next": "n_aop_cactusend_6",
+      "text": "“Mr. Cactus, I want to work with you. I think you are amazing and I want to be a part of your company.” You say sincerely."
+    },
+    {
+      "id": "n_aop_cactusend_6",
+      "next": "n_aop_cactusend_7",
+      "text": "The cactus responds in your head, “Thank you {password}. I’m glad you chose me. I think you are amazing too and I want you to be a part of my company.” The cactus says gratefully, “Then it’s settled {password}. You are hired. Welcome to my company.”"
+    },
+    {
+      "id": "n_aop_cactusend_7",
+      "next": "n_aop_cactusend_8",
+      "text": "You feel happy and fulfilled. You have found your dream job and your dream boss."
+    },
+    {
+      "id": "n_aop_cactusend_8",
+      "next": "n_aop_cactusend_9",
+      "text": "You buccaneer friend and the host of the party arrives, he tries to move away as you hug him, \"you are the best buccaneer ever!\" you shout, \"I am a financier actually, I remember explaining it 2 times before\" he jokes like the classic buccaneer he is."
+    },
+    {
+      "id": "n_aop_cactusend_9",
+      "next": "n_aop_cactusend_10",
+      "text": "You hug the cactus. You feel a warm sensation in your chest. You realise it's blood."
+    },
+    {
+      "id": "n_aop_cactusend_10",
+      "next": "n_aop_cactusend_11",
+      "text": "\"Do I get medical insurance with this job?\" you say with a smile, \"No\", Mr. Cactus answers."
+    },
+    {
+      "id": "n_aop_cactusend_11",
+      "isEnd": true,
+      "text": "<h1>The End</h1>"
+    },
+    {
+      "id": "n_aop_exend",
+      "next": "n_aop_exend_2",
+      "text": "You decide to work with your ex-boyfriend. You think that it is the best option for you. You are impressed by his success. You also want to sincerely apologize to him."
+    },
+    {
+      "id": "n_aop_exend_2",
+      "next": "n_aop_exend_3",
+      "text": "“Tom, I want to work with you. I think you are amazing and I want to be a part of your company.” You say sincerely."
+    },
+    {
+      "id": "n_aop_exend_3",
+      "next": "n_aop_exend_4",
+      "text": "He looks at you with surprise and then with anger."
+    },
+    {
+      "id": "n_aop_exend_4",
+      "next": "n_aop_exend_5",
+      "text": "“Work with me? Work with me? Is that what you want from me? You don't even remember my name yet!\""
+    },
+    {
+      "id": "n_aop_exend_5",
+      "next": "n_aop_exend_6",
+      "text": "\"What made you think of that Richard?\" you ask."
+    },
+    {
+      "id": "n_aop_exend_6",
+      "next": "n_aop_exend_7",
+      "text": "He turns around and walks away from you."
+    },
+    {
+      "id": "n_aop_exend_7",
+      "next": "n_aop_exend_8",
+      "text": "You feel a sharp pain in your back, It's Mr Cactus who is upset at you for ignoring him and attacked you with a prickle. You stare at him awkwardly as he leaves the venue."
+    },
+    {
+      "id": "n_aop_exend_8",
+      "next": "n_aop_exend_9",
+      "text": "You go back to your alley and try to remember whether the cactus was walking by himself or not, but you can't. You cry."
+    },
+    {
+      "id": "n_aop_exend_9",
+      "next": "n_aop_exend_10",
+      "text": "Atleast you could carry back some of the leftovers from the party. In a way, you still won."
+    },
+    {
+      "id": "n_aop_exend_10",
+      "isEnd": true,
+      "text": "<h1>The End</h1>"
+    },
+    {
+      "id": "n_aop_donkeyend",
+      "next": "n_aop_donkeyend_2",
+      "text": "Achievement Unlocked!"
+    },
+    {
+      "id": "n_aop_donkeyend_2",
+      "next": "n_aop_donkeyend_3",
+      "text": "My Boss is a Donkey!"
+    },
+    {
+      "id": "n_aop_donkeyend_3",
+      "next": "n_aop_donkeyend_4",
+      "text": "You decide to work with the donkey. You think that it is the best option for you. You like the donkey and you are intrigued by his business."
+    },
+    {
+      "id": "n_aop_donkeyend_4",
+      "next": "n_aop_donkeyend_5",
+      "text": "You tell the donkey your decision."
+    },
+    {
+      "id": "n_aop_donkeyend_5",
+      "next": "n_aop_donkeyend_6",
+      "text": "“Mr. Donkey, I want to work with you. I think you are cool and I want to be a part of your company.” You say cheerfully."
+    },
+    {
+      "id": "n_aop_donkeyend_6",
+      "next": "n_aop_donkeyend_7",
+      "text": "The donkey responds in a loud voice, “Thank you {password}. I’m glad you chose me. I think you are cool too and I want you to be a part of my company.”"
+    },
+    {
+      "id": "n_aop_donkeyend_7",
+      "next": "n_aop_donkeyend_8",
+      "text": "You buccaneer friend and the host of the party arrives, he tries to move away as you hug him, \"you are the best buccaneer ever!\" you shout, \"I am a financier actually, I remember explaining it 2 times before\" he jokes like the classic buccaneer he is."
+    },
+    {
+      "id": "n_aop_donkeyend_8",
+      "next": "n_aop_donkeyend_9",
+      "text": "You feel a tingly sensation in your stomach. You feel excited and adventurous. You have found your dream job and your dream boss."
+    },
+    {
+      "id": "n_aop_donkeyend_9",
+      "next": "n_aop_donkeyend_10",
+      "text": "You high-five him awkwardly and ask \"Can I wear sunglasses at work too\", Mr Don commands you with a smile \"Never!\"."
+    },
+    {
+      "id": "n_aop_donkeyend_10",
+      "isEnd": true,
+      "text": "<h1>The End</h1>"
+    }
+  ],
+  "replayable": false,
+  "title": "Start"
+}

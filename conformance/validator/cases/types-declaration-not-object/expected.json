@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "types 'spell': the declaration must be an object",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'rune': fields must be an object",
+      "severity": "error"
+    }
+  ]
+}

@@ -58,6 +58,15 @@
     {
       "id": "n_episode1_sms4a_8",
       "next": "n_episode1_sms4a_9",
+      "onEnter": [
+        {
+          "args": [
+            "Proof5"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_sophie",
       "text": "Très bonne idée !"
     },

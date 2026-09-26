@@ -7,18 +7,23 @@ Migration into Parlance from the formats writers are already using.
 | [`yarn-import`](yarn-import/SKILL.md) | Yarn Spinner (`.yarn`) | working |
 | [`ink-import`](ink-import/SKILL.md) | Ink (`.ink`) | working |
 | [`twine-import`](twine-import/SKILL.md) | Twine / Harlowe (published `.html`, or `.twee`) | working |
-| SugarCube | Twine's other story format | not started — a different macro language, and `twine-import` refuses a story that declares it |
+| [`renpy-import`](renpy-import/SKILL.md) | Ren'Py (`.rpy` scripts) | working |
+| [`arcweave-import`](arcweave-import/SKILL.md) | Arcweave (the "Export → JSON" project file) | working — fixture only, no worked example yet |
+| [`sugarcube-import`](sugarcube-import/SKILL.md) | Twine / SugarCube 2 (published `.html`, or `.twee`) | working — `twine-import` refuses a SugarCube story and points here |
+| [`choicescript-import`](choicescript-import/SKILL.md) | ChoiceScript (`startup.txt` + scene files) | working — no vendored example yet (see its SKILL.md) |
 
-[`examples/`](examples/README.md) holds three real migrations — inkle's *The
-Intercept* (Ink), Play Curious's *Cyberharcèlement* (Yarn) and
-Jake Kao's *Not Weird. Queer* (Twine) — each with the author's original file
-beside the imported project, so the claim below can be
-re-run rather than believed. Start with their `REPORT.md`s: the declared-loss
-tables are the honest picture of what a migration costs.
+[`examples/`](examples/README.md) holds five real migrations — inkle's *The
+Intercept* (Ink), Play Curious's *Cyberharcèlement* (Yarn), Jake Kao's *Not Weird.
+Queer* (Twine / Harlowe), ronynn's *Aesthetics Over Plot* (Twine / SugarCube) and
+Ren'Py's sample game *The Question* — each with the author's original file beside the
+imported project, so the claim below can be re-run rather than believed. Start with
+their `REPORT.md`s: the declared-loss tables are the honest picture of what a
+migration costs. *The Question* imports whole — the easy case, and labelled as such —
+and *Aesthetics Over Plot* is walkable end to end with 11 units declared lost.
 
 ## Will your story survive the move?
 
-Read this before you start one. Three real migrations are enough to answer it
+Read this before you start one. Five real migrations are enough to answer it
 concretely, and the answer is not "it depends".
 
 **One question decides most of it: how does your story move forward?**
@@ -29,7 +34,7 @@ concretely, and the answer is not "it depends".
   destination at play time has no equivalent, because a Parlance `goto` names one node,
   written into the data by you.
 
-That second category is the whole of what broke the three imports, and it is worth
+That second category is the whole of what broke the Ink, Yarn and Harlowe imports, and it is worth
 naming its members, because they do not look alike in the source:
 
 | Construct | Formats |
@@ -37,7 +42,7 @@ naming its members, because they do not look alike in the source:
 | a call that returns to **different** places per caller | Ink `-> knot ->` where the call sites disagree. One call site is fine — a `goto` may point backwards, so the tunnel is two ordinary edges |
 | a jump chosen by a condition | Harlowe `(goto:)`, `(link-goto:)`, a link inside an `(if:)` hook whose test will not map |
 | a gate on **how many times** something has been seen | Ink `{knot > 1}`, Yarn `visited()`, `visitedAllNodeOptions()` |
-| a destination handed to game code | Yarn custom commands, Ink `EXTERNAL` |
+| a destination handed to game code | Yarn custom commands that route scenes (the command itself is carried as an `engine` effect since 0.15, but it draws no edge), Ink `EXTERNAL` |
 
 Three other classes are lost without breaking the flow — text computed at play time
 (Ink `{a|b}`, Harlowe `(print:)`), calls into the engine (`(track:)`, `~ raise(x)`), and
@@ -47,14 +52,16 @@ the table above costs you the *story*.
 ### Converging is not the same as working
 
 This is the part no content check can tell you, and the reason to read a report rather
-than a verdict. All three worked migrations converge — every word present, provably
-unaltered, no validator error — and two of them produce a story a player can barely walk:
+than a verdict. All five worked migrations converge — every word present, provably
+unaltered, no validator error — and three of them produce a story a player cannot fully walk:
 
 | Story | Format | Reachable | Severed by |
 |---|---|---|---|
-| Cyberharcèlement | Yarn | 446 / 544 | nothing single — custom commands route its UI |
-| The Intercept | Ink | 387 / 546 | knots whose every line is declared loss, mostly one inline `{cond: a\|b}` |
-| Not Weird. Queer | Harlowe | 454 / 1,003 | links gated on read counts, text comparisons and underivable kinds |
+| Cyberharcèlement | Yarn | 516 / 596 | nothing single — custom commands route its UI |
+| The Intercept | Ink | 436 / 593 | knots whose every line is declared loss, mostly one inline `{cond: a\|b}` |
+| Not Weird. Queer | Harlowe | 500 / 1,051 | links gated on read counts, text comparisons and underivable kinds |
+| Aesthetics Over Plot | SugarCube | 333 / 333 | — |
+| The Question | Ren'Py | 71 / 71 | — |
 
 A single unmappable construct in the wrong place severs everything behind it, and the
 string comparison converges happily while it does, because no prose went anywhere.
@@ -82,6 +89,30 @@ those are exactly the declared losses an importer has to be candid about. Twine
 came third and is the odd one out: Harlowe has no weave and no fallthrough, so its
 structure is the simplest of the three to map — and its flow is the most fragile,
 because a passage's ONLY way forward is a link.
+
+**Ren'Py** is a screenplay with a Python escape hatch, and the screenplay half maps
+nearly one for one: labels, say statements, `menu:` (whose blocks fall through to
+what follows, as a label with no `jump` falls through to the next), `jump`, `$`
+assignments of literals, `if`/`elif`/`else` around lines. Its staging statements —
+`show`, `scene`, `with`, `play` — are statement-shaped commands with literal
+arguments, which is exactly what the 0.15 `engine` effect is for, so they are
+carried rather than lost. What does not map is the Python half and `call`/`return`
+(no cross-dialogue call/return, by decision). Two markup rules are worth knowing:
+text tags (`{b}`, `{w}`) are removed from a line and declared, the words inside
+staying required — markup is not prose — and `[var]` becomes `{var}` only where
+`var` is a text variable. The worked example, Ren'Py's own sample game *The
+Question*, imports whole; its report says plainly that it is the easy case.
+
+**Arcweave** is already a graph — elements, connections, branches — so its
+structure maps with little judgment, and it TYPES its variables, so no kind is
+inferred. Two things are specific to it. A branch behind a LABELLED connection is
+a player choice with conditions, and imports as one gated choice per arm (each arm
+under its own test and the negation of those above); a branch behind an
+UNLABELLED connection is the engine choosing a route, and is declared. And the
+source is JSON with HTML inside, so the residue check runs over a projection — one
+line per string leaf of the export — rather than the file's own lines; a field the
+parser does not know surfaces there as a parser gap. No clearly-licensed real
+export was available to vendor, so it ships with a fixture and no worked example.
 
 ## How an import is verified
 
@@ -129,9 +160,10 @@ the switch form where the branch heads are literals), and choice gates in both.
 disagree about the same guard. It refuses rather than approximates: Parlance's
 condition vocabulary is closed, so a guard it cannot express EXACTLY comes back as a
 reason, and the caller declares the loss. What is left is narrow and each case says
-which — a variable whose kind the source never reveals, a read count, a `LIST`, a
-comparison between two variables, and a guarded line that would have to host a choice
-list (a node may not carry `showIf` and `choices` together).
+which — a variable whose kind the source never reveals, a read count, a `LIST`,
+and a comparison between two variables. (A guarded line that hosts a choice list used
+to be on this list; since 0.15 a node may carry `showIf` and `choices` together — the
+gate hides only the line — so the importers carry it.)
 
 Two things about it are worth knowing before you touch it.
 
@@ -254,3 +286,40 @@ the node it landed in.
 And the boundary that no string comparison reaches: give either fixture's `else`
 branch the same `showIf` as its `if`, and `missing` and `invented` both stay empty
 while `condition_mismatch` names the line and shows what the guard should have been.
+
+## SugarCube (`sugarcube-import`)
+
+Twine's other story format, with its own parser because it shares no syntax with
+Harlowe. Two things in it are new to the shared gate:
+
+- **Sigil swaps.** SugarCube interpolates a naked `$name`; Parlance interpolates
+  `{name}`, and only for a TEXT variable. The parser declares `$name` → `{name}` as a
+  rewrite for each text variable a line uses, and `check.py` accepts those by SHAPE —
+  the id side must be the source name lowercased — exempt from the eight-character
+  cap that keeps every other rewrite at token scale. A swap is never declared for a
+  name that is a prefix of another name in the story, since the rewrite is a plain
+  substring replacement.
+- **Carriers.** A `<<set>>` sits between lines, and Parlance fires effects on arrival
+  at a node. The parser decides which node's `onEnter` fires exactly when the source's
+  assignment would — respecting that a skipped guarded node fires nothing and a node
+  holding choices fires even when its line is hidden — and declares the assignment
+  when no node does. `examples/aesthetics-over-plot/` shows the largest real cost:
+  a story that uses counters as ENUMS (`<<set $book to 4>>`, `<<if $book is 4>>`)
+  loses every assignment, because the vocabulary has no absolute counter set, while
+  every node stays reachable.
+
+## ChoiceScript (`choicescript-import`)
+
+The first importer whose parser emits the GRAPH rather than a list of items to map
+from. ChoiceScript's structure is indentation and its flow falls through — past an
+`*if` block, out of a `*fake_choice` option, off the end of a scene into the next one
+in `*scene_list` — and none of that is written as an edge, so a mapper re-deriving it
+could only do worse than a script that derives it exactly. The mapping step keeps the
+decisions that are decisions: one dialogue for the whole game, the registry, the
+report.
+
+The format maps unusually well at the menu: `*selectable_if` is 0.15's locked choice
+(`whenLocked: "show"`) exactly, and `*hide_reuse`/`*disable_reuse` are the COOKBOOK
+one-shot recipe, with the flag named after the scene and line that declared it. The
+cost is the idiom ChoiceScript is written in — `*if (cond)`, a few lines, `*finish` —
+which is a jump chosen by a condition and is declared whole, lines and all.

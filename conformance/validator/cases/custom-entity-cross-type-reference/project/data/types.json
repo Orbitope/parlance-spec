@@ -1,0 +1,24 @@
+{
+  "school": {
+    "fields": {
+      "signature": {
+        "target": "spell",
+        "type": "reference"
+      },
+      "teaches": {
+        "items": {
+          "target": "spell",
+          "type": "reference"
+        },
+        "type": "array"
+      }
+    },
+    "name": "School",
+    "plural": "schools"
+  },
+  "spell": {
+    "fields": {},
+    "name": "Spell",
+    "plural": "spells"
+  }
+}

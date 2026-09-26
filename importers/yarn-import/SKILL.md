@@ -74,6 +74,7 @@ into what is clearly a different scene entered by its own gate.
 | `<<if $v>>` around a **line** | one node + `node.showIf` |
 | `<<elseif>>` / `<<else>>` | one node + `showIf` per line; each branch carries the NEGATION of the branches above it |
 | `<<declare>>` / any `$var` | an entry in `variables.json` |
+| a custom command `<<shakeCamera 0.5>>` on its own line or an option | an `engine` effect — `{type: engine, command: shake_camera, args: [0.5]}`, where it sits (node `onEnter`, or the choice's `effects`). The name is snake_cased because the validator requires that; args are typed as written. One inline on a narration line stays in `unmapped` |
 
 **Never merge a back-and-forth into one node.** One node per speaker, chained by
 `next`. Merging is the most common way an import quietly loses the rhythm of a scene
@@ -105,16 +106,18 @@ class the string comparison cannot see, which is why it is checked rather than t
 A guarded node needs `next`, and may carry neither `choices` nor `isEnd`
 (validator rule `COND`) — a conditional node is interstitial narration.
 
-What is still declared loss is narrower, and the parser says which each time. The two
+What is still declared loss is narrower, and the parser says which each time. The one
 you will actually meet:
 
 - **A guard on a variable the story never assigns.** Its kind cannot be derived, and a
   number is truthy in Yarn too, so reading it as a flag would silently change when the
   line shows. Register the variable in the source or accept the loss — do not guess.
-- **A guarded line immediately before an option block.** That line would have to be the
-  node hosting those choices, and `showIf` and `choices` are mutually exclusive.
+A guarded line immediately before an option block, or as the conversation's last
+beat, is **carried** since Parlance 0.15: `showIf` on a node with `choices` or `isEnd`
+hides only the line. An option block with no line before it (it follows another
+option block) becomes a node with `choices` and no `text`.
 
-For those, do **not** wrap the line in a choice to make it fit — that fabricates a
+For what is declared, do **not** wrap the line in a choice to make it fit — that fabricates a
 decision the player never made and puts a phantom entry in their history. Carry them
 into the report so the author can decide. Expect a downstream validator warning too:
 dropping the line often orphans the flag it read, which surfaces as

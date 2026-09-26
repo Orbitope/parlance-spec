@@ -191,13 +191,23 @@ class Builder:
                     usable = [t for t in waiting
                               if not t.get("_choice") and not t.get("choices")
                               and not t.get("isEnd")]
-                    if len(usable) != 1:
-                        raise SystemExit(
-                            f"{container['title']}: a choice list with no line to host "
-                            f"it (source line {items[i]['lineno']}), which the parser "
-                            f"did not declare")
-                    prev = borrowed = usable[0]
-                    waiting.remove(borrowed)
+                    if len(usable) == 1:
+                        # One branch flows in: its last beat is unambiguously the
+                        # line the player just read, so it hosts the choices.
+                        prev = borrowed = usable[0]
+                        waiting.remove(borrowed)
+                    else:
+                        # No line to hang the options off (they open a container,
+                        # or several branches join here). Since 0.15 a node may
+                        # carry choices with no `text` — exactly what the source
+                        # wrote. Every waiting branch flows into it.
+                        prev = {"id": self.node_id(container["title"])}
+                        self.nodes[prev["id"]] = prev
+                        self.owner[prev["id"]] = container["title"]
+                        for t in waiting:
+                            self.terminate(t, prev["id"])
+                        waiting = []
+                        entry = entry or prev["id"]
                 host = prev
                 for idx in unclaimed:
                     self.at_item.setdefault((container["title"], idx), host["id"])
@@ -308,9 +318,8 @@ class Builder:
             return
         if node.get("choices") or node.get("next"):
             return
-        if node.get("showIf"):
-            raise SystemExit(f"node '{node['id']}' ends the conversation but carries a "
-                             f"guard the parser did not declare")
+        # A guarded last beat is legal since 0.15: the line hides, the
+        # conversation still ends.
         node["isEnd"] = True
 
 

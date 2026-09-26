@@ -262,8 +262,30 @@
     },
     {
       "id": "n_nwq_reacting_to_the_creeper_5",
-      "isEnd": true,
+      "next": "n_nwq_reacting_to_the_creeper_6",
       "text": "Even though the weirdo ended up leaving $name alone, $sbj still shivers slightly at the memory."
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper_6",
+      "next": "n_nwq_reacting_to_the_creeper_7",
+      "showIf": {
+        "counter": "happy",
+        "op": ">",
+        "type": "counter",
+        "value": -1
+      },
+      "text": "$ally: \"Hey, $name, forget about that prick. Your next sculpture isn't going to build itself!\""
+    },
+    {
+      "id": "n_nwq_reacting_to_the_creeper_7",
+      "isEnd": true,
+      "showIf": {
+        "counter": "happy",
+        "op": ">",
+        "type": "counter",
+        "value": -1
+      },
+      "text": "$name:"
     }
   ],
   "replayable": false,

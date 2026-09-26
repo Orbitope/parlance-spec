@@ -18,6 +18,31 @@
       "text": "*"
     },
     {
+      "id": "n_nwq_start_4",
+      "next": "n_nwq_start_5",
+      "text": "*"
+    },
+    {
+      "id": "n_nwq_start_5",
+      "next": "n_nwq_start_6",
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": false
+      },
+      "text": "More coming soon :)"
+    },
+    {
+      "id": "n_nwq_start_6",
+      "next": "n_nwq_start_7",
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": true
+      },
+      "text": "<ul><li>"
+    },
+    {
       "choices": [
         {
           "goto": "n_nwq_male",
@@ -50,8 +75,13 @@
           "text": "custom"
         }
       ],
-      "id": "n_nwq_start_4",
-      "text": "*"
+      "id": "n_nwq_start_7",
+      "showIf": {
+        "flag": "whategg",
+        "type": "flag",
+        "value": true
+      },
+      "text": "</li></ul>"
     },
     {
       "id": "n_nwq_male",
@@ -1115,8 +1145,72 @@
     },
     {
       "id": "n_nwq_arrive_at_school_part_1_3",
-      "isEnd": true,
+      "next": "n_nwq_arrive_at_school_part_1_4",
       "text": ", $sbj"
+    },
+    {
+      "id": "n_nwq_arrive_at_school_part_1_4",
+      "next": "n_nwq_arrive_at_school_part_1_5",
+      "showIf": {
+        "counter": "self",
+        "op": ">",
+        "type": "counter",
+        "value": 1
+      },
+      "text": "notices that flowers of multiple colors and varieties are in bloom."
+    },
+    {
+      "id": "n_nwq_arrive_at_school_part_1_5",
+      "next": "n_nwq_arrive_at_school_part_1_6",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          },
+          {
+            "counter": "self",
+            "op": "<",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "is annoyed to be at school once again but whatever."
+    },
+    {
+      "id": "n_nwq_arrive_at_school_part_1_6",
+      "isEnd": true,
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "self",
+              "op": ">",
+              "type": "counter",
+              "value": 1
+            },
+            "type": "not"
+          },
+          {
+            "of": {
+              "counter": "self",
+              "op": "<",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "worries about the upcoming hay fever season."
     },
     {
       "id": "n_nwq_restart",
@@ -1156,6 +1250,33 @@
       "text": "''Not Weird. Queer''"
     },
     {
+      "id": "n_nwq_restart_2",
+      "next": "n_nwq_restart_3",
+      "text": "^^(a working title)^^"
+    },
+    {
+      "id": "n_nwq_restart_3",
+      "next": "n_nwq_restart_4",
+      "showIf": {
+        "of": [
+          {
+            "counter": "deaths",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          },
+          {
+            "counter": "deaths",
+            "op": ">",
+            "type": "counter",
+            "value": 1
+          }
+        ],
+        "type": "all"
+      },
+      "text": "You can do this, $name. I believe in you!"
+    },
+    {
       "choices": [
         {
           "goto": "n_nwq_part_1_opening",
@@ -1193,8 +1314,27 @@
           "text": "Start"
         }
       ],
-      "id": "n_nwq_restart_2",
-      "text": "^^(a working title)^^"
+      "id": "n_nwq_restart_4",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "deaths",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          },
+          {
+            "flag": "complete",
+            "type": "flag",
+            "value": true
+          }
+        ],
+        "type": "all"
+      },
+      "text": "Welcome back! <br /><br />"
     },
     {
       "id": "n_nwq_morning_day_3",

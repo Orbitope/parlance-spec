@@ -1,0 +1,86 @@
+:: StoryTitle
+Cellar Door
+
+
+:: StoryData
+{
+  "ifid": "7C1B2D34-5E6F-4A70-8B91-A2B3C4D5E6F7",
+  "format": "SugarCube",
+  "format-version": "2.37.3",
+  "start": "Stairs"
+}
+
+
+:: StoryInit
+<<set $lantern to false>>
+<<set $matches to 3>>
+<<set $name to "stranger">>
+
+
+:: StoryCaption
+Matches left: $matches
+
+
+:: Widgets [widget]
+<<widget "creak">>The boards creak underfoot.<</widget>>
+
+
+:: Stairs
+/* The opening passage. */
+<<playSound "wind" 0.4>>
+The cellar stairs go down further than the house is tall.
+Someone has chalked a word on the wall, //twice//: $name.
+<<if $lantern>>
+The lantern throws your shadow ahead of you.
+<<elseif $matches gte 2>>
+You still have matches enough for the way back.
+<<else>>
+It is very dark.
+<</if>>
+[[Go down|Landing][$matches -= 1]]
+<<link "Light the lantern" "Stairs">><<set $lantern to true>>The match flares.<</link>>
+<<if $matches is 0>>[[Give up|Outside]]<</if>>
+
+
+:: Landing
+<<set $knocked to true>>
+<<creak>>
+A door waits at the bottom, painted the colour of old tea.
+You have <<print $matches>> matches left.
+<<textbox "$name" "stranger">>
+<<switch $matches>>
+<<case 0>>
+You will have to find the handle by touch.
+<<case 1 2>>
+One more match, maybe two.
+<<default>>
+Plenty of light, for now.
+<</switch>>
+<<notify>>The door is not locked.<</notify>>
+<<set $matches to 5>>
+<<if $lantern>><<goto "Cellar">><</if>>
+[[Open the door|Cellar]]
+[[Go back up|Stairs]]
+
+
+:: Cellar
+<<set _count to 2>>
+<<set $name to "the one who opened the door">>
+Shelves, jars, and a smell of apples.
+<<if $knocked>>Nobody answered your knock, and nobody is here.<</if>>
+<<back>>
+
+
+:: Outside
+The night air is cold and the house is quiet behind you.
+[[Try again|Crossroads]]
+
+
+:: Crossroads
+<<set $lantern to false>>
+[[Stairs]]
+[[Take the short way|Shortcut]]
+
+
+:: Shortcut
+<<goto "Outside">>

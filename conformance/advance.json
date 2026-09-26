@@ -588,5 +588,339 @@
       "skills": {},
       "xp": 0
     }
+  },
+  {
+    "description": "line-only gate (0.15): advance into an isEnd node whose gate FAILS — it is the node the player lands on (never skipped, never a throw); its line is hidden by stepDialogue",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ],
+          "id": "node_open",
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "text": "And you've seen the ledger. I can tell."
+        },
+        {
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ],
+          "id": "node_options"
+        },
+        {
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "lockedText": "[Requires the key]",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ],
+          "id": "node_door",
+          "text": "The door."
+        },
+        {
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ],
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing."
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "text": "You think of the cup, still warm."
+        },
+        {
+          "id": "node_hop",
+          "next": "node_last",
+          "text": "A beat."
+        },
+        {
+          "id": "node_hop_open",
+          "next": "node_open",
+          "text": "Another beat."
+        }
+      ]
+    },
+    "expected": {
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_last"
+    },
+    "fn": "advanceNode",
+    "nodeId": "node_hop",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
+  },
+  {
+    "description": "line-only gate: advance into a node with choices whose gate FAILS — same: reached, not skipped",
+    "dialogue": {
+      "entry": "node_open",
+      "id": "dlg_shapes",
+      "nodes": [
+        {
+          "choices": [
+            {
+              "goto": "node_options",
+              "id": "ch_ship",
+              "text": "Ask about the ship."
+            },
+            {
+              "goto": "node_door",
+              "id": "ch_leave",
+              "text": "Leave."
+            }
+          ],
+          "id": "node_open",
+          "onEnter": [
+            {
+              "flag": "visited_open",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "text": "And you've seen the ledger. I can tell."
+        },
+        {
+          "choices": [
+            {
+              "goto": "node_door",
+              "id": "ch_door",
+              "text": "Try the door."
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_end",
+              "text": "Say goodbye."
+            }
+          ],
+          "id": "node_options"
+        },
+        {
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock",
+              "lockedText": "[Requires the key]",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock the door.",
+              "whenLocked": "show"
+            },
+            {
+              "goto": "node_last",
+              "id": "ch_force",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Force it."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk",
+              "text": "Walk away."
+            }
+          ],
+          "id": "node_door",
+          "text": "The door."
+        },
+        {
+          "choices": [
+            {
+              "goto": "node_last",
+              "id": "ch_unlock2",
+              "showIf": {
+                "flag": "has_key",
+                "type": "flag",
+                "value": true
+              },
+              "text": "Unlock."
+            },
+            {
+              "fallback": true,
+              "goto": "node_last",
+              "id": "ch_walk2",
+              "showIf": {
+                "op": ">=",
+                "skill": "might",
+                "type": "skill",
+                "value": 5
+              },
+              "text": "Shoulder past."
+            }
+          ],
+          "id": "node_gated_fallback",
+          "text": "A gated fallback proves nothing."
+        },
+        {
+          "id": "node_last",
+          "isEnd": true,
+          "onEnter": [
+            {
+              "flag": "reached_end",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "showIf": {
+            "flag": "seen_ledger",
+            "type": "flag",
+            "value": true
+          },
+          "text": "You think of the cup, still warm."
+        },
+        {
+          "id": "node_hop",
+          "next": "node_last",
+          "text": "A beat."
+        },
+        {
+          "id": "node_hop_open",
+          "next": "node_open",
+          "text": "Another beat."
+        }
+      ]
+    },
+    "expected": {
+      "newState": {
+        "counters": {},
+        "flags": {},
+        "inventory": [],
+        "questStages": {},
+        "reputation": {},
+        "skillPointsSpent": {},
+        "skills": {},
+        "xp": 0
+      },
+      "nextNodeId": "node_open"
+    },
+    "fn": "advanceNode",
+    "nodeId": "node_hop_open",
+    "state": {
+      "counters": {},
+      "flags": {},
+      "inventory": [],
+      "questStages": {},
+      "reputation": {},
+      "skillPointsSpent": {},
+      "skills": {},
+      "xp": 0
+    }
   }
 ]

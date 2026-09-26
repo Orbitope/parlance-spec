@@ -1,0 +1,51 @@
+*title The Lighthouse Stair
+*author Parlance importer fixtures
+*scene_list
+  startup
+  keeper
+  ending
+
+*create lamp_lit false
+*create courage 50
+*create oil 2
+*create name "traveller"
+*create strength 10
+
+*achievement kept_watch true 10 Kept Watch
+  You kept the keeper company.
+  You kept the keeper company for a while, and/or a little longer.
+
+*comment the opening scene
+The stair winds up inside the tower, one iron step at a time.
+Someone has written ${name} on the wall, [i]twice[/i] // in chalk.
+
+*choice
+  #Climb quickly.
+    *set courage +5
+    You take the steps two at a time.
+    *goto top
+  *selectable_if (oil > 1) #Refill the lamp first.
+    *set oil -1
+    *set lamp_lit true
+    The wick drinks the oil and brightens.
+    *goto top
+  *hide_reuse #Listen at the wall.
+    The wind answers, and nothing else does.
+    *goto top
+  *if (courage < 20) #Go back down.
+    *ending
+
+*label top
+*if lamp_lit
+  The lamp throws your shadow up the stair ahead of you.
+*elseif oil > 0
+  You still have oil enough for the way down.
+*else
+  It is very dark.
+*set courage %+10
+*if courage > 60
+  The top is close now.
+  *goto_scene ending
+You have ${courage} reasons to keep going.
+*page_break Keep climbing
+*finish

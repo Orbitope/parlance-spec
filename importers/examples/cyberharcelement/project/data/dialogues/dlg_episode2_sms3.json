@@ -47,6 +47,7 @@
           "text": "Expliquer que tu as aussi remarqué son changement de comportement"
         },
         {
+          "goto": "n_episode2_sms3_18",
           "id": "c_episode2_rassurer_la_m_re",
           "text": "Rassurer la mère de Liam"
         },
@@ -58,12 +59,12 @@
               "type": "adjust_counter"
             }
           ],
+          "goto": "n_episode2_sms3_21",
           "id": "c_episode2_viter_de_r_pondre",
           "text": "Éviter de répondre"
         }
       ],
       "id": "n_episode2_sms3_7",
-      "isEnd": true,
       "text": "[character name=\"Maman de Liam\"][/character]Encore désolée du dérangement, bonne soirée et à bientôt."
     },
     {
@@ -93,17 +94,145 @@
               "type": "adjust_counter"
             }
           ],
+          "goto": "n_episode2_sms3_11",
           "id": "c_episode2_parler_des_r_sultats",
           "text": "Parler des résultats scolaires"
         },
         {
+          "goto": "n_episode2_sms3_15",
           "id": "c_episode2_ne_pas_donner_de",
           "text": "Ne pas donner de détails"
         }
       ],
       "id": "n_episode2_sms3_10",
-      "isEnd": true,
       "text": "[character name=\"Maman de Liam\"][/character] Je vois, et alors? Il t’a donné une explication ?"
+    },
+    {
+      "id": "n_episode2_sms3_11",
+      "next": "n_episode2_sms3_12",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Il a dit que c’était à cause de ses résultats scolaires, et seulement ça. Il a insisté là-dessus."
+    },
+    {
+      "id": "n_episode2_sms3_12",
+      "next": "n_episode2_sms3_13",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "text": "[character name=\"Maman de Liam\"][/character]Je vois. Pourtant, nous ne lui mettons aucune pression. Je crains que ce ne soit la conséquence, et non la raison..."
+    },
+    {
+      "id": "n_episode2_sms3_13",
+      "next": "n_episode2_sms3_14",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Je comprends. Il m’a dit qu’il se mettait la pression pour ne pas vous décevoir. Mais ok, je vais voir comment je peux l’aider."
+    },
+    {
+      "id": "n_episode2_sms3_14",
+      "isEnd": true,
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "text": "[character name=\"Maman de Liam\"][/character]Merci beaucoup ! Bonne soirée à la semaine prochaine !"
+    },
+    {
+      "id": "n_episode2_sms3_15",
+      "next": "n_episode2_sms3_16",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Non, pas spécialement."
+    },
+    {
+      "id": "n_episode2_sms3_16",
+      "next": "n_episode2_sms3_17",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "text": "[character name=\"Maman de Liam\"][/character]D’accord. Merci de m’avoir répondu. Bonne soirée à toi et à la semaine prochaine."
+    },
+    {
+      "id": "n_episode2_sms3_17",
+      "isEnd": true,
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Merci, toi aussi à la prochaine."
+    },
+    {
+      "id": "n_episode2_sms3_18",
+      "next": "n_episode2_sms3_19",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Oui j’ai vu et je lui en ai parlé, mais ne t'en fais pas, c’est sûrement passager. Il a l’air tracassé mais il va bien !"
+    },
+    {
+      "id": "n_episode2_sms3_19",
+      "next": "n_episode2_sms3_20",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "text": "[character name=\"Maman de Liam\"][/character]J’espère que tu as raison. Merci pour ta réponse ! Bonne soirée et à la semaine prochaine."
+    },
+    {
+      "id": "n_episode2_sms3_20",
+      "isEnd": true,
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Merci, toi aussi à la prochaine."
+    },
+    {
+      "id": "n_episode2_sms3_21",
+      "next": "n_episode2_sms3_22",
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "speakerId": "char_you",
+      "text": "Bonsoir. Malheureusement non, je n’ai rien remarqué de particulier. Excuse-moi de ne pas pouvoir t’aider."
+    },
+    {
+      "id": "n_episode2_sms3_22",
+      "isEnd": true,
+      "showIf": {
+        "flag": "knowaboutgradeexcuse",
+        "type": "flag",
+        "value": true
+      },
+      "text": "[character name=\"Maman de Liam\"][/character]Ah… Merci quand même."
     }
   ],
   "replayable": false,

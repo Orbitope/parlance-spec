@@ -1,0 +1,24 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "types 'sigil': plural 'Glyphs' is also used by type 'rune'",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'rumour': plural 'Dialogues' is a built-in folder or file",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'device': plural 'aux' is a reserved file name on Windows",
+      "severity": "error"
+    },
+    {
+      "code": "SCHEMA",
+      "contains": "types 'trail': plural 'trails",
+      "severity": "error"
+    }
+  ]
+}

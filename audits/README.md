@@ -104,6 +104,6 @@ less context. It is never required, never generated, and never written to.
 
 These audits read the Parlance data contract: `dialogues`, `characters`, `quests`,
 `locations`, `variables`, and the condition/effect vocabulary in
-`common.schema.json`. They target contract **0.10.x**. A field rename upstream will
+`common.schema.json`. They target contract **0.15.x**. A field rename upstream will
 silently reduce an audit to finding nothing — which looks exactly like a clean
 project. Re-check the anchors after any contract bump.

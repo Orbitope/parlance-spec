@@ -130,10 +130,16 @@ strings, not meaning. A converged import can still read differently from its sou
 `next`. Merging is the most common way an import quietly loses the rhythm of a scene
 while passing every count-based check.
 
-**Every node needs `text`.** A Parlance node requires it, so a choice list has to
-hang off the line that precedes it. Where Ink puts a choice list immediately after
-another choice's bracket-only text, there is no line to hang it on — that is a
-question for the author, not a licence to write a linking sentence.
+**A choice list hangs off the line before it — or off no line at all.** Where Ink
+puts a choice list immediately after another choice's bracket-only text, or at the
+top of a container, there is no line to hang it on. Since Parlance 0.15 a node that
+carries `choices` may omit `text`: emit a text-less node holding just the options.
+Never write a linking sentence to fill the gap.
+
+**A guarded line before a choice list, or as the last beat, is carried.** Since 0.15
+`showIf` on a node with `choices` or `isEnd` hides only the line — the choices still
+show, the conversation still ends — so give the guarded line the choices (or
+`isEnd`) exactly where the source puts them.
 
 **Never invent an id.** Derive every id from the source: knot and stitch names,
 variable names, and — for choices, which Ink does not name — a slug of the choice's
@@ -182,7 +188,6 @@ carry it into the report with its source line.
 | a guard on a variable the source never assigns | its Parlance kind (flag / counter / text) cannot be derived, and reading an untyped name as a flag would change when the line shows |
 | a guard comparing two variables, or containing arithmetic | a condition compares one registered variable against a literal |
 | a guard on a text variable | there is no text-valued condition in the vocabulary |
-| conditional narration immediately before a choice list | the line would have to host those choices, and a node may not carry `showIf` and `choices` together (`COND`) |
 | variable text `{a\|b\|c}`, cycles `{&…}`, shuffles `{~…}`, once `{!…}` | a node holds one authored string, chosen by the author, not by visit count |
 | read counts as conditions `{knot > 1}` | there is no visit counter in the condition vocabulary, and importing the choice ungated would change when the player may take it |
 | tunnels `-> knot ->` and returns `->->` | `goto` does not return. Faithful **only** where the tunnel has a single call site and can be inlined; with two call sites the return target is genuinely ambiguous and the author has to choose |
@@ -194,7 +199,7 @@ carry it into the report with its source line.
 | `~ temp v = …` | a temp is scoped to the knot call and has no registry entry to map to |
 | once-only `*` choices | a Parlance choice does not disappear once taken. Reproducing that needs a flag plus a `showIf` — a variable the source never declared, so **do not invent one**. Reported once for the whole file rather than per choice |
 | glue `<>` | a node is a discrete beat; the join is lost, though both lines survive |
-| per-line tags `# tag` | a dialogue carries `tags`; a node does not |
+| per-line tags `# tag` | not yet mapped — the importer carries only global and knot tags, onto `dialogue.tags` (`node.tags` exists since 0.15) |
 | `CONST` | Parlance registers mutable state only. Inline the value; do not declare a counter the story never writes |
 | `INCLUDE` | parse and import each file, then reconcile the manifests |
 
@@ -262,7 +267,7 @@ Every import ends with a written report, converged or not:
    Ink construct, the source line number, and why Parlance cannot carry it. This is
    the most valuable section; with Ink it will rarely be empty, so lead with it.
 3. **Open questions** — anything you could not map without guessing. A tunnel with
-   more than one call site and a choice list with no line to hang on both belong here.
+   more than one call site belongs here.
 4. **Validator state** — remaining errors and warnings, with the ones caused by
    declared loss called out as such.
 5. **What was NOT checked** — the content check compares player-facing strings. It

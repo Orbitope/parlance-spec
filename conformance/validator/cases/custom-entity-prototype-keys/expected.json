@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "protos '__proto__' field 'owner': unknown character 'npc_gone'",
+      "severity": "error"
+    }
+  ]
+}

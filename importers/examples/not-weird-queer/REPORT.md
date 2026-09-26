@@ -10,12 +10,12 @@ validator error.
 
 | | source | output |
 |---|---|---|
-| narration lines carried | 1,003 | 1,003 |
-| links carried | 176 | 176 |
-| lines under a `showIf` | — | 159 |
+| narration lines carried | 1,051 | 1,051 |
+| links carried | 178 | 178 |
+| lines and links under a `showIf` | — | 209 |
 | dialogues | 167 passages | 19 |
-| declared loss | 182 units | — |
-| nodes a player can reach | — | **454 of 1,003** |
+| declared loss | 145 units | — |
+| nodes a player can reach | — | **500 of 1,051** |
 
 Reproduce both halves from this directory:
 
@@ -32,30 +32,35 @@ the project against it. It is the whole claim of this example: you do not have t
 believe that no prose was rewritten, because the check refuses to converge if any
 was.
 
-## 2. Declared loss — 182 units
+## 2. Declared loss — 145 units
 
 | n | what | can the author fix it? |
 |---|---|---|
-| 60 | **Gated on a Harlowe keyword, not a variable** — `visits`, how many times this passage has been seen. Parlance has no read-count condition and no clock. | Only by restructuring: set a flag on first arrival and gate on that. |
-| 51 | **Gated on a variable whose kind cannot be derived** — the story assigns it from an expression, or assigns it as two different kinds in different places (`$gender` is set to `"male"` in one passage and to `0` in another). Reading it as either would silently change when the line shows. | Yes: keep a variable to one kind. |
+| 57 | **Gated on a Harlowe keyword, not a variable** — `visits`, how many times this passage has been seen. Parlance has no read-count condition and no clock. | Only by restructuring: set a flag on first arrival and gate on that. |
+| 50 | **Gated on a variable whose kind cannot be derived** — the story assigns it from an expression, or assigns it as two different kinds in different places (`$gender` is set to `"male"` in one passage and to `0` in another). Reading it as either would silently change when the line shows. | Yes: keep a variable to one kind. |
 | 38 | **Gated on a text variable** — `(if: $name is "Ryan")`. There is no text-valued condition in the Parlance vocabulary at all. | Only by restructuring into a flag. |
-| 24 | **Conditional narration hosting a passage's links.** Harlowe shows a whole passage at once, so its links hang off the last line; if that line is guarded it would carry `showIf` and `choices` together, which the validator refuses (`COND`). | Yes: one unguarded line at the end of the passage. |
-| 7 | **Conditional narration as the last beat** of a passage with no link out — `showIf` and `isEnd` are mutually exclusive too. | Yes: a line after it, or a link onwards. |
-| 2 | **A link with no narration line to host it** — the passage opens with the link. | Yes: one line before it. |
+
+**0.15 removed the positional losses.** Three rows this table used to lead with —
+a guarded line hosting a passage's links, a guarded line as the last beat,
+and a link with no line to host it — are gone. Parlance 0.15
+lets `showIf` on a node with `choices` or `isEnd` hide only the LINE (the choices
+still show, the conversation still ends), and lets a node carry links with no
+`text` at all. The importer now emits those shapes as the source wrote them, so
+none of it is declared, and none of it needed a line the source did not contain.
 
 Also reported in `unmapped` without costing a line: Harlowe macros with no
 Parlance equivalent — `(icon-counter:)`, `(text-style:)`, `(align:)`,
 `(link-goto:)`, `(event:)`, `(cond:)` — and the computed-text macros
 `(print:)` and `(display:)`.
 
-**159 guarded lines came across as `node.showIf`**, including every `(else:)`
+**174 guarded lines came across as `node.showIf`**, including every `(else:)`
 hook under the negation of its `(if:)`. That is more conditional narration than
 any other example here carries, and it is the reason this story replaced the
 first one.
 
-## 3. What a player can reach — 454 of 1,003
+## 3. What a player can reach — 500 of 1,051
 
-45%. What is cut off sits behind links whose guards did not map: in Harlowe every
+48% (45% before 0.15 removed the positional losses). What is cut off sits behind links whose guards did not map: in Harlowe every
 forward motion is a link, so a link inside an `(if:)` whose condition cannot be
 carried takes everything behind it with it.
 
@@ -65,8 +70,8 @@ is a real cost rather than a mapping the importer declined to make. The report
 for [`the-intercept`](../the-intercept/REPORT.md) has the counterpart case, where
 a construct that looked unexpressible turned out not to be.
 
-**Walk the graph; do not read the declared-loss total.** 182 losses out of 1,179
-units is 15%, and it costs 55% of the story — because one loss on a trunk link is
+**Walk the graph; do not read the declared-loss total.** 145 losses out of 1,229
+units is 12%, and it costs 52% of the story — because one loss on a trunk link is
 worth a hundred on the leaves. Reachability is pinned for every example in
 `tooling/tests/test_importer_examples.py` for exactly this reason.
 
@@ -85,13 +90,13 @@ worth a hundred on the leaves. Reachability is pinned for every example in
 
 ## 5. Validator state
 
-**Zero errors.** 603 warnings:
+**Zero errors.** 605 warnings:
 
 | n | code | why |
 |---|---|---|
 | 549 | `REACH` | §3 — links whose guards did not map. |
 | 27 | `TEXT` | Text variables set by the story and never interpolated into a line. |
-| 14 | `FLOW` | A node where every choice has a `showIf` — the player may be stuck if none passes. True of the source too. |
+| 15 | `FLOW` | A node where every choice has a `showIf` — the player may be stuck if none passes. True of the source too. One more than before 0.15, because a guarded line hosting links used to be declared and is now carried. |
 | 9 | `COND` | A conditional node carries `onEnter` effects, which do not fire when it is skipped (advisory). |
 | 4 | `FLAG` | Downstream of dropped assignments: flags set but never read. |
 

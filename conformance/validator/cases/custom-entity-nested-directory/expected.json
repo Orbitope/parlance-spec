@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "spells 'frostbite' field 'grantedBy': unknown character 'npc_gone'",
+      "severity": "error"
+    }
+  ]
+}

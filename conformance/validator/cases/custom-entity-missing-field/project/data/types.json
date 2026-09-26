@@ -1,0 +1,12 @@
+{
+  "spell": {
+    "fields": {
+      "manaCost": {
+        "required": true,
+        "type": "number"
+      }
+    },
+    "name": "Spell",
+    "plural": "spells"
+  }
+}

@@ -26,7 +26,7 @@ retroactively.** Concretely, during 0.x:
   added or removed, enum values may change, runtime semantics may be corrected.
 - **There is no deprecation window.** A wrong default gets fixed, not carried.
 - **There are no backports.** Fixes land on the current release only.
-- **Ports must pin an exact tag** (`v0.14.0`, never a range or a branch) and vendor the
+- **Ports must pin an exact tag** (`v0.15.0`, never a range or a branch) and vendor the
   conformance vectors at that tag — the mechanism described in
   [`INTEGRATION.md`](INTEGRATION.md). Moving the pin is a deliberate act with a
   re-run of your suite, not a dependency bump.
@@ -91,6 +91,7 @@ it is a hazard the *consumer* carries until they move their pin.
 |---|---|---|
 | 0.11.0 | `DialogueNode.showIf` | Additive to the schema, but it changes playback for data that uses it: a runtime without the skip walk renders conditionally-hidden text with no error of any kind. A port that reads "additive" and skips the release is silently wrong, not merely behind. Detection recipe and mitigations in `MIGRATIONS.md`. |
 | 0.14.0 | `Check.modifiers` | Additive to the schema, but a check with modifiers rolls the wrong odds on a runtime that ignores them — the pass/fail silently moves. Same class as `showIf`: silently wrong, not behind. Detection and port steps in `MIGRATIONS.md`. |
+| 0.15.0 | Line-only `showIf`, `choice.fallback`, the `engine` effect | Every 0.14 project is unchanged, but data that uses these plays wrong on a 0.14 runtime with no error: it skips a gated node that carries choices or `isEnd` (so the player loses the choice list, or the dialogue does not end where it should), shows a `fallback` choice beside the choices it was meant to replace, and may throw on an unknown effect type. Port steps and vectors in `MIGRATIONS.md`. |
 
 The general defence is strict deserialization: a port that rejects unknown fields turns
 every future member of this class into a load error instead of silent wrong output.

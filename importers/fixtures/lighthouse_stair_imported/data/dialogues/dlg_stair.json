@@ -1,0 +1,253 @@
+{
+  "entry": "n_startup_19",
+  "id": "dlg_stair",
+  "nodes": [
+    {
+      "id": "n_startup_19",
+      "next": "n_startup_22",
+      "text": "The stair winds up inside the tower, one iron step at a time."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_startup_25",
+          "id": "c_startup_23",
+          "text": "Climb quickly."
+        },
+        {
+          "goto": "n_startup_30",
+          "id": "c_startup_27",
+          "showIf": {
+            "counter": "oil",
+            "op": ">",
+            "type": "counter",
+            "value": 1
+          },
+          "text": "Refill the lamp first.",
+          "whenLocked": "show"
+        },
+        {
+          "effects": [
+            {
+              "flag": "reuse_startup_32",
+              "type": "set_flag",
+              "value": true
+            }
+          ],
+          "goto": "n_startup_33",
+          "id": "c_startup_32",
+          "showIf": {
+            "flag": "reuse_startup_32",
+            "type": "flag",
+            "value": false
+          },
+          "text": "Listen at the wall."
+        },
+        {
+          "id": "c_startup_35",
+          "showIf": {
+            "counter": "courage",
+            "op": "<",
+            "type": "counter",
+            "value": 20
+          },
+          "text": "Go back down."
+        }
+      ],
+      "id": "n_startup_22",
+      "isEnd": true,
+      "text": "Someone has written {name} on the wall, [i]twice[/i] // in chalk."
+    },
+    {
+      "id": "n_startup_25",
+      "next": "n_startup_40",
+      "onEnter": [
+        {
+          "counter": "courage",
+          "delta": 5,
+          "type": "adjust_counter"
+        }
+      ],
+      "text": "You take the steps two at a time."
+    },
+    {
+      "id": "n_startup_30",
+      "next": "n_startup_40",
+      "onEnter": [
+        {
+          "counter": "oil",
+          "delta": -1,
+          "type": "adjust_counter"
+        },
+        {
+          "flag": "lamp_lit",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "The wick drinks the oil and brightens."
+    },
+    {
+      "id": "n_startup_33",
+      "next": "n_startup_40",
+      "text": "The wind answers, and nothing else does."
+    },
+    {
+      "id": "n_startup_40",
+      "next": "n_startup_42",
+      "showIf": {
+        "flag": "lamp_lit",
+        "type": "flag",
+        "value": true
+      },
+      "text": "The lamp throws your shadow up the stair ahead of you."
+    },
+    {
+      "id": "n_startup_42",
+      "next": "n_startup_44",
+      "showIf": {
+        "of": [
+          {
+            "flag": "lamp_lit",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "counter": "oil",
+            "op": ">",
+            "type": "counter",
+            "value": 0
+          }
+        ],
+        "type": "all"
+      },
+      "text": "You still have oil enough for the way down."
+    },
+    {
+      "id": "n_startup_44",
+      "next": "n_startup_50",
+      "showIf": {
+        "of": [
+          {
+            "flag": "lamp_lit",
+            "type": "flag",
+            "value": false
+          },
+          {
+            "of": {
+              "counter": "oil",
+              "op": ">",
+              "type": "counter",
+              "value": 0
+            },
+            "type": "not"
+          }
+        ],
+        "type": "all"
+      },
+      "text": "It is very dark."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_keeper_3",
+          "id": "c_startup_50",
+          "text": "Keep climbing"
+        }
+      ],
+      "id": "n_startup_50"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_keeper_6",
+          "id": "c_keeper_4",
+          "text": "Ask about the lamp."
+        },
+        {
+          "goto": "n_keeper_8",
+          "id": "c_keeper_7",
+          "text": "Say nothing."
+        }
+      ],
+      "id": "n_keeper_3",
+      "onEnter": [
+        {
+          "flag": "asked",
+          "type": "set_flag",
+          "value": false
+        }
+      ],
+      "text": "The keeper looks up from her logbook."
+    },
+    {
+      "id": "n_keeper_6",
+      "next": "n_keeper_8",
+      "onEnter": [
+        {
+          "flag": "asked",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "text": "\"It has not gone out in forty years,\" she says."
+    },
+    {
+      "id": "n_keeper_8",
+      "next": "n_keeper_10",
+      "onEnter": [
+        {
+          "args": [
+            "keeper.png"
+          ],
+          "command": "image",
+          "type": "engine"
+        }
+      ],
+      "text": "\"Well,\" she says."
+    },
+    {
+      "id": "n_keeper_10",
+      "next": "n_keeper_15",
+      "showIf": {
+        "flag": "asked",
+        "type": "flag",
+        "value": true
+      },
+      "text": "She seems pleased that you asked."
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_ending_1",
+          "id": "c_keeper_15",
+          "text": "Go on"
+        }
+      ],
+      "id": "n_keeper_15"
+    },
+    {
+      "id": "n_keeper_18",
+      "next": "n_ending_1",
+      "text": "She writes something down."
+    },
+    {
+      "id": "n_ending_1",
+      "next": "n_ending_3",
+      "text": "At the top, the lamp room is warm and bright."
+    },
+    {
+      "id": "n_ending_3",
+      "isEnd": true,
+      "showIf": {
+        "counter": "strength",
+        "op": ">=",
+        "type": "counter",
+        "value": 10
+      },
+      "text": "You could stay here all night."
+    }
+  ],
+  "replayable": false,
+  "title": "The Lighthouse Stair"
+}

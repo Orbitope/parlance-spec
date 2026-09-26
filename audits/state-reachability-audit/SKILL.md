@@ -257,7 +257,12 @@ def analyse(did):
     pre = set.intersection(*per_route) if per_route else set()
 
     def is_cond(nid):
-        return bool(nodes[nid].get("showIf"))
+        # Only an INTERSTITIAL gated node (no choices, not isEnd) can be skipped.
+        # Since format 0.15 a gate on a node with choices or isEnd hides only its
+        # line: the node is always reached, its effects always fire, and being
+        # there proves nothing about the gate — so it is not conditional here.
+        n = nodes[nid]
+        return bool(n.get("showIf")) and not n.get("choices") and not n.get("isEnd")
 
     def out_must(nid):
         """Facts guaranteed at this node's SUCCESSOR, via its `next`.

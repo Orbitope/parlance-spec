@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "FLAG",
+      "contains": "mutually-exclusive flags simultaneously",
+      "severity": "error"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
     {
       "choices": [
         {
-          "goto": "node_close",
+          "goto": "node_aside",
           "id": "ch_listen",
           "text": "Listen."
         }
@@ -21,6 +21,15 @@
       "text": "The keeper looks up."
     },
     {
+      "id": "node_aside",
+      "showIf": {
+        "flag": "met_keeper",
+        "type": "flag",
+        "value": true
+      },
+      "text": "You have been here before, and they know it."
+    },
+    {
       "id": "node_close",
       "isEnd": true,
       "onEnter": [
@@ -30,11 +39,6 @@
           "value": true
         }
       ],
-      "showIf": {
-        "flag": "met_keeper",
-        "type": "flag",
-        "value": true
-      },
       "text": "They tell you what they saw."
     }
   ],

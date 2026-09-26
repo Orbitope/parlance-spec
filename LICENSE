@@ -18,7 +18,7 @@ for checking conformance to them, and the editorial audits written against them:
   tooling/VERSIONING.md
   tooling/MIGRATIONS.md
   tooling/audits/          review-only editorial audits (Claude skills)
-  tooling/importers/       format importers, Yarn / Ink / Twine (Claude skills)
+  tooling/importers/       format importers (Claude skills)
   tooling/PUBLISHED_SKILLS.md  the index to those two bundles
 
 Copying these is the intent, not a leak. An engine port cannot be written

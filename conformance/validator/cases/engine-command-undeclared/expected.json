@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "ENGINE",
+      "contains": "'shaek' is not declared",
+      "severity": "warning"
+    }
+  ]
+}

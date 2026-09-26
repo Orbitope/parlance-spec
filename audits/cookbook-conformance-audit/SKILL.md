@@ -5,7 +5,7 @@ description: Conformance audit for the Parlance pattern cookbook. Use when a pro
 
 # Cookbook Conformance Audit
 
-`tooling/COOKBOOK.md` is eighteen recipes for the narrative-logic problems every project
+`tooling/COOKBOOK.md` is nineteen recipes for the narrative-logic problems every project
 hits — say-it-once, skip-the-setup, one-shot option, hub-and-spoke, and the rest. Each
 recipe carries a **Pitfalls** section: the small, specific way the arrangement goes wrong.
 Some of those pitfalls are *mechanical* — visible in the data, not in the author's head —
@@ -25,8 +25,9 @@ Three walkers already cover most of this ground. Keep the boundary crisp or you 
 re-report their findings as noise:
 
 - **The validator** owns *invalid*: dangling ids, a character with no fallback offer, a
-  prioritized fallback that shadows every lower tier forever, the FLOW rule (a `showIf` node
-  must have `next` and must not have `choices`/`isEnd`). Run `python tooling/validate.py`
+  prioritized fallback that shadows every lower tier forever, the COND rules (a skippable
+  `showIf` node — no `choices`, not `isEnd` — must have `next`; a gate on a node with no
+  line is an error). Run `python tooling/validate.py`
   first. This audit
   assumes a clean validator and never repeats it.
 - **`offer-audit`** owns *intent*: whether a character's dialogue offers resolve to the
@@ -173,7 +174,9 @@ print("=" * 74)
 hitA = 0
 for did, d in sorted(dlg_by_id.items()):
     for n in d.get("nodes", []) or []:
-        if n.get("showIf") and n.get("onEnter"):
+        # Only an interstitial node is skipped; a gate on a node with choices or
+        # isEnd hides the line and its onEnter still fires (format 0.15).
+        if n.get("showIf") and n.get("onEnter") and not n.get("choices") and not n.get("isEnd"):
             hitA += 1
             eff = ", ".join(e.get("type", "?") for e in n["onEnter"] if isinstance(e, dict))
             print(f"\n  {dlg_file.get(did, did)}  dialogue {did}")
@@ -316,7 +319,7 @@ In this order:
   `node_brief`, which is skipped on every re-entry because its `showIf` fails once
   `seen_brief` is set, so a returning player never gets the XP" is.
 - **Mechanical validity is the validator's.** If a candidate is actually *invalid* (a
-  `showIf` node with `choices`, a character with no fallback offer), note it in one line and
+  skippable `showIf` node with no `next`, a character with no fallback offer), note it in one line and
   defer — do not dress it as a cookbook finding.
 - **Advisory, always.** You advise; the author decides. A skipped effect, a one-shot that
   spends elsewhere, a cold-open ending — each can be intent. Flag and ask.

@@ -1,0 +1,15 @@
+{
+  "must": [
+    {
+      "code": "REF",
+      "contains": "field 'teaches[1]': unknown spell 'frostbite'",
+      "severity": "error"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "REF",
+      "contains": "'signature'"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "ChoiceScript asked",
+      "id": "asked",
+      "kind": "flag"
+    },
+    {
+      "default": 50,
+      "description": "ChoiceScript courage",
+      "id": "courage",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "ChoiceScript lamp_lit",
+      "id": "lamp_lit",
+      "kind": "flag"
+    },
+    {
+      "default": "traveller",
+      "description": "ChoiceScript name",
+      "id": "name",
+      "kind": "text"
+    },
+    {
+      "default": 2,
+      "description": "ChoiceScript oil",
+      "id": "oil",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "ChoiceScript *hide_reuse on startup.txt line 32",
+      "id": "reuse_startup_32",
+      "kind": "flag"
+    },
+    {
+      "default": 10,
+      "description": "ChoiceScript strength",
+      "id": "strength",
+      "kind": "counter"
+    }
+  ]
+}

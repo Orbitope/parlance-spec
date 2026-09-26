@@ -1,0 +1,10 @@
+{
+  "id": "end_leave",
+  "name": "You Leave",
+  "summary": "The road takes you onward.",
+  "unlockedBy": {
+    "flag": "heard_story",
+    "type": "flag",
+    "value": true
+  }
+}

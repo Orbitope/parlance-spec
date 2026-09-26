@@ -34,9 +34,88 @@
     },
     {
       "id": "n_episode1_sms6a_6",
-      "isEnd": true,
+      "next": "n_episode1_sms6aq",
       "speakerId": "char_hakim",
       "text": "Mais encore merci d’avoir été là !"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_sms6aq_2",
+          "id": "c_episode1_comment_a_va_depuis",
+          "text": "Comment ça va depuis ?"
+        },
+        {
+          "goto": "n_episode1_sms6aq_4",
+          "id": "c_episode1_tu_as_de_l",
+          "text": "Tu as de l'aide ?"
+        },
+        {
+          "goto": "n_episode1_sms6aq_7",
+          "id": "c_episode1_et_dans_dans_ton",
+          "text": "Et dans dans ton nouveau collège ?"
+        },
+        {
+          "goto": "n_episode1_sms6aq_10",
+          "id": "c_episode1_dire_au_revoir",
+          "text": "Dire au revoir"
+        }
+      ],
+      "id": "n_episode1_sms6aq"
+    },
+    {
+      "id": "n_episode1_sms6aq_2",
+      "next": "n_episode1_sms6aq_3",
+      "speakerId": "char_you",
+      "text": "Comment ça va depuis ?"
+    },
+    {
+      "id": "n_episode1_sms6aq_3",
+      "next": "n_episode1_sms6aq",
+      "speakerId": "char_hakim",
+      "text": "Les moqueries ont beaucoup diminué, je ne suis plus identifié dans des commentaires ou publications gênantes. La vidéo continue de tourner sur quelques comptes. Mais globalement ça s’est bien calmé."
+    },
+    {
+      "id": "n_episode1_sms6aq_4",
+      "next": "n_episode1_sms6aq_5",
+      "speakerId": "char_you",
+      "text": "C’est cool ! Mais est-ce que tu reçois de l’aide de quelqu’un, d’une asso ?"
+    },
+    {
+      "id": "n_episode1_sms6aq_5",
+      "next": "n_episode1_sms6aq_6",
+      "speakerId": "char_hakim",
+      "text": "Je vois un psy depuis quelques temps."
+    },
+    {
+      "id": "n_episode1_sms6aq_6",
+      "next": "n_episode1_sms6aq",
+      "speakerId": "char_hakim",
+      "text": "Ça va m’aider à passer au dessus de tout ça, à digérer toute cette affaire."
+    },
+    {
+      "id": "n_episode1_sms6aq_7",
+      "next": "n_episode1_sms6aq_8",
+      "speakerId": "char_you",
+      "text": "Bien ! Et comment ça se passe dans ton nouveau collège ?"
+    },
+    {
+      "id": "n_episode1_sms6aq_8",
+      "next": "n_episode1_sms6aq_9",
+      "speakerId": "char_hakim",
+      "text": "Plutôt bien ! Je me suis fait quelques potes. Mais c’est pas pour ça qu’on s’oublie ! Je veux garder contact avec toi !"
+    },
+    {
+      "id": "n_episode1_sms6aq_9",
+      "next": "n_episode1_sms6aq",
+      "speakerId": "char_hakim",
+      "text": "T’es vraiment une bonne personne."
+    },
+    {
+      "id": "n_episode1_sms6aq_10",
+      "isEnd": true,
+      "speakerId": "char_you",
+      "text": "À très bientôt !"
     }
   ],
   "replayable": false,

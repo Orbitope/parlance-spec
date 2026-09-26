@@ -5,6 +5,50 @@
     {
       "id": "n_episode1_testemail",
       "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "Email1"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Email2"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Email3"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Email4"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Email5a"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Email5b"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        }
+      ],
       "text": "Check your mail, bro"
     }
   ],

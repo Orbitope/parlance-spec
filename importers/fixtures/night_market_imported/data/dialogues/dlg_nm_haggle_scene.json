@@ -1,0 +1,14 @@
+{
+  "entry": "n_nm_haggle_scene",
+  "id": "dlg_nm_haggle_scene",
+  "nodes": [
+    {
+      "id": "n_nm_haggle_scene",
+      "isEnd": true,
+      "speakerId": "v",
+      "text": "You want it cheaper? Everyone does."
+    }
+  ],
+  "replayable": false,
+  "title": "haggle_scene"
+}

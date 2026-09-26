@@ -5,6 +5,12 @@
     {
       "choices": [
         {
+          "effects": [
+            {
+              "command": "quit",
+              "type": "engine"
+            }
+          ],
           "id": "c_episode1_quit",
           "text": "Quit"
         }

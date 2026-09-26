@@ -1,0 +1,8 @@
+{
+  "profile": "godot",
+  "vo": {
+    "dialogue/dlg_meet/nodes/node_close/text": "res://vo/close.ogg",
+    "dialogue/dlg_meet/nodes/node_ghost/text": "res://vo/ghost.ogg",
+    "dialogue/dlg_meet/nodes/node_open/text": "res://vo/open.ogg"
+  }
+}

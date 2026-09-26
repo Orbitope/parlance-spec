@@ -1,0 +1,29 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "SugarCube $knocked",
+      "id": "knocked",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "SugarCube $lantern",
+      "id": "lantern",
+      "kind": "flag"
+    },
+    {
+      "default": 3,
+      "description": "SugarCube $matches",
+      "id": "matches",
+      "kind": "counter"
+    },
+    {
+      "default": "stranger",
+      "description": "SugarCube $name",
+      "id": "name",
+      "kind": "text",
+      "writtenBy": "engine"
+    }
+  ]
+}

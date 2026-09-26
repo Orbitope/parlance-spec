@@ -110,11 +110,32 @@ def base_project() -> dict[str, object]:
     }
 
 
+class WithBom:
+    """A file's JSON content, written with a leading UTF-8 byte-order mark —
+    what Windows PowerShell 5.1 (`Set-Content -Encoding UTF8`) and older
+    Notepad produce. Everything else is written canonically."""
+
+    def __init__(self, content: object) -> None:
+        self.content = content
+
+
+class Text:
+    """A non-JSON file (a lore Markdown document), written verbatim."""
+
+    def __init__(self, content: str) -> None:
+        self.content = content
+
+
 def write_project(root: Path, files: dict[str, object]) -> None:
     for rel, content in files.items():
         path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(content, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        if isinstance(content, Text):
+            path.write_text(content.content, encoding="utf-8")
+            continue
+        bom = "\ufeff" if isinstance(content, WithBom) else ""
+        body = content.content if isinstance(content, WithBom) else content
+        path.write_text(bom + json.dumps(body, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -123,6 +144,22 @@ def write_project(root: Path, files: dict[str, object]) -> None:
 
 def case_clean_minimal(p: dict) -> None:
     """No defect: the floor every other case is measured against."""
+
+
+def case_utf8_bom_loaded(p: dict) -> None:
+    """A dir-mode entity AND an array registry saved with a UTF-8 BOM.
+
+    Not a defect — a BOM is an encoding signature, and both implementations
+    strip it on read. The case pins that they LOAD such files: the keeper is
+    the dialogue's speaker and variables.json declares the flags the dialogue
+    sets and the codex/ending read, so a loader that dropped either file would
+    turn this clean project red with REF/FLAG errors. Both used to reject the
+    file (the editor silently dropping the entity, the reference validator
+    reporting invalid JSON), which is how a Notepad-edited character vanished
+    from a writer's project (R4-1).
+    """
+    for rel in ("data/characters/npc_keeper.json", "data/variables.json", "parlance.config.json"):
+        p[rel] = WithBom(p[rel])
 
 
 def case_passive_goto_dangling(p: dict) -> None:
@@ -638,6 +675,19 @@ def case_grant_xp_nonpositive(p: dict) -> None:
     )
 
 
+def case_loreref_unicode_form(p: dict) -> None:
+    """A loreRef whose accented name is in the other Unicode form from the file.
+
+    Not a defect. macOS can hand back a decomposed name (NFD: "e" + U+0301)
+    while git commits and Linux/Windows store it composed (NFC: "\u00e9"). Both
+    forms name the same file, so both validators accept either — before this,
+    the reference read as missing on Linux and in CI but not on the Mac that
+    wrote it, and the two validators disagreed there.
+    """
+    p["lore/caf\u00e9.md"] = Text("# Caf\u00e9\n\nWhere the keeper drinks.\n")
+    p["data/characters/npc_keeper.json"]["loreRef"] = {"file": "lore/cafe\u0301.md"}
+
+
 def case_loreref_file_missing(p: dict) -> None:
     """A pointer into the canon that no longer resolves."""
     p["data/characters/npc_keeper.json"]["loreRef"] = {"file": "lore/keeper.md"}
@@ -923,16 +973,148 @@ def case_cond_node_showif_clean(p: dict) -> None:
 
 
 def case_cond_showif_without_next(p: dict) -> None:
-    """showIf with nowhere to go when the gate fails."""
+    """showIf on an INTERSTITIAL node with nowhere to go when the gate fails.
+
+    Neither choices nor isEnd, so a failed gate skips it — and there is no
+    `next` to skip to. (Until the line-only gate landed this case seeded
+    node_close, an isEnd node; that shape is legal now, see
+    cond-showif-isend-clean.)
+    """
     dlg = p["data/dialogues/dlg_meet.json"]
-    dlg["nodes"][1]["showIf"] = _cond_gate()      # node_close: isEnd, no next
+    dlg["nodes"].insert(1, {
+        "id": "node_aside",
+        "showIf": _cond_gate(),
+        "text": "You have been here before, and they know it.",
+    })
+    dlg["nodes"][0]["choices"][0]["goto"] = "node_aside"
 
 
 def case_cond_showif_with_choices(p: dict) -> None:
-    """showIf on a node that offers choices — not interstitial narration."""
+    """A LEGAL gate on a node that offers choices: it hides the LINE only.
+
+    The node is still reached, its choices are still offered and its onEnter
+    still fires — so no COND error, and no "do NOT fire" advisory either. This
+    was a COND error before the line-only gate; the clean case pins that the
+    rule is gone from BOTH validators, not just one.
+    """
     dlg = p["data/dialogues/dlg_meet.json"]
-    dlg["nodes"][0]["showIf"] = _cond_gate()      # node_open carries choices
-    dlg["nodes"][0]["next"] = "node_close"
+    dlg["nodes"][0]["showIf"] = _cond_gate()      # node_open carries choices AND onEnter
+
+
+def case_cond_showif_isend_clean(p: dict) -> None:
+    """A LEGAL gate on an isEnd node: the line hides, the dialogue still ends."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"][1]["showIf"] = _cond_gate()      # node_close: isEnd, carries onEnter
+
+
+def case_cond_empty_text_with_choices(p: dict) -> None:
+    """A gate on a choice node with NO line — nothing to hide."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"][0]["showIf"] = _cond_gate()
+    del dlg["nodes"][0]["text"]
+
+
+def case_textless_choices_clean(p: dict) -> None:
+    """A text-less node that offers choices — the option-block shape (legal)."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    del dlg["nodes"][0]["text"]
+
+
+def case_textless_no_choices(p: dict) -> None:
+    """A node with neither text nor choices — nothing to present."""
+    dlg = p["data/dialogues/dlg_meet.json"]
+    del dlg["nodes"][1]["text"]                   # node_close: isEnd, no choices
+
+
+def _gated_choice(cid: str, goto: str = "node_close") -> dict:
+    return {"goto": goto, "id": cid, "showIf": _cond_gate(), "text": "Only if they know you."}
+
+
+def case_choice_fallback_clean(p: dict) -> None:
+    """Every regular choice is gated, and one ungated fallback covers the gap.
+
+    Without the fallback this node gets the FLOW "may be stuck" warning; the
+    fallback proves it cannot strand anyone, so the warning must NOT fire.
+    """
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"] = [
+        _gated_choice("ch_know"),
+        {"fallback": True, "goto": "node_close", "id": "ch_leave", "text": "Leave."},
+    ]
+
+
+def case_choice_fallback_gated_still_stuck(p: dict) -> None:
+    """A fallback that is ITSELF gated proves nothing — the warning stands."""
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"] = [
+        _gated_choice("ch_know"),
+        {"fallback": True, "goto": "node_close", "id": "ch_leave",
+         "showIf": {"flag": "heard_story", "type": "flag", "value": True}, "text": "Leave."},
+    ]
+
+
+def case_choice_fallback_duplicate(p: dict) -> None:
+    """Two fallbacks on one node — they show together; one is enough."""
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"] = [
+        _gated_choice("ch_know"),
+        {"fallback": True, "goto": "node_close", "id": "ch_leave", "text": "Leave."},
+        {"fallback": True, "goto": "node_close", "id": "ch_wait", "text": "Wait."},
+    ]
+
+
+def case_choice_fallback_pointless(p: dict) -> None:
+    """A fallback beside no gated sibling — it is always offered, the flag does nothing."""
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"].append({"fallback": True, "goto": "node_close", "id": "ch_leave", "text": "Leave."})
+
+
+def case_choice_locked_clean(p: dict) -> None:
+    """A gated choice shown locked with its own lockedText, and a project default (legal)."""
+    p["data/rules.json"] = {"choices": {"whenLockedDefault": "show"}}
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"].append({
+        "goto": "node_close", "id": "ch_ledger", "lockedText": "[Requires the keeper's trust]",
+        "showIf": _cond_gate(), "text": "Ask about the ledger.", "whenLocked": "show",
+    })
+
+
+def case_choice_locked_without_showif(p: dict) -> None:
+    """whenLocked/lockedText on a choice with no gate — it can never be locked."""
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"][0]["whenLocked"] = "show"
+    node["choices"][0]["lockedText"] = "[Locked]"
+
+
+def case_choice_when_locked_invalid(p: dict) -> None:
+    """whenLocked outside its enum — a schema error, not a runtime guess.
+
+    Seeded in a SEPARATE dialogue that sets no flags: the Python reference drops
+    a schema-invalid file from every later rule, while the TypeScript guard keeps
+    a shape-safe one in the pass, so seeding dlg_meet would cascade into a
+    python-only FLAG/CODEX/ENDING fan-out that says nothing about this rule.
+    """
+    p["data/dialogues/dlg_extra.json"] = {
+        "entry": "n1",
+        "id": "dlg_extra",
+        "nodes": [{
+            "id": "n1", "isEnd": True, "text": "Well?",
+            "choices": [
+                {"id": "c_ok", "text": "Fine."},
+                {"id": "c_locked", "showIf": _cond_gate(), "text": "Tell me.", "whenLocked": "grey"},
+            ],
+        }],
+        "speakerId": "npc_keeper",
+        "title": "Extra",
+    }
+
+
+def case_choice_locked_text_placeholder_undeclared(p: dict) -> None:
+    """lockedText is player-facing and interpolated, so its placeholders are checked too."""
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"][0]["showIf"] = _cond_gate()
+    node["choices"][0]["whenLocked"] = "show"
+    node["choices"][0]["lockedText"] = "[Requires {no_such_var}]"
 
 
 def case_cond_empty_text(p: dict) -> None:
@@ -1014,6 +1196,25 @@ def case_offer_tie(p: dict) -> None:
         "dlg_aside", "Something else.", {"when": {"flag": "met_keeper", "type": "flag", "value": True}}
     )
     p["data/dialogues/dlg_greet.json"] = _minimal_dialogue("dlg_greet", "Hello again.", {})
+
+
+def case_flag_exclusive_group_set_together(p: dict) -> None:
+    """Two flags of one exclusive group (rules.flag.exclusiveGroups) set to
+    true in the SAME effect list — an error in both validators (FLAG). The
+    rule landed in both validators at once (#118) with no case, which is
+    exactly the drift the harness exists to catch: a rule that stops firing
+    in one of them looks like clean data."""
+    p["data/rules.json"] = {"flag": {"exclusiveGroups": [["met_keeper", "heard_story"]]}}
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["onEnter"].append(
+        {"flag": "heard_story", "type": "set_flag", "value": True}
+    )
+
+
+def case_flag_exclusive_group_set_apart(p: dict) -> None:
+    """The same group, with its flags set in different nodes: exclusivity is
+    about one effect list, so this is clean — the rule must not fire across
+    lists, or every group would be an error somewhere."""
+    p["data/rules.json"] = {"flag": {"exclusiveGroups": [["met_keeper", "heard_story"]]}}
 
 
 def case_offer_numeric_exclusive_no_tie(p: dict) -> None:
@@ -1192,6 +1393,214 @@ def case_offer_no_character(p: dict) -> None:
     }
 
 
+def case_custom_entity_valid(p: dict) -> None:
+    """A custom entity type with valid definitions and references."""
+    p["data/types.json"] = {
+        "spell": {
+            "name": "Spell",
+            "plural": "spells",
+            "fields": {
+                "manaCost": {"type": "number", "default": 10},
+                "element": {"type": "enum", "options": ["fire", "ice", "lightning"]},
+                "grantedBy": {"type": "reference", "target": "character"},
+            },
+        }
+    }
+    p["data/spells/fireball.json"] = {
+        "id": "fireball",
+        "name": "Fireball",
+        "manaCost": 15,
+        "element": "fire",
+        "grantedBy": "npc_keeper",
+    }
+
+
+def case_custom_entity_missing_field(p: dict) -> None:
+    """A custom entity missing a required field."""
+    p["data/types.json"] = {
+        "spell": {
+            "name": "Spell",
+            "plural": "spells",
+            "fields": {
+                "manaCost": {"type": "number", "required": True},
+            },
+        }
+    }
+    p["data/spells/fireball.json"] = {
+        "id": "fireball",
+        "name": "Fireball",
+    }
+
+
+# ---- custom-entity STORAGE shapes -------------------------------------------
+# The editor's grid reads and writes custom rows in every shape the loaders
+# accept: one file per row (nested zones allowed), a {"<plural>": [...]} array
+# registry, and an id-keyed object registry — and each is written back in its own
+# shape. A clean case cannot prove a loader FOUND the rows (zero rows is also
+# clean), so each seeds one dangling reference that only fires if they loaded.
+
+_SPELL_TYPE = {
+    "spell": {
+        "name": "Spell",
+        "plural": "spells",
+        "fields": {"grantedBy": {"type": "reference", "target": "character"}},
+    }
+}
+
+
+def case_custom_entity_registry_array(p: dict) -> None:
+    """Custom rows in a data/<plural>.json array registry are loaded and checked."""
+    p["data/types.json"] = _SPELL_TYPE
+    p["data/spells.json"] = {"spells": [
+        {"id": "fireball", "grantedBy": "npc_keeper"},
+        {"id": "frostbite", "grantedBy": "npc_gone"},
+    ]}
+
+
+def case_custom_entity_registry_keyed(p: dict) -> None:
+    """Custom rows in an id-keyed object registry (keys need not equal ids) are loaded and checked."""
+    p["data/types.json"] = _SPELL_TYPE
+    p["data/spells.json"] = {
+        "fb": {"id": "fireball", "grantedBy": "npc_keeper"},
+        "fr": {"id": "frostbite", "grantedBy": "npc_gone"},
+    }
+
+
+def case_custom_entity_nested_directory(p: dict) -> None:
+    """Custom rows filed in nested zone folders under data/<plural>/ are loaded and checked."""
+    p["data/types.json"] = _SPELL_TYPE
+    p["data/spells/act_one/fireball.json"] = {"id": "fireball", "grantedBy": "npc_keeper"}
+    p["data/spells/act_two/north/frostbite.json"] = {"id": "frostbite", "grantedBy": "npc_gone"}
+
+
+def case_custom_entity_default_plural(p: dict) -> None:
+    """A type declared with no plural — or an empty one — is stored under <id>s."""
+    p["data/types.json"] = {
+        "spell": {"name": "Spell", "fields": {"grantedBy": {"type": "reference", "target": "character"}}},
+        "rune": {"name": "Rune", "plural": "", "fields": {"carvedBy": {"type": "reference", "target": "character"}}},
+    }
+    p["data/spells/frostbite.json"] = {"id": "frostbite", "grantedBy": "npc_gone"}
+    p["data/runes/ember.json"] = {"id": "ember", "carvedBy": "npc_lost"}
+
+
+def case_custom_entity_cross_type_reference(p: dict) -> None:
+    """A custom type referencing another custom type, singly and as a list; one list item dangles."""
+    p["data/types.json"] = {
+        "spell": {"name": "Spell", "plural": "spells", "fields": {}},
+        "school": {
+            "name": "School",
+            "plural": "schools",
+            "fields": {
+                "signature": {"type": "reference", "target": "spell"},
+                "teaches": {"type": "array", "items": {"type": "reference", "target": "spell"}},
+            },
+        },
+    }
+    p["data/spells/fireball.json"] = {"id": "fireball"}
+    p["data/schools/embers.json"] = {"id": "embers", "signature": "fireball", "teaches": ["fireball", "frostbite"]}
+
+
+def case_custom_entity_field_types(p: dict) -> None:
+    """Values of the wrong type in every scalar field kind, and a non-list in a list field."""
+    p["data/types.json"] = {
+        "spell": {
+            "name": "Spell",
+            "plural": "spells",
+            "fields": {
+                "manaCost": {"type": "number"},
+                "ritual": {"type": "boolean"},
+                "element": {"type": "enum", "options": ["fire", "ice"]},
+                "incantation": {"type": "string"},
+                "reagents": {"type": "array", "items": {"type": "string"}},
+            },
+        }
+    }
+    p["data/spells/fireball.json"] = {
+        "id": "fireball",
+        "manaCost": "15",
+        "ritual": 1,
+        "element": "water",
+        "incantation": 7,
+        "reagents": "ash",
+    }
+
+
+def case_types_declaration_plurals(p: dict) -> None:
+    """Declarations whose plural escapes data/, collides with a built-in folder, or with another type."""
+    p["data/types.json"] = {
+        "spell": {"name": "Spell", "plural": "../escape", "fields": {}},
+        "rumour": {"name": "Rumour", "plural": "dialogues", "fields": {}},
+        "rune": {"name": "Rune", "plural": "glyphs", "fields": {}},
+        "sigil": {"name": "Sigil", "plural": "glyphs", "fields": {}},
+    }
+
+
+def case_types_declaration_plural_portability(p: dict) -> None:
+    """Plurals that collide only on a case-insensitive disk (macOS, Windows), a
+    Windows device name, and a trailing newline a `$` regex would admit."""
+    p["data/types.json"] = {
+        "rune": {"name": "Rune", "plural": "glyphs", "fields": {}},
+        "sigil": {"name": "Sigil", "plural": "Glyphs", "fields": {}},
+        "rumour": {"name": "Rumour", "plural": "Dialogues", "fields": {}},
+        "device": {"name": "Device", "plural": "aux", "fields": {}},
+        "trail": {"name": "Trail", "plural": "trails\n", "fields": {}},
+    }
+
+
+def case_types_declaration_fields(p: dict) -> None:
+    """Field declarations that silently misbehave, and a type named after a built-in target."""
+    p["data/types.json"] = {
+        "character": {"name": "Hero", "plural": "heroes", "fields": {}},
+        "spell": {
+            "name": "Spell",
+            "plural": "spells",
+            "fields": {
+                "element": {"type": "enum", "options": []},
+                "power": {"type": "float"},
+                "caster": {"type": "reference"},
+                "school": {"type": "reference", "target": "school"},
+                "combos": {"type": "array", "items": {"type": "reference", "target": "combo"}},
+                "notes": "text",
+            },
+        },
+    }
+
+
+def case_types_declaration_not_object(p: dict) -> None:
+    """A declaration that is not an object, and one whose fields are not an object."""
+    p["data/types.json"] = {
+        "spell": "a spell",
+        "rune": {"name": "Rune", "plural": "runes", "fields": ["power"]},
+    }
+    p["data/runes/ember.json"] = {"id": "ember"}
+
+
+def case_custom_entity_prototype_keys(p: dict) -> None:
+    """'__proto__' as a type id and as a row id are ordinary keys: loaded and checked like any other."""
+    p["data/types.json"] = {
+        "__proto__": {"name": "Proto", "plural": "protos", "fields": {"owner": {"type": "reference", "target": "character"}}},
+    }
+    p["data/protos/p1.json"] = {"id": "__proto__", "owner": "npc_gone"}
+
+
+def case_custom_entity_bad_reference(p: dict) -> None:
+    """A custom entity with a dangling reference."""
+    p["data/types.json"] = {
+        "spell": {
+            "name": "Spell",
+            "plural": "spells",
+            "fields": {
+                "grantedBy": {"type": "reference", "target": "character"},
+            },
+        }
+    }
+    p["data/spells/fireball.json"] = {
+        "id": "fireball",
+        "name": "Fireball",
+        "grantedBy": "npc_missing",
+    }
+
+
 def case_offer_forced_only_is_not_a_gap(p: dict) -> None:
     """A routing-only character: its one offer is forced through
     active_dialogue__npc_keeper, so "no fallback" is the design, not a defect —
@@ -1234,8 +1643,111 @@ def case_offer_interactable_not_noop(p: dict) -> None:
     }
 
 
+def case_binding_clean(p: dict) -> None:
+    """A binding whose VO keys all match voiceable node text — clean.
+
+    The whole BIND family (validate.py check_bindings) had NO conformance case.
+    It is python-only by construction: asset bindings are not part of the
+    TypeScript project model, so there is nothing for validate() to check.
+    Without a case, a used_vo_keys derivation that silently stopped populating
+    would read as clean data — the exact drift the harness exists to catch."""
+    p["data/bindings/godot.json"] = {
+        "profile": "godot",
+        "vo": {
+            "dialogue/dlg_meet/nodes/node_open/text": "res://vo/open.ogg",
+            "dialogue/dlg_meet/nodes/node_close/text": "res://vo/close.ogg",
+        },
+    }
+
+
+def case_binding_vo_dangling(p: dict) -> None:
+    """A VO binding for a key that no node produces — check_bindings must flag
+    it dangling. The two real node-text keys are also bound, so the only BIND
+    finding is the dangling one (no unbound noise). Guards the used_vo_keys
+    derivation from the other side: if it emptied, every real key here would be
+    called dangling instead, and this assertion would still fail loudly."""
+    p["data/bindings/godot.json"] = {
+        "profile": "godot",
+        "vo": {
+            "dialogue/dlg_meet/nodes/node_open/text": "res://vo/open.ogg",
+            "dialogue/dlg_meet/nodes/node_close/text": "res://vo/close.ogg",
+            "dialogue/dlg_meet/nodes/node_ghost/text": "res://vo/ghost.ogg",
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# 0.15 — tags on lines and choices; engine commands (the `engine` effect).
+# ---------------------------------------------------------------------------
+
+def case_tags_on_lines_clean(p: dict) -> None:
+    """node.tags and choice.tags are opaque pass-through: no rule reads them.
+
+    Both validators must ACCEPT the shape (a schema that forgot the field would
+    reject the whole dialogue as SCHEMA), and neither may invent a finding for
+    a tag — including one that happens to equal an entity id.
+    """
+    dlg = p["data/dialogues/dlg_meet.json"]
+    dlg["nodes"][0]["tags"] = ["mood:angry", "sfx:door", "npc_keeper"]
+    dlg["nodes"][0]["choices"][0]["tags"] = ["tone:calm", "two words"]
+
+
+def _engine(p: dict, effect: dict, rules: dict | None = None) -> None:
+    p["data/dialogues/dlg_meet.json"]["nodes"][1]["onEnter"].append(effect)
+    if rules is not None:
+        p["data/rules.json"] = rules
+
+
+ENGINE_RULES = {"engine": {"commands": {"shake": {"args": 1, "description": "camera shake (intensity)"}, "sfx": {"args": "any"}}}}
+
+
+def case_engine_command_declared_clean(p: dict) -> None:
+    """A declared engine command with the declared argument count: no finding.
+
+    The effect changes no state, reads no id, and is returned to the engine in
+    order among the other effects — so it must not trip FLAG/REF hygiene either.
+    """
+    _engine(p, {"type": "engine", "command": "shake", "args": [0.5]}, ENGINE_RULES)
+    _engine(p, {"type": "engine", "command": "sfx", "args": ["door_slam", 0.8, True]})
+
+
+def case_engine_command_undeclared(p: dict) -> None:
+    """A typo'd command once the project declares its vocabulary: a warning,
+    because at runtime the engine silently ignores a name it does not know."""
+    _engine(p, {"type": "engine", "command": "shaek", "args": [0.5]}, ENGINE_RULES)
+
+
+def case_engine_command_bad_name(p: dict) -> None:
+    """A command that is not lowercase snake_case: an error, with or without a
+    declared vocabulary (no rules.json here — the name rule stands alone)."""
+    _engine(p, {"type": "engine", "command": "Shake-Camera"})
+
+
+def case_engine_command_arg_count(p: dict) -> None:
+    """A declared command called with the wrong number of arguments."""
+    _engine(p, {"type": "engine", "command": "shake", "args": [0.5, 2]}, ENGINE_RULES)
+
+
+def case_engine_command_undeclared_prototype_name(p: dict) -> None:
+    """An undeclared command whose name is an Object.prototype member
+    (`constructor`, valid snake_case). A lookup that reads through the
+    prototype chain calls it declared; the vocabulary is the project's own
+    keys only, so it must warn exactly like any other undeclared name."""
+    _engine(p, {"type": "engine", "command": "constructor"}, ENGINE_RULES)
+
+
+def case_engine_command_undeclared_vocabulary_ok(p: dict) -> None:
+    """No rules.engine.commands: any snake_case command is accepted silently."""
+    _engine(p, {"type": "engine", "command": "anything_goes", "args": ["x", 1, False]})
+
+
 CASE_BUILDERS = {
     "clean-minimal": (case_clean_minimal, {"noErrors": True}),
+    "utf8-bom-loaded": (
+        case_utf8_bom_loaded,
+        {"noErrors": True,
+         "mustNot": [{"code": "SCHEMA"}, {"code": "REF"}, {"code": "FLAG"}]},
+    ),
     "passive-goto-dangling": (
         case_passive_goto_dangling,
         {"must": [{"code": "REF", "contains": "node_typo", "severity": "error"}]},
@@ -1394,6 +1906,10 @@ CASE_BUILDERS = {
         case_grant_xp_nonpositive,
         {"must": [{"code": "XP", "contains": "should be positive", "severity": "warning"}]},
     ),
+    "loreref-unicode-form": (
+        case_loreref_unicode_form,
+        {"noErrors": True, "mustNot": [{"code": "LORE"}]},
+    ),
     "loreref-file-missing": (
         case_loreref_file_missing,
         {"must": [{"code": "LORE", "contains": "loreRef file 'lore/keeper.md' missing", "severity": "error"}]},
@@ -1462,17 +1978,65 @@ CASE_BUILDERS = {
     ),
     "cond-showif-without-next": (
         case_cond_showif_without_next,
-        # The seeder gates node_close, which is BOTH next-less and isEnd — so this
-        # one case pins two rules. Both assertions matter: an ablation run found
-        # the isEnd rule could be deleted with every case still green.
-        {"must": [
-            {"code": "COND", "contains": "no 'next'", "severity": "error"},
-            {"code": "COND", "contains": "'isEnd'", "severity": "error"},
-        ]},
+        {"must": [{"code": "COND", "contains": "no 'next'", "severity": "error"}]},
     ),
+    # Line-only gates (0.15): a gate on a node with choices or isEnd is LEGAL —
+    # it hides the line, never the node — so these two are clean baselines that
+    # also pin the absence of the onEnter advisory (those effects DO fire).
     "cond-showif-with-choices": (
         case_cond_showif_with_choices,
-        {"must": [{"code": "COND", "contains": "'choices'", "severity": "error"}]},
+        {"noErrors": True,
+         "mustNot": [{"code": "COND"}, {"code": "FLOW"}]},
+    ),
+    "cond-showif-isend-clean": (
+        case_cond_showif_isend_clean,
+        {"noErrors": True,
+         "mustNot": [{"code": "COND"}]},
+    ),
+    "cond-empty-text-with-choices": (
+        case_cond_empty_text_with_choices,
+        {"must": [{"code": "COND", "contains": "no line to hide", "severity": "error"}]},
+    ),
+    "textless-choices-clean": (
+        case_textless_choices_clean,
+        {"noErrors": True, "mustNot": [{"code": "FLOW"}, {"code": "SCHEMA"}]},
+    ),
+    "textless-no-choices": (
+        case_textless_no_choices,
+        {"must": [{"code": "FLOW", "contains": "no text and no choices", "severity": "error"}]},
+    ),
+    "choice-fallback-clean": (
+        case_choice_fallback_clean,
+        {"noErrors": True, "mustNot": [{"code": "FLOW"}]},
+    ),
+    "choice-fallback-gated-still-stuck": (
+        case_choice_fallback_gated_still_stuck,
+        {"must": [{"code": "FLOW", "contains": "may be stuck", "severity": "warning"}]},
+    ),
+    "choice-fallback-duplicate": (
+        case_choice_fallback_duplicate,
+        {"must": [{"code": "FLOW", "contains": "fallback choices", "severity": "warning"}],
+         "mustNot": [{"code": "FLOW", "contains": "may be stuck"}]},
+    ),
+    "choice-fallback-pointless": (
+        case_choice_fallback_pointless,
+        {"must": [{"code": "FLOW", "contains": "no gated sibling", "severity": "warning"}]},
+    ),
+    "choice-locked-clean": (
+        case_choice_locked_clean,
+        {"noErrors": True, "mustNot": [{"code": "FLOW"}, {"code": "TEXT"}, {"code": "RULES"}, {"code": "SCHEMA"}]},
+    ),
+    "choice-locked-without-showif": (
+        case_choice_locked_without_showif,
+        {"must": [{"code": "FLOW", "contains": "can never be locked", "severity": "warning"}]},
+    ),
+    "choice-when-locked-invalid": (
+        case_choice_when_locked_invalid,
+        {"must": [{"code": "SCHEMA", "severity": "error"}]},
+    ),
+    "choice-locked-text-placeholder-undeclared": (
+        case_choice_locked_text_placeholder_undeclared,
+        {"must": [{"code": "TEXT", "contains": "no_such_var", "severity": "error"}]},
     ),
     "cond-empty-text": (
         case_cond_empty_text,
@@ -1497,6 +2061,26 @@ CASE_BUILDERS = {
     "offer-tie": (
         case_offer_tie,
         {"must": [{"code": "OFFER", "contains": "not provably exclusive", "severity": "warning"}]},
+    ),
+    "flag-exclusive-group-set-together": (
+        case_flag_exclusive_group_set_together,
+        {"must": [{"code": "FLAG", "contains": "mutually-exclusive flags simultaneously", "severity": "error"}]},
+    ),
+    "flag-exclusive-group-set-apart": (
+        case_flag_exclusive_group_set_apart,
+        {"noErrors": True, "mustNot": [{"code": "FLAG", "contains": "mutually-exclusive"}]},
+    ),
+    "binding-clean": (
+        case_binding_clean,
+        {"validators": ["python"], "noErrors": True, "mustNot": [{"code": "BIND"}]},
+    ),
+    "binding-vo-dangling": (
+        case_binding_vo_dangling,
+        {
+            "validators": ["python"],
+            "must": [{"code": "BIND", "contains": "dangling VO binding 'dialogue/dlg_meet/nodes/node_ghost/text'", "severity": "warning"}],
+            "mustNot": [{"code": "BIND", "contains": "dangling VO binding 'dialogue/dlg_meet/nodes/node_open"}],
+        },
     ),
     "offer-numeric-exclusive-no-tie": (
         case_offer_numeric_exclusive_no_tie,
@@ -1553,6 +2137,121 @@ CASE_BUILDERS = {
     "offer-character-covers": (
         case_offer_character_covers,
         {"noErrors": True, "mustNot": [{"code": "COVERAGE"}]},
+    ),
+    "custom-entity-valid": (
+        case_custom_entity_valid,
+        {"noErrors": True},
+    ),
+    "custom-entity-missing-field": (
+        case_custom_entity_missing_field,
+        {"must": [{"code": "SCHEMA", "contains": "missing required field 'manaCost'", "severity": "error"}]},
+    ),
+    "custom-entity-bad-reference": (
+        case_custom_entity_bad_reference,
+        {"must": [{"code": "REF", "contains": "unknown character 'npc_missing'", "severity": "error"}]},
+    ),
+    "custom-entity-registry-array": (
+        case_custom_entity_registry_array,
+        {"must": [{"code": "REF", "contains": "spells 'frostbite' field 'grantedBy': unknown character 'npc_gone'", "severity": "error"}]},
+    ),
+    "custom-entity-registry-keyed": (
+        case_custom_entity_registry_keyed,
+        {"must": [{"code": "REF", "contains": "spells 'frostbite' field 'grantedBy': unknown character 'npc_gone'", "severity": "error"}]},
+    ),
+    "custom-entity-nested-directory": (
+        case_custom_entity_nested_directory,
+        {"must": [{"code": "REF", "contains": "spells 'frostbite' field 'grantedBy': unknown character 'npc_gone'", "severity": "error"}]},
+    ),
+    "custom-entity-default-plural": (
+        case_custom_entity_default_plural,
+        {"must": [
+            {"code": "REF", "contains": "spells 'frostbite' field 'grantedBy': unknown character 'npc_gone'", "severity": "error"},
+            {"code": "REF", "contains": "runes 'ember' field 'carvedBy': unknown character 'npc_lost'", "severity": "error"},
+        ]},
+    ),
+    "custom-entity-cross-type-reference": (
+        case_custom_entity_cross_type_reference,
+        {"must": [{"code": "REF", "contains": "field 'teaches[1]': unknown spell 'frostbite'", "severity": "error"}],
+         "mustNot": [{"code": "REF", "contains": "'signature'"}]},
+    ),
+    "custom-entity-field-types": (
+        case_custom_entity_field_types,
+        {"must": [
+            {"code": "SCHEMA", "contains": "field 'manaCost' expected number", "severity": "error"},
+            {"code": "SCHEMA", "contains": "field 'ritual' expected boolean", "severity": "error"},
+            {"code": "SCHEMA", "contains": "field 'element' invalid value 'water'", "severity": "error"},
+            {"code": "SCHEMA", "contains": "field 'incantation' expected string", "severity": "error"},
+            {"code": "SCHEMA", "contains": "field 'reagents' expected array", "severity": "error"},
+        ]},
+    ),
+    "types-declaration-plurals": (
+        case_types_declaration_plurals,
+        {"must": [
+            {"code": "SCHEMA", "contains": "types 'spell': plural '../escape' is not a plain name", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'rumour': plural 'dialogues' is a built-in folder or file", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'sigil': plural 'glyphs' is also used by type 'rune'", "severity": "error"},
+        ]},
+    ),
+    "types-declaration-plural-portability": (
+        case_types_declaration_plural_portability,
+        {"must": [
+            {"code": "SCHEMA", "contains": "types 'sigil': plural 'Glyphs' is also used by type 'rune'", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'rumour': plural 'Dialogues' is a built-in folder or file", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'device': plural 'aux' is a reserved file name on Windows", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'trail': plural 'trails", "severity": "error"},
+        ]},
+    ),
+    "types-declaration-fields": (
+        case_types_declaration_fields,
+        {"must": [
+            {"code": "SCHEMA", "contains": "types 'character': a custom type cannot be named after the built-in type 'character'", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'spell' field 'element': an enum needs at least one option", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'spell' field 'power': unknown type 'float'", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'spell' field 'caster': a reference needs a target", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'spell' field 'school': unknown reference target 'school'", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'spell' field 'combos[]': unknown reference target 'combo'", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'spell' field 'notes': must be an object", "severity": "error"},
+        ]},
+    ),
+    "types-declaration-not-object": (
+        case_types_declaration_not_object,
+        {"must": [
+            {"code": "SCHEMA", "contains": "types 'spell': the declaration must be an object", "severity": "error"},
+            {"code": "SCHEMA", "contains": "types 'rune': fields must be an object", "severity": "error"},
+        ]},
+    ),
+    "custom-entity-prototype-keys": (
+        case_custom_entity_prototype_keys,
+        {"must": [{"code": "REF", "contains": "protos '__proto__' field 'owner': unknown character 'npc_gone'", "severity": "error"}]},
+    ),
+    # ---- 0.15: tags on lines/choices; engine commands ----
+    "tags-on-lines-clean": (
+        case_tags_on_lines_clean,
+        {"noErrors": True, "mustNot": [{"code": "SCHEMA"}, {"code": "REF"}]},
+    ),
+    "engine-command-declared-clean": (
+        case_engine_command_declared_clean,
+        {"noErrors": True, "mustNot": [{"code": "ENGINE"}, {"code": "SCHEMA"}, {"code": "FLAG"}]},
+    ),
+    "engine-command-undeclared": (
+        case_engine_command_undeclared,
+        {"must": [{"code": "ENGINE", "contains": "'shaek' is not declared", "severity": "warning"}]},
+    ),
+    "engine-command-bad-name": (
+        case_engine_command_bad_name,
+        {"must": [{"code": "ENGINE", "contains": "'Shake-Camera' is not lowercase snake_case", "severity": "error"}]},
+    ),
+    "engine-command-arg-count": (
+        case_engine_command_arg_count,
+        {"must": [{"code": "ENGINE", "contains": "takes 1 argument(s), got 2", "severity": "warning"}]},
+    ),
+    "engine-command-undeclared-prototype-name": (
+        case_engine_command_undeclared_prototype_name,
+        {"must": [{"code": "ENGINE", "contains": "'constructor' is not declared", "severity": "warning"}]},
+    ),
+    "engine-command-undeclared-vocabulary-ok": (
+        case_engine_command_undeclared_vocabulary_ok,
+        {"noErrors": True, "mustNot": [{"code": "ENGINE"}, {"code": "SCHEMA"}]},
     ),
 }
 

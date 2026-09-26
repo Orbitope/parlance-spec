@@ -10,6 +10,16 @@
     {
       "id": "n_episode2_start_2",
       "next": "n_episode2_start_3",
+      "onEnter": [
+        {
+          "args": [
+            "proof",
+            false
+          ],
+          "command": "set_icon_visibility",
+          "type": "engine"
+        }
+      ],
       "text": "Comme tous les mercredis après-midi, avec tes amis de handball, tu t'entraînes pour la prochaine compétition."
     },
     {
@@ -25,6 +35,18 @@
     {
       "id": "n_episode2_gymnasium_2",
       "next": "n_episode2_gymnasium_3",
+      "onEnter": [
+        {
+          "args": [
+            "gymnasium-bench",
+            1340,
+            757,
+            -1
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_you",
       "text": "On s’est encore bien amusés aujourd’hui."
     },
@@ -288,6 +310,18 @@
     {
       "id": "n_episode2_gymnasium3_2",
       "next": "n_episode2_gymnasium3_3",
+      "onEnter": [
+        {
+          "args": [
+            "gymnasium-bench",
+            1340,
+            757,
+            -1
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_liam",
       "text": "Bon on fera mieux la prochaine fois, on va dire qu’ils ont gagné sur un coup de chance..."
     },
@@ -405,6 +439,12 @@
         }
       ],
       "id": "n_episode2_gymnasium5_6",
+      "onEnter": [
+        {
+          "command": "clear_character",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Peu après, Liam part aux toilettes en laissant son téléphone et reçoit une nouvelle notification."
     },
@@ -444,6 +484,25 @@
         }
       ],
       "id": "n_episode2_gymnasium5_9",
+      "onEnter": [
+        {
+          "args": [
+            "gymnasium-bench-phone",
+            1340,
+            757,
+            -1
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "gymnasium-bench"
+          ],
+          "command": "clear_foreground_image",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Liam revient des toilettes."
     },
@@ -468,6 +527,36 @@
     {
       "id": "n_episode2_gymnasium5_13",
       "next": "n_episode2_backfromgymnasium2",
+      "onEnter": [
+        {
+          "command": "clear_floating_speech_bubbles",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Liam"
+          ],
+          "command": "set_character",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "gymnasium-bench",
+            1340,
+            757,
+            -1
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "gymnasium-bench-phone"
+          ],
+          "command": "clear_foreground_image",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Rentrer chez toi."
     },
@@ -494,6 +583,17 @@
     {
       "id": "n_episode2_school1",
       "next": "n_episode2_school1_2",
+      "onEnter": [
+        {
+          "args": [
+            "student-group-1",
+            300,
+            440
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Devant le collège, comme à l’accoutumée, des groupes discutent avant le début des cours."
     },
@@ -572,6 +672,12 @@
     {
       "id": "n_episode2_school1_9",
       "next": "n_episode2_school1_10",
+      "onEnter": [
+        {
+          "command": "clear_character",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_students",
       "text": "Personne t’a demandé ton avis ! Toi aussi tu vas finir dans le club des recalés !"
     },
@@ -594,6 +700,18 @@
     {
       "id": "n_episode2_gymnasium6_2",
       "next": "n_episode2_gymnasium6_3",
+      "onEnter": [
+        {
+          "args": [
+            "gymnasium-bench",
+            1340,
+            757,
+            -1
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_you",
       "text": "Salut Liam."
     },
@@ -997,6 +1115,13 @@
               "counter": "score",
               "delta": -1,
               "type": "adjust_counter"
+            },
+            {
+              "args": [
+                "MJ"
+              ],
+              "command": "set_character",
+              "type": "engine"
             }
           ],
           "goto": "n_episode2_outside1_5",
@@ -1188,6 +1313,14 @@
           "type": "set_text",
           "value": "quelques jours plus tard, 18h15",
           "variable": "time"
+        },
+        {
+          "command": "clear_dialog",
+          "type": "engine"
+        },
+        {
+          "command": "clear_character",
+          "type": "engine"
         }
       ],
       "speakerId": "char_narrator",
@@ -1332,6 +1465,12 @@
     {
       "id": "n_episode2_goodending_9",
       "isEnd": true,
+      "onEnter": [
+        {
+          "command": "quit",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Fin"
     },
@@ -1368,6 +1507,12 @@
     {
       "id": "n_episode2_neutralending_6",
       "isEnd": true,
+      "onEnter": [
+        {
+          "command": "quit",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Fin"
     },
@@ -1386,6 +1531,23 @@
     {
       "id": "n_episode2_badending2",
       "isEnd": true,
+      "onEnter": [
+        {
+          "command": "clear_narrator",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "BadEndingSms"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "command": "quit",
+          "type": "engine"
+        }
+      ],
       "text": "SKIP"
     }
   ],

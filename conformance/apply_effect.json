@@ -981,5 +981,92 @@
         "npc_a": -3
       }
     }
+  },
+  {
+    "fn": "applyEffect",
+    "description": "engine: an engine command changes NO state (the host dispatches on it; the runtime never interprets it)",
+    "state": {
+      "flags": {
+        "seen": true
+      },
+      "reputation": {},
+      "skills": {},
+      "counters": {
+        "coins": 3
+      },
+      "inventory": [
+        "key"
+      ],
+      "questStages": {},
+      "xp": 40,
+      "skillPointsSpent": {},
+      "texts": {
+        "player_name": "Wren"
+      },
+      "pendingCutscene": "cs_intro"
+    },
+    "effect": {
+      "type": "engine",
+      "command": "shake",
+      "args": [
+        0.5,
+        "camera_main",
+        true
+      ]
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "flags": {
+        "seen": true
+      },
+      "reputation": {},
+      "skills": {},
+      "counters": {
+        "coins": 3
+      },
+      "inventory": [
+        "key"
+      ],
+      "questStages": {},
+      "xp": 40,
+      "skillPointsSpent": {},
+      "texts": {
+        "player_name": "Wren"
+      },
+      "pendingCutscene": "cs_intro"
+    }
+  },
+  {
+    "fn": "applyEffect",
+    "description": "engine: with no args the state is likewise untouched",
+    "state": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    },
+    "effect": {
+      "type": "engine",
+      "command": "fade_out"
+    },
+    "project": {
+      "factions": {}
+    },
+    "expected": {
+      "flags": {},
+      "reputation": {},
+      "skills": {},
+      "counters": {},
+      "inventory": [],
+      "questStages": {},
+      "xp": 0,
+      "skillPointsSpent": {}
+    }
   }
 ]

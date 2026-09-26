@@ -1,0 +1,24 @@
+{
+  "spell": {
+    "fields": {
+      "element": {
+        "options": [
+          "fire",
+          "ice",
+          "lightning"
+        ],
+        "type": "enum"
+      },
+      "grantedBy": {
+        "target": "character",
+        "type": "reference"
+      },
+      "manaCost": {
+        "default": 10,
+        "type": "number"
+      }
+    },
+    "name": "Spell",
+    "plural": "spells"
+  }
+}

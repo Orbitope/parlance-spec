@@ -2,19 +2,46 @@
   {
     "case": "dup-id-registry",
     "side": "python",
-    "issue": ["error", "DUP"],
+    "issue": [
+      "error",
+      "DUP"
+    ],
     "reason": "Registry duplicate-id detection lives at the loader layer. The TypeScript validate() is handed an id-keyed project in which duplicates have already collapsed, so the case is addressed to python only (see its expected.json); the Python reference sees the raw array and reports it."
+  },
+  {
+    "case": "binding-vo-dangling",
+    "side": "python",
+    "issue": [
+      "warning",
+      "BIND"
+    ],
+    "reason": "Asset bindings are a deploy-time concern that lives only in the Python reference validator: the TypeScript project model has no binding entities and validate() never reads data/bindings, so the dangling-VO-binding warning is python-only by construction (the case is addressed to python in its expected.json)."
   },
   {
     "case": "duplicate-node-id",
     "side": "typescript",
-    "issue": ["warning", "REACH"],
+    "issue": [
+      "warning",
+      "REACH"
+    ],
     "reason": "Once two nodes share an id the dialogue graph is ill-defined. Python merges both copies' outgoing edges under the one id, so node_close stays reachable; TypeScript keys nodes by id and the surviving copy has no edges, so node_close is unreachable. The REACH warning is an artefact of the DUP error both sides report, and it disappears with the duplicate."
   },
   {
     "case": "project-rules-bad-dice",
     "side": "python",
-    "issue": ["error", "SCHEMA"],
+    "issue": [
+      "error",
+      "SCHEMA"
+    ],
     "reason": "The Python reference validates rules.json against the published JSON Schema (whose dice pattern rejects '2x6') before running the RULES check, so one defect is reported twice. TypeScript parses rules.json with a permissive loader and reports the same defect once, from the RULES rule alone."
+  },
+  {
+    "case": "choice-when-locked-invalid",
+    "side": "typescript",
+    "issue": [
+      "warning",
+      "OFFER"
+    ],
+    "reason": "The seeded dialogue (dlg_extra, deliberately offer-less and effect-free) fails the schema on choice.whenLocked. The Python reference drops a schema-invalid file from every later rule, so it never sees the dialogue at all; the TypeScript guard keeps a shape-safe entity in the pass beside its SCHEMA error, so the OFFER coverage rule also sees a spoken dialogue that nothing offers. Both report the one SCHEMA error the case is about."
   }
 ]

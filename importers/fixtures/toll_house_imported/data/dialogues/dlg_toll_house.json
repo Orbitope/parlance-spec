@@ -53,6 +53,11 @@
       "text": "It is a fire. It has no history worth the telling."
     },
     {
+      "id": "n_bench",
+      "next": "n_bench_ford",
+      "text": "There is bread, if you want it. It is yesterday's."
+    },
+    {
       "choices": [
         {
           "effects": [
@@ -72,8 +77,13 @@
           "text": "Refuse it"
         }
       ],
-      "id": "n_bench",
-      "text": "There is bread, if you want it. It is yesterday's."
+      "id": "n_bench_ford",
+      "showIf": {
+        "flag": "asked_gate",
+        "type": "flag",
+        "value": true
+      },
+      "text": "You asked about the ford. Most people ask about the fire."
     },
     {
       "id": "n_take",

@@ -5,6 +5,15 @@
     {
       "id": "n_episode1_testchat",
       "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "TestChatMessage"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        }
+      ],
       "text": "asdf"
     }
   ],

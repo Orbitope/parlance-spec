@@ -1,0 +1,10 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "Ren'Py default book",
+      "id": "book",
+      "kind": "flag"
+    }
+  ]
+}

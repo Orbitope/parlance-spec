@@ -1,0 +1,8 @@
+{
+  "mustNot": [
+    {
+      "code": "COND"
+    }
+  ],
+  "noErrors": true
+}

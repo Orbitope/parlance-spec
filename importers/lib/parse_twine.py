@@ -90,21 +90,10 @@ WHY_READ_COUNT = (
     "gated on a Harlowe keyword rather than a variable — `visits` (how many times this "
     "passage has been seen), `turns`, `time`, `history`. Parlance has no read-count or "
     "clock condition, and importing the line ungated would change when it appears")
-WHY_CHOICE_HOST = (
-    "conditional narration immediately before a link. The line would have to be the "
-    "node that hosts those choices, and a Parlance node may not carry showIf and "
-    "choices together (validator rule COND) — a conditional node is interstitial "
-    "narration, and there is no text-less node to hang the choices on instead")
-WHY_NO_HOST = (
-    "a link with no narration line to host it — the passage opens with it, or the "
-    "line before it is itself declared loss. A Parlance choice hangs off a node and "
-    "every node requires text, so there is nothing for it to attach to. One line of "
-    "narration before it makes it importable")
-WHY_COND_TERMINAL = (
-    "conditional narration as the last beat of the conversation. The node would have "
-    "to carry showIf and isEnd together, which the validator refuses (rule COND): a "
-    "dialogue's termination must not be conditional, or a player who fails the gate "
-    "has nowhere to go. A line after it, or a link onwards, makes it importable")
+# Until the 0.15 contract three POSITIONS were declared loss here (a guarded
+# line hosting a passage's links, a guarded last beat, a link with no line to
+# host it). All are expressible now: `showIf` on a node with choices or isEnd
+# hides only the line, and a node may carry choices with no `text`.
 WHY_LINKED_HOOK = ("a link inside a conditional hook — the choice is offered only when "
                    "the condition holds, which maps, but it sits where this importer "
                    "cannot tell which line hosts it")
@@ -145,7 +134,10 @@ def wrong_format(declared):
             f"dialects: their\nsyntax overlaps Harlowe's nowhere. Parsing one with "
             f"this parser yields a project whose\nprose is full of unparsed macros, "
             f"which no downstream check would flag as wrong.\n"
-            f"See IMPORTERS.md — SugarCube is listed as not started.")
+            + ("A SugarCube story has its own importer: use sugarcube-import "
+               "(lib/parse_sugarcube.py)."
+               if declared.lower().startswith("sugarcube") else
+               "See IMPORTERS.md for the formats that have an importer."))
 
 
 def declared_format(raw):
@@ -545,50 +537,6 @@ def declare(passage, item, why, unmapped, construct):
                      "construct": construct, "text": item["text"], "why": why})
 
 
-def mark_structural_losses(passage, unmapped, links_out):
-    """What a guard cannot be carried onto, given where the links actually land.
-
-    This has to model the IMPORTER's shape, not the source's. Harlowe renders a
-    whole passage at once and shows every link in it together, so all of a
-    passage's links hang off its LAST line — not off whichever line each one
-    happens to follow. Checking per-link adjacency instead let a guarded line
-    host a choice list anyway, which the validator rejects (rule COND) after the
-    content check had already converged.
-
-    Three cases fall out of that:
-
-    * links, and no mappable line at all — nothing to hang them on (WHY_NO_HOST);
-    * links, and the last mappable line is guarded — that line would carry showIf
-      and choices together, so it is declared and the line before it becomes the
-      host, repeatedly (WHY_CHOICE_HOST);
-    * no links out — the last mappable line ends the conversation, so a guard on
-      it would be showIf with isEnd (WHY_COND_TERMINAL).
-    """
-    def mappable_lines():
-        return [it for it in passage.items
-                if it["kind"] == "line" and it.get("text") and not it.get("unmappable")]
-
-    if links_out:
-        while True:
-            lines = mappable_lines()
-            if not lines:
-                for it in passage.items:
-                    if it["kind"] == "option" and not it.get("unmappable"):
-                        declare(passage, it, WHY_NO_HOST, unmapped, "link with no host")
-                return
-            if not lines[-1].get("showIf"):
-                return
-            declare(passage, lines[-1], WHY_CHOICE_HOST, unmapped,
-                    "guarded line hosting the passage's links")
-    else:
-        while True:
-            lines = mappable_lines()
-            if not lines or not lines[-1].get("showIf"):
-                return
-            declare(passage, lines[-1], WHY_COND_TERMINAL, unmapped,
-                    "guarded line ending the passage")
-
-
 def analyse(passages, unmapped):
     kinds = infer_kinds(passages)
     for p in passages:
@@ -604,21 +552,7 @@ def analyse(passages, unmapped):
             else:
                 it["showIf"] = cond
 
-    # To a fixpoint, for the same reason as the other two parsers: declaring one
-    # passage's lines can empty it, which turns a link into a dead end, which
-    # makes another passage's tail terminal.
-    while True:
-        before = len(unmapped)
-        empty = {p.title for p in passages
-                 if not any(it.get("text") and not it.get("unmappable")
-                            for it in p.items)}
-        for p in passages:
-            live = [it for it in p.items
-                    if it["kind"] == "option" and not it.get("unmappable")
-                    and it.get("target") not in empty]
-            mark_structural_losses(p, unmapped, live)
-        if len(unmapped) == before:
-            break
+    # No structural pass since 0.15 (see the note above WHY_LINKED_HOOK).
 
     links = [{"from": p.title, "to": it["target"], "lineno": it["lineno"]}
              for p in passages for it in p.items if it["kind"] == "option"]

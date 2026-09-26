@@ -1,0 +1,19 @@
+*temp asked false
+The keeper looks up from her logbook.
+*fake_choice
+  #Ask about the lamp.
+    *set asked true
+    "It has not gone out in forty years," she says.
+  #Say nothing.
+"Well," she says.
+*if asked
+  She seems pleased that you asked.
+*rand roll 1 6
+*image keeper.png
+*achieve kept_watch
+*gosub note
+*finish Go on
+
+*label note
+She writes something down.
+*return

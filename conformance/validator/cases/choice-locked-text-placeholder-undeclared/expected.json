@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TEXT",
+      "contains": "no_such_var",
+      "severity": "error"
+    }
+  ]
+}

@@ -24,6 +24,7 @@ import argparse
 import glob
 import json
 import os
+import unicodedata
 import re
 import sys
 from collections import namedtuple
@@ -47,6 +48,13 @@ DEFAULT_DICE = (1, 20)
 # Whitespace class shared with editor/core/src/validator.ts. Explicit rather than
 # .strip()/.trim(), which differ on U+FEFF, U+0085 and U+001C-1F.
 _WS = "\t\n\x0b\x0c\r\x1c\x1d\x1e\x1f \x85\xa0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
+
+
+def _skippable_node(n):
+    """Whether a failed showIf SKIPS this node (interstitial: no choices, not
+    isEnd) or only hides its line. Mirrors isSkippableNode in
+    editor/core/src/nodeGate.ts — one definition per validator, same answer."""
+    return not n.get("choices") and not n.get("isEnd")
 
 
 def _WS_STRIP(t):
@@ -76,6 +84,9 @@ def strip_comments(o):
 
 # {var_id} placeholders in PLAYER-FACING strings (TEXT pass).
 PLACEHOLDER_RE = re.compile(r"\{([a-z][a-z0-9_]*)\}")
+# An `engine` effect's command name (mirrors ENGINE_COMMAND_PATTERN in
+# editor/core/src/validation/ids.ts). Not an id: nothing indexes or renames it.
+ENGINE_COMMAND = re.compile(r"^[a-z][a-z0-9_]*$")
 
 
 def condition_specificity(c):
@@ -123,6 +134,24 @@ def _interval(op, v, negated):
         }.get(op)
     flipped = {">=": "<", ">": "<=", "<=": ">", "<": ">="}.get(op)
     return _interval(flipped, v, False) if flipped else None
+
+
+# Custom types (data/types.json) — mirrors editor/core/src/customTypes.ts.
+CUSTOM_REF_BUILTIN_TARGETS = ("skill", "faction", "character", "variable", "item", "dialogue", "quest", "location", "cutscene")
+CUSTOM_FIELD_TYPES = ("string", "number", "boolean", "enum", "reference", "array")
+BUILTIN_DATA_NAMES = (
+    "skills", "variables", "factions", "characters", "dialogues", "quests", "locations", "endings", "codex",
+    "items", "portraits", "cutscenes", "locales", "vo", "bindings", "types", "rules", "progression",
+)
+_SAFE_PLURAL = re.compile(r"[A-Za-z0-9_-]+")  # always .fullmatch: `$` would admit a trailing newline
+# Device names Windows reserves with or without an extension (data/con.json cannot exist there).
+_WINDOWS_RESERVED = re.compile(r"(con|prn|aux|nul|com[1-9]|lpt[1-9])", re.IGNORECASE)
+
+
+def custom_plural(type_id, type_def):
+    """Where a type's rows live: its plural, or <id>s when absent or empty."""
+    p = type_def.get("plural") if isinstance(type_def, dict) else None
+    return p if isinstance(p, str) and p else type_id + "s"
 
 
 _NUMERIC_KEYS = {"counter": "counter", "reputation": "faction", "relationship": "character", "skill": "skill"}
@@ -231,7 +260,11 @@ class ProjectValidator:
         cfg_path = os.path.join(self.root, "parlance.config.json")
         if os.path.exists(cfg_path):
             try:
-                with open(cfg_path) as f:
+                # utf-8-sig: decode as UTF-8 and drop a leading BOM if there is
+                # one (Windows PowerShell 5.1 and older Notepad write it). The
+                # editor strips it too; without this a BOM'd config silently
+                # read as {} and the project's custom dirs were ignored.
+                with open(cfg_path, encoding="utf-8-sig") as f:
                     cfg = json.load(f) or {}
             except (json.JSONDecodeError, OSError):
                 cfg = {}
@@ -279,6 +312,9 @@ class ProjectValidator:
         self.routes, self.snapshots = {}, {}
         self.progression = None
         self.rules = None
+        self.engine_commands = None
+        self.entity_types = {}
+        self.custom_entities = {}
         # Paths the single-file registries were loaded from (for messages).
         self._registry_paths = {}
 
@@ -296,6 +332,7 @@ class ProjectValidator:
         self.triggered_cutscenes = set()
         self.xp_grants = []  # (amount, where)
         self.used_portraits = set()
+        self.used_vo_keys = set()
         self.chars_with_dialogue = set()
         # characterId -> [dialogue ids naming them as ROOT speaker]. The offer
         # pass uses this to spot dialogues nothing can reach: a speakerId does
@@ -304,6 +341,7 @@ class ProjectValidator:
         self.dialogues_by_speaker = {}
 
         self.default_dice = DEFAULT_DICE
+        self.exclusive_groups = []
 
     # -- issue plumbing ------------------------------------------------------
 
@@ -326,7 +364,12 @@ class ProjectValidator:
         """Load a JSON file; malformed JSON becomes a SCHEMA error instead of a
         crash, and the file is skipped."""
         try:
-            with open(path) as f:
+            # utf-8-sig, not the platform default: the format is UTF-8, and a
+            # leading byte-order mark (Windows PowerShell 5.1 / older Notepad)
+            # is an encoding signature, not content. The editor's parse()
+            # strips it as well, and the two validators must agree on which
+            # files load (conformance case utf8-bom-loaded).
+            with open(path, encoding="utf-8-sig") as f:
                 return json.load(f)
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
             self.err("SCHEMA", f"{self.rel(path)}: invalid JSON: {e}")
@@ -446,6 +489,54 @@ class ProjectValidator:
         self._load_dir("routes", "route.schema.json", self.routes, "route", self.tests_dir)
         self._load_dir("snapshots", "snapshot.schema.json", self.snapshots, "snapshot", self.tests_dir)
 
+        types_path = os.path.join(self.data_dir, "types.json")
+        if os.path.exists(types_path):
+            doc = self._read_json(types_path)
+            if isinstance(doc, dict):
+                self.entity_types = doc
+                for type_id, type_def in self.entity_types.items():
+                    reg = {}
+                    self.custom_entities[type_id] = reg
+                    if not isinstance(type_def, dict):
+                        continue
+                    # `or`, not a .get default: an EMPTY plural also means "<id>s"
+                    # (as the TypeScript loader has it). "" made this join to
+                    # data/ itself and read every JSON file there as a row.
+                    plural = custom_plural(type_id, type_def)
+                    # An unsafe plural ("../x") would steer the read outside
+                    # data/: nothing is loaded, and check_type_declarations says so.
+                    if not _SAFE_PLURAL.fullmatch(plural):
+                        continue
+                    sub_dir = os.path.join(self.data_dir, plural)
+                    file_path = os.path.join(self.data_dir, f"{plural}.json")
+                    if os.path.isdir(sub_dir):
+                        for p in glob.glob(os.path.join(sub_dir, "**", "*.json"), recursive=True):
+                            if p.endswith(".layout.json"):
+                                continue
+                            o = self._read_json(p)
+                            if isinstance(o, dict) and "id" in o:
+                                eid = o["id"]
+                                if eid in reg:
+                                    self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(p)}")
+                                reg[eid] = (o, p)
+                    elif os.path.exists(file_path):
+                        raw = self._read_json(file_path)
+                        if isinstance(raw, dict):
+                            if plural in raw and isinstance(raw[plural], list):
+                                for item in raw[plural]:
+                                    if isinstance(item, dict) and "id" in item:
+                                        eid = item["id"]
+                                        if eid in reg:
+                                            self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(file_path)}")
+                                        reg[eid] = (item, file_path)
+                            else:
+                                for k, v in raw.items():
+                                    if isinstance(v, dict) and "id" in v:
+                                        eid = v["id"]
+                                        if eid in reg:
+                                            self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(file_path)}")
+                                        reg[eid] = (v, file_path)
+
     # -- ref helpers ---------------------------------------------------------
 
     def ref_item(self, i, w):
@@ -484,6 +575,32 @@ class ProjectValidator:
             kind = x.get("kind")
             if kind is not None and kind != k:
                 self.err("REF", f"{w}: '{v}' is a {kind}, used as {k}")
+
+    def _check_ref(self, target_id, target_kind, where):
+        found = False
+        if target_kind == "skill":
+            found = target_id in self.skills
+        elif target_kind == "faction":
+            found = target_id in self.factions
+        elif target_kind == "character":
+            found = target_id in self.characters
+        elif target_kind == "variable":
+            found = target_id in self.variables
+        elif target_kind == "item":
+            found = target_id in self.items
+        elif target_kind == "dialogue":
+            found = target_id in self.dialogues
+        elif target_kind == "quest":
+            found = target_id in self.quests
+        elif target_kind == "location":
+            found = target_id in self.locations
+        elif target_kind == "cutscene":
+            found = target_id in self.cutscenes
+        else:
+            custom_reg = self.custom_entities.get(target_kind, {})
+            found = target_id in custom_reg
+        if not found:
+            self.err("REF", f"{where}: unknown {target_kind} '{target_id}'")
 
     def quest_stage_ids(self, qid):
         q = self.quests.get(qid)
@@ -535,7 +652,21 @@ class ProjectValidator:
         elif t == "not":
             self.walk_condition(c["of"], w)
 
+
+    def walk_effects(self, effects, w, site=None):
+        flags_set_to_true = set()
+        for e in effects:
+            self.walk_effect(e, w, site=site)
+            if isinstance(e, dict) and e.get("type") == "set_flag" and e.get("value", True):
+                flags_set_to_true.add(e["flag"])
+        
+        for group in self.exclusive_groups:
+            overlap = flags_set_to_true.intersection(group)
+            if len(overlap) > 1:
+                self.err("FLAG", f"{w}: sets mutually-exclusive flags simultaneously: {', '.join(sorted(overlap))}")
+
     def walk_effect(self, e, w, site=None):
+
         """`site` is a STRUCTURAL marker for where the effect was authored,
         passed by the caller — "quest_outcome" only from the quest-outcome walk.
         The XP convention advisory keys on it, never on the `where` message
@@ -612,6 +743,22 @@ class ProjectValidator:
         elif t == "set_text":
             self.ref_var(e["variable"], "text", w)
             self.texts_written.add(e["variable"])
+        elif t == "engine":
+            # Reads nothing, writes nothing — no hygiene set. The name pattern
+            # is a rule (not a schema constraint) so a typo reports precisely
+            # instead of failing the whole entity; the declared vocabulary is
+            # rules.engine.commands. Mirrors the ENGINE branch in local.ts.
+            cmd = e.get("command", "")
+            args = e.get("args") or []
+            if not isinstance(cmd, str) or not ENGINE_COMMAND.match(cmd):
+                self.err("ENGINE", f"{w}: engine command '{cmd}' is not lowercase snake_case")
+            elif self.engine_commands is not None:
+                decl = self.engine_commands.get(cmd)
+                if decl is None:
+                    declared = ", ".join(sorted(self.engine_commands)) or "none declared"
+                    self.warn("ENGINE", f"{w}: engine command '{cmd}' is not declared in rules.engine.commands ({declared}) — the engine will ignore it")
+                elif isinstance(decl, dict) and isinstance(decl.get("args"), int) and not isinstance(decl.get("args"), bool) and len(args) != decl["args"]:
+                    self.warn("ENGINE", f"{w}: engine command '{cmd}' takes {decl['args']} argument(s), got {len(args)}")
         elif t == "play_cutscene":
             if e["cutscene"] not in self.cutscenes:
                 self.err("REF", f"{w}: play_cutscene unknown cutscene '{e['cutscene']}'")
@@ -686,8 +833,16 @@ class ProjectValidator:
         # The project's default dice drive every active check, so malformed
         # notation here silently mis-resolves the whole game. Malformed is an
         # error; fall back to the engine default so the rest of the pass runs.
+        
         if self.rules is not None and isinstance(self.rules, dict):
+            self.exclusive_groups = (self.rules.get("flag") or {}).get("exclusiveGroups", [])
+            # rules.engine.commands — the ENGINE rule's vocabulary; None ⇒ any
+            # command is accepted (mirrors sig.engineCommands in signature.ts).
+            engine_commands = (self.rules.get("engine") or {}).get("commands")
+            if isinstance(engine_commands, dict):
+                self.engine_commands = engine_commands
             notation = (self.rules.get("check") or {}).get("dice")
+
             if isinstance(notation, str):
                 try:
                     self.default_dice = parse_dice(notation)
@@ -785,12 +940,25 @@ class ProjectValidator:
                 # it as a reader so FLAG/REP/REL hygiene does not call a gate flag dead.
                 if "showIf" in n:
                     self.walk_condition(n["showIf"], w)
-                for e in n.get("onEnter", []):
-                    self.walk_effect(e, w)
+                self.walk_effects(n.get("onEnter", []), w)
                 if n.get("speakerId"):
                     self.ref_node_speaker(n["speakerId"], w)
                     if n["speakerId"] in self.characters:
                         self.chars_with_dialogue.add(n["speakerId"])
+                # Voiceable set: every node with non-empty text, matching the
+                # canonical exporter extractLocStrings() in
+                # editor/core/src/localization.ts (which marks all node text
+                # voiceable and excludes only choice text). check_bindings uses
+                # this to decide which VO keys a binding may reference, so it MUST
+                # track that exporter or it rejects legitimately-authored bindings.
+                # The former `speakerId != "none"` guard only ever excluded a node
+                # whose speaker was the literal "none" — already a REF error (there
+                # is no "none" sentinel), so it changed nothing on a valid project
+                # while emitting a spurious second "dangling" warning on an invalid
+                # one; a genuine narration line has an ABSENT speaker and was always
+                # included.
+                if n.get("text"):
+                    self.used_vo_keys.add(f"dialogue/{dlg['id']}/nodes/{n['id']}/text")
                 if n.get("portrait"):
                     entry = self.portraits.get(n["portrait"])
                     if not entry:
@@ -820,22 +988,33 @@ class ProjectValidator:
                     edges.setdefault(n["id"], []).append(nxt)
                     if nxt not in node_ids:
                         self.err("REF", f"{w}: next '{nxt}' is not a node")
+                # `text` is optional ONLY on a node that offers choices. Absent,
+                # not blank: "" with a `next` is a legal silent effects beat.
+                if "text" not in n and not ch_list:
+                    self.err("FLOW", f"{w}: no text and no choices — a text-less node must offer choices")
                 if not ch_list and not n.get("isEnd") and not nxt:
                     self.err("FLOW", f"{w}: no choices, not isEnd, no next (player stuck)")
                 # Mirrors validator.ts: a node whose every choice is gated can
-                # present an empty choice list at runtime.
+                # present an empty choice list at runtime. An UNGATED fallback
+                # has no showIf, so `all` is false and the node is proven safe.
                 if ch_list and not n.get("isEnd") and all("showIf" in c for c in ch_list):
                     self.warn("FLOW", f"{w}: all choices have showIf — player may be stuck if all conditions fail")
+                fallbacks = [c for c in ch_list if c.get("fallback")]
+                if len(fallbacks) > 1:
+                    self.warn("FLOW", f"{w}: {len(fallbacks)} fallback choices — they all show together when nothing else does; one is enough")
+                if fallbacks and not any("showIf" in c for c in ch_list if not c.get("fallback")):
+                    self.warn("FLOW", f"{w}: fallback choice '{fallbacks[0]['id']}' has no gated sibling — it is always offered, so the flag does nothing")
                 cids = set()
                 for ch in ch_list:
                     cw = f"{w} choice '{ch['id']}'"
                     if ch["id"] in cids:
                         self.err("DUP", f"{cw}: duplicate choice id")
                     cids.add(ch["id"])
+                    if "showIf" not in ch and ("whenLocked" in ch or "lockedText" in ch):
+                        self.warn("FLOW", f"{cw}: whenLocked/lockedText on a choice with no showIf — it can never be locked")
                     if "showIf" in ch:
                         self.walk_condition(ch["showIf"], cw)
-                    for e in ch.get("effects", []):
-                        self.walk_effect(e, cw)
+                    self.walk_effects(ch.get("effects", []), cw)
                     if "check" in ch:
                         k = ch["check"]
                         self.ref_skill(k["skill"], cw)
@@ -948,20 +1127,20 @@ class ProjectValidator:
             if not self.valid("dialogue", did):
                 continue
             nodes = {n["id"]: n for n in d.get("nodes", [])}
-            conditional = {nid for nid, n in nodes.items() if n.get("showIf")}
-            for nid in sorted(conditional):
+            gated = {nid for nid, n in nodes.items() if n.get("showIf")}
+            # Only an INTERSTITIAL node (no choices, not isEnd) is skipped when
+            # its gate fails, so only it needs somewhere to go, only its onEnter
+            # is at risk, and only it can sit in an inescapable ring. On a node
+            # with choices or isEnd the gate hides the LINE and nothing else.
+            conditional = {nid for nid in gated if _skippable_node(nodes[nid])}
+            for nid in sorted(gated):
                 n = nodes[nid]
                 w = f"dialogue '{did}' node '{nid}'"
-                if not n.get("next"):
+                skippable = _skippable_node(n)
+                if skippable and not n.get("next"):
                     self.err("COND", f"{w}: has showIf but no 'next' — there is nowhere to go "
                                      f"when the condition fails")
-                if n.get("choices"):
-                    self.err("COND", f"{w}: has showIf together with 'choices' — a conditional "
-                                     f"node is interstitial narration; gate the choices instead")
-                if n.get("isEnd"):
-                    self.err("COND", f"{w}: has showIf together with 'isEnd' — a dialogue's "
-                                     f"termination must not be conditional")
-                if n.get("onEnter"):
+                if skippable and n.get("onEnter"):
                     self.warn("COND", f"{w}: conditional node carries onEnter effects — they do "
                                       f"NOT fire when it is skipped (advisory)")
                 # Same character class as the TypeScript side on purpose: JS
@@ -969,9 +1148,14 @@ class ProjectValidator:
                 # separators each fall one way only), and a silent split here is
                 # exactly the drift the two-validator rule exists to prevent.
                 if not _WS_STRIP(str(n.get("text", ""))):
-                    self.err("COND", f"{w}: showIf on a node with empty text — that is a "
-                                     f"conditional effects block, not conditional narration; "
-                                     f"gate the effects' consumers, or give the node a line")
+                    if skippable:
+                        self.err("COND", f"{w}: showIf on a node with empty text — that is a "
+                                         f"conditional effects block, not conditional narration; "
+                                         f"gate the effects' consumers, or give the node a line")
+                    else:
+                        self.err("COND", f"{w}: showIf on a node with empty text — there is no "
+                                         f"line to hide; gate the choices instead, or give the "
+                                         f"node a line")
 
             # A cycle made only of conditional nodes can never be escaped: every
             # node in it can fail its gate, and `next` leads back into the ring.
@@ -1039,11 +1223,9 @@ class ProjectValidator:
 
         for qid, (q, _p) in valid_quests.items():
             for st in q["stages"]:
-                for e in st.get("onComplete", []):
-                    self.walk_effect(e, f"quest '{qid}' stage '{st['id']}'")
+                self.walk_effects(st.get("onComplete", []), f"quest '{qid}' stage '{st['id']}'")
             for oc in q.get("outcomes", []):
-                for e in oc.get("effects", []):
-                    self.walk_effect(e, f"quest '{qid}' outcome '{oc['id']}'", site="quest_outcome")
+                self.walk_effects(oc.get("effects", []), f"quest '{qid}' outcome '{oc['id']}'", site="quest_outcome")
 
         # Dependency edges are polarity-aware: an edge means "prod sets (to
         # true) a flag that qid needs to BE true". A gate on the ABSENCE of a
@@ -1220,8 +1402,7 @@ class ProjectValidator:
                     self.err("CUT", f"{w}: arrivesAt unknown location '{aa['location']}'")
                 elif not any(s.get("id") == aa["spawn"] for s in (self.locations[aa["location"]][0].get("spawns") or [])):
                     self.err("CUT", f"{w}: arrivesAt spawn '{aa['spawn']}' not found in location '{aa['location']}'")
-            for e in cs.get("effectsOnComplete", []):
-                self.walk_effect(e, f"{w} effectsOnComplete")
+            self.walk_effects(cs.get("effectsOnComplete", []), f"{w} effectsOnComplete")
         for csid in self.cutscenes:
             if csid not in self.triggered_cutscenes:
                 self.warn("CUT", f"cutscene '{csid}' is never referenced by any play_cutscene effect")
@@ -1625,6 +1806,8 @@ class ProjectValidator:
                 self.scan_text(n.get("text"), f"dialogue '{did}' node '{n['id']}' text")
                 for ch in n.get("choices", []):
                     self.scan_text(ch.get("text"), f"dialogue '{did}' node '{n['id']}' choice '{ch['id']}' text")
+                    if "lockedText" in ch:
+                        self.scan_text(ch.get("lockedText"), f"dialogue '{did}' node '{n['id']}' choice '{ch['id']}' lockedText")
         for qid, (q, _p) in self.quests.items():
             if not self.valid("quest", qid):
                 continue
@@ -1801,7 +1984,11 @@ class ProjectValidator:
     def check_lorerefs(self):
         def check_loreref(o, w):
             lr = o.get("loreRef")
-            if lr and not os.path.exists(os.path.join(self.root, lr["file"])):
+            # Either Unicode form names the file (macOS NFD vs git/Linux NFC).
+            if lr and not any(
+                os.path.exists(os.path.join(self.root, f))
+                for f in {lr["file"], unicodedata.normalize("NFC", lr["file"]), unicodedata.normalize("NFD", lr["file"])}
+            ):
                 self.err("LORE", f"{w}: loreRef file '{lr['file']}' missing")
 
         for kind, reg in (
@@ -1818,9 +2005,165 @@ class ProjectValidator:
             for entity in reg.values():
                 check_loreref(entity, f"{kind} '{entity['id']}'{where_file}")
 
+    def check_type_declarations(self):
+        """Problems in data/types.json itself — mirrors validateTypeDeclarations
+        in editor/core/src/validator.ts, message for message."""
+        types = self.entity_types
+        if not isinstance(types, dict):
+            return
+        declared = set(types.keys())
+        plural_owner = {}
+
+        def check_target(type_id, label, d):
+            target = d.get("target")
+            if not isinstance(target, str) or target == "":
+                self.err("SCHEMA", f"types '{type_id}' field '{label}': a reference needs a target")
+            elif target not in CUSTOM_REF_BUILTIN_TARGETS and target not in declared:
+                self.err("SCHEMA", f"types '{type_id}' field '{label}': unknown reference target '{target}'")
+
+        def check_field(type_id, label, d, nested):
+            if not isinstance(d, dict):
+                self.err("SCHEMA", f"types '{type_id}' field '{label}': must be an object")
+                return
+            t = d.get("type")
+            if not isinstance(t, str) or t not in CUSTOM_FIELD_TYPES or (nested and t == "array"):
+                shown = "undefined" if t is None else (t if isinstance(t, str) else json.dumps(t))
+                self.err("SCHEMA", f"types '{type_id}' field '{label}': unknown type '{shown}'")
+                return
+            if t == "enum" and not (isinstance(d.get("options"), list) and len(d["options"]) > 0):
+                self.err("SCHEMA", f"types '{type_id}' field '{label}': an enum needs at least one option")
+            if t == "reference":
+                check_target(type_id, label, d)
+            if t == "array" and "items" in d:
+                check_field(type_id, f"{label}[]", d["items"], True)
+
+        for type_id, type_def in types.items():
+            if not isinstance(type_def, dict):
+                self.err("SCHEMA", f"types '{type_id}': the declaration must be an object")
+                continue
+            if type_id in CUSTOM_REF_BUILTIN_TARGETS:
+                self.err("SCHEMA", f"types '{type_id}': a custom type cannot be named after the built-in type '{type_id}' \u2014 references to it resolve to the built-in")
+            plural = custom_plural(type_id, type_def)
+            # Case-insensitively: on macOS and Windows "Drinks" and "drinks"
+            # are one file, so a collision there is a collision everywhere.
+            folded = plural.lower()
+            if not _SAFE_PLURAL.fullmatch(plural):
+                self.err("SCHEMA", f"types '{type_id}': plural '{plural}' is not a plain name \u2014 its rows are not loaded")
+            elif _WINDOWS_RESERVED.fullmatch(plural):
+                self.err("SCHEMA", f"types '{type_id}': plural '{plural}' is a reserved file name on Windows")
+            elif folded in BUILTIN_DATA_NAMES:
+                self.err("SCHEMA", f"types '{type_id}': plural '{plural}' is a built-in folder or file")
+            elif folded in plural_owner:
+                self.err("SCHEMA", f"types '{type_id}': plural '{plural}' is also used by type '{plural_owner[folded]}'")
+            else:
+                plural_owner[folded] = type_id
+            if "fields" not in type_def:
+                continue
+            fields = type_def["fields"]
+            if not isinstance(fields, dict):
+                self.err("SCHEMA", f"types '{type_id}': fields must be an object")
+                continue
+            for fname, fdef in fields.items():
+                check_field(type_id, fname, fdef, False)
+
+    def check_custom_entities(self):
+        self.check_type_declarations()
+        for type_id, type_def in self.entity_types.items():
+            if not isinstance(type_def, dict):
+                continue
+            plural = custom_plural(type_id, type_def)
+            fields = type_def.get("fields", {})
+            if not isinstance(fields, dict):
+                fields = {}
+            reg = self.custom_entities.get(type_id, {})
+            for eid, entry in reg.items():
+                entity = entry[0] if isinstance(entry, tuple) else entry
+                where = f"{plural} '{eid}'"
+                for fname, fdef in fields.items():
+                    if not isinstance(fdef, dict):
+                        continue
+                    ftype = fdef.get("type")
+                    freq = fdef.get("required", False)
+                    if fname not in entity or entity[fname] is None:
+                        if freq:
+                            self.err("SCHEMA", f"{where}: missing required field '{fname}'")
+                        continue
+                    val = entity[fname]
+                    if ftype == "string" and not isinstance(val, str):
+                        self.err("SCHEMA", f"{where}: field '{fname}' expected string, got {type(val).__name__}")
+                    elif ftype == "number" and not (isinstance(val, (int, float)) and not isinstance(val, bool)):
+                        self.err("SCHEMA", f"{where}: field '{fname}' expected number, got {type(val).__name__}")
+                    elif ftype == "boolean" and not isinstance(val, bool):
+                        self.err("SCHEMA", f"{where}: field '{fname}' expected boolean, got {type(val).__name__}")
+                    elif ftype == "enum":
+                        options = fdef.get("options") if isinstance(fdef.get("options"), list) else []
+                        if val not in options:
+                            self.err("SCHEMA", f"{where}: field '{fname}' invalid value '{val}' (expected one of {json.dumps(options)})")
+                    elif ftype == "reference":
+                        if not isinstance(val, str):
+                            self.err("SCHEMA", f"{where}: field '{fname}' expected string reference id, got {type(val).__name__}")
+                        else:
+                            target = fdef.get("target")
+                            if target:
+                                self._check_ref(val, target, f"{where} field '{fname}'")
+                    elif ftype == "array":
+                        if not isinstance(val, list):
+                            self.err("SCHEMA", f"{where}: field '{fname}' expected array, got {type(val).__name__}")
+                        else:
+                            item_def = fdef.get("items", {})
+                            if isinstance(item_def, dict) and item_def.get("type") == "reference":
+                                target = item_def.get("target")
+                                if target:
+                                    for idx, item_val in enumerate(val):
+                                        if not isinstance(item_val, str):
+                                            self.err("SCHEMA", f"{where} field '{fname}[{idx}]' expected string reference id, got {type(item_val).__name__}")
+                                        else:
+                                            self._check_ref(item_val, target, f"{where} field '{fname}[{idx}]'")
+
     # -- driver --------------------------------------------------------------
 
+
+    def check_bindings(self):
+        bindings_dir = os.path.join(self.data_dir, "bindings")
+        if not os.path.exists(bindings_dir):
+            return
+        import glob
+        for p in glob.glob(os.path.join(bindings_dir, "*.json")):
+            b = self._read_json(p)
+            if not isinstance(b, dict):
+                continue
+            ok = self.schema_check(p, "binding.schema.json", b)
+            if not ok:
+                continue
+            
+            b_portraits = b.get("portraits", {})
+            b_vo = b.get("vo", {})
+            b_cutscenes = b.get("cutscenes", {})
+            profile = b.get("profile", os.path.basename(p))
+            w = f"binding '{profile}'"
+            
+            for pid in self.used_portraits:
+                if pid not in b_portraits:
+                    self.warn("BIND", f"{w}: used portrait '{pid}' is unbound")
+            for vk in self.used_vo_keys:
+                if vk not in b_vo:
+                    self.warn("BIND", f"{w}: VO key '{vk}' is unbound")
+            for cid in self.triggered_cutscenes:
+                if cid not in b_cutscenes:
+                    self.warn("BIND", f"{w}: triggered cutscene '{cid}' is unbound")
+                    
+            for pid in b_portraits:
+                if pid not in self.portraits:
+                    self.warn("BIND", f"{w}: dangling portrait binding '{pid}'")
+            for cid in b_cutscenes:
+                if cid not in self.cutscenes:
+                    self.warn("BIND", f"{w}: dangling cutscene binding '{cid}'")
+            for vk in b_vo:
+                if vk not in self.used_vo_keys:
+                    self.warn("BIND", f"{w}: dangling VO binding '{vk}'")
+
     def run(self):
+
         self.load()
         self.resolve_rules()
         self.check_variables()
@@ -1845,6 +2188,8 @@ class ProjectValidator:
         self.check_xp_advisory()
         self.check_check_discipline()
         self.check_lorerefs()
+        self.check_bindings()
+        self.check_custom_entities()
         return self.issues
 
     def summary_line(self):

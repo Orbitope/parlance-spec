@@ -5,6 +5,16 @@
     {
       "id": "n_episode1_start",
       "next": "n_episode1_bedroom1",
+      "onEnter": [
+        {
+          "args": [
+            "proof",
+            false
+          ],
+          "command": "set_icon_visibility",
+          "type": "engine"
+        }
+      ],
       "text": "Comme chaque matin, 6h45, le réveil de ton téléphone sonne pour aller au collège..."
     },
     {
@@ -212,6 +222,10 @@
           "type": "set_text",
           "value": "Lundi 13 Novembre, 08h50",
           "variable": "time"
+        },
+        {
+          "command": "clear_dialog",
+          "type": "engine"
         }
       ],
       "speakerId": "char_cpe",
@@ -259,6 +273,12 @@
         }
       ],
       "id": "n_episode1_class1questions_2",
+      "onEnter": [
+        {
+          "command": "clear_dialog",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_cpe",
       "text": "Avez-vous des questions ?"
     },
@@ -382,7 +402,7 @@
     {
       "choices": [
         {
-          "goto": "n_episode1_outside1",
+          "goto": "n_episode1_outside1_15",
           "id": "c_episode1_ne_rien_faire",
           "text": "Ne rien faire"
         },
@@ -402,13 +422,13 @@
     },
     {
       "id": "n_episode1_outside1_3",
-      "next": "n_episode1_outside1",
+      "next": "n_episode1_outside1_15",
       "speakerId": "char_narrator",
       "text": "Tu prends des notes sur la conversation."
     },
     {
       "id": "n_episode1_outside1_4",
-      "next": "n_episode1_outside1",
+      "next": "n_episode1_outside1_15",
       "speakerId": "char_you",
       "text": "J'espère qu'il va bien aussi"
     },
@@ -420,7 +440,7 @@
     {
       "choices": [
         {
-          "goto": "n_episode1_outside1",
+          "goto": "n_episode1_outside1_15",
           "id": "c_episode1_ne_rien_faire_2",
           "text": "Ne rien faire"
         },
@@ -440,7 +460,7 @@
     },
     {
       "id": "n_episode1_outside1_7",
-      "next": "n_episode1_outside1",
+      "next": "n_episode1_outside1_15",
       "speakerId": "char_narrator",
       "text": "Tu prends des notes sur la conversation."
     },
@@ -452,7 +472,7 @@
     },
     {
       "id": "n_episode1_outside1_9",
-      "next": "n_episode1_outside1",
+      "next": "n_episode1_outside1_15",
       "text": "De quoi tu te mêles ? On dit ce qu'on veut de toute façon ! #position:635,450"
     },
     {
@@ -463,7 +483,7 @@
     {
       "choices": [
         {
-          "goto": "n_episode1_outside1",
+          "goto": "n_episode1_outside1_15",
           "id": "c_episode1_ne_rien_faire_3",
           "text": "Ne rien faire"
         },
@@ -483,7 +503,16 @@
     },
     {
       "id": "n_episode1_outside1_12",
-      "next": "n_episode1_outside1",
+      "next": "n_episode1_outside1_15",
+      "onEnter": [
+        {
+          "args": [
+            "Proof1"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        }
+      ],
       "speakerId": "char_narrator",
       "text": "Tu prends des notes sur la conversation."
     },
@@ -495,8 +524,51 @@
     },
     {
       "id": "n_episode1_outside1_14",
-      "next": "n_episode1_outside1",
+      "next": "n_episode1_outside1_15",
       "text": "En même temps il avait qu'à pas être de la team fragile ! #position:1100,420"
+    },
+    {
+      "choices": [
+        {
+          "goto": "n_episode1_prebedroom2",
+          "id": "c_episode1_rentrer_chez_toi",
+          "text": "Rentrer chez toi"
+        }
+      ],
+      "id": "n_episode1_outside1_15",
+      "onEnter": [
+        {
+          "args": [
+            "student-group-1",
+            30,
+            440
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "student-group-2",
+            390,
+            480
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "student-group-3",
+            850,
+            466
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        },
+        {
+          "command": "clear_dialog",
+          "type": "engine"
+        }
+      ]
     },
     {
       "id": "n_episode1_prebedroom2",
@@ -537,6 +609,15 @@
     {
       "id": "n_episode1_outside2_2",
       "next": "n_episode1_outside2_3",
+      "onEnter": [
+        {
+          "args": [
+            "outside2-scene"
+          ],
+          "command": "add_foreground_image",
+          "type": "engine"
+        }
+      ],
       "text": "Allez le fragile ! #position:850,400"
     },
     {
@@ -557,6 +638,15 @@
           "text": "Détourner le regard et ne rien faire"
         },
         {
+          "effects": [
+            {
+              "args": [
+                "Proof3"
+              ],
+              "command": "add_message",
+              "type": "engine"
+            }
+          ],
           "goto": "n_episode1_outside2_7",
           "id": "c_episode1_filmer_la_sc_ne",
           "text": "Filmer la scène avec ton téléphone"
@@ -631,6 +721,20 @@
               "flag": "didshowbackpackvideo",
               "type": "set_flag",
               "value": true
+            },
+            {
+              "args": [
+                "outside2-scene-phone",
+                200,
+                200,
+                0
+              ],
+              "command": "add_foreground_image",
+              "type": "engine"
+            },
+            {
+              "command": "clear_dialog",
+              "type": "engine"
             }
           ],
           "goto": "n_episode1_temoignage_7",
@@ -666,6 +770,43 @@
     {
       "id": "n_episode1_bedroom3_2",
       "next": "n_episode1_prebedroom4",
+      "onEnter": [
+        {
+          "args": [
+            "Email3"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Chat3"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms3c"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms3b"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms3a"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        }
+      ],
       "text": "SKIP"
     },
     {
@@ -767,6 +908,36 @@
         }
       ],
       "id": "n_episode1_bedroom4_2",
+      "onEnter": [
+        {
+          "args": [
+            "Email4"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Chat4"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms4a"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms4b"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        }
+      ],
       "text": "SKIP"
     },
     {
@@ -781,6 +952,50 @@
       "text": "Pendant une pause, Ryan se dirige vers toi d'un pas décidé."
     },
     {
+      "id": "n_episode1_outside3_3",
+      "next": "n_episode1_outside3_4",
+      "speakerId": "char_narrator",
+      "text": "De toute évidence, il te cherchait..."
+    },
+    {
+      "id": "n_episode1_outside3_4",
+      "next": "n_episode1_outside3_5",
+      "showIf": {
+        "counter": "score",
+        "op": ">",
+        "type": "counter",
+        "value": 2
+      },
+      "speakerId": "char_ryan",
+      "text": "On voulait que tu saches qu’on t’a à l’œil !"
+    },
+    {
+      "id": "n_episode1_outside3_5",
+      "next": "n_episode1_outside3_6",
+      "showIf": {
+        "of": [
+          {
+            "of": {
+              "counter": "score",
+              "op": ">",
+              "type": "counter",
+              "value": 2
+            },
+            "type": "not"
+          },
+          {
+            "counter": "score",
+            "op": "<",
+            "type": "counter",
+            "value": -2
+          }
+        ],
+        "type": "all"
+      },
+      "speakerId": "char_ryan",
+      "text": "T'as vraiment assuré ! Y'en a marre de tous ces fragiles !"
+    },
+    {
       "choices": [
         {
           "effects": [
@@ -790,12 +1005,12 @@
               "type": "adjust_counter"
             }
           ],
-          "goto": "n_episode1_outside3_4",
+          "goto": "n_episode1_outside3_7",
           "id": "c_episode1_comptez_sur_moi",
           "text": "Comptez sur moi"
         },
         {
-          "goto": "n_episode1_outside3_6",
+          "goto": "n_episode1_outside3_9",
           "id": "c_episode1_non_a_ira",
           "text": "Non, ça ira."
         },
@@ -807,18 +1022,27 @@
               "type": "adjust_counter"
             }
           ],
-          "goto": "n_episode1_outside3_8",
+          "goto": "n_episode1_outside3_11",
           "id": "c_episode1_hors_de_question",
           "text": "Hors de question"
         }
       ],
-      "id": "n_episode1_outside3_3",
-      "speakerId": "char_narrator",
-      "text": "De toute évidence, il te cherchait..."
+      "id": "n_episode1_outside3_6",
+      "showIf": {
+        "of": {
+          "counter": "score",
+          "op": ">",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "speakerId": "char_ryan",
+      "text": "La prochaine fois, tu viens avec nous pour filmer ?"
     },
     {
-      "id": "n_episode1_outside3_4",
-      "next": "n_episode1_outside3_5",
+      "id": "n_episode1_outside3_7",
+      "next": "n_episode1_outside3_8",
       "showIf": {
         "of": {
           "counter": "score",
@@ -832,8 +1056,8 @@
       "text": "Comptez sur moi !"
     },
     {
-      "id": "n_episode1_outside3_5",
-      "next": "n_episode1_outside3_10",
+      "id": "n_episode1_outside3_8",
+      "next": "n_episode1_outside3_13",
       "showIf": {
         "of": {
           "counter": "score",
@@ -847,8 +1071,8 @@
       "text": "Cool"
     },
     {
-      "id": "n_episode1_outside3_6",
-      "next": "n_episode1_outside3_7",
+      "id": "n_episode1_outside3_9",
+      "next": "n_episode1_outside3_10",
       "showIf": {
         "of": {
           "counter": "score",
@@ -862,8 +1086,8 @@
       "text": "Non, ça ira, je passe mon tour cette fois."
     },
     {
-      "id": "n_episode1_outside3_7",
-      "next": "n_episode1_outside3_10",
+      "id": "n_episode1_outside3_10",
+      "next": "n_episode1_outside3_13",
       "showIf": {
         "of": {
           "counter": "score",
@@ -877,8 +1101,8 @@
       "text": "Ok, c’est toi qui vois"
     },
     {
-      "id": "n_episode1_outside3_8",
-      "next": "n_episode1_outside3_9",
+      "id": "n_episode1_outside3_11",
+      "next": "n_episode1_outside3_12",
       "showIf": {
         "of": {
           "counter": "score",
@@ -892,8 +1116,8 @@
       "text": "Non, c'est hors de question !"
     },
     {
-      "id": "n_episode1_outside3_9",
-      "next": "n_episode1_outside3_10",
+      "id": "n_episode1_outside3_12",
+      "next": "n_episode1_outside3_13",
       "showIf": {
         "of": {
           "counter": "score",
@@ -907,7 +1131,7 @@
       "text": "Ah... je vois qu'on se dégonfle, finalement ?"
     },
     {
-      "id": "n_episode1_outside3_10",
+      "id": "n_episode1_outside3_13",
       "next": "n_episode1_bedroom5",
       "speakerId": "char_narrator",
       "text": "Suite"
@@ -926,6 +1150,43 @@
         }
       ],
       "id": "n_episode1_bedroom5_2",
+      "onEnter": [
+        {
+          "args": [
+            "Sms5a"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms5c"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms5b"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms5d"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Email5a"
+          ],
+          "command": "add_message",
+          "type": "engine"
+        }
+      ],
       "text": "SKIP"
     },
     {
@@ -1111,12 +1372,41 @@
     {
       "choices": [
         {
+          "effects": [
+            {
+              "command": "quit",
+              "type": "engine"
+            }
+          ],
           "id": "c_episode1_fin",
           "text": "Fin"
         }
       ],
       "id": "n_episode1_epilogue_2",
       "isEnd": true,
+      "onEnter": [
+        {
+          "args": [
+            "Sms6a"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms6b"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        },
+        {
+          "args": [
+            "Sms6c"
+          ],
+          "command": "add_node_option",
+          "type": "engine"
+        }
+      ],
       "text": "SKIP"
     }
   ],

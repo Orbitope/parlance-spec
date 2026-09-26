@@ -1,0 +1,13 @@
+{
+  "entry": "n_hw_swim",
+  "id": "dlg_hw_swim",
+  "nodes": [
+    {
+      "id": "n_hw_swim",
+      "isEnd": true,
+      "text": "The water is colder than it looks."
+    }
+  ],
+  "replayable": false,
+  "title": "Swim"
+}

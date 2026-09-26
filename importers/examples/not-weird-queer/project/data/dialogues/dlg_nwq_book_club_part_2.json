@@ -474,8 +474,45 @@
     },
     {
       "id": "n_nwq_cry_in_the_hallway_part_2",
-      "isEnd": true,
+      "next": "n_nwq_cry_in_the_hallway_part_2_2",
       "text": "$name stops in the hallway and checks to see that no one else is there."
+    },
+    {
+      "id": "n_nwq_cry_in_the_hallway_part_2_2",
+      "next": "n_nwq_cry_in_the_hallway_part_2_3",
+      "showIf": {
+        "counter": "self",
+        "op": "<",
+        "type": "counter",
+        "value": 2
+      },
+      "text": "$badEnding"
+    },
+    {
+      "id": "n_nwq_cry_in_the_hallway_part_2_3",
+      "isEnd": true,
+      "onEnter": [
+        {
+          "counter": "deaths",
+          "delta": 1,
+          "type": "adjust_counter"
+        },
+        {
+          "counter": "deaths",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "showIf": {
+        "of": {
+          "counter": "self",
+          "op": "<",
+          "type": "counter",
+          "value": 2
+        },
+        "type": "not"
+      },
+      "text": "The day's been rough but $name calms down and makes it to through the school day."
     },
     {
       "choices": [

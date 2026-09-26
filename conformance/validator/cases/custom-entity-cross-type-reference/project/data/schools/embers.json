@@ -1,0 +1,8 @@
+{
+  "id": "embers",
+  "signature": "fireball",
+  "teaches": [
+    "fireball",
+    "frostbite"
+  ]
+}
