@@ -10,11 +10,12 @@ conformance vectors and run them.
 
 ## Status
 
-**Empty until Parlance tags v0.9.0.** A spec repository pinned to an untagged
-version gives a port nothing to pin to, which is the whole point of publishing.
-Contents arrive via the one-way `sync-spec` publication from the upstream repo.
+Published through **v0.15.0**. Each release is a tag here, synced one way from the
+upstream repository by `sync-spec`; `PUBLICATION.json` names the upstream commit the
+current contents came from, and [`CHANGELOG.md`](CHANGELOG.md) says what each release
+changed and what a port must do about it.
 
-## What will live here
+## Contents
 
 | Path | What it is |
 |---|---|
@@ -22,6 +23,10 @@ Contents arrive via the one-way `sync-spec` publication from the upstream repo.
 | `conformance/` | Executable vectors any port must pass. Where prose and vectors disagree, the vectors win |
 | `validate/` | The standalone reference validator (Python) |
 | `docs/` | Runtime contract, integration guide, naming standards, versioning policy, migrations |
+| `audits/` | Review-only editorial audit skills to run against a project |
+| `importers/` | Format importers (Claude skills) with worked examples |
+| `PUBLISHED_SKILLS.md` | What the audits and importers have in common |
+| `CHANGELOG.md` | One entry per release, newest first |
 
 ## Using it
 
