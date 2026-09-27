@@ -43,5 +43,59 @@
       "OFFER"
     ],
     "reason": "The seeded dialogue (dlg_extra, deliberately offer-less and effect-free) fails the schema on choice.whenLocked. The Python reference drops a schema-invalid file from every later rule, so it never sees the dialogue at all; the TypeScript guard keeps a shape-safe entity in the pass beside its SCHEMA error, so the OFFER coverage rule also sees a spoken dialogue that nothing offers. Both report the one SCHEMA error the case is about."
+  },
+  {
+    "case": "custom-entity-prototype-keys",
+    "side": "python",
+    "issue": [
+      "error",
+      "SCHEMA"
+    ],
+    "reason": "The Python reference checks every custom row id against the id pattern at load time (a row id becomes a filename and a URL segment), so '__proto__' is reported as not lowercase snake_case beside the REF the case is about. The TypeScript side enforces the pattern only when a row is WRITTEN (saveCustomEntities throws), never in validate()."
+  },
+  {
+    "case": "custom-row-id-not-snake-case",
+    "side": "python",
+    "issue": [
+      "error",
+      "SCHEMA"
+    ],
+    "reason": "Same layer difference as custom-entity-prototype-keys: the row id pattern is a load-time SCHEMA check in the Python reference and a write-time refusal in the editor, so validate() there says nothing. The case is addressed to python in its expected.json."
+  },
+  {
+    "case": "id-trailing-newline",
+    "side": "typescript",
+    "issue": [
+      "warning",
+      "COVERAGE"
+    ],
+    "reason": "Both report the SCHEMA on the id and the REF from the dialogue that names the un-newlined id. The Python reference drops a schema-invalid file from every later rule; the TypeScript guard keeps a shape-safe entity in the pass beside its SCHEMA error. So TypeScript also sees a character ('npc_keeper\\n') that no dialogue speaks and reports COVERAGE; Python never walks the failed character."
+  },
+  {
+    "case": "progression-thresholds-not-numbers",
+    "side": "python",
+    "issue": [
+      "error",
+      "SCHEMA"
+    ],
+    "reason": "The Python reference validates progression.json against the published JSON Schema (integer items); the TypeScript loader has no zod schema for it and the PROG ordering rule compares 'a' <= 1 as false, so it reports nothing. Same layer difference as project-rules-bad-dice. Addressed to python in its expected.json."
+  },
+  {
+    "case": "registry-entries-not-array",
+    "side": "python",
+    "issue": [
+      "error",
+      "SCHEMA"
+    ],
+    "reason": "skills.json with `\"skills\": null` is a SCHEMA error in the Python reference (the registry's array is not an array); the TypeScript loader reads it as an empty registry and validate() sees nothing wrong. Addressed to python in its expected.json — widen when the loader reports the shape."
+  },
+  {
+    "case": "types-json-array",
+    "side": "python",
+    "issue": [
+      "error",
+      "SCHEMA"
+    ],
+    "reason": "data/types.json as an array is a SCHEMA error in the Python reference; the TypeScript loader iterates Object.entries([]) and declares no types, so validate() sees nothing. Addressed to python in its expected.json — widen when the loader reports the shape."
   }
 ]

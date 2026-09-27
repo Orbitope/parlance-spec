@@ -51,6 +51,16 @@ for `clean-minimal`), so a failure names the rule directly.
   changes what ships while a code-only assertion stays green. A mutation probe
   confirmed exactly that — demoting the reserved-`end` rule passed the entire
   suite until severity was asserted here.
+- `at` (optional, inside a `must`/`mustNot` entry) — where the issue sits:
+  `{"entityType": "dialogue", "entityId": "dlg_meet", "path":
+  "nodes/node_open/choices/ch_leave"}`, with `"path": null` for "no path".
+  The editor's Validation panel lands a click there, so a rule that stops
+  attaching its location degrades a row from "the choice" back to "the
+  dialogue, somewhere". Rule paths name array elements by **id**; SCHEMA paths
+  are zod's and name them by **position** (`nodes/0`). Checked by the
+  TypeScript harness only: the Python reference validator's issue is
+  (severity, code, message) and carries no location, so `test_conformance.py`
+  ignores the key rather than the case being split per implementation.
 - `mustNot` — no issue matches (same fields, same matching rule).
 - `validators` — which implementations the case applies to, e.g.
   `["python"]`. Both when absent. Only for rules that genuinely live at
@@ -76,8 +86,8 @@ XP advisory keyed on its own message text). Keep the coverage total.
 
 `known_divergences.json` is the authoritative list: every (case, side, issue)
 where the two implementations legitimately differ, each with a reason, and
-both harnesses fail if an entry goes stale or a difference is not listed. It
-holds five. Two are layer differences the case's own `validators` key already
+both harnesses fail if an entry goes stale or a difference is not listed. The
+oldest entries are layer differences the case's own `validators` key already
 records, both Python-side:
 
 - `dup-id-registry` — registry duplicate-id detection lives in the loader on
@@ -103,6 +113,20 @@ The other three are real differences in behaviour:
   beside its `SCHEMA` error, so it also reports an `OFFER` warning for a spoken
   dialogue nothing offers. Both report the one `SCHEMA` error the case is
   about.
+
+The malformed-shape cases added after the E4/A3 audit (`id-trailing-newline`,
+`node-unknown-key`, `types-json-array`, `registry-entries-not-array`,
+`progression-thresholds-not-numbers`, `custom-row-id-not-snake-case`,
+`quest-stages-null-referenced`, `loreref-not-object`) each carry a reason of
+one of two kinds: the same drop-vs-keep policy difference above, or a shape the
+Python reference rejects against the published JSON Schema that the TypeScript
+zod schemas do not reject yet. The second kind is marked `"validators":
+["python"]` in the case and says so in its reason; when the TypeScript
+conformance run starts reporting the `SCHEMA`, widen the case and drop the
+entry. Every `pattern` in the schemas is evaluated with ECMA-262 anchoring on
+the Python side (`ecma_pattern` in `validate.py`), so a trailing newline in an
+id, a dice string or an engine command name fails in both, as it does in every
+JavaScript engine.
 
 ## Adding a case
 

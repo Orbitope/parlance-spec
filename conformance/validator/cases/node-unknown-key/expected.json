@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "at": {
+        "entityId": "dlg_extra",
+        "entityType": "dialogue",
+        "path": "nodes/0"
+      },
+      "code": "SCHEMA",
+      "contains": "'foo'",
+      "severity": "error"
+    }
+  ]
+}

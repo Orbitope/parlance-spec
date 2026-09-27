@@ -14,7 +14,7 @@ validator error.
 | links carried | 178 | 178 |
 | lines and links under a `showIf` | — | 209 |
 | dialogues | 167 passages | 19 |
-| declared loss | 145 units | — |
+| declared loss | 145 units (359 `unmapped` entries) | — |
 | nodes a player can reach | — | **500 of 1,051** |
 
 Reproduce both halves from this directory:
@@ -47,6 +47,18 @@ lets `showIf` on a node with `choices` or `isEnd` hide only the LINE (the choice
 still show, the conversation still ends), and lets a node carry links with no
 `text` at all. The importer now emits those shapes as the source wrote them, so
 none of it is declared, and none of it needed a line the source did not contain.
+
+**Why the parser's manifest shows different numbers.** A unit here is a line or link
+whose text is missing from the output, which is what `check.py` lists under
+`missing_declared`. The manifest counts something else. It marks 178 units
+unmappable (83 citing `visits`; 55 "gated on a name the source never declares", the
+manifest's wording for every variable whose kind can't be derived, declared or not; 40
+text variables), but 33 of those have text that still occurs in the output: punctuation, a
+`<br />`, a short label like "working on", or a line the story repeats elsewhere. The
+check counts a declared loss only when its text is absent from the output altogether,
+which leaves 57, 50 and 38. The manifest's `unmapped` list is longer again, 359
+entries, because it names constructs rather than lines: those 178, plus the 168 macros
+and 10 computed-text uses below, and 3 links to passages the story doesn't define.
 
 Also reported in `unmapped` without costing a line: Harlowe macros with no
 Parlance equivalent — `(icon-counter:)`, `(text-style:)`, `(align:)`,

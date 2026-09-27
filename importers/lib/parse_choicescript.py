@@ -54,6 +54,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue
 import conditions
 import manifest as _manifest
+import source as _source
 
 WHY_FAIRMATH = ("fairmath (`%+` / `%-`) — an increase or decrease proportional to the "
                 "distance from 0 or 100. `adjust_counter` adds a fixed delta, and "
@@ -124,7 +125,7 @@ INTERP = re.compile(r"\$!{1,2}\{|@!?\{|\$\{([^}]*)\}")
 # Lines and blocks.
 
 def read_lines(path):
-    text = open(path, encoding="utf-8-sig").read()
+    text = _source.read_text(path)
     out = []
     for n, raw in enumerate(text.splitlines(), 1):
         if not raw.strip():
@@ -1033,6 +1034,7 @@ def main():
         for r in find_residue(sc.text, mine, um, sc.accounted, fmt="choicescript"):
             residue.append({**r, "file": f})
     man = {"source": a.source, "format": "choicescript", "units": units,
+           "literals": _manifest.literals_of(list(comp.nodes.values())),
            "variables": sorted(kinds), "variableKinds": kinds, "nodes": order,
            "unmapped": unmapped,
            # ChoiceScript writes `${name}`, Parlance `{name}`: one token, the

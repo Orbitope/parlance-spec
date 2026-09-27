@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "saw_ledger",
+        "entityType": "variable",
+        "path": null
+      },
       "code": "FLAG",
       "contains": "saw_ledger",
       "severity": "warning"

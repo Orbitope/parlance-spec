@@ -14,6 +14,154 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.16.0 — stricter validation, a passive-only `FLOW` warning; the reference runtime published under MIT
+
+0.16.0 is a validator release. `schema/` is unchanged, the runtime conformance vectors
+(`tooling/conformance/*.json`) are unchanged, and `RUNTIME_CONTRACT.md` changed only in
+one file path. **Runtimes have nothing to do**: a 0.15 runtime plays every 0.16 project
+exactly as before, so this release is not on `VERSIONING.md`'s "Releases you cannot skip"
+list. **Validator ports owe work:** one new `FLOW` warning, a bound on dice notation, a
+capped `OFFER` tie report, ECMA-262 pattern anchoring, and total reporting over malformed
+files. Eighteen new validator cases (129 in all) pin them.
+
+**Does an existing project stay valid?** A project that passed `tooling/validate.py`
+under 0.15.0 (what CI, `parlance ci-check` and the `validate` action gate on) still has
+no errors, with two narrow exceptions below. Three things can still change what you see:
+
+- **The editor now rejects unknown keys.** Every object schema in the editor's validator
+  is strict, as every `schema/*.json` already declared (`additionalProperties: false`).
+  An unknown or misspelled key (`isend`, `showif`, `foo`) used to be silently ignored in
+  the editor and was a `SCHEMA` error in `tooling/validate.py`, so a project could look
+  clean in the editor and fail CI. **The reference validator already enforced this**, so
+  a project CI accepted is unaffected. A project only ever checked in the editor may now
+  show `SCHEMA` errors there; delete or correct the key. `_comment` is still allowed at
+  any depth in both validators, and a leftover `character.dialogues` ladder still
+  reports `MIGRATE` alone.
+- **Dice notation is bounded (both validators).** A `check.dice` or `rules.check.dice`
+  with more than 100 dice or a die with more than 1000 sides is now a `RULES` error
+  (`'101d6': at most 100 dice`, `'1d1001': a die has at most 1000 sides`). It used to
+  validate, then hang or throw in the editor. The schema's `NdM` pattern did not change.
+- **A new `FLOW` warning** (below) can appear on existing nodes. It is a warning, so it
+  fails only a `--strict` run.
+
+The two exceptions, both in `tooling/validate.py` only, both shapes the editor already
+refused to write:
+
+- **A custom-type row id that is not lowercase snake_case** (`"Fire Ball"`) is a `SCHEMA`
+  error at load. Row ids become file names and URL segments. The editor refused to save
+  one; its `validate()` still says nothing (layer difference, in
+  `known_divergences.json`).
+- **A pattern-checked string ending in a newline** (`"npc_keeper\n"`, `"1d20\n"`, an
+  engine command `"shake\n"`) is now rejected. Python's `re.search` let `$` match
+  before a trailing newline. Every JavaScript engine, and so the editor, already
+  rejected these.
+
+Projects that used to crash `tooling/validate.py` with a traceback (valid JSON, wrong
+shape: a registry whose array is `null`, `types.json` as an array, a non-numeric
+progression threshold, a `null` quest `stages` that other files reference, a bare-string
+`loreRef`, and about twenty more) now get `SCHEMA` errors naming the file. They were
+never passing.
+
+### For validator ports
+
+- **`FLOW` warning: every non-fallback choice is a passive check.** On a node that is not
+  `isEnd`, has no `next`, and whose non-fallback choices are all `check.mode: "passive"`,
+  warn: *"every non-fallback choice is a passive check ('a', 'b') — the runtime counts
+  them as visible even when unrevealed, so a game that hides unrevealed passive choices
+  can show nothing clickable here"*, then *", and fallback 'f' is suppressed
+  (chooseChoice refuses it)"* or *", and there is no fallback"*, then *"; give the node a
+  choice without a passive check"*. It reads only the node's own choices. It does not
+  consult difficulty (no reveal is provable in every state), and `whenLocked: "show"`
+  does not clear it. `RUNTIME_CONTRACT.md` is unchanged: a passive choice is visible
+  whenever its `showIf` passes, `passiveCheckPasses` is a reveal rule the game applies on
+  top, and a fallback is offered only when the visible non-fallback set is empty. Cases:
+  `choice-passive-only-fallback-suppressed`, `choice-passive-only-no-fallback`,
+  `choice-passive-beside-plain-clean`.
+- **Dice bounds.** `N <= 100` dice and `M <= 1000` sides, reported as `RULES` errors with
+  the messages above. Cases: `dice-too-many`, `dice-too-many-sides`.
+- **`OFFER` ties are bucketed and capped.** Compare only offers of one character with the
+  same (priority, specificity). Report the first 10 ties in id order, then **one**
+  summary warning: *"character 'c': N more offer pair(s) share a priority and specificity
+  and were not checked — the first 10 ties are reported above; …"*. Under the cap the
+  output is unchanged. The old pairwise report produced about 500,000 warnings at 1,000
+  tied offers. Case: `offer-tie-capped` (six tied offers, 15 pairs: 10 ties and a
+  summary).
+- **Schema `pattern` uses ECMA-262 anchoring.** `$` matches only at the end of the
+  string, never before a trailing newline. A Python port should use `fullmatch` or
+  rewrite `$` to `\Z` (`ecma_pattern` in `validate.py`). Cases: `id-trailing-newline`,
+  `engine-command-trailing-newline`.
+- **Unknown keys are `SCHEMA` errors** everywhere a schema says
+  `additionalProperties: false`, except `_comment` and the legacy ladder above. Case:
+  `node-unknown-key`.
+- **Reporting is total.** A malformed file is a `SCHEMA` error, never a crash, and a
+  valid entity that reads a malformed one (a quest's `stages`, a location's spawns, a
+  route into a dialogue, a failed dialogue's `offer.when`) reads it through a shape
+  check. Cases: `types-json-array`, `registry-entries-not-array`,
+  `progression-thresholds-not-numbers`, `custom-row-id-not-snake-case`,
+  `quest-stages-null-referenced`, `loreref-not-object`, `route-unknown-dialogue`,
+  `route-unknown-choice`. Four of these are `"validators": ["python"]` today, because the
+  editor's loader does not report the shape yet. Each is recorded in
+  `known_divergences.json` with its widening condition.
+- **Existing rule, new case:** `check-priced-failure-sets-offer-flag` pins the `CHECK`
+  punishment-spiral advisory, which had no shared case.
+- **Case format: an optional `at` key** inside a `must`/`mustNot` entry
+  (`{"entityType", "entityId", "path"}`) says where an issue sits. Twelve cases carry it.
+  Only the TypeScript harness checks it; the Python reference's issues carry no location.
+  A port whose issues carry no location should ignore the key; a strict case-file
+  decoder must accept it.
+
+### For runtimes (reference runtime changes; no vector moved)
+
+None of these changes a conformance vector, and a port need not change for any of them.
+Matching them keeps a port in step with the editor.
+
+- **State and registry lookups read own keys only.** The id pattern admits
+  `constructor`, `toString` and `valueOf`. The reference runtime (JavaScript) used to
+  resolve `state.flags["constructor"]` through `Object.prototype`, and `{constructor}` in
+  a line interpolated a function's source. Now an absent key reads as its default.
+  Ports on plain dictionaries already behaved this way; a JavaScript port should check.
+- **`unlockedCodexEntries` is in ordinal (code-unit) id order**, not locale order. The
+  contract does not fix the order; the reference now agrees with a plain byte compare,
+  as offer resolution already did.
+- **`parseDice` throws past the bounds above**, instead of hanging or throwing a
+  `RangeError` deep in the probability code.
+- The reference implementation moved from `editor/core/src/` to `editor/runtime/src/`
+  (the one path change in `RUNTIME_CONTRACT.md`), and is published. See below.
+
+### Not the contract, but worth knowing
+
+- **`@orbitope/parlance-runtime` (MIT, npm).** The reference playback runtime
+  (conditions, effects, stepping, checks, offers, quests, dice, interpolation, speakers)
+  plus a pure `loadProjectFromFileMap`, zero dependencies, versioned with the release. It
+  runs every conformance vector. A JavaScript or TypeScript game can use it instead of
+  porting. Ports in other languages still need only the vectors.
+- **Locale files carry `@`-prefixed metadata.** `locales/<lang>.json` may now hold
+  `@sourceHashes` (key → hash of the source line each translation was made from) and
+  `@outdated` (keys to re-translate). A loader that expects every value to be a string
+  must skip keys starting with `@`; no real key starts with one. See `INTEGRATION.md`.
+- **CLI exit codes.** `parlance init` refuses an existing project or a non-empty folder
+  (exit 1) and never overwrites, even with `--force`; a usage mistake (unknown
+  `--template`, mistyped flag) exits 2. `parlance ci-check`, `parlance route` and
+  `tooling/validate.py` take `--annotations github|none|auto` (default: on under GitHub
+  Actions), which prints one `::error`/`::warning` per issue with file and line; stdout is
+  otherwise unchanged and exit codes do not move. `parlance explore --json` and
+  `parlance witness --json` now print only JSON on stdout; status lines go to stderr.
+- **Route `advance`.** A route step `advance: N` above 10,000 is refused
+  (`advance_invalid`), and one that returns to a node in a state already seen fails as
+  `advance_cycle`.
+- **MCP writes.** `create_entity`, `update_entity` and `save_custom_rows` validate first
+  and refuse (`written: false`, nothing on disk) when what they would write fails its own
+  schema. Reference and cross-entity issues still write and are reported afterwards.
+
+**Exactly what to run.** For a project: `python tooling/validate.py` (or `parlance
+ci-check`) and fix any `SCHEMA` or `RULES` error it names. Also open the project in the
+editor once if you have only validated in CI. For a runtime port: move the pin; nothing
+else is required. For a validator port: add the `FLOW` rule, the dice bounds, the `OFFER`
+cap and ECMA anchoring, make malformed files `SCHEMA` errors, accept the `at` key, and
+re-run the 129 cases.
+
+---
+
 ## 0.15.0 — node shapes, fallback and locked choices, line tags, engine commands; custom entity types, bindings, exclusive flag groups; BOM and Unicode-form loading
 
 0.15.0 is a contract release. **Every project valid under 0.14.0 stays valid and behaves

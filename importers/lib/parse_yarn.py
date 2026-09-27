@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue
 import conditions
 import manifest as _manifest
+import source as _source
 
 CMD = re.compile(r"<<\s*(.*?)\s*>>")
 OPTION = re.compile(r"^(\s*)->\s*(.*)$")
@@ -315,6 +316,25 @@ def frame_condition(frame, kinds):
 _stamp = _manifest.stamp
 
 
+# `<<set $name to "…">>` / `<<declare $name = "…">>` — the quoted value is a
+# string the source writes into a variable, which an importer carries as a
+# `set_text` effect. Same shape the example builder maps (its SET pattern),
+# so the manifest vouches for exactly the string the project will hold.
+SET_STRING = re.compile(r'^(?:set|declare)\s+\$\w+\s*(?:to|=)\s*"(.*)"$', re.S)
+
+
+def set_literals(nodes):
+    """Every quoted string a set/declare command assigns, for the manifest."""
+    out = []
+    for n in nodes:
+        for it in n["items"]:
+            for cmd in it.get("commands") or []:
+                m = SET_STRING.match(cmd.strip())
+                if m:
+                    out.append(m.group(1))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("source")
@@ -323,7 +343,7 @@ def main():
     # utf-8-sig, not utf-8: a BOM is invisible in an editor but makes the
     # first line unrecognisable to every line-anchored pattern here — a
     # BOM'd file parsed to a single node titled None before this.
-    text = open(a.source, encoding="utf-8-sig").read()
+    text = _source.read_text(a.source)
     nodes = parse(text)
     variables, jumps, unmapped, kinds = analyse(nodes)
 
@@ -342,6 +362,7 @@ def main():
              if it["kind"] in ("line", "option") and it["text"]]
     man = {
         "source": a.source, "format": "yarn", "units": units,
+        "literals": _manifest.literals_of(extra=set_literals(nodes)),
         "variables": variables, "variableKinds": kinds,
         "nodes": [n["title"] for n in nodes],
         "unmapped": unmapped,

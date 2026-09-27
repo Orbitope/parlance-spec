@@ -1,0 +1,12 @@
+{
+  "spell": {
+    "fields": {
+      "grantedBy": {
+        "target": "character",
+        "type": "reference"
+      }
+    },
+    "name": "Spell",
+    "plural": "spells"
+  }
+}

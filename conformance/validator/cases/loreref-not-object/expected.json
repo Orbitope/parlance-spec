@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "npc_keeper",
+      "severity": "error"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "LORE"
+    }
+  ]
+}

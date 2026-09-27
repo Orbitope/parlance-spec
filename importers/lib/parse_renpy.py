@@ -43,6 +43,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue, strip_hash_comment
 import conditions
 import manifest as _manifest
+import source as _source
 
 # --- the reasons, spelled once ------------------------------------------------
 WHY_CALL = ("`call` runs a label as a subroutine and `return`s to the caller. Parlance "
@@ -769,7 +770,7 @@ _stamp = _manifest.stamp
 def parse_file(path):
     # utf-8-sig: The Question itself starts with a BOM, and a BOM'd first line is
     # unrecognisable to every line-anchored pattern here.
-    text = open(path, encoding="utf-8-sig").read().replace("\r\n", "\n")
+    text = _source.read_text(path).replace("\r\n", "\n")
     p = Parser(text)
     p.run()
     return text, p
@@ -803,6 +804,9 @@ def main():
     units += p.units_declared
     man = {
         "source": a.source, "format": "renpy", "units": units,
+        # A `define` gives a speaker a display name the project carries as the
+        # character's `name`; the units name the speaker by its variable.
+        "literals": _manifest.literals_of([p.labels[n] for n in p.order], extra=characters.values()),
         "variables": sorted(p.kinds), "variableKinds": p.kinds,
         "nodes": list(p.order),
         "unmapped": p.unmapped,

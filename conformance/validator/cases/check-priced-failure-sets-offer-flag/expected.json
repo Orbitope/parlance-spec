@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "at": {
+        "entityId": "dlg_meet",
+        "entityType": "dialogue",
+        "path": "nodes/node_open/choices/ch_press/check"
+      },
+      "code": "CHECK",
+      "contains": "punishment-spiral",
+      "severity": "warning"
+    }
+  ]
+}

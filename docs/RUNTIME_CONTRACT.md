@@ -400,7 +400,7 @@ goldens over content with gated nodes are pinned to one side of every gate they 
 
 A dialogue has a default speaker; a node MAY override it for that one line — the multi-speaker
 feature that lets a single dialogue interleave NPCs, narration, and skill-voiced beats (a
-skill speaking as an inner voice). All three functions live in `editor/core/src/speaker.ts` and are the ONE place
+skill speaking as an inner voice). All three functions live in `editor/runtime/src/speaker.ts` and are the ONE place
 this logic exists — every consumer (validator, reference index, transcript, client canvas,
 `PlayPanel`, host draft context) calls through them rather than re-deriving any of it.
 

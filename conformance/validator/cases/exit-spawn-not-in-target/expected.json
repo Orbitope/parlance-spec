@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "loc_yard",
+        "entityType": "location",
+        "path": "exits/ex_north"
+      },
       "code": "LOC",
       "contains": "sp_typo",
       "severity": "error"

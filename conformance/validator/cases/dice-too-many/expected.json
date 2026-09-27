@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "RULES",
+      "contains": "'101d6': at most 100 dice",
+      "severity": "error"
+    }
+  ]
+}

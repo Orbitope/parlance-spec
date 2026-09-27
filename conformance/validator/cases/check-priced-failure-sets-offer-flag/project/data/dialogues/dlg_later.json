@@ -1,0 +1,20 @@
+{
+  "entry": "n1",
+  "id": "dlg_later",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "The keeper nods again."
+    }
+  ],
+  "offer": {
+    "when": {
+      "flag": "met_keeper",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "Later"
+}

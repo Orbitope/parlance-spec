@@ -1,0 +1,20 @@
+{
+  // Self-contained on purpose (no `extends ../tsconfig.base.json`): this
+  // directory is also published as source to parlance-spec, where there is no
+  // monorepo around it. Keep these options equal to tsconfig.base.json's.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": false,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*", "test/**/*"]
+}

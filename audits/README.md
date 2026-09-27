@@ -46,23 +46,25 @@ enough to. "Wins forever" may be an intended one-way door; a thin footprint may 
 a deliberately minor character.
 
 **Known limits, stated because the promise above is only worth what it excludes.**
-An independent audit of this bundle found real defects, and the honest ones to know
-before you rely on a result:
+An independent audit of this bundle found real defects. Most are fixed: every gather now
+globs entity directories recursively (so dialogues nested in subfolders are read), honours
+a `data` override in `parlance.config.json`, and finds a character by its `id` field
+rather than its filename; `state-reachability-audit` now revokes facts (`set_flag: false`,
+`take_item`, `adjust_counter`, `advance_quest`) as well as establishing them. What still
+holds:
 
-- The gathers glob entity directories **non-recursively** and assume the default `data/`
-  layout. A project that nests dialogues in subdirectories, or that redirects `data` via
-  `parlance.config.json`, is silently under-read — and an under-read looks exactly like a
-  clean project. Check the reported node and word counts against what you expect before
-  trusting any finding.
-- The gathers assume a character's **filename matches its id**. The schema does not
-  require that; a mismatch either crashes or silently reports zero.
-- A mistyped character id reports zeros rather than an error.
-- `state-reachability-audit`'s KNOWN set has **no kill logic**: `take_item` and
-  `set_flag: false` are not modelled, so a fact once established is treated as permanent.
-  Treat its KNOWN as "established somewhere upstream", not "still true here".
+- `character-presence-audit`'s first gather reports **zeros for a mistyped character id**
+  rather than an error (the voice and offer gathers stop and say so). A character with
+  0 spoken nodes is more often a typo than a finding.
+- A file a gather can't parse is skipped rather than reported, and an under-read looks
+  exactly like a clean project. Check the reported node and word counts against what you
+  expect before trusting any finding.
+- `state-reachability-audit` can't see through `any`/`not` gates or world state, and a
+  counter it has seen adjusted goes unknown rather than being recomputed. Each skill states
+  its own limits; read them.
 
-These are being fixed. Until they are, the bundle's second promise — loss is declared,
-never silent — does not fully hold for the gather step, and you should read the counts.
+Until those are gone, the bundle's second promise — loss is declared, never silent — does
+not fully hold for the gather step, and you should read the counts.
 
 **5. Nothing leaves your machine except what you send.** These are prompts. They
 read local files through your own agent. There is no service, no account, no

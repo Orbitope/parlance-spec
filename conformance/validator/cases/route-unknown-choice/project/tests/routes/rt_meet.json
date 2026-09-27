@@ -1,0 +1,9 @@
+{
+  "dialogueId": "dlg_meet",
+  "id": "rt_meet",
+  "steps": [
+    {
+      "choiceId": "ch_ghost"
+    }
+  ]
+}

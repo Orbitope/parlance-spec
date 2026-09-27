@@ -31,6 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue, strip_comment
 import conditions
 import manifest as _manifest
+import source as _source
 
 KNOT       = re.compile(r"^\s*={2,}\s*(function\s+)?([A-Za-z_]\w*)\s*(\([^)]*\))?\s*=*\s*$")
 STITCH     = re.compile(r"^\s*=\s*(function\s+)?([A-Za-z_]\w*)\s*(\([^)]*\))?\s*$")
@@ -1047,7 +1048,7 @@ def main():
     # utf-8-sig, not utf-8: a BOM is invisible in an editor but makes the
     # first line unrecognisable to every line-anchored pattern here — a
     # BOM'd file parsed to a single node titled None before this.
-    text = open(a.source, encoding="utf-8-sig").read()
+    text = _source.read_text(a.source)
     parsed = parse(text)
     info = analyse(parsed)
 
@@ -1073,6 +1074,7 @@ def main():
              for c, it, kind in units_of(parsed)]
     man = {
         "source": a.source, "format": "ink", "units": units,
+        "literals": _manifest.literals_of(parsed["containers"]),
         "variables": info["variables"],
         "variableKinds": info["variableKinds"],
         "nodes": info["titles"],

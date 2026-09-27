@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "dlg_meet",
+        "entityType": "dialogue",
+        "path": "nodes/node_open/choices/ch_leave"
+      },
       "code": "REF",
       "contains": "node_typo",
       "severity": "error"

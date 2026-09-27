@@ -58,6 +58,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue
 import conditions
 import manifest as _manifest
+import source as _source
 
 WHY_AUTO_ROUTE = (
     "a branch reached by an UNLABELLED connection — the engine evaluates the "
@@ -570,8 +571,7 @@ _stamp = _manifest.stamp
 
 
 def parse_file(path):
-    data = json.load(open(path, encoding="utf-8-sig"))
-    return Parser(data).run()
+    return Parser(_source.read_json_object(path)).run()
 
 
 def main():
@@ -599,6 +599,7 @@ def main():
              for owner, it in units_of(p) if it.get("text")]
     man = {
         "source": a.source, "format": "arcweave", "units": units,
+        "literals": _manifest.literals_of(p.elements, extra=p.characters.values()),
         "variables": sorted(p.kinds), "variableKinds": p.kinds,
         "nodes": [el["id"] for el in p.elements],
         "unmapped": p.unmapped,

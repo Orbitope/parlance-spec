@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "qst_errand",
+        "entityType": "quest",
+        "path": "stages/stg_listen/objectives/ob_listen"
+      },
       "code": "OBJ",
       "contains": "duplicate objective id",
       "severity": "error"

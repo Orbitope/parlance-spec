@@ -26,7 +26,39 @@ import json
 #: Every manifest field check.py's verdict depends on. Adding a field here
 #: without adding it to the parsers' output is a hard failure, by design: an
 #: unstamped-for field is a field a repair pass may edit unnoticed.
-TRUSTED_FIELDS = ("units", "rewrites", "residue")
+TRUSTED_FIELDS = ("units", "rewrites", "residue", "literals")
+
+
+def literals_of(*roots, extra=()):
+    """Every string the source WRITES rather than speaks, for check.py's
+    invention check: the values `set`-style commands assign to text variables
+    (they reach the project as `set_text` effects and are interpolated into
+    player-facing lines), plus whatever the parser passes as `extra` — speaker
+    display names a `define` gave, say. Collected by walking the parser's own
+    structures for the two shapes an assignment takes on its way to a project
+    (`{"op": "settext", "value": …}` in an IR, `{"type": "set_text", "value":
+    …}` as an effect), so a parser cannot forget to list one it mapped.
+
+    A literal vouches only for a `set_text` value or a character name in the
+    output. It never vouches for a line or an option: those are compared
+    against `units`, so a string the source assigned to a variable cannot be
+    laundered into narration."""
+    out = set(s for s in extra if isinstance(s, str) and s)
+
+    def walk(o):
+        if isinstance(o, dict):
+            v = o.get("value")
+            if isinstance(v, str) and (o.get("op") == "settext" or o.get("type") == "set_text"):
+                out.add(v)
+            for x in o.values():
+                walk(x)
+        elif isinstance(o, (list, tuple)):
+            for x in o:
+                walk(x)
+
+    for r in roots:
+        walk(r)
+    return sorted(out)
 
 
 def digest(man):

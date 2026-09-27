@@ -241,8 +241,20 @@ do not check a parser, they check that the checker can still see. The strongest 
 residue must notice, for every line in both fixtures. A line whose disappearance is
 undetectable is a blind spot, and a real parser bug there would converge silently.
 
-`residue` is covered by the manifest's integrity digest along with `units` and
-`rewrites`, so emptying it by hand is refused as tampering rather than obeyed.
+`residue` is covered by the manifest's integrity digest along with `units`,
+`rewrites` and `literals`, so emptying it by hand is refused as tampering rather than
+obeyed.
+
+`literals` is the fourth trusted field: every string the source *writes* rather than
+speaks — the value a `set`-style command assigns to a text variable, which an import
+carries as a `set_text` effect, and a speaker display name a `define` gives. The gate
+reads every player-facing string field in the project, not only node and choice text
+(a `lockedText`, a character's `name`, a `set_text` value, quest and codex prose), and
+each kind has its own yardstick: prose against `units`, a character name against the
+units' speakers and the literals, a `set_text` value against the literals alone. A
+literal never vouches for a line, so a string assigned to a variable cannot be
+laundered into narration. A dialogue's `title` is the one string field deliberately
+not read: the runtime never renders it, so it is an editor label, like `id`.
 
 ### What it does not check
 

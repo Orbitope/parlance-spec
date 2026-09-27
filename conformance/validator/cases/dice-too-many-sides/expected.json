@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "RULES",
+      "contains": "'1d1001': a die has at most 1000 sides",
+      "severity": "error"
+    }
+  ]
+}

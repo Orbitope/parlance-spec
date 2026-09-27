@@ -324,6 +324,60 @@ def case_malformed_dice(p: dict) -> None:
     })
 
 
+def _dice_check_choice(p: dict, dice: str) -> None:
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["choices"].append({
+        "check": {
+            "dice": dice,
+            "difficulty": 8,
+            "mode": "active",
+            "onFailure": "node_close",
+            "onSuccess": "node_close",
+            "skill": "observation",
+        },
+        "id": "ch_press",
+        "text": "[Observation] Read the room.",
+    })
+
+
+def case_dice_too_many(p: dict) -> None:
+    """More dice than the notation allows (adversarial review D8).
+
+    The grammar alone accepted any `\\d+d\\d+`; the editor's probability table
+    allocates n·m cells, so `200d1000` stalled the inspector for half a minute
+    and an absurd side count threw a RangeError out of it. Both validators now
+    bound N ≤ 100 and M ≤ 1000 in parse_dice / parseDice, so a per-check
+    override past either bound is the same RULES error a malformed notation is.
+    """
+    _dice_check_choice(p, "101d6")
+
+
+def case_dice_too_many_sides(p: dict) -> None:
+    """A die with more sides than the notation allows (D8, the other bound)."""
+    _dice_check_choice(p, "1d1001")
+
+
+def case_offer_tie_capped(p: dict) -> None:
+    """Six offers for one character tied on priority and specificity.
+
+    The tie rule used to report every pair — N(N-1)/2 warnings, 499,501 at a
+    thousand offers (adversarial review D1). Both validators now report the
+    first OFFER_TIE_REPORT_CAP (10) ties in id order and ONE summary naming the
+    pairs left unchecked: six offers make 15 pairs, so 10 tie warnings plus the
+    summary — 11 OFFER warnings, the same on both sides. dlg_meet's own bare
+    `offer` is the unconditional fallback, at a different specificity, so
+    neither it nor the no-fallback rule takes part.
+    """
+    for letter in "abcdef":
+        p[f"data/dialogues/dlg_tie_{letter}.json"] = {
+            "entry": "n1",
+            "id": f"dlg_tie_{letter}",
+            "nodes": [{"id": "n1", "isEnd": True, "text": f"The keeper says {letter}."}],
+            "offer": {"when": {"flag": "met_keeper", "type": "flag", "value": True}},
+            "speakerId": "npc_keeper",
+            "title": f"Tie {letter.upper()}",
+        }
+
+
 def case_difficulty_exceeds_dice(p: dict) -> None:
     """A 2d6 check gated above what 2d6 plus a plausible skill can roll."""
     p["data/dialogues/dlg_meet.json"]["nodes"][0]["choices"].append({
@@ -374,6 +428,27 @@ def case_check_modifier_zero_bonus(p: dict) -> None:
         "onFailure": "node_close", "onSuccess": "node_close", "skill": "observation",
         "modifiers": [{"when": {"flag": "met_keeper", "type": "flag", "value": True}, "bonus": 0}],
     })
+
+
+def case_check_priced_failure_sets_offer_flag(p: dict) -> None:
+    """A priced check whose failure branch sets a flag an offer gates on — the
+    CHECK punishment-spiral advisory (a derive-pass rule, located on the choice)."""
+    _append_check_choice(p, "ch_press", {
+        "difficulty": 10, "mode": "active",
+        "onFailure": "node_setback", "onSuccess": "node_close", "skill": "observation",
+    })
+    p["data/dialogues/dlg_meet.json"]["nodes"].append({
+        "id": "node_setback", "next": "node_close", "text": "The keeper bristles.",
+        "onEnter": [{"flag": "met_keeper", "type": "set_flag", "value": True}],
+    })
+    p["data/dialogues/dlg_later.json"] = {
+        "entry": "n1",
+        "id": "dlg_later",
+        "nodes": [{"id": "n1", "isEnd": True, "text": "The keeper nods again."}],
+        "offer": {"when": {"flag": "met_keeper", "type": "flag", "value": True}},
+        "speakerId": "npc_keeper",
+        "title": "Later",
+    }
 
 
 def case_check_modifier_empty(p: dict) -> None:
@@ -1069,6 +1144,36 @@ def case_choice_fallback_pointless(p: dict) -> None:
     node["choices"].append({"fallback": True, "goto": "node_close", "id": "ch_leave", "text": "Leave."})
 
 
+def _passive_choice(cid: str = "ch_notice", **extra) -> dict:
+    return {"check": {"difficulty": 6, "mode": "passive", "skill": "observation"},
+            "goto": "node_close", "id": cid, "text": "[Observation] Notice the ledger.", **extra}
+
+
+def case_choice_passive_only_fallback_suppressed(p: dict) -> None:
+    """Every non-fallback choice is a passive check, beside a fallback (D13).
+
+    The runtime counts a passive choice as visible whenever its showIf passes —
+    the reveal is the game's display rule — so the fallback is suppressed while
+    a game that hides the unrevealed passive shows nothing clickable. The
+    passive choice is gated so the fallback is not also "pointless": one defect.
+    """
+    node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
+    node["choices"] = [
+        _passive_choice(showIf=_cond_gate()),
+        {"fallback": True, "goto": "node_close", "id": "ch_leave", "text": "Leave."},
+    ]
+
+
+def case_choice_passive_only_no_fallback(p: dict) -> None:
+    """The node's only choice is a passive check, with no fallback at all (D13)."""
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["choices"] = [_passive_choice()]
+
+
+def case_choice_passive_beside_plain_clean(p: dict) -> None:
+    """A passive check beside an ordinary choice: something is always clickable."""
+    _add_choice(p, **_passive_choice())
+
+
 def case_choice_locked_clean(p: dict) -> None:
     """A gated choice shown locked with its own lockedText, and a project default (legal)."""
     p["data/rules.json"] = {"choices": {"whenLockedDefault": "show"}}
@@ -1084,6 +1189,26 @@ def case_choice_locked_without_showif(p: dict) -> None:
     node = p["data/dialogues/dlg_meet.json"]["nodes"][0]
     node["choices"][0]["whenLocked"] = "show"
     node["choices"][0]["lockedText"] = "[Locked]"
+
+
+def case_node_unknown_key(p: dict) -> None:
+    """A node carrying a key the schema does not declare (`foo: 1`).
+
+    Every `schema/*.json` says `additionalProperties: false` and the Python
+    reference always enforced it, but the editor's zod objects were passthrough
+    (adversarial review A3): a misspelled optional field — `isend`, `showif` —
+    was a silent no-op in the editor and a SCHEMA error in CI. Seeded in a
+    separate, speakerless, offer-less dialogue for the same reason as
+    choice-when-locked-invalid: Python drops a schema-invalid file from every
+    later rule, so seeding dlg_meet would fan out into python-only FLAG/CODEX/
+    ENDING noise that says nothing about this rule.
+    """
+    p["data/dialogues/dlg_extra.json"] = {
+        "entry": "n1",
+        "id": "dlg_extra",
+        "nodes": [{"foo": 1, "id": "n1", "isEnd": True, "text": "Well?"}],
+        "title": "Extra",
+    }
 
 
 def case_choice_when_locked_invalid(p: dict) -> None:
@@ -1741,6 +1866,101 @@ def case_engine_command_undeclared_vocabulary_ok(p: dict) -> None:
     _engine(p, {"type": "engine", "command": "anything_goes", "args": ["x", 1, False]})
 
 
+# ---- Malformed-but-plausible shapes (E4 / A3 audit) ------------------------
+# Each is a file a script or an agent writes: valid JSON, wrong shape. Both
+# validators must report a SCHEMA error and keep going — never a traceback on
+# the Python side, never a thrown validate() on the TypeScript side.
+
+def case_id_trailing_newline(p: dict) -> None:
+    """An entity id with a trailing newline. ^[a-z][a-z0-9_]*$ REJECTS it in
+    every JavaScript engine and, under Python's re.search, ACCEPTED it — `$`
+    also matches before a final newline there. The reference validator now
+    evaluates schema patterns with ECMA-262 anchoring, so both sides agree."""
+    p["data/characters/npc_keeper.json"]["id"] = "npc_keeper\n"
+
+
+def case_types_json_array(p: dict) -> None:
+    """data/types.json as an array of declarations instead of an object keyed
+    by type id. The reference used to skip it silently."""
+    p["data/types.json"] = [{"name": "Spell", "plural": "spells"}]
+
+
+def case_custom_row_id_not_snake_case(p: dict) -> None:
+    """A custom row whose id is not lowercase snake_case. No JSON Schema
+    describes a custom row, so the loader applies the id pattern by hand — the
+    id becomes a filename and a URL segment, and the editor refuses to write
+    one like this. The row is still registered so the reference to it holds."""
+    p["data/types.json"] = {
+        "spell": {"name": "Spell", "plural": "spells",
+                  "fields": {"grantedBy": {"type": "reference", "target": "character"}}},
+    }
+    p["data/spells/fireball.json"] = {"id": "Fire Ball", "grantedBy": "npc_keeper"}
+
+
+def case_progression_thresholds_not_numbers(p: dict) -> None:
+    """xpThresholds holding a string. The schema rejects it; the ordering rule
+    must not then compare a string to an integer (a TypeError, until it did
+    not run over non-numbers)."""
+    p["data/progression.json"] = {
+        "maxSkill": 5,
+        "pointsPerLevel": 1,
+        "startingSkills": {},
+        "xpThresholds": ["a", 1],
+    }
+
+
+def case_registry_entries_not_array(p: dict) -> None:
+    """skills.json whose `skills` is null rather than an array — what a script
+    writes when it has nothing to say. Used to be a TypeError on the loader's
+    for-loop, before any pass ran."""
+    p["data/skills.json"] = {"skills": None}
+
+
+def case_quest_stages_null_referenced(p: dict) -> None:
+    """A quest whose `stages` is null, reached through a VALID dialogue's
+    advance_quest. The quest fails its schema; the dialogue's REF check then
+    reads the quest's stage ids and must find none rather than iterate null."""
+    p["data/quests/qst_errand.json"] = {
+        "id": "qst_errand", "name": "The Errand", "stages": None,
+        "summary": "Fetch something for the keeper.",
+    }
+    p["data/dialogues/dlg_meet.json"]["nodes"][-1]["onEnter"].append(
+        {"quest": "qst_errand", "toStage": "stg_go", "type": "advance_quest"}
+    )
+
+
+def case_loreref_not_object(p: dict) -> None:
+    """A loreRef written as the bare path string instead of {"file": ...}. The
+    LORE rule used to index the string with ["file"] — a TypeError."""
+    p["data/characters/npc_keeper.json"]["loreRef"] = "lore/keeper.md"
+
+
+def case_engine_command_trailing_newline(p: dict) -> None:
+    """An engine command name with a trailing newline. The ENGINE name rule is
+    a hand-rolled regex on both sides; a `.match` against `^...$` admitted the
+    newline in Python while the same regex rejected it in JavaScript."""
+    _engine(p, {"type": "engine", "command": "shake\n"})
+
+
+def case_route_unknown_dialogue(p: dict) -> None:
+    """A route whose entry dialogue does not exist. Lives under tests/, so a
+    shipping game never reads it — which is why a stale id rots unnoticed."""
+    p["tests/routes/rt_ghost.json"] = {
+        "id": "rt_ghost",
+        "dialogueId": "dlg_ghost",
+        "steps": [{"choiceId": "ch_listen"}],
+    }
+
+
+def case_route_unknown_choice(p: dict) -> None:
+    """A route step naming a choice the dialogue does not offer."""
+    p["tests/routes/rt_meet.json"] = {
+        "id": "rt_meet",
+        "dialogueId": "dlg_meet",
+        "steps": [{"choiceId": "ch_ghost"}],
+    }
+
+
 CASE_BUILDERS = {
     "clean-minimal": (case_clean_minimal, {"noErrors": True}),
     "utf8-bom-loaded": (
@@ -1775,11 +1995,13 @@ CASE_BUILDERS = {
     ),
     "plain-goto-dangling": (
         case_plain_goto_dangling,
-        {"must": [{"code": "REF", "contains": "node_typo", "severity": "error"}]},
+        {"must": [{"code": "REF", "contains": "node_typo", "severity": "error",
+                   "at": {"entityType": "dialogue", "entityId": "dlg_meet", "path": "nodes/node_open/choices/ch_leave"}}]},
     ),
     "dead-end-node": (
         case_dead_end_node,
-        {"must": [{"code": "FLOW", "contains": "dead end", "severity": "error"}]},
+        {"must": [{"code": "FLOW", "contains": "dead end", "severity": "error",
+                   "at": {"entityType": "dialogue", "entityId": "dlg_meet", "path": "nodes/node_open/choices/ch_nowhere"}}]},
     ),
     "offer-when-dangling": (
         case_offer_when_dangling,
@@ -1808,6 +2030,23 @@ CASE_BUILDERS = {
         case_difficulty_exceeds_dice,
         {"must": [{"code": "GATE", "contains": "difficulty", "severity": "warning"}]},
     ),
+    "dice-too-many": (
+        case_dice_too_many,
+        {"must": [{"code": "RULES", "contains": "'101d6': at most 100 dice", "severity": "error"}]},
+    ),
+    "dice-too-many-sides": (
+        case_dice_too_many_sides,
+        {"must": [{"code": "RULES", "contains": "'1d1001': a die has at most 1000 sides", "severity": "error"}]},
+    ),
+    "offer-tie-capped": (
+        case_offer_tie_capped,
+        {"noErrors": True,
+         "must": [
+             {"code": "OFFER", "contains": "offers 'dlg_tie_a' and 'dlg_tie_b' have equal priority", "severity": "warning"},
+             {"code": "OFFER", "contains": "5 more offer pair(s) share a priority and specificity and were not checked", "severity": "warning"},
+         ],
+         "mustNot": [{"code": "OFFER", "contains": "offers 'dlg_tie_d' and 'dlg_tie_f'"}]},
+    ),
     "check-modifier-clean": (
         case_check_modifier_clean,
         {"noErrors": True, "mustNot": [{"code": "GATE"}, {"code": "CHECK"}]},
@@ -1818,7 +2057,13 @@ CASE_BUILDERS = {
     ),
     "check-modifier-zero-bonus": (
         case_check_modifier_zero_bonus,
-        {"must": [{"code": "CHECK", "contains": "bonus 0", "severity": "warning"}]},
+        {"must": [{"code": "CHECK", "contains": "bonus 0", "severity": "warning",
+                   "at": {"entityType": "dialogue", "entityId": "dlg_meet", "path": "nodes/node_open/choices/ch_mod/check"}}]},
+    ),
+    "check-priced-failure-sets-offer-flag": (
+        case_check_priced_failure_sets_offer_flag,
+        {"must": [{"code": "CHECK", "contains": "punishment-spiral", "severity": "warning",
+                   "at": {"entityType": "dialogue", "entityId": "dlg_meet", "path": "nodes/node_open/choices/ch_press/check"}}]},
     ),
     "check-modifier-empty": (
         case_check_modifier_empty,
@@ -1846,7 +2091,8 @@ CASE_BUILDERS = {
     ),
     "dialogue-island-unreachable": (
         case_dialogue_island_unreachable,
-        {"must": [{"code": "REACH", "contains": "unreachable", "severity": "warning"}]},
+        {"must": [{"code": "REACH", "contains": "unreachable", "severity": "warning",
+                   "at": {"entityType": "dialogue", "entityId": "dlg_meet", "path": "nodes/node_island_a"}}]},
     ),
 
     # -- One case per issue-code family that had no shared case at all --------
@@ -1864,11 +2110,13 @@ CASE_BUILDERS = {
     ),
     "flag-read-never-set": (
         case_flag_read_never_set,
-        {"must": [{"code": "FLAG", "contains": "saw_ledger", "severity": "warning"}]},
+        {"must": [{"code": "FLAG", "contains": "saw_ledger", "severity": "warning",
+                   "at": {"entityType": "variable", "entityId": "saw_ledger", "path": None}}]},
     ),
     "exit-spawn-not-in-target": (
         case_exit_spawn_not_in_target,
-        {"must": [{"code": "LOC", "contains": "sp_typo", "severity": "error"}]},
+        {"must": [{"code": "LOC", "contains": "sp_typo", "severity": "error",
+                   "at": {"entityType": "location", "entityId": "loc_yard", "path": "exits/ex_north"}}]},
     ),
     "faction-opposes-itself": (
         case_faction_opposes_itself,
@@ -1876,7 +2124,8 @@ CASE_BUILDERS = {
     ),
     "duplicate-objective-id": (
         case_duplicate_objective_id,
-        {"must": [{"code": "OBJ", "contains": "duplicate objective id", "severity": "error"}]},
+        {"must": [{"code": "OBJ", "contains": "duplicate objective id", "severity": "error",
+                   "at": {"entityType": "quest", "entityId": "qst_errand", "path": "stages/stg_listen/objectives/ob_listen"}}]},
     ),
     "character-portrait-dangling": (
         case_character_portrait_dangling,
@@ -1888,11 +2137,13 @@ CASE_BUILDERS = {
     ),
     "relationship-read-never-adjusted": (
         case_relationship_read_never_adjusted,
-        {"must": [{"code": "REL", "contains": "never adjusted", "severity": "warning"}]},
+        {"must": [{"code": "REL", "contains": "never adjusted", "severity": "warning",
+                   "at": {"entityType": "character", "entityId": "npc_keeper", "path": None}}]},
     ),
     "reputation-read-never-adjusted": (
         case_reputation_read_never_adjusted,
-        {"must": [{"code": "REP", "contains": "never adjusted", "severity": "warning"}]},
+        {"must": [{"code": "REP", "contains": "never adjusted", "severity": "warning",
+                   "at": {"entityType": "faction", "entityId": "fac_villagers", "path": None}}]},
     ),
     "snapshot-unknown-quest": (
         case_snapshot_unknown_quest,
@@ -1900,7 +2151,8 @@ CASE_BUILDERS = {
     ),
     "text-placeholder-undeclared": (
         case_text_placeholder_undeclared,
-        {"must": [{"code": "TEXT", "contains": "player_name", "severity": "error"}]},
+        {"must": [{"code": "TEXT", "contains": "player_name", "severity": "error",
+                   "at": {"entityType": "dialogue", "entityId": "dlg_meet", "path": "nodes/node_open/text"}}]},
     ),
     "grant-xp-nonpositive": (
         case_grant_xp_nonpositive,
@@ -2022,6 +2274,22 @@ CASE_BUILDERS = {
         case_choice_fallback_pointless,
         {"must": [{"code": "FLOW", "contains": "no gated sibling", "severity": "warning"}]},
     ),
+    "choice-passive-only-fallback-suppressed": (
+        case_choice_passive_only_fallback_suppressed,
+        {"noErrors": True,
+         "must": [{"code": "FLOW", "contains": "every non-fallback choice is a passive check ('ch_notice')", "severity": "warning"},
+                  {"code": "FLOW", "contains": "fallback 'ch_leave' is suppressed", "severity": "warning"}],
+         "mustNot": [{"code": "FLOW", "contains": "no gated sibling"}, {"code": "FLOW", "contains": "may be stuck"}]},
+    ),
+    "choice-passive-only-no-fallback": (
+        case_choice_passive_only_no_fallback,
+        {"noErrors": True,
+         "must": [{"code": "FLOW", "contains": "there is no fallback", "severity": "warning"}]},
+    ),
+    "choice-passive-beside-plain-clean": (
+        case_choice_passive_beside_plain_clean,
+        {"noErrors": True, "mustNot": [{"code": "FLOW"}]},
+    ),
     "choice-locked-clean": (
         case_choice_locked_clean,
         {"noErrors": True, "mustNot": [{"code": "FLOW"}, {"code": "TEXT"}, {"code": "RULES"}, {"code": "SCHEMA"}]},
@@ -2033,6 +2301,12 @@ CASE_BUILDERS = {
     "choice-when-locked-invalid": (
         case_choice_when_locked_invalid,
         {"must": [{"code": "SCHEMA", "severity": "error"}]},
+    ),
+    "node-unknown-key": (
+        case_node_unknown_key,
+        {"must": [{"code": "SCHEMA", "contains": "'foo'", "severity": "error",
+                   # zod's dialect: array positions, not ids (lib/issueNav resolves them).
+                   "at": {"entityType": "dialogue", "entityId": "dlg_extra", "path": "nodes/0"}}]},
     ),
     "choice-locked-text-placeholder-undeclared": (
         case_choice_locked_text_placeholder_undeclared,
@@ -2252,6 +2526,59 @@ CASE_BUILDERS = {
     "engine-command-undeclared-vocabulary-ok": (
         case_engine_command_undeclared_vocabulary_ok,
         {"noErrors": True, "mustNot": [{"code": "ENGINE"}, {"code": "SCHEMA"}]},
+    ),
+    # ---- malformed-but-plausible shapes (E4 / A3 audit); ROUTE family ----
+    "id-trailing-newline": (
+        case_id_trailing_newline,
+        {"must": [{"code": "SCHEMA", "contains": "npc_keeper", "severity": "error"}]},
+    ),
+    "engine-command-trailing-newline": (
+        case_engine_command_trailing_newline,
+        {"must": [{"code": "ENGINE", "contains": "is not lowercase snake_case", "severity": "error"}]},
+    ),
+    # The four python-only cases below are shapes the TypeScript zod schemas do
+    # not reject today (a strict-schema change is under way); widen each to
+    # both validators once the TypeScript conformance run reports the SCHEMA.
+    "types-json-array": (
+        case_types_json_array,
+        {"validators": ["python"],
+         "must": [{"code": "SCHEMA", "contains": "types.json", "severity": "error"}]},
+    ),
+    "custom-row-id-not-snake-case": (
+        case_custom_row_id_not_snake_case,
+        {"validators": ["python"],
+         "must": [{"code": "SCHEMA", "contains": "row id \"Fire Ball\" is not lowercase snake_case", "severity": "error"}],
+         "mustNot": [{"code": "REF"}]},
+    ),
+    "progression-thresholds-not-numbers": (
+        case_progression_thresholds_not_numbers,
+        {"validators": ["python"],
+         "must": [{"code": "SCHEMA", "contains": "progression.json", "severity": "error"}],
+         "mustNot": [{"code": "PROG", "contains": "strictly increasing"}]},
+    ),
+    "registry-entries-not-array": (
+        case_registry_entries_not_array,
+        {"validators": ["python"],
+         "must": [{"code": "SCHEMA", "contains": "skills", "severity": "error"}]},
+    ),
+    "quest-stages-null-referenced": (
+        case_quest_stages_null_referenced,
+        {"must": [{"code": "SCHEMA", "contains": "qst_errand", "severity": "error"},
+                  {"code": "REF", "contains": "qst_errand", "severity": "error"}]},
+    ),
+    "loreref-not-object": (
+        case_loreref_not_object,
+        {
+         "must": [{"code": "SCHEMA", "contains": "npc_keeper", "severity": "error"}],
+         "mustNot": [{"code": "LORE"}]},
+    ),
+    "route-unknown-dialogue": (
+        case_route_unknown_dialogue,
+        {"must": [{"code": "ROUTE", "contains": "dlg_ghost", "severity": "error"}]},
+    ),
+    "route-unknown-choice": (
+        case_route_unknown_choice,
+        {"must": [{"code": "ROUTE", "contains": "ch_ghost", "severity": "error"}]},
     ),
 }
 

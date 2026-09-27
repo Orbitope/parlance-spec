@@ -1,0 +1,13 @@
+{
+  "entry": "n1",
+  "id": "dlg_extra",
+  "nodes": [
+    {
+      "foo": 1,
+      "id": "n1",
+      "isEnd": true,
+      "text": "Well?"
+    }
+  ],
+  "title": "Extra"
+}

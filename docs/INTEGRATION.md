@@ -10,9 +10,19 @@ runtime API, and validating your implementation against the conformance suite.
 
 Every entity in a Parlance project is a JSON file (or an entry in a flat JSON array for
 skills and variables). The same files the editor writes are what the runtime reads.
-`@parlance/core` defines the authoritative behavioral contract — what the data *means*
-when executed. A port in any language must implement the same semantics; use the
-conformance suite in `tooling/conformance/` to verify.
+The reference runtime defines the authoritative behavioral contract — what the data
+*means* when executed. For JavaScript and TypeScript it is published to npm, MIT, as
+[`@orbitope/parlance-runtime`](https://www.npmjs.com/package/@orbitope/parlance-runtime):
+the same playback code the editor runs, zero dependencies, no filesystem, DOM or clock,
+so it ships inside a browser, Node, Deno, Bun or embedded-JS game as it is.
+
+```bash
+npm install @orbitope/parlance-runtime
+```
+
+Its version tracks the format version it plays (see `VERSIONING.md`). A port in any
+other language must implement the same semantics; use the conformance suite in
+`tooling/conformance/` to verify — the npm package passes every vector in it.
 
 ---
 
@@ -44,10 +54,21 @@ data/
   <plural>/            … one file per row (nested folders allowed)
   bindings/
     godot.json         optional — asset paths per engine profile (see Asset Bindings)
+  locales/
+    fr.json            optional — translated strings, keyed by localization key
+  vo/
+    fr.json            optional — voice-over audio keys, same keys
 ```
 
-No runtime function reads custom-type rows or bindings; they are there for your
-engine's own code and your build pipeline.
+No runtime function reads custom-type rows, bindings, locales or VO files; they are
+there for your engine's own code and your build pipeline.
+
+**Skip `@`-prefixed keys in locale and VO files.** A locale file is a flat
+`key → translated string` map, except for entries whose key starts with `@`, which
+are editor metadata: `@sourceHashes` (an object recording which English each
+translation was made from) and `@outdated` (an array of keys to re-translate). No
+real key starts with `@`. A loader that expects every value to be a string must skip
+them.
 
 **A shipping game loads `data/` and nothing else.** Route and snapshot fixtures live
 in a sibling directory, because they are regression tests rather than story:
@@ -73,24 +94,63 @@ See [`NAMING_STANDARDS.md`](NAMING_STANDARDS.md) for id conventions. See
 
 ## Loading
 
-Parse each JSON file and assemble a `ProjectData` object:
+In JavaScript/TypeScript, hand the runtime's loader every `.json` file under `data/`,
+keyed by its data-relative path with `/` separators. It reads no files itself — use
+`fs`, `fetch`, an asset bundle or a zip, whatever your platform has:
 
 ```ts
-import type { ProjectData, Skill, Variable, Item, Faction, Character, Dialogue, Quest, Location, Ending, Codex } from "@parlance/core";
+import { readFileSync, readdirSync } from "node:fs";
+import { loadProjectFromFileMap } from "@orbitope/parlance-runtime";
+
+const paths = readdirSync("data", { recursive: true, encoding: "utf-8" }).filter((p) => p.endsWith(".json"));
+const project = loadProjectFromFileMap(
+  new Map(paths.map((p) => [p.replaceAll("\\", "/"), readFileSync(`data/${p}`, "utf-8")])),
+);
+```
+
+It skips canvas `*.layout.json` sidecars, tolerates a byte-order mark, and does not
+validate — run `parlance ci-check` in CI for that. Malformed JSON in an entity file
+throws; a wrong-shaped registry or entity is skipped.
+
+In another language (or to see what the loader does), parse each JSON file and assemble a
+`ProjectData` object:
+
+```ts
+import type { ProjectData, Skill, Variable, Item, Portrait, Faction, Character, Dialogue, Quest, Location, Ending, Codex } from "@orbitope/parlance-runtime";
 
 const project: ProjectData = {
-  skills:     indexById(skillsJson.skills),       // array → Record<id, Skill>
-  variables:  indexById(variablesJson.variables), // array → Record<id, Variable>
-  items:      indexById(itemsJson.items),         // array → Record<id, Item>
-  factions:   loadDir("factions"),
-  characters: loadDir("characters"),
-  dialogues:  loadDir("dialogues"),
-  quests:     loadDir("quests"),
-  locations:  loadDir("locations"),
-  endings:    loadDir("endings"),
-  codex:      loadDir("codex"),
+  skills:      indexById(skillsJson.skills),       // array → Record<id, Skill>
+  variables:   indexById(variablesJson.variables), // array → Record<id, Variable>
+  items:       indexById(itemsJson.items),         // array → Record<id, Item>
+  portraits:   indexById(portraitsJson.portraits), // array → Record<id, Portrait>
+  factions:    loadDir("factions"),
+  characters:  loadDir("characters"),
+  dialogues:   loadDir("dialogues"),
+  quests:      loadDir("quests"),
+  locations:   loadDir("locations"),
+  endings:     loadDir("endings"),
+  codex:       loadDir("codex"),
+  cutscenes:   loadDir("cutscenes"),
+  rules:       rulesJson,        // data/rules.json, if present
+  progression: progressionJson,  // data/progression.json, if present
 };
 ```
+
+**Don't drop the optional files.** Every key after `endings` is optional in the type, so a
+loader that skips one still type-checks and simply behaves differently:
+
+- Without `rules`, checks roll 1d20 with no criticals and locked choices hide, whatever
+  the project configured.
+- Without `progression`, `createDefaultState` starts every skill empty instead of at the
+  project's starting loadout.
+- Without `cutscenes`, `nextContinuations` never offers the pending cutscene, so the host
+  never learns it should play one.
+
+`portraits`, like `items`, is display data: the runtime returns portrait ids, and the
+registry is how your game turns one into an image.
+
+`routes` and `snapshots` live in `tests/` and are for the editor and CI; a shipping game
+never loads them.
 
 **`items` is for display, not for execution.** No runtime function reads it: possession
 lives entirely in `GameState.inventory`, `give_item` adds an id, and the `item` condition
@@ -99,13 +159,14 @@ asks whether that set contains one — none of which consults the registry. You 
 omit it if your game never renders an inventory. Worth stating because the shape invites
 guessing in both directions.
 
-**`loreFiles` field:** omit it from your load — it is a `Set<string>` used by editor
-tooling, is not JSON-serializable, and no runtime function reads it.
+**`loreFiles`:** not part of the runtime's `ProjectData`. The editor adds that field (a
+`Set<string>` its lore-reference check reads); no runtime function reads it, so a game
+never builds one.
 
 **`GameState.inventory`** is a `Set<string>` in TypeScript. **`GameState.questStages`**
 maps `questId → current stage id` and is updated by `advance_quest` effects. If you
 are storing or transmitting state as JSON, use `serializeState` / `deserializeState`
-from `@parlance/core` to convert — the serialized form has `inventory: string[]`
+from `@orbitope/parlance-runtime` to convert — the serialized form has `inventory: string[]`
 (sorted) and `questStages: Record<string, string>`. See
 [`tooling/conformance/README.md`](conformance/README.md) for the full serialized format
 all ports must match.
@@ -115,7 +176,8 @@ all ports must match.
 ## Runtime API
 
 All functions are pure — no filesystem, no DOM, no clock. Inject `rng` for deterministic
-tests.
+tests; `mulberry32(seed)` is the reference seeded generator (the stream
+`conformance/rng.json` pins), so a seeded run replays identically in every port.
 
 ```ts
 import {
@@ -132,7 +194,7 @@ import {
   resolveQuests,
   serializeState,
   deserializeState,
-} from "@parlance/core";
+} from "@orbitope/parlance-runtime";
 ```
 
 **`resolveCharacterDialogue` is how you decide what a character says next**, and a port
@@ -362,10 +424,10 @@ Releases are a `chore(release): X.Y.Z` commit plus a `vX.Y.Z` tag; the version o
 
 ## Hook model
 
-`@parlance/core` is pure: it returns new states but fires no events. Your game engine
+The runtime is pure: it returns new states but fires no events. Your game engine
 is responsible for reacting to state changes. The two data-level hand-offs to the engine
 are `engine` effects (a command, in order among the other effects) and line/choice
-`tags`. Core returns both and interprets neither. The following events are the natural wiring
+`tags`. The runtime returns both and interprets neither. The following events are the natural wiring
 points:
 
 | When | What your engine should do |
@@ -462,13 +524,14 @@ save is a position, and the steps that produced a state are not recoverable from
 ## Quick start (TypeScript / Node)
 
 ```ts
-import { readFileSync, readdirSync } from "fs";
-import { join } from "path";
-import { createDefaultState, stepDialogue, chooseChoice, applyEffects } from "@parlance/core";
-import type { ProjectData, Dialogue } from "@parlance/core";
+import { readFileSync, readdirSync } from "node:fs";
+import { loadProjectFromFileMap, createDefaultState, stepDialogue, chooseChoice, applyEffects } from "@orbitope/parlance-runtime";
 
-// 1. Load project (sketch — adapt to your file layout)
-const project = loadProject("./data");
+// 1. Load project — every .json under data/, keyed by its data-relative path
+const paths = readdirSync("data", { recursive: true, encoding: "utf-8" }).filter((p) => p.endsWith(".json"));
+const project = loadProjectFromFileMap(
+  new Map(paths.map((p) => [p.replaceAll("\\", "/"), readFileSync(`data/${p}`, "utf-8")])),
+);
 
 // 2. Initial state with custom skill values
 const state = { ...createDefaultState(project), skills: { wit: 7 } };
@@ -478,7 +541,8 @@ const dlg = project.dialogues["dlg_gatekeeper_intro"]!;
 let nodeId = dlg.entry;
 let currentState = state;
 
-const step = stepDialogue(dlg, nodeId, currentState);
+const step = stepDialogue(dlg, nodeId, currentState, project);
+nodeId = step.node.id; // a gated node may have been skipped — continue from the RESOLVED one
 currentState = applyEffects(step.onEnterEffects, currentState, project);
 
 if (step.node.text && !step.textHidden) console.log(step.node.text);
@@ -490,6 +554,11 @@ const outcome = chooseChoice(dlg, nodeId, "ch_wit_bluff", currentState, project,
 currentState = outcome.newState;
 if (outcome.nextNodeId) nodeId = outcome.nextNodeId;
 ```
+
+`stepDialogue` takes the project as its fourth argument because it resolves conditional
+nodes (`showIf`) against it. The node it returns may not be the one you asked for: a
+conditional node whose gate fails is skipped, so carry `step.node.id` forward as the
+current node.
 
 
 ## Asset Bindings
@@ -523,4 +592,4 @@ Only the reference validator checks bindings; the editor's validator does not re
 }
 ```
 
-The game runtime (like the Godot addon) reads this file at startup to map the raw string IDs emitted by the narrative flow into loadable engine assets.
+Your game reads this file at startup to map the raw string IDs emitted by the narrative flow into loadable engine assets. Neither official port loads binding profiles yet (the Godot and Unity runtimes take ids and leave asset lookup to the host), so this mapping is code you write. `tooling/validate.py` checks the profiles; `parlance ci-check` does not.

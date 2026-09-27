@@ -1,0 +1,21 @@
+{
+  "must": [
+    {
+      "code": "OFFER",
+      "contains": "offers 'dlg_tie_a' and 'dlg_tie_b' have equal priority",
+      "severity": "warning"
+    },
+    {
+      "code": "OFFER",
+      "contains": "5 more offer pair(s) share a priority and specificity and were not checked",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "OFFER",
+      "contains": "offers 'dlg_tie_d' and 'dlg_tie_f'"
+    }
+  ],
+  "noErrors": true
+}

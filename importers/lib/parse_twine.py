@@ -54,6 +54,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue
 import conditions
 import manifest as _manifest
+import source as _source
 
 # `:: Name [tag tag] {"position":"…"}` — tags and metadata both optional.
 PASSAGE = re.compile(r"^::\s*(?P<name>[^\[\{\n]+?)"
@@ -153,7 +154,7 @@ def read_source(path):
     everything else blanked to spaces, newlines kept — and those bodies decoded,
     so a line number still points at the line a reader would find in the file.
     """
-    raw = open(path, encoding="utf-8-sig").read()
+    raw = _source.read_text(path)
     if "<tw-passagedata" not in raw:
         return raw, split_passages(raw)
 
@@ -637,6 +638,7 @@ def main():
              if it["kind"] in ("line", "option") and it.get("text")]
     man = {
         "source": a.source, "format": "twine", "units": units,
+        "literals": _manifest.literals_of(nodes),
         "variables": variables, "variableKinds": kinds,
         "nodes": [p.title for p in passages],
         "unmapped": unmapped,

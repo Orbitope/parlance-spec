@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "npc_keeper",
+        "entityType": "character",
+        "path": null
+      },
       "code": "REL",
       "contains": "never adjusted",
       "severity": "warning"

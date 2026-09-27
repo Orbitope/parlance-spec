@@ -1,0 +1,17 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "row id \"Fire Ball\" is not lowercase snake_case",
+      "severity": "error"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "REF"
+    }
+  ],
+  "validators": [
+    "python"
+  ]
+}

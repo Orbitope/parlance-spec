@@ -1,0 +1,9 @@
+{
+  "dialogueId": "dlg_ghost",
+  "id": "rt_ghost",
+  "steps": [
+    {
+      "choiceId": "ch_listen"
+    }
+  ]
+}

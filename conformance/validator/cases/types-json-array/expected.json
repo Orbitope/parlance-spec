@@ -1,0 +1,12 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "types.json",
+      "severity": "error"
+    }
+  ],
+  "validators": [
+    "python"
+  ]
+}

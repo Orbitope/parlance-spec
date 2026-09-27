@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "ROUTE",
+      "contains": "ch_ghost",
+      "severity": "error"
+    }
+  ]
+}

@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "dlg_meet",
+        "entityType": "dialogue",
+        "path": "nodes/node_island_a"
+      },
       "code": "REACH",
       "contains": "unreachable",
       "severity": "warning"

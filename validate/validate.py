@@ -29,7 +29,8 @@ import re
 import sys
 from collections import namedtuple
 
-from jsonschema import Draft7Validator
+from jsonschema import Draft7Validator, ValidationError
+from jsonschema import validators as _jsonschema_validators
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT7
 
@@ -39,10 +40,19 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # bucket (errors/warnings) it lands in and therefore the exit code.
 Issue = namedtuple("Issue", ["severity", "code", "message"])
 
-# --- Dice notation (mirrors editor/core/src/dice.ts — keep in lockstep) ------
+# --- Dice notation (mirrors editor/runtime/src/dice.ts — keep in lockstep) ---
 # Grammar: NdM, n >= 1, m >= 2. The skill value is a modifier, not notation.
-DICE_RE = re.compile(r"^(\d+)d(\d+)$")
+DICE_RE = re.compile(r"(\d+)d(\d+)")  # always .fullmatch: `$` would admit a trailing newline
 DEFAULT_DICE = (1, 20)
+# Upper bounds, mirroring MAX_DICE_COUNT / MAX_DIE_SIDES in dice.ts: the
+# editor's probability table allocates n·m cells, so the grammar alone let
+# `200d1000` stall it and `1d99999999999999999999` throw out of it.
+MAX_DICE_COUNT = 100
+MAX_DIE_SIDES = 1000
+# Most tied offer PAIRS reported per character before one summary line takes
+# over (check_offers). Mirrors OFFER_TIE_REPORT_CAP in
+# editor/core/src/validation/global.ts — keep in lockstep.
+OFFER_TIE_REPORT_CAP = 10
 
 
 # Whitespace class shared with editor/core/src/validator.ts. Explicit rather than
@@ -53,7 +63,7 @@ _WS = "\t\n\x0b\x0c\r\x1c\x1d\x1e\x1f \x85\xa0\u1680\u2000\u2001\u2002\u2003\u20
 def _skippable_node(n):
     """Whether a failed showIf SKIPS this node (interstitial: no choices, not
     isEnd) or only hides its line. Mirrors isSkippableNode in
-    editor/core/src/nodeGate.ts — one definition per validator, same answer."""
+    editor/runtime/src/nodeGate.ts — one definition per validator, same answer."""
     return not n.get("choices") and not n.get("isEnd")
 
 
@@ -63,7 +73,7 @@ def _WS_STRIP(t):
 def parse_dice(notation):
     """Parse "NdM" → (n, m). Raises ValueError with the same messages dice.ts
     throws, so both validators report identically."""
-    m = DICE_RE.match(notation.strip())
+    m = DICE_RE.fullmatch(notation.strip())
     if not m:
         raise ValueError(f"Invalid dice notation '{notation}': expected NdM (e.g. 1d20, 2d6)")
     n, sides = int(m.group(1)), int(m.group(2))
@@ -71,6 +81,10 @@ def parse_dice(notation):
         raise ValueError(f"Invalid dice notation '{notation}': need at least 1 die")
     if sides < 2:
         raise ValueError(f"Invalid dice notation '{notation}': die must have at least 2 sides")
+    if n > MAX_DICE_COUNT:
+        raise ValueError(f"Invalid dice notation '{notation}': at most {MAX_DICE_COUNT} dice")
+    if sides > MAX_DIE_SIDES:
+        raise ValueError(f"Invalid dice notation '{notation}': a die has at most {MAX_DIE_SIDES} sides")
     return (n, sides)
 
 
@@ -86,32 +100,112 @@ def strip_comments(o):
 PLACEHOLDER_RE = re.compile(r"\{([a-z][a-z0-9_]*)\}")
 # An `engine` effect's command name (mirrors ENGINE_COMMAND_PATTERN in
 # editor/core/src/validation/ids.ts). Not an id: nothing indexes or renames it.
-ENGINE_COMMAND = re.compile(r"^[a-z][a-z0-9_]*$")
+# Always .fullmatch, never .match against a `$`-anchored pattern: Python's `$`
+# also matches before a trailing newline, so "shake\n" would pass here and fail
+# the same regex in every JavaScript engine.
+ENGINE_COMMAND = re.compile(r"[a-z][a-z0-9_]*")
+# Entity ids (common.schema.json#/definitions/id, mirrors ID_PATTERN in
+# editor/core/src/validation/ids.ts). The JSON Schema applies this to every
+# built-in entity; custom rows are not described by a schema, so the loader
+# applies it by hand — a row id becomes a filename and a URL segment.
+ID_PATTERN = re.compile(r"[a-z][a-z0-9_]*")  # always .fullmatch
+
+
+def ecma_pattern(pattern):
+    """A JSON Schema `pattern` (ECMA-262 semantics) as an equivalent Python regex.
+
+    The published schemas are consumed by JavaScript (the editor, engine ports)
+    and by this validator, and the two regex dialects disagree on exactly one
+    thing the schemas rely on: outside a character class, an unescaped `$`
+    matches at the end of the string in ECMA-262 but ALSO before a trailing
+    newline in Python. So "npc_keeper\\n" satisfied ^[a-z][a-z0-9_]*$ here and
+    failed it in every JS engine — a file this validator passed and the editor
+    rejected. `\Z` is Python's end-of-string-only anchor.
+    """
+    out = []
+    in_class = False
+    i = 0
+    while i < len(pattern):
+        ch = pattern[i]
+        if ch == "\\" and i + 1 < len(pattern):
+            out.append(pattern[i:i + 2])
+            i += 2
+            continue
+        if in_class:
+            if ch == "]":
+                in_class = False
+        elif ch == "[":
+            in_class = True
+        elif ch == "$":
+            out.append(r"\Z")
+            i += 1
+            continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
+_ECMA_CACHE = {}
+
+
+def ecma_search(pattern, text):
+    """`pattern` matches `text` under ECMA-262 anchoring (see ecma_pattern)."""
+    rx = _ECMA_CACHE.get(pattern)
+    if rx is None:
+        rx = _ECMA_CACHE[pattern] = re.compile(ecma_pattern(pattern))
+    return rx.search(text) is not None
+
+
+def _ecma_pattern_keyword(validator, patrn, instance, schema):
+    """jsonschema's `pattern` keyword, evaluated with ECMA-262 anchoring instead
+    of Python re.search. Same message text as the library's own, so the shared
+    conformance pins see no difference on the cases that already pass."""
+    if validator.is_type(instance, "string") and not ecma_search(patrn, instance):
+        yield ValidationError(f"{instance!r} does not match {patrn!r}")
+
+
+# Draft 7 with ECMA-anchored patterns. This is the one validator class every
+# schema check goes through — a plain Draft7Validator here would quietly
+# re-admit the trailing newline.
+SchemaValidator = _jsonschema_validators.extend(
+    Draft7Validator, validators={"pattern": _ecma_pattern_keyword}
+)
 
 
 def condition_specificity(c):
     """How specific a condition tree is — the 'most specific offer wins' tiebreak
-    (ws 17). Mirrors conditionSpecificity in editor/core/src/runtime.ts:
+    (ws 17). Mirrors conditionSpecificity in editor/runtime/src/runtime.ts:
     absent 0, any leaf 1, all = sum, any = min, not = operand."""
-    if not c:
+    if not c or not isinstance(c, dict):
         return 0
     t = c.get("type")
     if t == "all":
-        return sum(condition_specificity(m) for m in c.get("of", []))
+        return sum(condition_specificity(m) for m in _members(c))
     if t == "any":
-        of = c.get("of", [])
+        of = _members(c)
         return 0 if not of else min(condition_specificity(m) for m in of)
     if t == "not":
         return condition_specificity(c.get("of"))
     return 1  # any leaf
 
 
+def _members(c):
+    """An all/any condition's `of` list, or [] when the shape is wrong. The
+    helpers below run over offers of dialogues that FAILED the schema (a valid
+    dialogue's set_active_dialogue reaches into them), so they cannot assume
+    the shape the schema promised."""
+    of = c.get("of")
+    return [m for m in of if isinstance(m, dict)] if isinstance(of, list) else []
+
+
 def _top_conjuncts(c):
     """Top-level conjuncts of a condition — an `all` flattened one level, else
     the condition itself. The unit the offer-exclusivity oracle reasons over."""
+    if not isinstance(c, dict):
+        return []
     if c.get("type") == "all":
         out = []
-        for m in c.get("of", []):
+        for m in _members(c):
             out.extend(_top_conjuncts(m))
         return out
     return [c]
@@ -163,7 +257,8 @@ def _literal(c, negated=False):
     editor/core/src/offerExclusivity.ts."""
     t = c.get("type")
     if t == "not":
-        return None if negated else _literal(c.get("of", {}), True)
+        inner = c.get("of")
+        return None if negated or not isinstance(inner, dict) else _literal(inner, True)
     if t == "flag":
         v = bool(c.get("value"))
         return ("bool", f"flag:{c.get('flag')}", (not v) if negated else v)
@@ -200,7 +295,7 @@ def _condition_contradicts(c, b):
     other value / a disjoint interval; an `any` contradicts b iff EVERY member
     does. Mirrors `conditionContradicts` in editor/core/src/offerExclusivity.ts."""
     if c.get("type") == "any":
-        return all(_condition_contradicts(m, b) for m in c.get("of", []))
+        return all(_condition_contradicts(m, b) for m in _members(c))
     lc = _literal(c)
     if lc is None:
         return False
@@ -226,7 +321,7 @@ def _offer_outranks(id_a, offer_a, id_b, offer_b):
 def condition_reads_flag(c, flag):
     """Does this gate REQUIRE `flag` true — a top-level conjunct `flag f=true`?
     The test for a forced offer. Mirrors `conditionReadsFlag` in
-    editor/core/src/offerExclusivity.ts."""
+    editor/runtime/src/forcedOffer.ts."""
     return bool(c) and any(
         t.get("type") == "flag" and t.get("flag") == flag and t.get("value") is True
         for t in _top_conjuncts(c)
@@ -244,6 +339,16 @@ def offers_exclusive(a, b):
         return False
     return (any(_condition_contradicts(c, b) for c in _top_conjuncts(a))
             or any(_condition_contradicts(c, a) for c in _top_conjuncts(b)))
+
+
+def _section(rules, key):
+    """A rules.json section as a dict, or {} when it is absent or not an object."""
+    s = rules.get(key)
+    return s if isinstance(s, dict) else {}
+
+
+def _is_num(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
 
 
 class ProjectValidator:
@@ -265,18 +370,40 @@ class ProjectValidator:
                 # editor strips it too; without this a BOM'd config silently
                 # read as {} and the project's custom dirs were ignored.
                 with open(cfg_path, encoding="utf-8-sig") as f:
-                    cfg = json.load(f) or {}
-            except (json.JSONDecodeError, OSError):
+                    cfg = json.load(f)
+            except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as e:
+                self.err("SCHEMA", f"parlance.config.json: invalid JSON: {e}")
                 cfg = {}
-        self.data_dir = os.path.join(self.root, cfg.get("data") or "data")
+            except OSError as e:
+                self.err("SCHEMA", f"parlance.config.json: cannot read file: {e}")
+                cfg = {}
+            if cfg is None:
+                cfg = {}
+            elif not isinstance(cfg, dict):
+                # A list or a scalar has no `.get`: this used to be an
+                # AttributeError before the first pass ran.
+                self.err("SCHEMA", f"parlance.config.json: expected an object, got {type(cfg).__name__}")
+                cfg = {}
+
+        def cfg_dir(key, default):
+            v = cfg.get(key)
+            if v is None or v == "":
+                return default
+            if not isinstance(v, str):
+                # os.path.join(root, 5) is a TypeError, not a SCHEMA error.
+                self.err("SCHEMA", f"parlance.config.json: '{key}' must be a path string, got {type(v).__name__}")
+                return default
+            return v
+
+        self.data_dir = os.path.join(self.root, cfg_dir("data", "data"))
         # Route/snapshot fixtures are regression tests, not narrative content, so
         # they live beside data/ rather than inside it — a shipping game never
         # loads them.
-        self.tests_dir = os.path.join(self.root, cfg.get("tests") or "tests")
+        self.tests_dir = os.path.join(self.root, cfg_dir("tests", "tests"))
         # Schemas ship with the tool: a project only needs its own schema/ to pin
         # a specific contract version, so fall back to this repo's set (same rule
         # the editor host applies).
-        self.schema_dir = os.path.join(self.root, cfg.get("schema") or "schema")
+        self.schema_dir = os.path.join(self.root, cfg_dir("schema", "schema"))
         if not os.path.isdir(self.schema_dir):
             self.schema_dir = os.path.join(REPO_ROOT, "schema")
 
@@ -374,6 +501,12 @@ class ProjectValidator:
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
             self.err("SCHEMA", f"{self.rel(path)}: invalid JSON: {e}")
             return None
+        except RecursionError:
+            # json.load recurses per nesting level; a few thousand `[` is a
+            # RecursionError, not a JSONDecodeError, and it is still malformed
+            # input rather than a validator crash.
+            self.err("SCHEMA", f"{self.rel(path)}: invalid JSON: nested too deeply to parse")
+            return None
         except OSError as e:
             self.err("SCHEMA", f"{self.rel(path)}: cannot read file: {e}")
             return None
@@ -381,7 +514,7 @@ class ProjectValidator:
     def _validator_for(self, fn):
         v = self._validator_cache.get(fn)
         if v is None:
-            v = Draft7Validator(self.schema_store[fn], registry=self.schema_registry)
+            v = SchemaValidator(self.schema_store[fn], registry=self.schema_registry)
             self._validator_cache[fn] = v
         return v
 
@@ -397,7 +530,14 @@ class ProjectValidator:
             and isinstance(obj, dict)
             and "dialogues" in obj
         )
-        for e in sorted(self._validator_for(fn).iter_errors(strip_comments(obj)), key=str):
+        try:
+            errors = sorted(self._validator_for(fn).iter_errors(strip_comments(obj)), key=str)
+        except RecursionError:
+            # A document json.load accepted but the schema walk cannot descend
+            # (every `$ref` level costs frames). Malformed input, not a crash.
+            self.err("SCHEMA", f"{self.rel(path)}: nested too deeply to validate against {fn}")
+            return False
+        for e in errors:
             if legacy_ladder and e.validator == "additionalProperties" and "dialogues" in e.message:
                 continue
             ok = False
@@ -420,7 +560,17 @@ class ProjectValidator:
         doc = self._read_json(p)
         if doc is None:
             return
-        entries = doc.get(list_key, []) if isinstance(doc, dict) else []
+        if not isinstance(doc, dict):
+            # `7` or `[]` used to load as an empty registry with nothing said.
+            self.err("SCHEMA", f"{self.rel(p)}: expected an object with a '{list_key}' array, got {type(doc).__name__}")
+            return
+        entries = doc.get(list_key)
+        if entries is None and list_key not in doc:
+            entries = []
+        if not isinstance(entries, list):
+            # {"skills": null} was a TypeError on the for-loop below.
+            self.err("SCHEMA", f"{self.rel(p)}: '{list_key}' must be an array, got {type(entries).__name__}")
+            return
         for entry in entries:
             if not isinstance(entry, dict):
                 self.err("SCHEMA", f"{self.rel(p)}: {list_key} entry is not an object: {entry!r}")
@@ -471,11 +621,15 @@ class ProjectValidator:
         if os.path.exists(prog_path):
             self.progression = self._read_json(prog_path)
             if self.progression is not None:
+                # Read afterwards whether or not it passed: check_progression
+                # checks the type of every field it compares.
                 self.schema_check(prog_path, "progression.schema.json", self.progression)
         rules_path = os.path.join(self.data_dir, "rules.json")
         if os.path.exists(rules_path):
             self.rules = self._read_json(rules_path)
             if self.rules is not None:
+                # Read afterwards whether or not it passed: resolve_rules checks
+                # the shape of every section it reads.
                 self.schema_check(rules_path, "rules.schema.json", self.rules)
 
         self._load_dir("factions", "faction.schema.json", self.factions, "faction")
@@ -492,6 +646,10 @@ class ProjectValidator:
         types_path = os.path.join(self.data_dir, "types.json")
         if os.path.exists(types_path):
             doc = self._read_json(types_path)
+            if doc is not None and not isinstance(doc, dict):
+                # An array of declarations is a shape the editor rejects (its
+                # loader reports SCHEMA); this used to skip it without a word.
+                self.err("SCHEMA", f"{self.rel(types_path)}: expected an object of type declarations keyed by type id, got {type(doc).__name__}")
             if isinstance(doc, dict):
                 self.entity_types = doc
                 for type_id, type_def in self.entity_types.items():
@@ -515,27 +673,35 @@ class ProjectValidator:
                                 continue
                             o = self._read_json(p)
                             if isinstance(o, dict) and "id" in o:
-                                eid = o["id"]
-                                if eid in reg:
-                                    self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(p)}")
-                                reg[eid] = (o, p)
+                                self._register_custom_row(reg, type_id, o, p)
                     elif os.path.exists(file_path):
                         raw = self._read_json(file_path)
                         if isinstance(raw, dict):
                             if plural in raw and isinstance(raw[plural], list):
                                 for item in raw[plural]:
                                     if isinstance(item, dict) and "id" in item:
-                                        eid = item["id"]
-                                        if eid in reg:
-                                            self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(file_path)}")
-                                        reg[eid] = (item, file_path)
+                                        self._register_custom_row(reg, type_id, item, file_path)
                             else:
                                 for k, v in raw.items():
                                     if isinstance(v, dict) and "id" in v:
-                                        eid = v["id"]
-                                        if eid in reg:
-                                            self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(file_path)}")
-                                        reg[eid] = (v, file_path)
+                                        self._register_custom_row(reg, type_id, v, file_path)
+
+    def _register_custom_row(self, reg, type_id, row, path):
+        """One custom row into its type's registry. The id is checked against
+        ID_PATTERN here because no JSON Schema describes a custom row, and the
+        id becomes a filename and a URL segment (the editor refuses to WRITE
+        one that fails it). A non-string id used to be a TypeError on the
+        `in reg` lookup; a string one that fails the pattern is registered
+        anyway so references to it still resolve, beside its SCHEMA error."""
+        eid = row["id"]
+        if not isinstance(eid, str):
+            self.err("SCHEMA", f"{self.rel(path)}: {type_id} row id must be a string, got {type(eid).__name__}")
+            return
+        if not ID_PATTERN.fullmatch(eid):
+            self.err("SCHEMA", f"{self.rel(path)}: {type_id} row id {json.dumps(eid, ensure_ascii=False)} is not lowercase snake_case")
+        if eid in reg:
+            self.err("DUP", f"duplicate {type_id} id '{eid}' in {self.rel(path)}")
+        reg[eid] = (row, path)
 
     # -- ref helpers ---------------------------------------------------------
 
@@ -602,17 +768,35 @@ class ProjectValidator:
         if not found:
             self.err("REF", f"{where}: unknown {target_kind} '{target_id}'")
 
-    def quest_stage_ids(self, qid):
+    # A valid entity may name a quest or location that FAILED its schema (the
+    # registry keeps it so the reference resolves), so anything read through a
+    # reference goes through these — never `q[0]["stages"]` directly. `stages:
+    # null` on the target used to be a TypeError in the referrer's pass.
+
+    def quest_stages(self, qid):
         q = self.quests.get(qid)
-        if not q:
-            return set()
-        return {s.get("id") for s in q[0].get("stages", []) if isinstance(s, dict)}
+        stages = q[0].get("stages") if q else None
+        return [s for s in stages if isinstance(s, dict)] if isinstance(stages, list) else []
+
+    def quest_outcomes(self, qid):
+        q = self.quests.get(qid)
+        outcomes = q[0].get("outcomes") if q else None
+        return [o for o in outcomes if isinstance(o, dict)] if isinstance(outcomes, list) else []
+
+    def quest_stage_ids(self, qid):
+        # String ids only: a list-valued id on a schema-failed quest is not
+        # hashable, and the schema has already named it.
+        return {s.get("id") for s in self.quest_stages(qid) if isinstance(s.get("id"), str)}
 
     def quest_outcome_ids(self, qid):
-        q = self.quests.get(qid)
-        if not q:
+        return {o.get("id") for o in self.quest_outcomes(qid) if isinstance(o.get("id"), str)}
+
+    def location_spawn_ids(self, lid):
+        loc = self.locations.get(lid)
+        spawns = loc[0].get("spawns") if loc else None
+        if not isinstance(spawns, list):
             return set()
-        return {o.get("id") for o in q[0].get("outcomes", []) if isinstance(o, dict)}
+        return {s.get("id") for s in spawns if isinstance(s, dict) and isinstance(s.get("id"), str)}
 
     # -- condition / effect walkers -----------------------------------------
 
@@ -750,7 +934,7 @@ class ProjectValidator:
             # rules.engine.commands. Mirrors the ENGINE branch in local.ts.
             cmd = e.get("command", "")
             args = e.get("args") or []
-            if not isinstance(cmd, str) or not ENGINE_COMMAND.match(cmd):
+            if not isinstance(cmd, str) or not ENGINE_COMMAND.fullmatch(cmd):
                 self.err("ENGINE", f"{w}: engine command '{cmd}' is not lowercase snake_case")
             elif self.engine_commands is not None:
                 decl = self.engine_commands.get(cmd)
@@ -774,21 +958,20 @@ class ProjectValidator:
             return acc
         t = c.get("type")
         if t == "flag":
-            acc.add(c["flag"])
+            if isinstance(c.get("flag"), str):
+                acc.add(c["flag"])
         elif t in ("all", "any"):
-            for s in c["of"]:
+            for s in _members(c):
                 self.flags_in_condition(s, acc, visited)
         elif t == "not":
-            self.flags_in_condition(c["of"], acc, visited)
+            self.flags_in_condition(c.get("of"), acc, visited)
         elif t == "questOutcome":
-            key = f"{c['quest']}/{c['outcome']}"
+            key = f"{c.get('quest')}/{c.get('outcome')}"
             if key not in visited:
                 visited.add(key)
-                q = self.quests.get(c["quest"])
-                if q:
-                    oc = next((o for o in q[0].get("outcomes", []) if o.get("id") == c["outcome"]), None)
-                    if oc and oc.get("reachedWhen"):
-                        self.flags_in_condition(oc["reachedWhen"], acc, visited)
+                oc = next((o for o in self.quest_outcomes(c.get("quest")) if o.get("id") == c.get("outcome")), None)
+                if oc and oc.get("reachedWhen"):
+                    self.flags_in_condition(oc["reachedWhen"], acc, visited)
         return acc
 
     def positive_flag_needs(self, c, acc, negated=False, visited=None):
@@ -808,22 +991,20 @@ class ProjectValidator:
         t = c.get("type")
         if t == "flag":
             needed_value = bool(c.get("value", True)) != negated
-            if needed_value:
+            if needed_value and isinstance(c.get("flag"), str):
                 acc.add(c["flag"])
         elif t in ("all", "any"):
-            for s in c["of"]:
+            for s in _members(c):
                 self.positive_flag_needs(s, acc, negated, visited)
         elif t == "not":
-            self.positive_flag_needs(c["of"], acc, not negated, visited)
+            self.positive_flag_needs(c.get("of"), acc, not negated, visited)
         elif t == "questOutcome" and not negated:
-            key = f"{c['quest']}/{c['outcome']}"
+            key = f"{c.get('quest')}/{c.get('outcome')}"
             if key not in visited:
                 visited.add(key)
-                q = self.quests.get(c["quest"])
-                if q:
-                    oc = next((o for o in q[0].get("outcomes", []) if o.get("id") == c["outcome"]), None)
-                    if oc and oc.get("reachedWhen"):
-                        self.positive_flag_needs(oc["reachedWhen"], acc, negated, visited)
+                oc = next((o for o in self.quest_outcomes(c.get("quest")) if o.get("id") == c.get("outcome")), None)
+                if oc and oc.get("reachedWhen"):
+                    self.positive_flag_needs(oc["reachedWhen"], acc, negated, visited)
         return acc
 
     # -- passes --------------------------------------------------------------
@@ -834,14 +1015,24 @@ class ProjectValidator:
         # notation here silently mis-resolves the whole game. Malformed is an
         # error; fall back to the engine default so the rest of the pass runs.
         
+        # rules.json is read HERE whether or not it passed its schema — the
+        # RULES check on a bad dice string must still fire (conformance case
+        # project-rules-bad-dice) — so every read below checks the shape it
+        # needs instead of trusting the one the schema promised. `"flag": 7`
+        # used to be an AttributeError before any pass ran.
         if self.rules is not None and isinstance(self.rules, dict):
-            self.exclusive_groups = (self.rules.get("flag") or {}).get("exclusiveGroups", [])
+            groups = _section(self.rules, "flag").get("exclusiveGroups")
+            if isinstance(groups, list):
+                self.exclusive_groups = [
+                    g for g in groups
+                    if isinstance(g, list) and all(isinstance(f, str) for f in g)
+                ]
             # rules.engine.commands — the ENGINE rule's vocabulary; None ⇒ any
             # command is accepted (mirrors sig.engineCommands in signature.ts).
-            engine_commands = (self.rules.get("engine") or {}).get("commands")
+            engine_commands = _section(self.rules, "engine").get("commands")
             if isinstance(engine_commands, dict):
                 self.engine_commands = engine_commands
-            notation = (self.rules.get("check") or {}).get("dice")
+            notation = _section(self.rules, "check").get("dice")
 
             if isinstance(notation, str):
                 try:
@@ -1004,6 +1195,28 @@ class ProjectValidator:
                     self.warn("FLOW", f"{w}: {len(fallbacks)} fallback choices — they all show together when nothing else does; one is enough")
                 if fallbacks and not any("showIf" in c for c in ch_list if not c.get("fallback")):
                     self.warn("FLOW", f"{w}: fallback choice '{fallbacks[0]['id']}' has no gated sibling — it is always offered, so the flag does nothing")
+                # Passive-only choice set (D13; mirrors validation/local.ts).
+                # The runtime counts a passive-check choice as visible whenever
+                # its showIf passes (the reveal is the game's display rule), so
+                # a game that hides unrevealed ones can show nothing clickable
+                # while the fallback stays suppressed. Conservative by design:
+                # no passive check is provably revealed in every state.
+                primary = [c for c in ch_list if not c.get("fallback")]
+                if (
+                    not n.get("isEnd") and not nxt and primary
+                    and all(isinstance(c.get("check"), dict) and c["check"].get("mode") == "passive" for c in primary)
+                ):
+                    ids = ", ".join(f"'{c['id']}'" for c in primary)
+                    if fallbacks:
+                        consequence = f", and fallback '{fallbacks[0]['id']}' is suppressed (chooseChoice refuses it)"
+                    else:
+                        consequence = ", and there is no fallback"
+                    self.warn(
+                        "FLOW",
+                        f"{w}: every non-fallback choice is a passive check ({ids}) — the runtime counts them as "
+                        "visible even when unrevealed, so a game that hides unrevealed passive choices can show "
+                        f"nothing clickable here{consequence}; give the node a choice without a passive check",
+                    )
                 cids = set()
                 for ch in ch_list:
                     cw = f"{w} choice '{ch['id']}'"
@@ -1198,7 +1411,7 @@ class ProjectValidator:
             offer = dlg.get("offer")
             if isinstance(offer, dict):
                 key = offer.get("character") or dlg.get("speakerId")
-                if key:
+                if isinstance(key, str) and key:
                     offered.add(key)
         for cid, (o, _p) in self.characters.items():
             if not self.valid("character", cid):
@@ -1354,7 +1567,9 @@ class ProjectValidator:
         # rules.json. Absent ⇒ any tag is accepted.
         quest_tag_vocabulary = None
         if isinstance(self.rules, dict):
-            quest_tag_vocabulary = (self.rules.get("quest") or {}).get("tagVocabulary")
+            tv = _section(self.rules, "quest").get("tagVocabulary")
+            if isinstance(tv, list):
+                quest_tag_vocabulary = [t for t in tv if isinstance(t, str)]
 
         for qid, (q, _p) in valid_quests.items():
             for st in q["stages"]:
@@ -1400,7 +1615,7 @@ class ProjectValidator:
             if aa:
                 if aa["location"] not in self.locations:
                     self.err("CUT", f"{w}: arrivesAt unknown location '{aa['location']}'")
-                elif not any(s.get("id") == aa["spawn"] for s in (self.locations[aa["location"]][0].get("spawns") or [])):
+                elif aa["spawn"] not in self.location_spawn_ids(aa["location"]):
                     self.err("CUT", f"{w}: arrivesAt spawn '{aa['spawn']}' not found in location '{aa['location']}'")
             self.walk_effects(cs.get("effectsOnComplete", []), f"{w} effectsOnComplete")
         for csid in self.cutscenes:
@@ -1450,9 +1665,16 @@ class ProjectValidator:
         choices_cache = {}
 
         def all_choices_of(dlg):
+            # The dialogue a route names may have failed its schema; its nodes
+            # are whatever is on disk.
             did = dlg["id"]
             if did not in choices_cache:
-                choices_cache[did] = [c for n in dlg.get("nodes", []) for c in n.get("choices", [])]
+                nodes = dlg.get("nodes")
+                choices_cache[did] = [
+                    c
+                    for n in (nodes if isinstance(nodes, list) else []) if isinstance(n, dict)
+                    for c in (n.get("choices") if isinstance(n.get("choices"), list) else []) if isinstance(c, dict)
+                ]
             return choices_cache[did]
 
         for rid, (route, _p) in self.routes.items():
@@ -1487,7 +1709,7 @@ class ProjectValidator:
                         route_err(f"step {i}: unknown continuation dialogueId '{step['continuation']}'")
                     else:
                         dialogue = self.dialogues[step["continuation"]][0]
-                choice = next((c for c in all_choices_of(dialogue) if c["id"] == step["choiceId"]), None)
+                choice = next((c for c in all_choices_of(dialogue) if c.get("id") == step["choiceId"]), None)
                 if not choice:
                     route_err(f"step {i}: choice '{step['choiceId']}' not found in dialogue '{dialogue['id']}'")
                 elif step.get("forced") and not choice.get("check"):
@@ -1611,17 +1833,36 @@ class ProjectValidator:
                     if _offer_outranks(oi, oo, fi, fo):
                         self.warn("OFFER", f"character '{cid}': forced offer '{fi}' (priority {fo.get('priority', 0)}) can be out-ranked by '{oi}' while '{forced_flag}' is set — routing would play '{oi}' instead (raise '{fi}' to a priority tier above it)")
                         break
-            for a in range(len(offers)):
-                for b in range(a + 1, len(offers)):
-                    ia, oa = offers[a]
-                    ib, ob = offers[b]
-                    if oa.get("priority", 0) != ob.get("priority", 0):
-                        continue
-                    if condition_specificity(oa.get("when")) != condition_specificity(ob.get("when")):
-                        continue
-                    if exclusive(oa.get("when"), ob.get("when")):
-                        continue
-                    self.warn("OFFER", f"character '{cid}': offers '{ia}' and '{ib}' have equal priority and specificity and are not provably exclusive — the id decides which wins ('{ia}' sorts first; make one more specific, tier it, or gate them so they can't both apply)")
+            # Tie rule, mirroring checkOffers in global.ts: bucket by
+            # (priority, specificity), report the first OFFER_TIE_REPORT_CAP
+            # ties in id order, then stop examining and summarize the rest.
+            # The pairwise report was N(N-1)/2 warnings per character.
+            buckets = {}
+            for ia, oa in offers:
+                buckets.setdefault((oa.get("priority", 0), condition_specificity(oa.get("when"))), []).append((ia, oa))
+            candidates = sum(len(b) * (len(b) - 1) // 2 for b in buckets.values())
+            examined = reported = 0
+            capped = False
+            for bucket in buckets.values():
+                for a in range(len(bucket)):
+                    for b in range(a + 1, len(bucket)):
+                        if reported >= OFFER_TIE_REPORT_CAP:
+                            capped = True
+                            break
+                        examined += 1
+                        ia, oa = bucket[a]
+                        ib, ob = bucket[b]
+                        if exclusive(oa.get("when"), ob.get("when")):
+                            continue
+                        reported += 1
+                        self.warn("OFFER", f"character '{cid}': offers '{ia}' and '{ib}' have equal priority and specificity and are not provably exclusive — the id decides which wins ('{ia}' sorts first; make one more specific, tier it, or gate them so they can't both apply)")
+                    if capped:
+                        break
+                if capped:
+                    break
+            unexamined = candidates - examined
+            if unexamined > 0:
+                self.warn("OFFER", f"character '{cid}': {unexamined} more offer pair(s) share a priority and specificity and were not checked — the first {OFFER_TIE_REPORT_CAP} ties are reported above; tier or gate those and re-validate")
 
     def check_locations_and_offers(self):
         # Locations (LOC pass) — mirrors editor/core/src/validator.ts. Graph
@@ -1640,7 +1881,7 @@ class ProjectValidator:
             offer = dlg.get("offer")
             if isinstance(offer, dict):
                 key = offer.get("character") or dlg.get("speakerId")
-                if key:
+                if isinstance(key, str) and key:
                     characters_with_source.add(key)
         dialogues_placed_in_world = set()
         for _lid, (loc, _lp) in valid_locations.items():
@@ -1848,32 +2089,43 @@ class ProjectValidator:
         if progression is None or not isinstance(progression, dict):
             return
         w = "progression.json"
+        # progression.json may have FAILED its schema and still be here: the
+        # SCHEMA error names the bad field, and each read below checks the
+        # type it is about to compare or add. `["a", 1]` thresholds used to be
+        # a TypeError on `<=`; the schema already reports that shape, so the
+        # ordering rule simply does not run over non-numbers.
         thr = progression.get("xpThresholds")
         if not isinstance(thr, list) or len(thr) == 0:
             self.err("PROG", f"{w}: xpThresholds must be a non-empty array")
-        else:
+        elif all(_is_num(t) for t in thr):
             for i in range(1, len(thr)):
                 if thr[i] <= thr[i - 1]:
                     self.err("PROG", f"{w}: xpThresholds must be strictly increasing (index {i} = {thr[i]})")
                     break
         ppl = progression.get("pointsPerLevel")
         ms = progression.get("maxSkill")
-        if not (isinstance(ppl, (int, float)) and ppl >= 1):
+        if not (_is_num(ppl) and ppl >= 1):
             self.err("PROG", f"{w}: pointsPerLevel must be ≥ 1")
-        if not (isinstance(ms, (int, float)) and ms >= 1):
+        if not (_is_num(ms) and ms >= 1):
             self.err("PROG", f"{w}: maxSkill must be ≥ 1")
 
         def skill_cap(sid):
-            # Per-skill `max` (skills.json) overrides the global maxSkill.
-            return (self.skills.get(sid) or {}).get("max", ms)
+            # Per-skill `max` (skills.json) overrides the global maxSkill. A
+            # skill whose `max` failed its schema ("5") falls back to the
+            # global — its own SCHEMA error already names the field.
+            m = (self.skills.get(sid) or {}).get("max")
+            return m if _is_num(m) else ms
 
-        for sid, val in (progression.get("startingSkills") or {}).items():
+        starting = progression.get("startingSkills")
+        if not isinstance(starting, dict):
+            starting = {}
+        for sid, val in starting.items():
             if sid not in self.skills:
                 self.err("REF", f"{w}: startingSkills references unknown skill '{sid}'")
-            if isinstance(ms, (int, float)) and val >= skill_cap(sid):
+            if _is_num(ms) and _is_num(val) and _is_num(skill_cap(sid)) and val >= skill_cap(sid):
                 self.warn("PROG", f"{w}: startingSkills['{sid}'] ({val}) ≥ its ceiling ({skill_cap(sid)}) — nothing to invest")
-        if isinstance(ms, (int, float)) and ms >= 1 and isinstance(ppl, (int, float)) and ppl >= 1 and isinstance(thr, list) and thr:
-            total_xp = sum(max(0, a) for a, _w, _s in self.xp_grants)
+        if _is_num(ms) and ms >= 1 and _is_num(ppl) and ppl >= 1 and isinstance(thr, list) and thr and all(_is_num(t) for t in thr):
+            total_xp = sum(max(0, a) for a, _w, _s in self.xp_grants if _is_num(a))
             level = 0
             for i, t2 in enumerate(thr):
                 if total_xp >= t2:
@@ -1881,7 +2133,10 @@ class ProjectValidator:
                 else:
                     break
             earnable = level * ppl
-            cost = sum(max(0, skill_cap(sid) - (progression.get("startingSkills") or {}).get(sid, 0)) for sid in self.skills)
+            cost = sum(
+                max(0, skill_cap(sid) - (starting.get(sid) if _is_num(starting.get(sid)) else 0))
+                for sid in self.skills
+            )
             if cost > 0 and earnable >= cost:
                 self.warn("PROG", f"{w}: progression not actually capped — authored XP grants {earnable} point(s), enough to max all skills (cost {cost}).")
 
@@ -1911,7 +2166,9 @@ class ProjectValidator:
         # --- Priced/oneshot check discipline (CHECK) + mandatory-path lockout (REACH) ---
         # Offer gate flag reads feed the priced-gate advisory (ws 17).
         offer_read_flags = set()
-        for _did, (dlg, _p) in self.dialogues.items():
+        for did, (dlg, _p) in self.dialogues.items():
+            if not self.valid("dialogue", did):
+                continue
             offer = dlg.get("offer")
             if isinstance(offer, dict) and offer.get("when"):
                 self.flags_in_condition(offer["when"], offer_read_flags)
@@ -1984,6 +2241,10 @@ class ProjectValidator:
     def check_lorerefs(self):
         def check_loreref(o, w):
             lr = o.get("loreRef")
+            # A loreRef that is a bare string, or names no string file, is the
+            # schema's finding (already reported); this rule needs the shape.
+            if not isinstance(lr, dict) or not isinstance(lr.get("file"), str):
+                return
             # Either Unicode form names the file (macOS NFD vs git/Linux NFC).
             if lr and not any(
                 os.path.exists(os.path.join(self.root, f))
@@ -1998,12 +2259,14 @@ class ProjectValidator:
             ("codex", self.codex),
         ):
             for k, (o, p) in reg.items():
-                check_loreref(o, f"{kind} '{o.get('id', k)}' ({self.rel(p)})")
+                if self.valid(kind, k):
+                    check_loreref(o, f"{kind} '{o.get('id', k)}' ({self.rel(p)})")
         for kind, reg in (("skill", self.skills), ("item", self.items)):
             p = self._registry_paths.get(kind)
             where_file = f" ({self.rel(p)})" if p else ""
-            for entity in reg.values():
-                check_loreref(entity, f"{kind} '{entity['id']}'{where_file}")
+            for k, entity in reg.items():
+                if self.valid(kind, k):
+                    check_loreref(entity, f"{kind} '{entity['id']}'{where_file}")
 
     def check_type_declarations(self):
         """Problems in data/types.json itself — mirrors validateTypeDeclarations
@@ -2104,7 +2367,7 @@ class ProjectValidator:
                             self.err("SCHEMA", f"{where}: field '{fname}' expected string reference id, got {type(val).__name__}")
                         else:
                             target = fdef.get("target")
-                            if target:
+                            if isinstance(target, str) and target:
                                 self._check_ref(val, target, f"{where} field '{fname}'")
                     elif ftype == "array":
                         if not isinstance(val, list):
@@ -2113,7 +2376,7 @@ class ProjectValidator:
                             item_def = fdef.get("items", {})
                             if isinstance(item_def, dict) and item_def.get("type") == "reference":
                                 target = item_def.get("target")
-                                if target:
+                                if isinstance(target, str) and target:
                                     for idx, item_val in enumerate(val):
                                         if not isinstance(item_val, str):
                                             self.err("SCHEMA", f"{where} field '{fname}[{idx}]' expected string reference id, got {type(item_val).__name__}")
@@ -2212,6 +2475,318 @@ def format_issue(issue):
     return f"[{issue.code}] {issue.message}"
 
 
+# --- GitHub Actions annotations -------------------------------------------
+# Under GitHub Actions (GITHUB_ACTIONS=true, or --annotations github) every
+# issue is also printed as a workflow command, so a failing check points at
+# the data file — and the line of the entity / node / choice where the file's
+# JSON can be walked to it:
+#     ::error file=data/dialogues/d.json,line=12,title=REF::<message>
+# Mirrors editor/host/src/ci-annotations.ts (`parlance ci-check`). Each
+# severity stops at ANNOTATION_CAP (GitHub renders only 10 per type per step
+# anyway); one notice counts the rest, which stay in the normal report.
+
+ANNOTATION_CAP = 50
+_ENTITY_ATTR = {
+    "skill": "skills", "variable": "variables", "item": "items", "portrait": "portraits",
+    "faction": "factions", "character": "characters", "dialogue": "dialogues",
+    "quest": "quests", "location": "locations", "ending": "endings", "codex": "codex",
+    "cutscene": "cutscenes", "route": "routes", "snapshot": "snapshots",
+}
+_ENTITY_PREFIX = re.compile(r"^([a-z_][a-z0-9_]*) '([^']+)'")
+_SUB_ENTITY = re.compile(r"\b(?:node|choice|stage|objective|exit|interactable|spawn|field) '([^']+)'")
+_FILE_PREFIX = re.compile(r"^([^\s:][^:]*?\.json): ")
+_AT_PATH = re.compile(r"\(at ([^()]*)\)$")
+_JSON_ERR_LINE = re.compile(r"line (\d+) column \d+")
+
+
+def annotations_enabled(mode, env=None):
+    """--annotations github|none|auto; auto (the default) = GITHUB_ACTIONS is 'true'."""
+    if mode == "github":
+        return True
+    if mode == "none":
+        return False
+    return (os.environ if env is None else env).get("GITHUB_ACTIONS") == "true"
+
+
+def escape_data(s):
+    return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+def escape_property(s):
+    return escape_data(s).replace(":", "%3A").replace(",", "%2C")
+
+
+def format_annotation(level, message, title=None, file=None, line=None):
+    props = []
+    if file:
+        props.append(f"file={escape_property(file)}")
+        if line is not None:
+            props.append(f"line={line}")
+    if title:
+        props.append(f"title={escape_property(title)}")
+    return f"::{level}{' ' + ','.join(props) if props else ''}::{escape_data(message)}"
+
+
+class _JsonLines:
+    """JSON parsed into (kind, line, payload) nodes that remember the 1-based
+    line they start on — an object member's line is its KEY's line. `error_line`
+    is set instead of `root` when the text does not parse."""
+
+    _SCALAR = re.compile(r"-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|true|false|null")
+
+    def __init__(self, text):
+        self.t, self.i, self.line = text, 1 if text.startswith("\ufeff") else 0, 1
+        self.root, self.error_line = None, None
+        try:
+            self._ws()
+            root = self._value(self.line)
+            self._ws()
+            if self.i == len(self.t):
+                self.root = root
+            else:
+                self.error_line = self.line
+        except (ValueError, IndexError):
+            self.error_line = self.line
+
+    def _ws(self):
+        t = self.t
+        while self.i < len(t) and t[self.i] in " \t\r\n":
+            if t[self.i] == "\n":
+                self.line += 1
+            self.i += 1
+
+    def _str(self):
+        t, start = self.t, self.i
+        self.i += 1
+        while t[self.i] != '"':
+            if t[self.i] == "\\":
+                self.i += 1
+            elif t[self.i] == "\n":
+                raise ValueError("newline in string")
+            self.i += 1
+        self.i += 1
+        return json.loads(t[start:self.i])
+
+    def _value(self, at):
+        self._ws()
+        c = self.t[self.i]
+        if c == "{":
+            self.i += 1
+            members = {}
+            self._ws()
+            if self.t[self.i] == "}":
+                self.i += 1
+                return ("object", at, members)
+            while True:
+                self._ws()
+                if self.t[self.i] != '"':
+                    raise ValueError("expected key")
+                key_line = self.line
+                k = self._str()
+                self._ws()
+                if self.t[self.i] != ":":
+                    raise ValueError("expected :")
+                self.i += 1
+                v = self._value(key_line)
+                members.setdefault(k, (v[0], key_line, v[2]))
+                self._ws()
+                if self.t[self.i] == ",":
+                    self.i += 1
+                    continue
+                if self.t[self.i] == "}":
+                    self.i += 1
+                    return ("object", at, members)
+                raise ValueError("expected , or }")
+        if c == "[":
+            self.i += 1
+            items = []
+            self._ws()
+            if self.t[self.i] == "]":
+                self.i += 1
+                return ("array", at, items)
+            while True:
+                self._ws()
+                items.append(self._value(self.line))
+                self._ws()
+                if self.t[self.i] == ",":
+                    self.i += 1
+                    continue
+                if self.t[self.i] == "]":
+                    self.i += 1
+                    return ("array", at, items)
+                raise ValueError("expected , or ]")
+        if c == '"':
+            return ("scalar", at, self._str())
+        m = self._SCALAR.match(self.t, self.i)
+        if not m:
+            raise ValueError("unexpected token")
+        self.i = m.end()
+        return ("scalar", at, json.loads(m.group(0)))
+
+
+def _jid(n):
+    if n[0] != "object":
+        return None
+    idn = n[2].get("id")
+    return idn[2] if idn and idn[0] == "scalar" and isinstance(idn[2], str) else None
+
+
+def _find_by_id(n, eid):
+    pool = n[2] if n[0] == "array" else list(n[2].values()) if n[0] == "object" else []
+    return next((c for c in pool if _jid(c) == eid), None)
+
+
+def _path_segments(path):
+    out = []
+    for part in path.split("/"):
+        out.extend(a or b for a, b in re.findall(r"([^\[\]]+)|\[(\d*)\]", part) if a or b)
+    return out
+
+
+def _resolve_line(node, segments):
+    """Walk segments as far as they resolve (object key, else the id of an
+    element in one of its arrays; array index, else element id); report the
+    deepest node — at its `"id":` line when it has one."""
+    cur = node
+    for seg in segments:
+        nxt = None
+        if cur[0] == "object":
+            nxt = cur[2].get(seg)
+            if nxt is None:
+                for m in cur[2].values():
+                    if m[0] == "array":
+                        nxt = _find_by_id(m, seg)
+                        if nxt is not None:
+                            break
+        elif cur[0] == "array":
+            if seg.isdigit() and int(seg) < len(cur[2]):
+                nxt = cur[2][int(seg)]
+            else:
+                nxt = _find_by_id(cur, seg)
+        if nxt is None:
+            break
+        cur = nxt
+    if _jid(cur) is not None:
+        return cur[2]["id"][1]
+    return cur[1]
+
+
+def issue_location(v, issue, _cache=None):
+    """(absolute file path, line or None) for an issue, or (None, None)."""
+    cache = {} if _cache is None else _cache
+
+    def tree(p):
+        if p not in cache:
+            try:
+                with open(p, encoding="utf-8-sig") as f:
+                    cache[p] = _JsonLines(f.read())
+            except OSError:
+                cache[p] = None
+        return cache[p]
+
+    msg = issue.message
+    head = msg.split(": ", 1)[0]
+    # The leading "where" names the location; when it stops at the entity
+    # ("dialogue 'd': node 'n' is unreachable") the sub-entity is in the text.
+    subs = _SUB_ENTITY.findall(head) or _SUB_ENTITY.findall(msg)[:1]
+
+    def entity_in(p, container, eid, segments):
+        jl = tree(p)
+        if not jl or not jl.root:
+            return p, None
+        holder = jl.root
+        if holder[0] == "object" and container in holder[2]:
+            holder = holder[2][container]
+        row = _find_by_id(holder, eid)
+        return p, (_resolve_line(row, segments) if row else None)
+
+    # 1. "<file>.json: ..." — schema and load errors name their file.
+    m = _FILE_PREFIX.match(msg)
+    if m and os.path.isfile(os.path.join(v.root, m.group(1))):
+        p = os.path.join(v.root, m.group(1))
+        jl = tree(p)
+        if jl and jl.error_line is not None:
+            lm = _JSON_ERR_LINE.search(msg)
+            return p, int(lm.group(1)) if lm else jl.error_line
+        at = _AT_PATH.search(msg)
+        # A registry entry's schema path is relative to the ENTRY, which the
+        # message does not name: file only.
+        registry = os.path.abspath(p) in {os.path.abspath(r) for r in v._registry_paths.values()}
+        if jl and jl.root and at and not registry:
+            segs = [] if at.group(1) == "root" else _path_segments(at.group(1))
+            return p, _resolve_line(jl.root, segs)
+        return p, None
+
+    # 2. "<kind> '<id>' [node 'n'] [choice 'c'] ...: ..."
+    m = _ENTITY_PREFIX.match(msg)
+    if m:
+        kind, eid = m.group(1), m.group(2)
+        attr = _ENTITY_ATTR.get(kind)
+        if attr:
+            if kind in v._registry_paths:
+                return entity_in(v._registry_paths[kind], attr, eid, subs)
+            entry = getattr(v, attr, {}).get(eid)
+            if isinstance(entry, tuple) and len(entry) == 2:
+                jl = tree(entry[1])
+                return entry[1], (_resolve_line(jl.root, subs) if jl and jl.root else None)
+        elif kind == "types":
+            p = os.path.join(v.data_dir, "types.json")
+            jl = tree(p) if os.path.isfile(p) else None
+            if jl and jl.root:
+                return p, _resolve_line(jl.root, [eid, "fields", *subs] if subs else [eid])
+        else:
+            for type_id, type_def in (v.entity_types or {}).items():
+                if kind not in (custom_plural(type_id, type_def), type_id):
+                    continue
+                row = v.custom_entities.get(type_id, {}).get(eid)
+                if not row:
+                    break
+                p = row[1]
+                segs = [x for s in _SUB_ENTITY.findall(msg)[:1] for x in _path_segments(s)]
+                if os.path.basename(p) == f"{custom_plural(type_id, type_def)}.json":
+                    return entity_in(p, custom_plural(type_id, type_def), eid, segs)
+                jl = tree(p)
+                return p, (_resolve_line(jl.root, segs) if jl and jl.root else None)
+
+    # 3. Any project file the message mentions: the file, no line.
+    for tok in re.findall(r"[\w./-]+\.json", msg):
+        p = os.path.join(v.root, tok)
+        if os.path.isfile(p):
+            return p, None
+    return None, None
+
+
+def github_annotations(v, workspace=None):
+    """Workflow-command lines for every issue (errors first, capped per severity)."""
+    ws = os.path.abspath(workspace or os.environ.get("GITHUB_WORKSPACE") or os.getcwd())
+    cache, out, omitted = {}, [], 0
+    for level, issues in (("error", v.errors), ("warning", v.warnings)):
+        for n, issue in enumerate(issues):
+            if n >= ANNOTATION_CAP:
+                omitted += len(issues) - ANNOTATION_CAP
+                break
+            try:
+                p, line = issue_location(v, issue, cache)
+            except Exception:  # locating is best-effort; the report is what counts
+                p, line = None, None
+            rel = os.path.relpath(p, ws) if p else None
+            if rel and (rel.startswith("..") or os.path.isabs(rel)):
+                rel = None
+            out.append(format_annotation(
+                level, issue.message, title=issue.code,
+                file=rel.replace(os.sep, "/") if rel else None,
+                line=line if rel else None,
+            ))
+    if omitted:
+        out.append(format_annotation(
+            "notice",
+            f"{omitted} more issue{'' if omitted == 1 else 's'} not annotated (at most "
+            f"{ANNOTATION_CAP} errors and {ANNOTATION_CAP} warnings are); the full list is in the log.",
+            title="validate.py",
+        ))
+    return out
+
+
 def report(v, strict):
     """Print the classic report; returns the process exit code."""
     print(v.summary_line())
@@ -2241,6 +2816,9 @@ def main(argv=None):
                         help="project root to validate (default: this repository)")
     parser.add_argument("--strict", action="store_true",
                         help="treat warnings as errors (exit 1)")
+    parser.add_argument("--annotations", choices=("github", "none", "auto"), default="auto",
+                        help="also print each issue as a GitHub Actions annotation "
+                             "(file and line); auto (default) = when GITHUB_ACTIONS=true")
     args = parser.parse_args(argv)
 
     root = os.path.abspath(args.root) if args.root else REPO_ROOT
@@ -2266,7 +2844,11 @@ def main(argv=None):
             print()
         print("validate.py: internal error — traceback follows.", file=sys.stderr)
         raise
-    return report(v, args.strict)
+    code = report(v, args.strict)
+    if annotations_enabled(args.annotations):
+        for line in github_annotations(v):
+            print(line)
+    return code
 
 
 if __name__ == "__main__":

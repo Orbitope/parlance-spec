@@ -2,8 +2,9 @@
 
 Language-agnostic test vectors for the Parlance runtime. Any implementation — C#, GDScript,
 Lua, or another TypeScript port — can run these vectors to prove behavioral parity with the
-reference implementation (`editor/core/src/runtime.ts`, which lives in Parlance's private
-repository and is not published — these vectors exist precisely so a port never needs it).
+reference implementation (`editor/runtime/src/runtime.ts`). That implementation is itself MIT
+and published to npm as `@orbitope/parlance-runtime`, which runs every vector here; a port in
+another language still never needs it — these vectors are the contract.
 
 > **License: MIT** (see `LICENSE-SPEC`). These files are meant to be copied —
 > vendor them into your port and republish freely. The Parlance *editor* is

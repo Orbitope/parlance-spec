@@ -1,0 +1,6 @@
+{
+  "archetype": "keeper",
+  "id": "npc_keeper",
+  "loreRef": "lore/keeper.md",
+  "name": "The Keeper"
+}

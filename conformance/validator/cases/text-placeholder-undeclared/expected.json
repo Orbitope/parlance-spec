@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "dlg_meet",
+        "entityType": "dialogue",
+        "path": "nodes/node_open/text"
+      },
       "code": "TEXT",
       "contains": "player_name",
       "severity": "error"

@@ -1,0 +1,14 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "qst_errand",
+      "severity": "error"
+    },
+    {
+      "code": "REF",
+      "contains": "qst_errand",
+      "severity": "error"
+    }
+  ]
+}

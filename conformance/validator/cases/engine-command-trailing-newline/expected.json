@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "ENGINE",
+      "contains": "is not lowercase snake_case",
+      "severity": "error"
+    }
+  ]
+}

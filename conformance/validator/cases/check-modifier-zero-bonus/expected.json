@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "dlg_meet",
+        "entityType": "dialogue",
+        "path": "nodes/node_open/choices/ch_mod/check"
+      },
       "code": "CHECK",
       "contains": "bonus 0",
       "severity": "warning"

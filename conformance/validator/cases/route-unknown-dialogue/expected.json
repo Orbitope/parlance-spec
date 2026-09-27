@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "ROUTE",
+      "contains": "dlg_ghost",
+      "severity": "error"
+    }
+  ]
+}

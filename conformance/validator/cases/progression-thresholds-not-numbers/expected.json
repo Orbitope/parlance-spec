@@ -1,0 +1,18 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "progression.json",
+      "severity": "error"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "PROG",
+      "contains": "strictly increasing"
+    }
+  ],
+  "validators": [
+    "python"
+  ]
+}

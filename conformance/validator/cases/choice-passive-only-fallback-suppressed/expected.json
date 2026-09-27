@@ -1,0 +1,25 @@
+{
+  "must": [
+    {
+      "code": "FLOW",
+      "contains": "every non-fallback choice is a passive check ('ch_notice')",
+      "severity": "warning"
+    },
+    {
+      "code": "FLOW",
+      "contains": "fallback 'ch_leave' is suppressed",
+      "severity": "warning"
+    }
+  ],
+  "mustNot": [
+    {
+      "code": "FLOW",
+      "contains": "no gated sibling"
+    },
+    {
+      "code": "FLOW",
+      "contains": "may be stuck"
+    }
+  ],
+  "noErrors": true
+}

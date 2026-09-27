@@ -71,17 +71,70 @@ def norm(s, rewrites):
     return re.sub(r"\s+", " ", s).strip()
 
 
+def _load_json(path):
+    # utf-8-sig, as validate.py reads a project: a BOM (Windows PowerShell 5.1,
+    # older Notepad) is an encoding signature, not content, and json.load on a
+    # plain utf-8 handle raised on it — so a BOM'd dialogue's prose reached
+    # neither side of the comparison.
+    with open(path, encoding="utf-8-sig") as f:
+        return json.load(f)
+
+
 def _data_dir(root):
     """Honour parlance.config.json's `data` override, exactly as validate.py does."""
     try:
-        with open(os.path.join(root, "parlance.config.json"), encoding="utf-8") as f:
-            return json.load(f).get("data") or "data"
+        cfg = _load_json(os.path.join(root, "parlance.config.json"))
+        return (cfg.get("data") if isinstance(cfg, dict) else None) or "data"
     except Exception:
         return "data"
 
 
+# Row kinds and what each is compared against (see main):
+#   line / option        a node's text, a choice's text  — the source's units;
+#                        also the two counts the report leads with
+#   locked / prose       a choice's lockedText; quest, codex, location, ending,
+#                        item and skill prose — the source's units, like a line
+#   name                 a character's name — the source's speakers and literals
+#   literal              a set_text value    — the source's literals
+# Not a row: a dialogue's `title`. The runtime never renders it — it labels the
+# dialogue in the editor's sidebar, the way `id` does — so it is authoring
+# metadata an importer may derive from a file name, not a sentence a player
+# reads. Every field a player CAN read is above.
+SPOKEN_KINDS = ("line", "option")
+UNIT_KINDS = SPOKEN_KINDS + ("locked", "prose")
+
+# Player-facing prose outside dialogues: (directory or registry, list key or
+# None, [path]) — "*" walks a list. The same fields validate.py's TEXT pass
+# interpolates, plus the names a journal or codex shows.
+PROSE_FIELDS = [
+    ("quests", None, [("journalName",), ("stages", "*", "description"),
+                      ("stages", "*", "objectives", "*", "text"), ("outcomes", "*", "name")]),
+    ("codex", None, [("name",), ("body",)]),
+    ("locations", None, [("name",), ("description",)]),
+    ("endings", None, [("name",), ("summary",)]),
+    ("items.json", "items", [("name",), ("description",)]),
+    ("skills.json", "skills", [("name",), ("description",)]),
+]
+
+
+def _strings_at(obj, path, where=""):
+    """(where, string) for every non-empty string at `path`; "*" walks a list."""
+    if not path:
+        if isinstance(obj, str) and obj:
+            yield where, obj
+        return
+    head, rest = path[0], path[1:]
+    if head == "*":
+        if isinstance(obj, list):
+            for i, item in enumerate(obj):
+                yield from _strings_at(item, rest, f"{where}[{i}]")
+    elif isinstance(obj, dict) and head in obj:
+        yield from _strings_at(obj[head], rest, f"{where}/{head}" if where else head)
+
+
 def project_texts(root):
-    """Every authored player-facing string in the project, with its location.
+    """Every authored player-facing string in the project, with its kind and
+    location — see the kinds table above.
 
     Globbed RECURSIVELY, and through the configured data dir, because that is how
     `validate.py` reads a project: dir-mode entities may be nested in zone or
@@ -93,18 +146,56 @@ def project_texts(root):
     in `data/dialogues/act1/` reached neither side of the comparison: an invented
     line there was invisible, and the whole subdir counted as missing. The
     guarantee this file exists to make — no line reaches the output that was not
-    in the source — held only for projects that happened to be flat."""
+    in the source — held only for projects that happened to be flat. And reading
+    only node and choice text meant a lockedText, a character name, a `set_text`
+    value or a quest description could say anything at all: every player-facing
+    string field an importer writes is a place a sentence can be written, so
+    every one of them is read here."""
     out = []
-    pat = os.path.join(root, _data_dir(root), "dialogues", "**", "*.json")
-    for p in sorted(glob.glob(pat, recursive=True)):
-        d = json.load(open(p, encoding="utf-8"))
-        for n in d.get("nodes", []):
+    data = os.path.join(root, _data_dir(root))
+    for p in sorted(glob.glob(os.path.join(data, "dialogues", "**", "*.json"), recursive=True)):
+        d = _load_json(p)
+        if not isinstance(d, dict):
+            continue
+        did = d.get("id") or os.path.basename(p)
+        for n in d.get("nodes") or []:
+            if not isinstance(n, dict):
+                continue
+            nid = n.get("id")
             if n.get("text"):
-                out.append(("line", d["id"], n["id"], n["text"], n.get("showIf")))
+                out.append(("line", did, nid, n["text"], n.get("showIf")))
+            effects = list(n.get("onEnter") or [])
             for c in n.get("choices") or []:
+                if not isinstance(c, dict):
+                    continue
                 if c.get("text"):
-                    out.append(("option", d["id"], f"{n['id']}/{c['id']}", c["text"],
-                                c.get("showIf")))
+                    out.append(("option", did, f"{nid}/{c.get('id')}", c["text"], c.get("showIf")))
+                if isinstance(c.get("lockedText"), str) and c["lockedText"]:
+                    out.append(("locked", did, f"{nid}/{c.get('id')}/lockedText", c["lockedText"], None))
+                effects += c.get("effects") or []
+            for e in effects:
+                if isinstance(e, dict) and e.get("type") == "set_text" \
+                        and isinstance(e.get("value"), str) and e["value"]:
+                    out.append(("literal", did, f"{nid}/set_text {e.get('variable')}", e["value"], None))
+    for p in sorted(glob.glob(os.path.join(data, "characters", "**", "*.json"), recursive=True)):
+        c = _load_json(p)
+        if isinstance(c, dict) and isinstance(c.get("name"), str) and c["name"]:
+            out.append(("name", c.get("id") or os.path.basename(p), "name", c["name"], None))
+    for sub, list_key, paths in PROSE_FIELDS:
+        if list_key is None:
+            files = sorted(glob.glob(os.path.join(data, sub, "**", "*.json"), recursive=True))
+            entities = [(_load_json(f), f) for f in files]
+        else:
+            f = os.path.join(data, sub)
+            doc = _load_json(f) if os.path.exists(f) else None
+            entities = [(e, f) for e in ((doc or {}).get(list_key) or [])] if isinstance(doc, dict) else []
+        for e, f in entities:
+            if not isinstance(e, dict):
+                continue
+            eid = e.get("id") or os.path.basename(f)
+            for path in paths:
+                for where, text in _strings_at(e, path):
+                    out.append(("prose", eid, where, text, None))
     return out
 
 
@@ -244,7 +335,7 @@ def merge_manifests(parts):
         sys.exit("MANIFESTS DISAGREE ON REWRITES — they describe the format, not the "
                  "file, so two parts of one story cannot declare different ones.")
     merged = dict(parts[0])
-    for key in ("units", "unmapped", "residue"):
+    for key in ("units", "unmapped", "residue", "literals"):
         merged[key] = [x for p in parts for x in p.get(key, [])]
     merged["sources"] = [p.get("source") for p in parts]
     merged["nodes"] = [n for p in parts for n in p.get("nodes", [])]
@@ -301,10 +392,28 @@ def main():
     declared = [u for u in man["units"] if u.get("text") and u.get("unmappable")]
     src = Counter(norm(u["text"], rewrites) for u in mappable)
     got_rows = project_texts(a.root)
-    got = Counter(norm(t, []) for _, _, _, t, _c in got_rows)
+    spoken_rows = [r for r in got_rows if r[0] in SPOKEN_KINDS]
+    # Prose of every kind is held to the units: a lockedText or a quest
+    # description is a sentence a player reads, and the source either wrote it
+    # or did not.
+    got = Counter(norm(t, []) for k, _, _, t, _c in got_rows if k in UNIT_KINDS)
 
     missing = src - got          # in the source, absent from the output
     invented = got - src         # in the output, absent from the source
+
+    # Strings the source WROTE rather than spoke have their own yardsticks: a
+    # character name is a speaker (or a `define`d display name the parser
+    # listed as a literal); a set_text value is a literal. Each is checked
+    # against ITS yardstick and no other, so a string assigned to a variable
+    # cannot vouch for a line, nor a speaker for a set_text value. Anything
+    # outside its yardstick is invention.
+    literals_ok = {norm(s, rewrites) for s in man["literals"] if isinstance(s, str)}
+    speakers_ok = {norm(u["speaker"], rewrites) for u in man["units"]
+                   if isinstance(u.get("speaker"), str)} | literals_ok
+    yardstick = {"name": speakers_ok, "literal": literals_ok}
+    for k, _did, _nid, t, _c in got_rows:
+        if k in yardstick and norm(t, []) not in yardstick[k]:
+            invented[norm(t, [])] += 1
     # A declared-unmappable line found in the output was mapped by hand. Fine —
     # it is neither loss nor invention, so clear it from both sides.
     for u in declared:
@@ -320,6 +429,7 @@ def main():
     src_opts = sum(1 for u in mappable if u.get("kind") == "option")
     got_lines = sum(1 for k, *_ in got_rows if k == "line")
     got_opts = sum(1 for k, *_ in got_rows if k == "option")
+    output_strings = dict(sorted(Counter(k for k, *_ in got_rows).items()))
 
     vpath = a.validator
     if not vpath:
@@ -341,7 +451,7 @@ def main():
     vres, verr = (run_validator(a.root, vpath) if vpath else (None, ["validator not found"]))
 
     n_err = len(vres["errors"]) if vres else 0
-    cond_defects = condition_defects(man["units"], got_rows, rewrites)
+    cond_defects = condition_defects(man["units"], spoken_rows, rewrites)
     defects = (sum(missing.values()) + n_err + len(cond_defects)
                + abs(src_lines - got_lines) + abs(src_opts - got_opts))
 
@@ -406,6 +516,9 @@ def main():
         "validator_problems": verr,
         "counts": {"source_lines": src_lines, "output_lines": got_lines,
                    "source_options": src_opts, "output_options": got_opts},
+        # Every string field read, by kind — so a reader can see the comparison
+        # covered the titles, names and literals as well as the lines.
+        "output_strings": output_strings,
         "missing_unexplained": [{"text": t, "n": c} for t, c in missing.most_common()],
         "missing_declared": [{"text": u["text"], "why": u["unmappable"],
                               "node": u.get("node"), "lineno": u.get("lineno")}

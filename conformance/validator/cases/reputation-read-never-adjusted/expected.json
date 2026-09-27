@@ -1,6 +1,11 @@
 {
   "must": [
     {
+      "at": {
+        "entityId": "fac_villagers",
+        "entityType": "faction",
+        "path": null
+      },
       "code": "REP",
       "contains": "never adjusted",
       "severity": "warning"

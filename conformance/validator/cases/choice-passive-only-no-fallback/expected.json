@@ -1,0 +1,10 @@
+{
+  "must": [
+    {
+      "code": "FLOW",
+      "contains": "there is no fallback",
+      "severity": "warning"
+    }
+  ],
+  "noErrors": true
+}

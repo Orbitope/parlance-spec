@@ -1,0 +1,12 @@
+{
+  "must": [
+    {
+      "code": "SCHEMA",
+      "contains": "skills",
+      "severity": "error"
+    }
+  ],
+  "validators": [
+    "python"
+  ]
+}

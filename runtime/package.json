@@ -1,0 +1,48 @@
+{
+  "name": "@orbitope/parlance-runtime",
+  "version": "0.16.0",
+  "description": "The Parlance narrative runtime for JavaScript and TypeScript: play dialogues, conditions, effects, checks, quests and saves exactly as the Parlance editor does.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": [
+    "parlance",
+    "dialogue",
+    "narrative",
+    "interactive-fiction",
+    "game-dev"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./test/conformance": "./test/conformanceRunner.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm run build && node ./scripts/publish-manifest.mjs apply",
+    "postpack": "node ./scripts/publish-manifest.mjs restore"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "entry": "n1",
+  "id": "dlg_tie_a",
+  "nodes": [
+    {
+      "id": "n1",
+      "isEnd": true,
+      "text": "The keeper says a."
+    }
+  ],
+  "offer": {
+    "when": {
+      "flag": "met_keeper",
+      "type": "flag",
+      "value": true
+    }
+  },
+  "speakerId": "npc_keeper",
+  "title": "Tie A"
+}

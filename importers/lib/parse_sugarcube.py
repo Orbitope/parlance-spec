@@ -52,6 +52,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from residue import find_residue
 import conditions
 import manifest as _manifest
+import source as _source
 from parse_twine import (ATTR, PASSAGEDATA, declared_format, parse_link,
                          split_passages, unescape)
 
@@ -150,7 +151,7 @@ def is_sugarcube(fmt):
 
 def read_source(path):
     """(text as parser and residue see it, passages, start passage name or None)."""
-    raw = open(path, encoding="utf-8-sig").read()
+    raw = _source.read_text(path)
     if "<tw-passagedata" not in raw:
         passages = split_passages(raw)
         start = None
@@ -1019,6 +1020,7 @@ def main():
              for p in passages for it in p.items
              if it["kind"] in ("line", "option") and it.get("text")]
     man = {"source": a.source, "format": "sugarcube", "units": units,
+           "literals": _manifest.literals_of([p.items for p in passages]),
            "variables": sorted(kinds), "variableKinds": kinds,
            "nodes": [p.title for p in story], "unmapped": unmapped,
            # `$name` -> `{name}` for each text variable a line interpolates:
