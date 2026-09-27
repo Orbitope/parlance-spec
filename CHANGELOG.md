@@ -8,6 +8,45 @@ Pre-1.0, breaking changes land in minor releases with no deprecation window —
 see [`docs/VERSIONING.md`](docs/VERSIONING.md). Pin an exact tag and vendor the
 conformance vectors at it.
 
+## v0.16.0
+
+**Runtimes have nothing to do; validator ports owe work.** `schema/` and the runtime
+conformance vectors are unchanged, so a 0.15 runtime plays every 0.16 project exactly as
+before, and this is not a release you cannot skip. The reference playback runtime is now
+published under MIT as `@orbitope/parlance-runtime`, and its source is in `runtime/`.
+
+**What a validator port must do.** Eighteen new validator cases, 129 in all.
+- **New `FLOW` warning.** Warn on a node that is not `isEnd`, has no `next`, and whose
+  non-fallback choices are all `check.mode: "passive"`. The runtime counts unrevealed
+  passive choices as visible, so a fallback there is suppressed and a game that hides
+  them shows nothing clickable. Cases: `choice-passive-only-*`,
+  `choice-passive-beside-plain-clean`.
+- **Dice bounds.** More than 100 dice, or a die with more than 1000 sides, is a `RULES`
+  error. Cases: `dice-too-many`, `dice-too-many-sides`.
+- **`OFFER` ties are bucketed and capped.** Compare only offers of one character with the
+  same priority and specificity. Report the first 10 ties, then one summary warning.
+  Case: `offer-tie-capped`.
+- **ECMA-262 pattern anchoring.** `$` never matches before a trailing newline. In Python,
+  use `fullmatch` or `\Z`. Cases: `id-trailing-newline`,
+  `engine-command-trailing-newline`.
+- **Unknown keys are `SCHEMA` errors** wherever a schema says
+  `additionalProperties: false`, except `_comment`. Case: `node-unknown-key`.
+- **Reporting is total.** A malformed file is a `SCHEMA` error naming the file, never a
+  crash. See the `types-json-array` and `registry-entries-not-array` cases and six more.
+- **Case files accept an optional `at` key** (`entityType`, `entityId`, `path`) in
+  `must`/`mustNot` entries. A port whose issues carry no location should ignore it.
+
+**Projects.** A project that passed `validate/validate.py` under 0.15.0 still passes,
+with two narrow exceptions: a custom-type row id that is not snake_case, and a
+pattern-checked string ending in a newline. The editor already refused to write either.
+Oversized dice notation is newly an error. The new `FLOW` warning fails only `--strict`.
+
+**For loaders.** Locale files may now carry `@sourceHashes` and `@outdated`. Skip keys that
+start with `@`; no real key does. See `docs/INTEGRATION.md`.
+
+Full detail, including the reference-runtime changes that moved no vector, is in
+[`docs/MIGRATIONS.md`](docs/MIGRATIONS.md).
+
 ## v0.15.0
 
 **No project needs migrating; every port must upgrade.** Every project valid under 0.14.0
