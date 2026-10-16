@@ -8,6 +8,46 @@ Pre-1.0, breaking changes land in minor releases with no deprecation window —
 see [`docs/VERSIONING.md`](docs/VERSIONING.md). Pin an exact tag and vendor the
 conformance vectors at it.
 
+## v0.17.0
+
+**Runtimes have nothing to do; validator ports owe work.** `schema/rules.schema.json`
+gains an optional, editor-only `rules.time` (clock counters, and acts with a
+`startsWhen`) and `rules.quest.lines`. The change is additive, the runtime conformance
+vectors are unchanged and no runtime reads either block, so a 0.16 runtime plays every
+0.17 project exactly as before. This is not a release you cannot skip.
+
+**What a validator port must do.** Forty-four new validator cases, 173 in all.
+- **The declaration.** `rules.time.clock[].counter` must name a declared counter
+  (`REF`). Each `startsWhen` is an ordinary `Condition`: REF-check it, and count its flag,
+  reputation and relationship reads as reads for the hygiene rules. A later act with no
+  `startsWhen` is a `RULES` error.
+- **The `TIME` family** runs only when `rules.time` is an object or a quest carries a
+  `line:<id>` tag. Otherwise it emits nothing.
+- **The act derivation the rules read.** A quest's act is derived from its top-level
+  `availableWhen` conjuncts:
+  - a flag opens with its earliest quest setter;
+  - a quest read pushes only for `>=`, `>` or `==` (a `<` / `<=` read is no dependency);
+  - an `any` of such reads pushes only when all of them are late.
+  A quest placed late only by a flag some non-quest entity also sets is *tainted*.
+  `docs/MIGRATIONS.md` § 0.17.0 states every step; `validate/validate.py`
+  (`_derive_timeline`) is the reference.
+- **Six `TIME` rules**, warnings unless noted:
+  - TIME-1: a clock counter nothing advances.
+  - TIME-2: a stage needing a flag set only by quests in a later act.
+  - TIME-3: an act tag that disagrees with the derived act.
+  - TIME-4: a gap on a line.
+  - TIME-5 (an error): a duplicate act id.
+  - TIME-6: a stage or outcome whose effects fire before its quest opens. TIME-6 runs
+    first, and the flags it finds set early join the non-quest set before TIME-3 and TIME-2.
+- **Port in one piece.** A port written against an earlier draft fails the
+  `time-act-earliest-setter-*`, `time-act-before-stage-silent`,
+  `time-act-tag-dialogue-push-silent`, `time-stage-tainted-setter-silent` and
+  `time-effects-before-open` cases.
+
+**Projects.** A project with no `rules.time` and no `line:` tag validates exactly as
+under 0.16.0. One that declares `rules.time` can see new `REF` / `RULES` errors in that
+declaration, and new `TIME` warnings, which fail only `--strict` runs.
+
 ## v0.16.0
 
 **Runtimes have nothing to do; validator ports owe work.** `schema/` and the runtime
