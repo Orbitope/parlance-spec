@@ -1,6 +1,6 @@
 # Audits
 
-Editorial audits for Parlance projects, packaged as Claude Code skills. Each one
+Editorial audits for Parlance projects, packaged as agent skills (`SKILL.md`). Each one
 answers a question about your narrative that a static validator cannot — whether an
 ordering tells the story you meant, whether a character sounds like themselves,
 whether a line can be reached in a state where it isn't true yet.
@@ -82,11 +82,16 @@ the source string by string.
 
 ## Installing
 
-Copy the audits you want into a project's skills directory:
+Copy the audits you want into your agent's skills directory in the project
+(`.agents/skills/`, or `.claude/skills/` for Claude Code):
 
 ```bash
-cp -r audits/character-voice-audit /path/to/project/.claude/skills/
+cp -r audits/character-voice-audit /path/to/project/.agents/skills/
 ```
+
+Each skill is a folder with a `SKILL.md` in the open Agent Skills format. Agents that
+support that format load it from their skills directory; with any other agent, point it
+at the `SKILL.md` and ask it to follow the instructions there.
 
 Take one, take all, take none. They share no code and no state; each `SKILL.md` is
 self-contained.

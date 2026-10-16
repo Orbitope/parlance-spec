@@ -31,6 +31,29 @@
             "type": "string"
           },
           "description": "Controlled vocabulary for Quest.tags. Journal UIs group and prioritise quests from these, so a typo'd tag silently drops out of the grouping — declaring the vocabulary here turns that into an OBJ warning. Omit the field and any tag is accepted."
+        },
+        "lines": {
+          "type": "array",
+          "description": "Quest LINES (the line map's lanes, the board's bands), in lane order. Membership is the quest tag `line:<id>`; stop order along a line is derived from the quests' dependencies, never listed here.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/definitions/id"
+              },
+              "label": {
+                "type": "string"
+              },
+              "color": {
+                "type": "string",
+                "description": "Optional CSS color for the lane."
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "additionalProperties": false
@@ -99,6 +122,57 @@
             "minItems": 2
           },
           "description": "Lists of flags that are mutually exclusive. A validator rule enforces that no single effect sequence sets more than one flag in a group to true."
+        }
+      },
+      "additionalProperties": false
+    },
+    "time": {
+      "type": "object",
+      "description": "The project's TIME declaration (editor-only; the runtime never reads it). Names which counters are the clock and where the acts begin, so the editor can DERIVE each quest's earliest act and day from its conditions instead of having them authored twice. Every field is optional.",
+      "properties": {
+        "clock": {
+          "type": "array",
+          "description": "Counters that are time, primary first. A `counter` condition on one of these in a quest gate is a clock gate the editor can read as a day.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "counter": {
+                "$ref": "common.schema.json#/definitions/id",
+                "description": "A declared counter variable."
+              },
+              "label": {
+                "type": "string",
+                "description": "Unit label shown in the editor, e.g. Day."
+              }
+            },
+            "required": [
+              "counter"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "acts": {
+          "type": "array",
+          "description": "The acts in order. `id` doubles as the act TAG a quest may carry (list it in quest.tagVocabulary when one is declared); the editor warns when the tag and the derived act disagree. The first act has no startsWhen; every later act must carry one — a later act without it never starts and is a RULES error.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/definitions/id"
+              },
+              "label": {
+                "type": "string"
+              },
+              "startsWhen": {
+                "$ref": "common.schema.json#/definitions/condition",
+                "description": "When this act begins. A READ by the editor, never a reachability gate: the runtime does not evaluate it."
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "additionalProperties": false

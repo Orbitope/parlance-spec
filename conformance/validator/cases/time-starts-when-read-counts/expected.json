@@ -1,0 +1,9 @@
+{
+  "mustNot": [
+    {
+      "code": "FLAG",
+      "contains": "act2_begun"
+    }
+  ],
+  "noErrors": true
+}

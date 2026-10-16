@@ -1,0 +1,49 @@
+{
+  "availableWhen": {
+    "op": ">=",
+    "quest": "q_main",
+    "stage": "stg_two",
+    "type": "quest"
+  },
+  "id": "q_x",
+  "name": "q_x",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "counter": "ct_prog",
+        "op": ">=",
+        "type": "counter",
+        "value": 1
+      },
+      "description": "stg_one",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_stg_one",
+          "text": "stg_one"
+        }
+      ],
+      "onComplete": [
+        {
+          "flag": "f_x",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "summary": "s"
+}

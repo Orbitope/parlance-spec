@@ -1,0 +1,51 @@
+{
+  "quest": {
+    "lines": [
+      {
+        "id": "smoke",
+        "label": "The smuggling line"
+      },
+      {
+        "id": "church",
+        "label": "The Church"
+      }
+    ],
+    "tagVocabulary": [
+      "act1",
+      "act2",
+      "act3",
+      "line:church",
+      "line:smoke",
+      "main"
+    ]
+  },
+  "time": {
+    "acts": [
+      {
+        "id": "act1"
+      },
+      {
+        "id": "act2",
+        "startsWhen": {
+          "flag": "met_keeper",
+          "type": "flag",
+          "value": true
+        }
+      },
+      {
+        "id": "act2",
+        "startsWhen": {
+          "flag": "heard_story",
+          "type": "flag",
+          "value": true
+        }
+      }
+    ],
+    "clock": [
+      {
+        "counter": "ct_day",
+        "label": "Day"
+      }
+    ]
+  }
+}

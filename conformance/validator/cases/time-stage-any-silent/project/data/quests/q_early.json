@@ -1,0 +1,46 @@
+{
+  "id": "q_early",
+  "name": "q_early",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "of": [
+          {
+            "flag": "f_late",
+            "type": "flag",
+            "value": true
+          },
+          {
+            "flag": "f_other",
+            "type": "flag",
+            "value": true
+          }
+        ],
+        "type": "any"
+      },
+      "description": "Done.",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_one",
+          "text": "Do it."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "s"
+}

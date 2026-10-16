@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "RULES",
+      "contains": "act2",
+      "severity": "error"
+    }
+  ]
+}

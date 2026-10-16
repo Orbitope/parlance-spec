@@ -1,0 +1,66 @@
+{
+  "quest": {
+    "lines": [
+      {
+        "id": "smoke",
+        "label": "The smuggling line"
+      },
+      {
+        "id": "church",
+        "label": "The Church"
+      }
+    ],
+    "tagVocabulary": [
+      "act1",
+      "act2",
+      "act3",
+      "line:church",
+      "line:smoke",
+      "main"
+    ]
+  },
+  "time": {
+    "acts": [
+      {
+        "id": "act1",
+        "label": "Act I"
+      },
+      {
+        "id": "act2",
+        "label": "Act II",
+        "startsWhen": {
+          "op": ">=",
+          "quest": "qst_errand",
+          "stage": "stg_listen",
+          "type": "quest"
+        }
+      },
+      {
+        "id": "act3",
+        "label": "Act III",
+        "startsWhen": {
+          "of": [
+            {
+              "flag": "met_keeper",
+              "type": "flag",
+              "value": true
+            },
+            {
+              "counter": "ct_day",
+              "op": ">=",
+              "type": "counter",
+              "value": 5
+            }
+          ],
+          "type": "all"
+        }
+      }
+    ],
+    "clock": [
+      {
+        "counter": "met_keeper",
+        "label": "Day"
+      }
+    ]
+  }
+}

@@ -25,6 +25,8 @@ import glob
 import json
 import os
 import unicodedata
+import heapq
+import math
 import re
 import sys
 from collections import namedtuple
@@ -251,27 +253,481 @@ def custom_plural(type_id, type_def):
 _NUMERIC_KEYS = {"counter": "counter", "reputation": "faction", "relationship": "character", "skill": "skill"}
 
 
-def _literal(c, negated=False):
-    """Reduce a conjunct to a literal the oracle reasons about — ("bool", key,
-    value) or ("num", key, lo, hi) — or None. Mirrors `literal` in
-    editor/core/src/offerExclusivity.ts."""
+def _literal(c, negated=False, stage_order=None):
+    """Reduce a conjunct to a literal — ("bool", key, value) or ("num", key, lo,
+    hi) — or None. Mirrors `literal` in editor/core/src/offerExclusivity.ts.
+
+    A flag or item literal needs a REAL boolean (TypeScript returns null for
+    anything else; this used to coerce with bool()). With a `stage_order`
+    lookup (quest id, stage id) -> order, a `quest` condition reduces to an
+    interval on the stage ORDER — only the timeline derivation (ws 18) passes
+    one, so the offer oracle's verdicts do not move."""
+    if not isinstance(c, dict):
+        return None
     t = c.get("type")
     if t == "not":
         inner = c.get("of")
-        return None if negated or not isinstance(inner, dict) else _literal(inner, True)
+        return None if negated or not isinstance(inner, dict) else _literal(inner, True, stage_order)
     if t == "flag":
-        v = bool(c.get("value"))
+        v = c.get("value")
+        if not isinstance(v, bool):
+            return None
         return ("bool", f"flag:{c.get('flag')}", (not v) if negated else v)
     if t == "item":
-        v = bool(c.get("has"))
+        v = c.get("has")
+        if not isinstance(v, bool):
+            return None
         return ("bool", f"item:{c.get('item')}", (not v) if negated else v)
     if t in _NUMERIC_KEYS:
-        v = c.get("value")
-        if not isinstance(v, (int, float)) or isinstance(v, bool):
+        return _numeric_literal(f"{t}:{c.get(_NUMERIC_KEYS[t])}", c.get("op"), c.get("value"), negated)
+    if t == "quest":
+        if stage_order is None or not isinstance(c.get("quest"), str) or not isinstance(c.get("stage"), str):
             return None
-        iv = _interval(c.get("op"), v, negated)
-        return ("num", f"{t}:{c.get(_NUMERIC_KEYS[t])}", iv[0], iv[1]) if iv else None
+        order = stage_order(c["quest"], c["stage"])
+        if order is None:
+            return None
+        return _numeric_literal(f"quest:{c['quest']}", c.get("op"), order, negated)
     return None
+
+
+def _numeric_literal(key, op, v, negated):
+    if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v):
+        return None
+    iv = _interval(op, v, negated)
+    return ("num", key, iv[0], iv[1]) if iv else None
+
+
+def _interval_within(a_lo, a_hi, b_lo, b_hi):
+    """Interval a admits no value outside interval b. Mirrors intervalWithin."""
+    lo_ok = b_lo[0] < a_lo[0] or (b_lo[0] == a_lo[0] and (not b_lo[1] or a_lo[1]))
+    hi_ok = a_hi[0] < b_hi[0] or (a_hi[0] == b_hi[0] and (not b_hi[1] or a_hi[1]))
+    return lo_ok and hi_ok
+
+
+def _literal_implies(a, b):
+    """A state satisfying literal a satisfies literal b. Mirrors literalImplies."""
+    if a[1] != b[1] or a[0] != b[0]:
+        return False
+    if a[0] == "bool":
+        return a[2] == b[2]
+    return _interval_within(a[2], a[3], b[2], b[3])
+
+
+def _positive_flag_leaves(c, out):
+    """Every `flag` leaf NOT under a `not`, descending all/any, WHATEVER its
+    value — the twin of positiveFlagReads in questDependencyGraph.ts, which the
+    TypeScript flag edges use. (positive_flag_needs respects `value`; the
+    timeline mirror must not, or the two validators disagree on requires
+    edges.)"""
+    if not isinstance(c, dict):
+        return out
+    t = c.get("type")
+    if t == "flag":
+        if isinstance(c.get("flag"), str):
+            out.append(c["flag"])
+    elif t in ("all", "any"):
+        of = c.get("of")
+        for m in (of if isinstance(of, list) else []):
+            _positive_flag_leaves(m, out)
+    return out
+
+
+def _flags_set_true(effects):
+    out = []
+    for e in effects if isinstance(effects, list) else []:
+        if isinstance(e, dict) and e.get("type") == "set_flag" and e.get("value") is True and isinstance(e.get("flag"), str):
+            out.append(e["flag"])
+    return out
+
+
+def _quest_setter_index(quests):
+    """flag -> the quests whose stage onComplete or outcome effects set it TRUE,
+    built once. The twin of buildFlagSetterIndex; a false write never sets."""
+    index = {}
+    for q in quests:
+        qid = q["id"]
+        stages = q.get("stages")
+        outcomes = q.get("outcomes")
+        flags = set()
+        for st in stages if isinstance(stages, list) else []:
+            if isinstance(st, dict):
+                flags.update(_flags_set_true(st.get("onComplete")))
+        for oc in outcomes if isinstance(outcomes, list) else []:
+            if isinstance(oc, dict):
+                flags.update(_flags_set_true(oc.get("effects")))
+        for f in flags:
+            index.setdefault(f, set()).add(qid)
+    return index
+
+
+def _quest_requires_edges(quests, setters, facts):
+    """(from, to) requires pairs, deduplicated: buildQuestFlagEdges' flag edges
+    (availableWhen's positive flag leaves resolved through the setter index)
+    plus each top-level quest / questOutcome read of availableWhen. O(reads)."""
+    edges = set()
+    for q in quests:
+        qid = q["id"]
+        av = q.get("availableWhen")
+        if av:
+            for f in _positive_flag_leaves(av, []):
+                for src in setters.get(f, ()):
+                    if src != qid:
+                        edges.add((src, qid))
+        for src in facts[qid]["quest_reads"] if qid in facts else []:
+            if src != qid and src in facts:
+                edges.add((src, qid))
+    return edges
+
+
+def _reach(seeds, nxt):
+    seen = set(seeds)
+    queue = list(seen)
+    i = 0
+    while i < len(queue):
+        for n in nxt.get(queue[i], ()):
+            if n not in seen:
+                seen.add(n)
+                queue.append(n)
+        i += 1
+    return seen
+
+
+# The ops under which a quest read needs the quest to have PROGRESSED: an
+# unadvanced quest makes `<` and `<=` true, so a "before stage" read is neither a
+# push source nor a requires edge (design § 1 of
+# openspec/changes/temporal-derivation-gaps). The twin of PROGRESS_OPS.
+_PROGRESS_OPS = (">=", ">", "==")
+
+
+def _quest_read(c):
+    """questRead's twin: the quest a quest / questOutcome read needs to have
+    progressed, else None."""
+    if not isinstance(c, dict) or not isinstance(c.get("quest"), str):
+        return None
+    t = c.get("type")
+    if t == "quest" and isinstance(c.get("stage"), str) and isinstance(c.get("op"), str) and c["op"] in _PROGRESS_OPS:
+        return c["quest"]
+    if t == "questOutcome" and isinstance(c.get("outcome"), str):
+        return c["quest"]
+    return None
+
+
+def _gate_source(c):
+    """A push-group source read from one condition AS WRITTEN: ("flag", f) for a
+    `flag ... true` read, ("quest", q) for a quest read that needs progress
+    (_quest_read), else None."""
+    if not isinstance(c, dict):
+        return None
+    t = c.get("type")
+    if t == "flag" and c.get("value") is True and isinstance(c.get("flag"), str):
+        return ("flag", c["flag"])
+    q = _quest_read(c)
+    return ("quest", q) if q is not None else None
+
+
+def _gate_groups(cond):
+    """gateGroupsOf (editor/core/src/timeline.ts): one group per top-level conjunct
+    that can only hold after its sources have run — a flag-true read, a quest read,
+    or an `any` whose every disjunct is one of those (design § 1 of
+    openspec/changes/temporal-earliest-setter). Sources deduplicated, and identical
+    groups collapse."""
+    out, seen = [], set()
+    for conj in _top_conjuncts(cond):
+        if conj.get("type") == "any":
+            of = conj.get("of") if isinstance(conj.get("of"), list) else []
+            leaves = [_gate_source(m) for m in of]
+            sources = leaves if of and all(l is not None for l in leaves) else None
+        else:
+            l = _gate_source(conj)
+            sources = [l] if l is not None else None
+        if not sources:
+            continue
+        key = frozenset(sources)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(sorted(key))
+    return out
+
+
+def _push_groups(facts, setters, never_late=()):
+    """buildPushGroups' twin, built per flag: each flag's quest setters, each group's
+    owner and sources, and who waits on what. A group with a source that can never
+    be late (no other quest setter, a flag in `never_late` — the taint re-run —, an
+    unknown quest, the owner itself) is dropped."""
+    flag_setters = {f: set(q for q in qs if q in facts) for f, qs in setters.items()}
+    flag_setters = {f: qs for f, qs in flag_setters.items() if qs}
+    sets_by_quest = {}
+    for f, qs in flag_setters.items():
+        for q in qs:
+            sets_by_quest.setdefault(q, []).append(f)
+    owners, sizes = [], []
+    quest_waiters, flag_waiters, self_waiters = {}, {}, {}
+    for qid, f in facts.items():
+        for group in f["groups"]:
+            ok = True
+            for kind, name in group:
+                if kind == "quest":
+                    ok = name in facts and name != qid
+                else:
+                    qs = flag_setters.get(name, ())
+                    ok = name not in never_late and len(qs) - (1 if qid in qs else 0) > 0
+                if not ok:
+                    break
+            if not ok:
+                continue
+            g = len(owners)
+            owners.append(qid)
+            sizes.append(len(group))
+            for kind, name in group:
+                if kind == "quest":
+                    quest_waiters.setdefault(name, []).append(g)
+                elif qid in flag_setters[name]:
+                    self_waiters.setdefault(name, {}).setdefault(qid, []).append(g)
+                else:
+                    flag_waiters.setdefault(name, []).append(g)
+    return {"flag_setters": flag_setters, "sets_by_quest": sets_by_quest, "owners": owners, "sizes": sizes,
+            "quest_waiters": quest_waiters, "flag_waiters": flag_waiters, "self_waiters": self_waiters}
+
+
+def _past_boundary(seeds, pg):
+    """pastBoundary's twin: Horn propagation from the satisfiers. A flag is late for
+    a non-setter reader when no setter is left, and for a setter-reader when the
+    one setter left is that reader. Linear in the setter index and the groups."""
+    remaining = {f: len(qs) for f, qs in pg["flag_setters"].items()}
+    left_setters = {f: set(qs) for f, qs in pg["flag_setters"].items()}
+    left = list(pg["sizes"])
+    past = set()
+    queue = []
+
+    def add(q):
+        if q not in past:
+            past.add(q)
+            queue.append(q)
+
+    def tick(g):
+        left[g] -= 1
+        if left[g] == 0:
+            add(pg["owners"][g])
+
+    for q in seeds:
+        add(q)
+    i = 0
+    while i < len(queue):
+        q = queue[i]
+        i += 1
+        for g in pg["quest_waiters"].get(q, ()):
+            tick(g)
+        for f in pg["sets_by_quest"].get(q, ()):
+            remaining[f] -= 1
+            left_setters[f].discard(q)
+            if remaining[f] == 0:
+                for g in pg["flag_waiters"].get(f, ()):
+                    tick(g)
+            elif remaining[f] == 1:
+                (last,) = left_setters[f]
+                for g in pg["self_waiters"].get(f, {}).get(last, ()):
+                    tick(g)
+    return past
+
+
+def _derive_timeline(quests, rules):
+    """The rule-relevant half of deriveTimeline (editor/core/src/timeline.ts),
+    item for item as design § 1 of openspec/changes/temporal-time-family lists
+    it: per-quest gate literals and opaque bit, requires edges, the derived act
+    by one earliest-setter pass per boundary literal (_past_boundary, design § 2
+    of openspec/changes/temporal-earliest-setter), the effective act, the day from
+    the primary clock, and each line's stops (Kahn over member-restricted edges,
+    smallest (act, day, id) first, through a heap) and gaps."""
+    time = rules.get("time") if isinstance(rules, dict) else None
+    time = time if isinstance(time, dict) else None
+    qrules = rules.get("quest") if isinstance(rules, dict) else None
+    qrules = qrules if isinstance(qrules, dict) else None
+    by_id = {}
+    for q in quests:
+        by_id[q["id"]] = q
+
+    def stage_order(quest, stage):
+        q = by_id.get(quest)
+        stages = q.get("stages") if q else None
+        for st in stages if isinstance(stages, list) else []:
+            if isinstance(st, dict) and st.get("id") == stage:
+                o = st.get("order")
+                return o if isinstance(o, (int, float)) and not isinstance(o, bool) else None
+        return None
+
+    clock = []
+    for ck in (time.get("clock") if time and isinstance(time.get("clock"), list) else []):
+        if isinstance(ck, dict) and isinstance(ck.get("counter"), str):
+            clock.append(ck["counter"])
+    primary = clock[0] if clock else None
+
+    facts = {}
+    for qid, q in by_id.items():
+        lits, opaque, reads = [], False, []
+        for conj in _top_conjuncts(q.get("availableWhen")):
+            lit = _literal(conj, False, stage_order)
+            if lit:
+                lits.append(lit)
+            r = _quest_read(conj)
+            if r is not None:
+                reads.append(r)
+            if not lit:
+                opaque = True
+        tags = [t for t in (q.get("tags") if isinstance(q.get("tags"), list) else []) if isinstance(t, str)]
+        facts[qid] = {"lits": lits, "opaque": opaque, "quest_reads": reads, "tags": tags, "groups": _gate_groups(q.get("availableWhen"))}
+
+    qlist = list(by_id.values())
+    setters = _quest_setter_index(qlist)
+    edges = _quest_requires_edges(qlist, setters, facts)
+
+    acts = [a for a in (time.get("acts") if time and isinstance(time.get("acts"), list) else []) if isinstance(a, dict) and isinstance(a.get("id"), str)]
+    declared = len(acts) > 0
+    act_index = {}
+    for i, a in enumerate(acts):
+        act_index[a["id"]] = i
+    derived = _assign_acts(acts, facts, _push_groups(facts, setters), stage_order)
+
+    cards = {}
+    for qid, f in facts.items():
+        tagged = [act_index[t] for t in f["tags"] if t in act_index]
+        if declared and tagged:
+            act, source = max(tagged), "tag"
+        elif not declared or f["opaque"]:
+            act, source = 0, "uncertain"
+        else:
+            act, source = derived[qid], "derived"
+        day = None
+        if primary is not None:
+            for lit in f["lits"]:
+                if lit[0] != "num" or lit[1] != f"counter:{primary}" or not math.isfinite(lit[2][0]):
+                    continue
+                m = lit[2][0] + 1 if lit[2][1] else lit[2][0]
+                day = m if day is None else max(day, m)
+        line = next((t[len("line:"):] for t in f["tags"] if t.startswith("line:") and len(t) > len("line:")), None)
+        cards[qid] = {
+            "act": act, "source": source, "derived": derived[qid] if declared else 0,
+            "opaque": f["opaque"], "day": day, "line": line,
+        }
+
+    members = {}
+    for qid in facts:
+        line = cards[qid]["line"]
+        if line is not None:
+            members.setdefault(line, []).append(qid)
+    lanes, seen = [], set()
+    for l in (qrules.get("lines") if qrules and isinstance(qrules.get("lines"), list) else []):
+        if isinstance(l, dict) and isinstance(l.get("id"), str) and l["id"] not in seen:
+            seen.add(l["id"])
+            lanes.append(l["id"])
+    for l in sorted(members):
+        if l not in seen:
+            seen.add(l)
+            lanes.append(l)
+
+    def key(qid):
+        c = cards[qid]
+        return (c["act"], c["day"] if c["day"] is not None else 0, qid)
+
+    lines = []
+    for lid in lanes:
+        ms = set(members.get(lid, []))
+        out = {m: [] for m in ms}
+        indeg = {m: 0 for m in ms}
+        for a, b in edges:
+            if a in ms and b in ms:
+                out[a].append(b)
+                indeg[b] += 1
+        heap = [key(m) for m in ms if indeg[m] == 0]
+        heapq.heapify(heap)
+        stops, placed = [], set()
+        while heap:
+            q = heapq.heappop(heap)[2]
+            stops.append(q)
+            placed.add(q)
+            for n in out[q]:
+                indeg[n] -= 1
+                if indeg[n] == 0:
+                    heapq.heappush(heap, key(n))
+        for m in sorted((m for m in ms if m not in placed), key=key):
+            stops.append(m)
+        reached = _reach([stops[0]], out) if stops else set()
+        lines.append({"id": lid, "stops": stops, "gaps": [s for s in stops if s not in reached]})
+
+    act_ids = [a["id"] for a in acts]
+    return {"declared": declared, "acts": act_ids, "cards": cards, "lines": lines, "setters": setters,
+            "derivation": (acts, facts, setters, stage_order)}
+
+
+def _assign_acts(acts, facts, groups, stage_order):
+    """assignActs' twin: each quest's greatest derived act, one _past_boundary per
+    boundary literal."""
+    derived = {qid: 0 for qid in facts}
+    for n in range(1, len(acts)):
+        sw = acts[n].get("startsWhen")
+        if sw is None:
+            continue
+        conjs = _top_conjuncts(sw)
+        lits = [_literal(c, False, stage_order) for c in conjs]
+        if not conjs or any(l is None for l in lits):
+            continue
+        satisfied = None
+        for L in lits:
+            seeds = [qid for qid, f in facts.items() if any(_literal_implies(g, L) for g in f["lits"])]
+            reached = _past_boundary(seeds, groups)
+            satisfied = reached if satisfied is None else (satisfied & reached)
+            if not satisfied:
+                break
+        for qid in satisfied or ():
+            derived[qid] = n
+    return derived
+
+
+def _tainted_cards(tl, never_late):
+    """taintedCards' twin (design § 2 of openspec/changes/temporal-derivation-gaps):
+    the acts re-run with every flag in `never_late` never late; a quest whose clean
+    act is lower than its derived act is tainted. quest -> its reasons."""
+    if not tl["declared"]:
+        return {}
+    acts, facts, setters, stage_order = tl["derivation"]
+    clean = _assign_acts(acts, facts, _push_groups(facts, setters, never_late), stage_order)
+    out = {}
+    for qid, f in facts.items():
+        if clean[qid] >= tl["cards"][qid]["derived"]:
+            continue
+        named = sorted({name for g in f["groups"] for kind, name in g if kind == "flag" and name in never_late})
+        out[qid] = [f"pushed-by-non-quest-flag:{n}" for n in named] if named else ["pushed-by-non-quest-flag"]
+    return out
+
+
+def _early_flag(cond, owner, setters, non_quest, sure, act_of):
+    """earlyFlag's twin (TIME-6): when every top-level conjunct of `cond` is a
+    `flag ... true` read of a flag with quest setters, none of them `owner`, none a
+    non-quest flag, every setter sure — (flag, act, setter) for the flag first set
+    latest, its act the earliest of its setters'. Else None."""
+    conjs = _top_conjuncts(cond)
+    if not conjs:
+        return None
+    flags = set()
+    for c in conjs:
+        if c.get("type") != "flag" or c.get("value") is not True or not isinstance(c.get("flag"), str):
+            return None
+        flags.add(c["flag"])
+    best = None
+    for f in sorted(flags):
+        writers = setters.get(f)
+        if not writers or owner in writers or f in non_quest:
+            return None
+        low, at = math.inf, ""
+        for w in sorted(writers):
+            if not sure(w):
+                return None
+            a = act_of(w)
+            if a < low:
+                low, at = a, w
+        if best is None or low > best[1]:
+            best = (f, low, at)
+    return best
 
 
 def _below(x, y):
@@ -456,6 +912,10 @@ class ProjectValidator:
         self.texts_written, self.texts_read = set(), set()
         self.reps_adjusted, self.reps_read = set(), set()
         self.rels_adjusted, self.rels_read = set(), set()
+        # TIME (ws 18): counters any adjust_counter names, and flags set true by
+        # something other than a quest.
+        self.counters_adjusted = set()
+        self.flags_set_true_nonquest = set()
         self.triggered_cutscenes = set()
         self.xp_grants = []  # (amount, where)
         self.used_portraits = set()
@@ -837,10 +1297,12 @@ class ProjectValidator:
             self.walk_condition(c["of"], w)
 
 
-    def walk_effects(self, effects, w, site=None):
+    def walk_effects(self, effects, w, site=None, kind="other"):
+        """`kind` is "quest" from the quest walk and "other" everywhere else, so
+        TIME-2 can tell a flag set only by quests (ws 18)."""
         flags_set_to_true = set()
         for e in effects:
-            self.walk_effect(e, w, site=site)
+            self.walk_effect(e, w, site=site, kind=kind)
             if isinstance(e, dict) and e.get("type") == "set_flag" and e.get("value", True):
                 flags_set_to_true.add(e["flag"])
         
@@ -849,7 +1311,7 @@ class ProjectValidator:
             if len(overlap) > 1:
                 self.err("FLAG", f"{w}: sets mutually-exclusive flags simultaneously: {', '.join(sorted(overlap))}")
 
-    def walk_effect(self, e, w, site=None):
+    def walk_effect(self, e, w, site=None, kind="other"):
 
         """`site` is a STRUCTURAL marker for where the effect was authored,
         passed by the caller — "quest_outcome" only from the quest-outcome walk.
@@ -862,6 +1324,8 @@ class ProjectValidator:
         if t == "set_flag":
             self.ref_var(e["flag"], "flag", w)
             self.flags_written.add(e["flag"])
+            if kind != "quest" and e.get("value") is True and isinstance(e.get("flag"), str):
+                self.flags_set_true_nonquest.add(e["flag"])
         elif t == "adjust_reputation":
             self.ref_faction(e["faction"], w)
             self.reps_adjusted.add(e["faction"])
@@ -870,6 +1334,8 @@ class ProjectValidator:
             self.rels_adjusted.add(e["character"])
         elif t == "adjust_counter":
             self.ref_var(e["counter"], "counter", w)
+            if isinstance(e.get("counter"), str):
+                self.counters_adjusted.add(e["counter"])
         elif t in ("give_item", "take_item"):
             self.ref_item(e["item"], w)
         elif t == "advance_quest":
@@ -1039,6 +1505,46 @@ class ProjectValidator:
                     self.default_dice = parse_dice(notation)
                 except ValueError as e:
                     self.err("RULES", f"rules.check.dice: {e}")
+
+    def check_time_declaration(self):
+        """rules.time (ws 18): the clock counters and each act's startsWhen.
+
+        A READ by the editor, never a reachability gate — the runtime does not
+        evaluate it. walk_condition REF-checks every leaf and records the flag /
+        reputation / relationship reads, so a flag read only by an act boundary
+        is not "set but never read"; the TypeScript twin (checkTimeDeclaration
+        in validation/global.ts) returns the same reads to its hygiene rule.
+        A later act with no startsWhen never starts, so no quest could ever be
+        placed in it: RULES. Every read below checks its own shape — rules.json
+        is read whether or not it passed its schema.
+        """
+        if not isinstance(self.rules, dict):
+            return
+        time = self.rules.get("time")
+        if not isinstance(time, dict):
+            return
+        clock = time.get("clock")
+        if isinstance(clock, list):
+            for i, ck in enumerate(clock):
+                if isinstance(ck, dict) and isinstance(ck.get("counter"), str):
+                    self.ref_var(ck["counter"], "counter", f"rules.time.clock[{i}]")
+        acts = time.get("acts")
+        if isinstance(acts, list):
+            for i, act in enumerate(acts):
+                if not isinstance(act, dict):
+                    continue
+                aid = act["id"] if isinstance(act.get("id"), str) else f"#{i}"
+                w = f"rules.time.acts '{aid}'"
+                if i > 0 and "startsWhen" not in act:
+                    self.err("RULES", f"{w}: a later act needs a startsWhen — without one it never starts, and no quest can be placed in it")
+                if "startsWhen" in act:
+                    try:
+                        self.walk_condition(act["startsWhen"], f"{w} startsWhen")
+                    except (KeyError, TypeError):
+                        # A leaf the schema has already rejected (a `flag`
+                        # condition with no `flag`): SCHEMA named it; the walk
+                        # has nothing more to say and must not take the run down.
+                        pass
 
     def check_variables(self):
         # Variable `default` must match `kind` (boolean⇔flag, number⇔counter,
@@ -1436,9 +1942,9 @@ class ProjectValidator:
 
         for qid, (q, _p) in valid_quests.items():
             for st in q["stages"]:
-                self.walk_effects(st.get("onComplete", []), f"quest '{qid}' stage '{st['id']}'")
+                self.walk_effects(st.get("onComplete", []), f"quest '{qid}' stage '{st['id']}'", kind="quest")
             for oc in q.get("outcomes", []):
-                self.walk_effects(oc.get("effects", []), f"quest '{qid}' outcome '{oc['id']}'", site="quest_outcome")
+                self.walk_effects(oc.get("effects", []), f"quest '{qid}' outcome '{oc['id']}'", site="quest_outcome", kind="quest")
 
         # Dependency edges are polarity-aware: an edge means "prod sets (to
         # true) a flag that qid needs to BE true". A gate on the ABSENCE of a
@@ -2066,6 +2572,142 @@ class ProjectValidator:
             if vid not in self.texts_read:
                 self.warn("TEXT", f"text variable '{vid}' is declared but never referenced in any authored string")
 
+    def check_time_rules(self):
+        """The TIME family (ws 18 phase 2). Mirrors checkTimeRules in
+        editor/core/src/validation/global.ts rule for rule and message for
+        message, over the same derivation (_derive_timeline mirrors
+        deriveTimeline). Silent unless rules.time is declared or a quest is
+        tagged `line:<id>`."""
+        rules = self.rules if isinstance(self.rules, dict) else {}
+        time = rules.get("time")
+        declared_time = isinstance(time, dict)
+        quests = [q for qid, (q, _p) in self.quests.items() if self.valid("quest", qid) and isinstance(q, dict) and isinstance(q.get("id"), str)]
+
+        def tags_of(q):
+            t = q.get("tags")
+            return [x for x in t if isinstance(x, str)] if isinstance(t, list) else []
+
+        any_line = any(any(t.startswith("line:") and len(t) > len("line:") for t in tags_of(q)) for q in quests)
+        if not declared_time and not any_line:
+            return
+        tl = _derive_timeline(quests, rules)
+        cards = tl["cards"]
+        acts = tl["acts"]
+
+        def act_id(i):
+            return acts[i] if 0 <= i < len(acts) else f"#{i}"
+
+        def certain(qid):
+            return tl["declared"] and qid in cards and not cards[qid]["opaque"]
+
+        if declared_time:
+            ids = [a["id"] for a in (time.get("acts") if isinstance(time.get("acts"), list) else []) if isinstance(a, dict) and isinstance(a.get("id"), str)]
+            seen, dup = set(), set()
+            for i in ids:
+                if i in seen:
+                    dup.add(i)
+                seen.add(i)
+            for i in sorted(dup):
+                self.err("TIME", f"rules.time.acts: duplicate id '{i}'")
+            clocks = set()
+            for ck in (time.get("clock") if isinstance(time.get("clock"), list) else []):
+                if isinstance(ck, dict) and isinstance(ck.get("counter"), str):
+                    clocks.add(ck["counter"])
+            for c in sorted(clocks):
+                v = self.variables.get(c)
+                if not isinstance(v, dict) or v.get("kind") != "counter" or self.engine_written(c):
+                    continue
+                if c not in self.counters_adjusted:
+                    self.warn("TIME", f"clock counter '{c}' is never advanced — every gate on it stays at its default")
+
+        if tl["declared"]:
+            setters = tl["setters"]
+            non_quest = self.flags_set_true_nonquest
+            tainted = _tainted_cards(tl, non_quest)
+
+            def sure(qid):
+                return certain(qid) and qid not in tainted
+
+            # TIME-6 — a stage or outcome whose effects fire before its quest opens.
+            early = set()
+            for q in quests:
+                if not sure(q["id"]):
+                    continue
+                q_act = cards[q["id"]]["act"]
+                items = []
+                stages = q.get("stages")
+                for st in stages if isinstance(stages, list) else []:
+                    if isinstance(st, dict) and isinstance(st.get("id"), str):
+                        items.append(("stage", st["id"], st.get("completeWhen"), st.get("onComplete")))
+                outcomes = q.get("outcomes")
+                for oc in outcomes if isinstance(outcomes, list) else []:
+                    if isinstance(oc, dict) and isinstance(oc.get("id"), str):
+                        items.append(("outcome", oc["id"], oc.get("reachedWhen"), oc.get("effects")))
+                for kind, iid, cond, effects in items:
+                    if not isinstance(effects, list) or not effects:
+                        continue
+                    found = _early_flag(cond, q["id"], setters, non_quest, sure, lambda w: cards[w]["act"])
+                    if found is None or not (found[1] < q_act):
+                        continue
+                    verb = "completes" if kind == "stage" else "is reached"
+                    self.warn(
+                        "TIME",
+                        f"quest '{q['id']}' {kind} '{iid}' {verb} on flag '{found[0]}', set in {act_id(found[1])} by quest "
+                        f"'{found[2]}', but the quest opens in {act_id(q_act)} — its effects fire as soon as the flag is set, "
+                        f"even before the quest opens",
+                    )
+                    early.update(_flags_set_true(effects))
+            # Those items' flags are known to be set early: they join the non-quest
+            # set before TIME-3 and TIME-2 read it.
+            untrusted = non_quest | early if early else non_quest
+            if early:
+                tainted = _tainted_cards(tl, untrusted)
+
+            for q in quests:
+                c = cards.get(q["id"])
+                if not c or c["source"] != "tag" or c["opaque"] or q["id"] in tainted:
+                    continue
+                if c["derived"] != c["act"]:
+                    self.warn("TIME", f"quest '{q['id']}' is tagged '{act_id(c['act'])}' but its gates place it in '{act_id(c['derived'])}'")
+            for q in quests:
+                if not certain(q["id"]):
+                    continue
+                q_act = cards[q["id"]]["act"]
+                stages = q.get("stages")
+                for st in stages if isinstance(stages, list) else []:
+                    if not isinstance(st, dict) or not isinstance(st.get("id"), str):
+                        continue
+                    flags = set()
+                    for conj in _top_conjuncts(st.get("completeWhen")):
+                        if conj.get("type") == "flag" and conj.get("value") is True and isinstance(conj.get("flag"), str):
+                            flags.add(conj["flag"])
+                    for f in sorted(flags):
+                        writers = setters.get(f)
+                        if not writers or f in untrusted:
+                            continue
+                        low, at, all_certain = math.inf, "", True
+                        for w in sorted(writers):
+                            if not certain(w) or w in tainted:
+                                all_certain = False
+                                break
+                            a = cards[w]["act"]
+                            if a < low:
+                                low, at = a, w
+                        if not all_certain or not (low > q_act):
+                            continue
+                        self.warn(
+                            "TIME",
+                            f"quest '{q['id']}' stage '{st['id']}' needs flag '{f}', which is only set in {act_id(low)} "
+                            f"(quest '{at}') — the quest is in {act_id(q_act)}, so this stage cannot complete before {act_id(low)}",
+                        )
+
+        for line in tl["lines"]:
+            if len(line["stops"]) < 2:
+                continue
+            first = line["stops"][0]
+            for g in line["gaps"]:
+                self.warn("TIME", f"line '{line['id']}': quest '{g}' has no requires-path from the line's first stop '{first}' — the line map shows a gap")
+
     def check_flag_hygiene(self):
         declared = {vid for vid, v in self.variables.items() if v.get("kind") == "flag"}
         for fl in declared:
@@ -2429,6 +3071,7 @@ class ProjectValidator:
 
         self.load()
         self.resolve_rules()
+        self.check_time_declaration()
         self.check_variables()
         self.check_characters_portraits_factions()
         self.check_dialogues()
@@ -2446,6 +3089,7 @@ class ProjectValidator:
         self.check_portrait_usage()
         self.check_text()
         self.check_flag_hygiene()
+        self.check_time_rules()
         self.check_progression()
         self.check_quest_resolution_reachability()
         self.check_xp_advisory()

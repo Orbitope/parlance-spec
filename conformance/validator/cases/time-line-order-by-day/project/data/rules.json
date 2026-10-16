@@ -1,0 +1,10 @@
+{
+  "time": {
+    "clock": [
+      {
+        "counter": "ct_day",
+        "label": "Day"
+      }
+    ]
+  }
+}

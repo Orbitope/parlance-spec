@@ -1,0 +1,10 @@
+{
+  "body": "A village that keeps to itself.",
+  "id": "cdx_village",
+  "name": "The Village",
+  "unlockedBy": {
+    "flag": "met_keeper",
+    "type": "flag",
+    "value": true
+  }
+}

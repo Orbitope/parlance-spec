@@ -589,9 +589,32 @@ export type Rules = {
      * declare it to get the check, omit it and any tag is accepted.
      */
     tagVocabulary?: string[];
+    /**
+     * Quest LINES — the line map's lanes and the board's bands, in lane order.
+     * Membership is the quest tag `line:<id>`; the stop order along a line is
+     * derived from the quests' dependencies, never listed here. Editor-only:
+     * the runtime never reads it (ws 18).
+     */
+    lines?: Array<{ id: string; label?: string; color?: string }>;
   };
   flag?: {
     exclusiveGroups?: readonly (readonly string[])[];
+  };
+  /**
+   * The project's TIME declaration (ws 18): which counters are the clock and
+   * where the acts begin, so the editor can DERIVE each quest's earliest act
+   * and day from its conditions instead of having them authored twice.
+   * Editor-only — the runtime never reads it, and `acts[].startsWhen` is a
+   * READ by the editor, never a reachability gate.
+   */
+  time?: {
+    /** Counters that are time, primary first. */
+    clock?: Array<{ counter: string; label?: string }>;
+    /**
+     * The acts in order. `id` doubles as the act TAG a quest may carry. The
+     * first act has no `startsWhen`; every later act must carry one.
+     */
+    acts?: Array<{ id: string; label?: string; startsWhen?: Condition }>;
   };
   choices?: {
     /**

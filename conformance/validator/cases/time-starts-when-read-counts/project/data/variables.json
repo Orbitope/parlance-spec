@@ -1,0 +1,28 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "The player has met the keeper.",
+      "id": "met_keeper",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "The keeper's story has been heard out.",
+      "id": "heard_story",
+      "kind": "flag"
+    },
+    {
+      "default": 1,
+      "description": "Which day it is.",
+      "id": "ct_day",
+      "kind": "counter"
+    },
+    {
+      "default": false,
+      "description": "The second act has begun.",
+      "id": "act2_begun",
+      "kind": "flag"
+    }
+  ]
+}

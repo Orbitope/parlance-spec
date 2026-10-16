@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "line 'smoke': quest 'q_z' has no requires-path from the line's first stop 'q_a'",
+      "severity": "warning"
+    }
+  ]
+}

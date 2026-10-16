@@ -278,6 +278,44 @@ vocabulary declared, any tag is accepted. A project declares one like this, in
 }
 ```
 
+### Time, acts and lines (`rules.time`, `rules.quest.lines`)
+
+A project may declare which counters are its clock and where its acts begin, so the
+editor can DERIVE every quest's earliest act and day from the conditions it already has
+instead of having them authored twice:
+
+```json
+{
+  "time": {
+    "clock": [{ "counter": "ct_day", "label": "Day" }],
+    "acts": [
+      { "id": "act1", "label": "Act I" },
+      { "id": "act2", "label": "Act II",
+        "startsWhen": { "type": "quest", "quest": "qst_main", "op": ">=", "stage": "stg_framework" } }
+    ]
+  },
+  "quest": {
+    "lines": [{ "id": "smoke", "label": "The smuggling line" }],
+    "tagVocabulary": ["main", "side", "act1", "act2", "line:smoke"]
+  }
+}
+```
+
+- `time.clock` names counters that are time, primary first. A `counter` gate on one is a
+  clock gate the editor reads as a day.
+- `time.acts` is ordered. `id` doubles as the act **tag** a quest may carry; the first act
+  has no `startsWhen`, every later act must (one without it never starts — a `RULES`
+  error). `startsWhen` is an ordinary `Condition`, REF-checked by both validators, and a
+  READ by the editor only: the runtime never evaluates it, and a flag read there counts as
+  a read for the flag-hygiene rules.
+- `quest.lines` declares the quest lines (the line map's lanes) in lane order. Membership
+  is the quest tag `line:<id>`; the stop order along a line is derived, never listed.
+- Act ids and `line:` tags are ordinary tags, so list them in `tagVocabulary` when the
+  project declares one.
+
+Everything here is optional and editor-only. A project without it validates exactly as
+before, and no runtime reads any of it.
+
 ### OBJ validator checks
 
 | Check | Severity |

@@ -1,0 +1,55 @@
+{
+  "id": "q_a",
+  "name": "q_a",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "stg_one",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_stg_one",
+          "text": "stg_one"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "stg_two",
+      "id": "stg_two",
+      "objectives": [
+        {
+          "id": "ob_stg_two",
+          "text": "stg_two"
+        }
+      ],
+      "order": 2
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "s",
+  "tags": [
+    "line:smoke"
+  ]
+}

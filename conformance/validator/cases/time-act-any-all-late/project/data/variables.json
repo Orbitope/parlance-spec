@@ -1,0 +1,34 @@
+{
+  "variables": [
+    {
+      "default": false,
+      "description": "The player has met the keeper.",
+      "id": "met_keeper",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "The keeper's story has been heard out.",
+      "id": "heard_story",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "The f_late flag.",
+      "id": "f_late",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "The f_other flag.",
+      "id": "f_other",
+      "kind": "flag"
+    },
+    {
+      "default": false,
+      "description": "The f_x flag.",
+      "id": "f_x",
+      "kind": "flag"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "'ct_day' is never advanced",
+      "severity": "warning"
+    }
+  ]
+}

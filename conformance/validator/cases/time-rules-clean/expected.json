@@ -1,0 +1,20 @@
+{
+  "mustNot": [
+    {
+      "code": "SCHEMA"
+    },
+    {
+      "code": "RULES"
+    },
+    {
+      "code": "OBJ"
+    },
+    {
+      "code": "REF"
+    },
+    {
+      "code": "FLAG"
+    }
+  ],
+  "noErrors": true
+}

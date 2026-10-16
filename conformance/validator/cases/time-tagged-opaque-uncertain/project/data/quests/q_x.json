@@ -1,0 +1,53 @@
+{
+  "availableWhen": {
+    "of": [
+      {
+        "flag": "f_a",
+        "type": "flag",
+        "value": true
+      },
+      {
+        "flag": "f_b",
+        "type": "flag",
+        "value": true
+      }
+    ],
+    "type": "any"
+  },
+  "id": "q_x",
+  "name": "q_x",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "f_late",
+        "type": "flag",
+        "value": true
+      },
+      "description": "Done.",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_one",
+          "text": "Do it."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "summary": "s",
+  "tags": [
+    "act1"
+  ]
+}

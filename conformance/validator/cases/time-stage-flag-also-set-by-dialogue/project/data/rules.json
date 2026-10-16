@@ -1,0 +1,18 @@
+{
+  "time": {
+    "acts": [
+      {
+        "id": "act1"
+      },
+      {
+        "id": "act2",
+        "startsWhen": {
+          "op": ">=",
+          "quest": "q_main",
+          "stage": "stg_two",
+          "type": "quest"
+        }
+      }
+    ]
+  }
+}

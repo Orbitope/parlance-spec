@@ -1,0 +1,39 @@
+{
+  "id": "q_c",
+  "name": "q_c",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "Done.",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_one",
+          "text": "Do it."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "s",
+  "tags": [
+    "line:smoke"
+  ]
+}

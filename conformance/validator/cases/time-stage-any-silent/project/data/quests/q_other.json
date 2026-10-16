@@ -1,0 +1,43 @@
+{
+  "id": "q_other",
+  "name": "q_other",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "effects": [
+        {
+          "flag": "f_other",
+          "type": "set_flag",
+          "value": true
+        }
+      ],
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "Done.",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_one",
+          "text": "Do it."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "s"
+}

@@ -18,8 +18,8 @@ conformance to them, and the editorial audits written against them:
   tooling/NAMING_STANDARDS.md
   tooling/VERSIONING.md
   tooling/MIGRATIONS.md
-  tooling/audits/          review-only editorial audits (Claude skills)
-  tooling/importers/       format importers (Claude skills)
+  tooling/audits/          review-only editorial audits (agent skills)
+  tooling/importers/       format importers (agent skills)
   tooling/PUBLISHED_SKILLS.md  the index to those two bundles
   editor/runtime/           the reference runtime (npm: @orbitope/parlance-runtime)
 

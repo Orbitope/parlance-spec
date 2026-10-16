@@ -1,6 +1,6 @@
 # Published skills
 
-Claude Code skills for [Parlance](https://github.com/Orbitope/parlance) projects, in
+Agent skills for [Parlance](https://github.com/Orbitope/parlance) projects, in
 two bundles. Both are inside the MIT carve-out (`LICENSE-SPEC`) and publish to
 `parlance-spec` alongside the schema and the reference validator — forking one for
 your own project is the point, and a licence that withholds that makes them useless.
@@ -57,12 +57,17 @@ every string the original did. Neither is possible against a pile of prose.
 
 ## Installing
 
-Copy the skills you want into your project's skills directory:
+Copy the skills you want into your agent's skills directory in the project —
+`.agents/skills/` for agents that read that path, `.claude/skills/` for Claude Code:
 
 ```bash
-cp -r audits/character-voice-audit  /path/to/project/.claude/skills/
-cp -r importers/yarn-import         /path/to/project/.claude/skills/
+cp -r audits/character-voice-audit  /path/to/project/.agents/skills/
+cp -r importers/yarn-import         /path/to/project/.agents/skills/
 ```
+
+Each skill is a folder with a `SKILL.md` in the open Agent Skills format. Agents that
+support that format load it from their skills directory; with any other agent, point it
+at the `SKILL.md` and ask it to follow the instructions there.
 
 The importers also need their `lib/` alongside them. Each skill is otherwise
 self-contained: no shared state, no configuration, no network calls, no telemetry.

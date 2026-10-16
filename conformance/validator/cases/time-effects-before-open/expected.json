@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "quest 'q_x' stage 'stg_one' completes on flag 'f_early', set in act1 by quest 'q_early', but the quest opens in act2",
+      "severity": "warning"
+    }
+  ]
+}

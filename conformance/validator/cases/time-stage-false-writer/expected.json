@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "quest 'q_early' stage 'stg_one' needs flag 'f_late'",
+      "severity": "warning"
+    }
+  ]
+}

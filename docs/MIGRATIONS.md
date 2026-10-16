@@ -14,6 +14,111 @@ Each entry answers three questions: **what broke**, **why it was worth breaking*
 
 ---
 
+## 0.17.0 — time, acts and quest lines: an optional `rules.time` declaration and the `TIME` warnings
+
+0.17.0 adds an optional, editor-only declaration to `schema/rules.schema.json`:
+`rules.time` (which counters are the clock, and where the acts begin) and
+`rules.quest.lines` (the quest lines). From it the editor DERIVES each quest's act, day and
+place on a line from the conditions the project already has. The schema change is purely
+additive, the runtime conformance vectors are unchanged and no runtime reads any of it, so
+**runtimes have nothing to do** and this release is not on `VERSIONING.md`'s "Releases
+you cannot skip" list. **Validator ports owe work:** the declaration's `REF` and `RULES`
+checks, and a new `TIME` family that compares the declaration with the project. Forty-four
+new validator cases (173 in all) pin them.
+
+**Does an existing project stay valid?** Yes. A project with no `rules.time` and no quest
+tagged `line:<id>` validates exactly as under 0.16.0: every `TIME` rule is silent. A
+project that declares `rules.time` can see new `REF` / `RULES` errors only in that
+declaration, and new `TIME` warnings, which fail only `--strict` runs.
+
+### For validator ports
+
+- **The declaration.** `rules.time.clock[].counter` must name a declared counter (`REF`,
+  as any counter read). Each `rules.time.acts[].startsWhen` is an ordinary `Condition`:
+  REF-check every leaf, and count a flag / reputation / relationship read there as a READ
+  for the hygiene rules (an act boundary is never a reachability gate — the runtime never
+  evaluates it). A later act (index > 0) with no `startsWhen` is a `RULES` error: it never
+  starts, so no quest can be placed in it.
+- **When the family runs.** Only when `rules.time` is an object or some quest carries a
+  `line:<id>` tag; otherwise no `TIME` issue is emitted at all.
+- **The derivation the rules read** (the reference is `_derive_timeline` in
+  `tooling/validate.py`). Per quest, the top-level conjuncts of `availableWhen` reduced to
+  literals (an `any`, `not` or unreadable conjunct makes the quest *opaque*). **Requires
+  edges**: from every quest setting TRUE a flag that appears in `availableWhen` under
+  `all` / `any` but not under a `not` (whatever its value), and from each top-level
+  `questOutcome` read and each top-level `quest` read whose `op` is `>=`, `>` or `==` — a
+  *progress read*. A `<` or `<=` read is true before the quest has started, so it is neither
+  an edge nor a push source. **Acts**:
+  for each later act and each top-level literal L of its `startsWhen`, the quests past L
+  are the least set containing every quest whose own gate literals imply L, and every
+  quest with a *push group* all of whose sources are late. A push group is one top-level
+  conjunct read as written: a `flag … true` read (late when EVERY quest setter of the flag
+  other than the quest itself is past — a flag opens with its earliest setter), a progress
+  read of a known other quest (late when that quest is past), or an `any`
+  whose every disjunct is one of those (late when all are). Nothing else pushes: not a
+  `value: false` read, not an `any` with any other disjunct, and only QUEST setters count.
+  A quest's derived act is the greatest act past every literal of whose `startsWhen` it is;
+  an act tag (an act id among its tags, highest wins) overrides it. A quest is *certain*
+  when acts are declared and it is not opaque. **Taint**: re-run the acts with every flag
+  some non-quest entity sets TRUE treated as never late (a group with such a source never
+  fires). A quest whose act from that run is lower than its derived act is *tainted*: it was
+  placed late only by trusting a flag a dialogue (or another non-quest writer) can set at any
+  time. **Day**: the lower bound a top-level
+  primary-clock literal gives. **Lines**: members of `line:<id>`, ordered by Kahn over the
+  requires edges among them, ties by (effective act, day, id); a *gap* is a member with no
+  requires-path from the first stop.
+- **`TIME` rules.** Warnings unless noted:
+  - TIME-1: a clock counter no effect anywhere adjusts (skip `writtenBy: "engine"`) —
+    "clock counter '…' is never advanced — every gate on it stays at its default".
+  - TIME-6, computed FIRST: for each certain, untainted quest Q and each stage
+    (`completeWhen`) or outcome (`reachedWhen`) of Q with a non-empty effects list, when
+    EVERY top-level conjunct of its condition is a `flag … true` read of a flag that has quest
+    setters, is not set by Q itself, is not set by a non-quest writer, and whose every setter
+    is certain and untainted: take, per flag, its earliest setter's effective act, and the
+    LATEST of those (ties by flag id, then setter id). When that act is before Q's effective
+    act — "quest '…' stage '…' completes on flag '…', set in <act> by quest '…', but the quest
+    opens in <act> — its effects fire as soon as the flag is set, even before the quest opens"
+    (an outcome: "quest '…' outcome '…' is reached on flag '…', …"). The flags those stages and
+    outcomes set TRUE then join the non-quest set, and taint is recomputed, before TIME-3 and
+    TIME-2 run.
+  - TIME-2: a stage of a certain quest whose `completeWhen` has a top-level `flag … true`
+    conjunct, when every quest setter of that flag is certain and untainted, none is a non-quest writer,
+    and the earliest setter's act is after the quest's — "quest '…' stage '…' needs flag
+    '…', which is only set in <act> (quest '…') — …".
+  - TIME-3: a tagged, non-opaque, untainted quest whose tag and derived act differ — "quest '…' is
+    tagged '<act>' but its gates place it in '<act>'".
+  - TIME-4: each gap of a line with two or more stops — "line '…': quest '…' has no
+    requires-path from the line's first stop '…' — the line map shows a gap".
+  - TIME-5 (an **error**): two acts with one id — "rules.time.acts: duplicate id '…'".
+- **Port in one piece.** The earliest-setter rule above landed late in the cycle; a port
+  written against an earlier draft that pushed a quest past a boundary when ANY setter was
+  past places quests too late and fails `time-act-earliest-setter-*`,
+  `time-act-any-one-early-silent`, `time-act-false-read-silent`,
+  `time-act-any-other-disjunct-silent`, `time-stage-earliest-setter-silent` and
+  `time-line-first-stop-earliest-setter`. So did operator-aware quest reads, taint and TIME-6
+  (openspec/changes/temporal-derivation-gaps): a port that treats every quest read as a
+  dependency fails `time-act-before-stage-silent` and `time-line-before-stage-gap` (a line
+  gap that is new under this rule), one without taint fails `time-act-tag-dialogue-push-silent`
+  and `time-stage-tainted-setter-silent`, and one without TIME-6 fails
+  `time-effects-before-open`.
+
+### Not the contract, but worth knowing
+
+- **The editor draws the derivation.** The quest surface gains **Board** (one column per
+  act, one band per line) and **Lines** (the line map) beside **Graph**; Reports gains a
+  **Shape** tab (width against depth per act and line, and district layers) and a
+  **Timeline** mode under **Speakers** (when each character's offered dialogues open).
+  Nothing in them is placed by hand.
+- **Act tags and `line:` tags are ordinary tags**, so list them in `quest.tagVocabulary`
+  when the project declares one.
+
+**Exactly what to run.** For a project: nothing — add `rules.time` when you want the
+views, then `python tooling/validate.py --strict` to see what the `TIME` rules say. For a
+runtime port: move the pin; nothing else is required. For a validator port: add the
+declaration checks, the derivation and the six `TIME` rules, and re-run the 173 cases.
+
+---
+
 ## 0.16.0 — stricter validation, a passive-only `FLOW` warning; the reference runtime published under MIT
 
 0.16.0 is a validator release. `schema/` is unchanged, the runtime conformance vectors

@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "duplicate id 'act2'",
+      "severity": "error"
+    }
+  ]
+}

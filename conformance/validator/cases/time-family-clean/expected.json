@@ -1,0 +1,8 @@
+{
+  "mustNot": [
+    {
+      "code": "TIME"
+    }
+  ],
+  "noErrors": true
+}

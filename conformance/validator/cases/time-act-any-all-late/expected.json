@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "quest 'q_y' is tagged 'act1' but its gates place it in 'act2'",
+      "severity": "warning"
+    }
+  ]
+}

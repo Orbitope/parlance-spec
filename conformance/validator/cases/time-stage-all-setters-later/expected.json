@@ -1,0 +1,9 @@
+{
+  "must": [
+    {
+      "code": "TIME",
+      "contains": "quest 'q_y' stage 'stg_one' needs flag 'f_next', which is only set in act2",
+      "severity": "warning"
+    }
+  ]
+}

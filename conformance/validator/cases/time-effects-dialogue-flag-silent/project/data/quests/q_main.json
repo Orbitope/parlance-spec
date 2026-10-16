@@ -1,0 +1,52 @@
+{
+  "id": "q_main",
+  "name": "q_main",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "One.",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_one",
+          "text": "One."
+        }
+      ],
+      "order": 1
+    },
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "Two.",
+      "id": "stg_two",
+      "objectives": [
+        {
+          "id": "ob_two",
+          "text": "Two."
+        }
+      ],
+      "order": 2
+    }
+  ],
+  "startsAvailable": true,
+  "summary": "s"
+}

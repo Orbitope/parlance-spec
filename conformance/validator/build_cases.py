@@ -584,6 +584,558 @@ def _errand_quest(**overrides) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# rules.time (ws 18) — the time declaration: clock counters, acts with a
+# startsWhen Condition, quest lines. A READ by the editor, never a reachability
+# gate; both validators REF-check it and count its reads for flag hygiene.
+# ---------------------------------------------------------------------------
+
+def _time_rules(**acts_override) -> dict:
+    """A clean three-act declaration over the base project plus the errand quest."""
+    rules = {
+        "quest": {
+            "lines": [
+                {"id": "smoke", "label": "The smuggling line"},
+                {"id": "church", "label": "The Church"},
+            ],
+            "tagVocabulary": ["act1", "act2", "act3", "line:church", "line:smoke", "main"],
+        },
+        "time": {
+            "acts": [
+                {"id": "act1", "label": "Act I"},
+                {"id": "act2", "label": "Act II",
+                 "startsWhen": {"op": ">=", "quest": "qst_errand", "stage": "stg_listen", "type": "quest"}},
+                {"id": "act3", "label": "Act III",
+                 "startsWhen": {"of": [
+                     {"flag": "met_keeper", "type": "flag", "value": True},
+                     {"counter": "ct_day", "op": ">=", "type": "counter", "value": 5},
+                 ], "type": "all"}},
+            ],
+            "clock": [{"counter": "ct_day", "label": "Day"}],
+        },
+    }
+    rules["time"].update(acts_override)
+    return rules
+
+
+def _with_time_base(p: dict) -> None:
+    """The clock counter and a tagged quest the declaration can name.
+
+    The stage advances the clock (ws 18 phase 2): without an adjust_counter
+    somewhere, TIME-1 reports the clock as never advanced. It sits on the
+    STAGE's onComplete because case_time_starts_when_read_counts overwrites the
+    outcome's effects."""
+    p["data/variables.json"]["variables"].append(
+        {"default": 1, "description": "Which day it is.", "id": "ct_day", "kind": "counter"}
+    )
+    quest = _errand_quest(tags=["act1", "line:smoke", "main"])
+    quest["stages"][0]["onComplete"] = [{"counter": "ct_day", "delta": 1, "type": "adjust_counter"}]
+    p["data/quests/qst_errand.json"] = quest
+
+
+def case_time_rules_clean(p: dict) -> None:
+    """A declaration that names only things that exist — no issue of any kind."""
+    _with_time_base(p)
+    p["data/rules.json"] = _time_rules()
+
+
+def case_time_act_no_starts_when(p: dict) -> None:
+    """A later act with no startsWhen never starts: no quest can be placed in it."""
+    _with_time_base(p)
+    p["data/rules.json"] = _time_rules(acts=[{"id": "act1"}, {"id": "act2"}])
+
+
+def case_time_act_starts_when_dangling(p: dict) -> None:
+    """An act boundary reading a flag nothing declares."""
+    _with_time_base(p)
+    p["data/rules.json"] = _time_rules(acts=[
+        {"id": "act1"},
+        {"id": "act2", "startsWhen": {"flag": "no_such_flag", "type": "flag", "value": True}},
+    ])
+
+
+def case_time_clock_not_a_counter(p: dict) -> None:
+    """The clock names a declared variable of the wrong kind."""
+    _with_time_base(p)
+    p["data/rules.json"] = _time_rules(clock=[{"counter": "met_keeper", "label": "Day"}])
+
+
+def case_time_starts_when_read_counts(p: dict) -> None:
+    """A flag set by a quest and read ONLY by an act boundary is not 'set but never read'.
+
+    The parity pin for the hygiene union: Python's walk_condition records the
+    read as a side effect, TypeScript's checkTimeDeclaration returns it to the
+    FLAG rule. Drop either and this case fails on that side alone.
+    """
+    _with_time_base(p)
+    _flag(p, "act2_begun", "The second act has begun.")
+    p["data/quests/qst_errand.json"]["outcomes"][0]["effects"] = [
+        {"flag": "act2_begun", "type": "set_flag", "value": True},
+    ]
+    p["data/rules.json"] = _time_rules(acts=[
+        {"id": "act1"},
+        {"id": "act2", "startsWhen": {"flag": "act2_begun", "type": "flag", "value": True}},
+    ])
+
+
+# ---------------------------------------------------------------------------
+# The TIME family (ws 18 phase 2): a clock nothing advances, a stage needing a
+# later act's flag, an act tag disagreeing with the derived act, a line gap, a
+# duplicate act id. Both validators mirror one derivation (deriveTimeline /
+# _derive_timeline), so every case here is also a parity test of the mirror.
+# ---------------------------------------------------------------------------
+
+def _tq(qid: str, *, gate: dict | None = None, sets: list | None = None, sets_false: list | None = None,
+        tags: list | None = None, complete: dict | None = None, stages: list | None = None,
+        effects: list | None = None) -> dict:
+    """A small, otherwise-clean quest for the TIME cases."""
+    oc_effects = [{"flag": f, "type": "set_flag", "value": True} for f in (sets or [])]
+    oc_effects += [{"flag": f, "type": "set_flag", "value": False} for f in (sets_false or [])]
+    oc_effects += effects or []
+    q = {
+        "id": qid,
+        "name": qid,
+        "outcomes": [{
+            "description": "Done.",
+            "id": "out_done",
+            "kind": "success",
+            "reachedWhen": {"flag": "heard_story", "type": "flag", "value": True},
+            **({"effects": oc_effects} if oc_effects else {}),
+        }],
+        "stages": stages or [{
+            "completeWhen": complete or {"flag": "heard_story", "type": "flag", "value": True},
+            "description": "Done.",
+            "id": "stg_one",
+            "objectives": [{"id": "ob_one", "text": "Do it."}],
+            "order": 1,
+        }],
+        "summary": "s",
+    }
+    if gate is not None:
+        q["availableWhen"] = gate
+    else:
+        q["startsAvailable"] = True
+    if tags:
+        q["tags"] = tags
+    return q
+
+
+def _two_stage_main() -> dict:
+    return _tq("q_main", stages=[
+        {"completeWhen": {"flag": "heard_story", "type": "flag", "value": True}, "description": "One.",
+         "id": "stg_one", "objectives": [{"id": "ob_one", "text": "One."}], "order": 1},
+        {"completeWhen": {"flag": "heard_story", "type": "flag", "value": True}, "description": "Two.",
+         "id": "stg_two", "objectives": [{"id": "ob_two", "text": "Two."}], "order": 2},
+    ])
+
+
+_AT_STAGE_TWO = {"op": ">=", "quest": "q_main", "stage": "stg_two", "type": "quest"}
+_TWO_ACTS = {"time": {"acts": [{"id": "act1"}, {"id": "act2", "startsWhen": _AT_STAGE_TWO}]}}
+
+
+def _put(p: dict, *quests: dict) -> None:
+    for q in quests:
+        p[f"data/quests/{q['id']}.json"] = q
+
+
+def _flags(p: dict, *names: str) -> None:
+    for n in names:
+        _flag(p, n, f"The {n} flag.")
+
+
+def case_time_family_absent_silent(p: dict) -> None:
+    """No rules.time and no line tag: nothing in the family runs, whatever the tags say."""
+    _put(p, _tq("q_x", tags=["act1", "act3"]))
+
+
+def case_time_family_clean(p: dict) -> None:
+    """The phase-1a clean declaration, with its clock advanced: no TIME issue."""
+    _with_time_base(p)
+    p["data/rules.json"] = _time_rules()
+
+
+def _clock_unadvanced(p: dict) -> None:
+    _with_time_base(p)
+    del p["data/quests/qst_errand.json"]["stages"][0]["onComplete"]
+    p["data/rules.json"] = _time_rules()
+
+
+def case_time_clock_never_advanced(p: dict) -> None:
+    """TIME-1: a declared clock counter no adjust_counter names."""
+    _clock_unadvanced(p)
+
+
+def case_time_clock_engine_written(p: dict) -> None:
+    """An engine-written clock is advanced by the engine: not reported."""
+    _clock_unadvanced(p)
+    for v in p["data/variables.json"]["variables"]:
+        if v["id"] == "ct_day":
+            v["writtenBy"] = "engine"
+
+
+def case_time_clock_advanced_by_dialogue(p: dict) -> None:
+    """A dialogue advancing the clock counts: not reported."""
+    _clock_unadvanced(p)
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["onEnter"].append(
+        {"counter": "ct_day", "delta": 1, "type": "adjust_counter"})
+
+
+def _later_act_flag(p: dict, *, late_gated: bool = True, early_complete: dict | None = None) -> None:
+    _flags(p, "f_late")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(
+        p,
+        _two_stage_main(),
+        _tq("q_late", gate=_AT_STAGE_TWO if late_gated else None, sets=["f_late"]),
+        _tq("q_early", complete=early_complete or {"flag": "f_late", "type": "flag", "value": True}),
+    )
+
+
+def case_time_stage_needs_later_act_flag(p: dict) -> None:
+    """TIME-2: q_early (act 1) needs f_late, set only by q_late (act 2)."""
+    _later_act_flag(p)
+
+
+def case_time_stage_flag_also_set_by_dialogue(p: dict) -> None:
+    """A dialogue also sets f_late: its act is not derived (phase 4), so silent."""
+    _later_act_flag(p)
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["onEnter"].append(
+        {"flag": "f_late", "type": "set_flag", "value": True})
+
+
+def case_time_stage_same_act(p: dict) -> None:
+    """f_late set in the same act: silent."""
+    _later_act_flag(p, late_gated=False)
+
+
+def case_time_stage_any_silent(p: dict) -> None:
+    """'f_late or f_other' is not blocked by f_late: an any conjunct is never read."""
+    _flags(p, "f_other")
+    _later_act_flag(p, early_complete={"of": [
+        {"flag": "f_late", "type": "flag", "value": True},
+        {"flag": "f_other", "type": "flag", "value": True},
+    ], "type": "any"})
+    _put(p, _tq("q_other", sets=["f_other"]))
+
+
+def case_time_stage_false_writer(p: dict) -> None:
+    """A quest setting f_late FALSE is not a writer: TIME-2 still fires."""
+    _later_act_flag(p)
+    _put(p, _tq("q_falsy", sets_false=["f_late"]))
+
+
+def _fl(f: str, value: bool = True) -> dict:
+    return {"flag": f, "type": "flag", "value": value}
+
+
+def _mixed_setters(p: dict, *, early: bool = True) -> None:
+    """f_mix set by q_late (gated into act 2) and, when `early`, by the ungated
+    q_early (act 1) — the earliest-setter fixture (openspec/changes/temporal-earliest-setter)."""
+    _flags(p, "f_mix")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(p, _two_stage_main(), _tq("q_late", gate=_AT_STAGE_TWO, sets=["f_mix"]))
+    _put(p, _tq("q_early", sets=["f_mix"]) if early else _tq("q_late2", gate=_AT_STAGE_TWO, sets=["f_mix"]))
+
+
+def case_time_act_earliest_setter_agrees(p: dict) -> None:
+    """f_mix opens with its act-1 setter, so q_x tagged act1 agrees: silent (the old reach said act2)."""
+    _mixed_setters(p)
+    _put(p, _tq("q_x", gate=_fl("f_mix"), tags=["act1"]))
+
+
+def case_time_act_earliest_setter_disagrees(p: dict) -> None:
+    """TIME-3: q_x tagged act2, but its earliest setter places it in act 1."""
+    _mixed_setters(p)
+    _put(p, _tq("q_x", gate=_fl("f_mix"), tags=["act2"]))
+
+
+def case_time_act_all_setters_later(p: dict) -> None:
+    """TIME-3: every setter of f_mix is in act 2, so q_x tagged act1 still disagrees."""
+    _mixed_setters(p, early=False)
+    _put(p, _tq("q_x", gate=_fl("f_mix"), tags=["act1"]))
+
+
+def _any_gated(p: dict, second: dict) -> None:
+    _flags(p, "f_late", "f_other", "f_x")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(
+        p,
+        _two_stage_main(),
+        _tq("q_l1", gate=_AT_STAGE_TWO, sets=["f_late"]),
+        _tq("q_l2", gate=_AT_STAGE_TWO, sets=["f_other"]),
+        _tq("q_x", gate={"of": [_fl("f_late"), second], "type": "any"}, sets=["f_x"]),
+        _tq("q_y", gate=_fl("f_x"), tags=["act1"]),
+    )
+
+
+def case_time_act_any_all_late(p: dict) -> None:
+    """TIME-3: q_x's any of two act-2 flags places it, and its dependent q_y, in act 2."""
+    _any_gated(p, _fl("f_other"))
+
+
+def case_time_act_any_one_early_silent(p: dict) -> None:
+    """f_other is also set by the ungated q_early, so the any opens in act 1: q_y tagged act1, silent."""
+    _any_gated(p, _fl("f_other"))
+    _put(p, _tq("q_early", sets=["f_other"]))
+
+
+def case_time_act_any_other_disjunct_silent(p: dict) -> None:
+    """An any with a counter disjunct can hold without any quest: q_y stays in act 1, silent."""
+    p["data/variables.json"]["variables"].append(
+        {"default": 1, "description": "Which day it is.", "id": "ct_day", "kind": "counter"})
+    _any_gated(p, {"counter": "ct_day", "op": ">=", "type": "counter", "value": 1})
+
+
+def case_time_act_false_read_silent(p: dict) -> None:
+    """A false-valued read is not opened by f_late's setters: q_x tagged act1, silent."""
+    _flags(p, "f_late")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(p, _two_stage_main(), _tq("q_l1", gate=_AT_STAGE_TWO, sets=["f_late"]), _tq("q_x", gate=_fl("f_late", False), tags=["act1"]))
+
+
+def case_time_stage_earliest_setter_silent(p: dict) -> None:
+    """The untagged q_x opens in act 1 (earliest setter of f_mix) and sets f_next; q_y's stage needing it: silent."""
+    _mixed_setters(p)
+    _flags(p, "f_next")
+    _put(p, _tq("q_x", gate=_fl("f_mix"), sets=["f_next"]), _tq("q_y", complete=_fl("f_next")))
+
+
+def case_time_stage_all_setters_later(p: dict) -> None:
+    """TIME-2: every setter of f_mix is in act 2, so f_next is only set in act 2."""
+    _mixed_setters(p, early=False)
+    _flags(p, "f_next")
+    _put(p, _tq("q_x", gate=_fl("f_mix"), sets=["f_next"]), _tq("q_y", complete=_fl("f_next")))
+
+
+def case_time_line_first_stop_earliest_setter(p: dict) -> None:
+    """TIME-4: q_a opens in act 1 by its earliest setter, so it is the first stop and q_c the gap."""
+    _mixed_setters(p)
+    _put(
+        p,
+        _tq("q_a", gate=_fl("f_mix"), tags=["line:smoke"]),
+        _tq("q_b", tags=["line:smoke"]),
+        _tq("q_c", tags=["line:smoke"]),
+    )
+
+
+# ---------------------------------------------------------------------------
+# openspec/changes/temporal-derivation-gaps: TIME-6 (effects firing before
+# their quest opens), taint (an act trusted to a flag a dialogue also sets),
+# and operator-aware quest reads (a "before stage" read is no dependency).
+# ---------------------------------------------------------------------------
+
+def _stage(sid: str, order: int, complete: dict, sets: list | None = None, effects: list | None = None) -> dict:
+    st = {"completeWhen": complete, "description": sid, "id": sid,
+          "objectives": [{"id": f"ob_{sid}", "text": sid}], "order": order}
+    eff = [{"flag": f, "type": "set_flag", "value": True} for f in (sets or [])] + (effects or [])
+    if eff:
+        st["onComplete"] = eff
+    return st
+
+
+def _two_stage(qid: str, **kw) -> dict:
+    """A two-stage quest (stg_one, stg_two), otherwise _tq's."""
+    return _tq(qid, stages=[_stage("stg_one", 1, _fl("heard_story")), _stage("stg_two", 2, _fl("heard_story"))], **kw)
+
+
+def _dialogue_sets(p: dict, flag: str) -> None:
+    p["data/dialogues/dlg_meet.json"]["nodes"][0]["onEnter"].append({"flag": flag, "type": "set_flag", "value": True})
+
+
+def _effects_before_open(p: dict, *, early_gate: dict | None = None) -> None:
+    """q_x is gated into act 2; its stg_one completes on f_early, set by q_early, and sets f_x."""
+    _flags(p, "f_early", "f_x")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(
+        p,
+        _two_stage_main(),
+        _tq("q_early", gate=early_gate, sets=["f_early"]),
+        _tq("q_x", gate=_AT_STAGE_TWO, stages=[_stage("stg_one", 1, _fl("f_early"), sets=["f_x"])]),
+    )
+
+
+def case_time_effects_before_open(p: dict) -> None:
+    """TIME-6: q_x opens in act 2, but its stage completes on f_early, set in act 1."""
+    _effects_before_open(p)
+
+
+def case_time_effects_dialogue_flag_silent(p: dict) -> None:
+    """A dialogue also sets f_early: its first set is no promise, so silent."""
+    _effects_before_open(p)
+    _dialogue_sets(p, "f_early")
+
+
+def case_time_effects_self_chain_silent(p: dict) -> None:
+    """q_x's stg_two completes on f_own, which q_x's own stg_one sets (and the act-1
+    q_early too, so only the self-chain skip keeps it silent)."""
+    _flags(p, "f_own", "f_x")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(p, _two_stage_main(), _tq("q_early", sets=["f_own"]), _tq("q_x", gate=_AT_STAGE_TWO, stages=[
+        _stage("stg_one", 1, _fl("heard_story"), sets=["f_own"]),
+        _stage("stg_two", 2, _fl("f_own"), sets=["f_x"]),
+    ]))
+
+
+def case_time_effects_counter_silent(p: dict) -> None:
+    """q_x's stage completes on a counter, not a flag: TIME-6 does not read it."""
+    _flags(p, "f_x")
+    p["data/variables.json"]["variables"].append(
+        {"default": 0, "description": "Progress.", "id": "ct_prog", "kind": "counter"})
+    p["data/rules.json"] = _TWO_ACTS
+    _put(
+        p,
+        _two_stage_main(),
+        _tq("q_late", gate=_AT_STAGE_TWO, effects=[{"counter": "ct_prog", "delta": 1, "type": "adjust_counter"}]),
+        _tq("q_x", gate=_AT_STAGE_TWO, stages=[
+            _stage("stg_one", 1, {"counter": "ct_prog", "op": ">=", "type": "counter", "value": 1}, sets=["f_x"])]),
+    )
+
+
+def case_time_effects_same_act_silent(p: dict) -> None:
+    """f_early is set only by an act-2 quest, the act q_x opens in: silent."""
+    _effects_before_open(p, early_gate=_AT_STAGE_TWO)
+
+
+def _dialogue_pushed(p: dict) -> None:
+    """f_late is set by the act-2 q_late AND by a dialogue; q_x is gated on it and sets f_next."""
+    _flags(p, "f_late", "f_next")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(p, _two_stage_main(), _tq("q_late", gate=_AT_STAGE_TWO, sets=["f_late"]))
+    _dialogue_sets(p, "f_late")
+
+
+def case_time_act_tag_dialogue_push_silent(p: dict) -> None:
+    """q_x is pushed into act 2 only by a flag a dialogue also sets: its act1 tag is not contradicted."""
+    _dialogue_pushed(p)
+    _put(p, _tq("q_x", gate=_fl("f_late"), tags=["act1"]))
+
+
+def case_time_stage_tainted_setter_silent(p: dict) -> None:
+    """q_y's stage needs f_next, set only by q_x, whose act 2 is tainted: silent."""
+    _dialogue_pushed(p)
+    _put(p, _tq("q_x", gate=_fl("f_late"), sets=["f_next"]), _tq("q_y", complete=_fl("f_next")))
+
+
+def _before_stage(p: dict, op: str) -> None:
+    p["data/rules.json"] = _TWO_ACTS
+    _put(
+        p,
+        _two_stage_main(),
+        _two_stage("q_late", gate=_AT_STAGE_TWO),
+        _tq("q_x", gate={"op": op, "quest": "q_late", "stage": "stg_two", "type": "quest"}, tags=["act1"]),
+    )
+
+
+def case_time_act_before_stage_silent(p: dict) -> None:
+    """q_x is gated on q_late being BEFORE stg_two — true before q_late starts — so tagged act1: silent."""
+    _before_stage(p, "<")
+
+
+def case_time_act_at_stage_pushes(p: dict) -> None:
+    """TIME-3: q_x is gated on q_late AT stg_two, which only an act-2 quest reaches."""
+    _before_stage(p, "==")
+
+
+def case_time_line_before_stage_gap(p: dict) -> None:
+    """TIME-4: q_b reads q_a only BEFORE its stg_two — no dependency, so q_b is a gap."""
+    _put(
+        p,
+        _two_stage("q_a", tags=["line:smoke"]),
+        _tq("q_b", gate={"op": "<", "quest": "q_a", "stage": "stg_two", "type": "quest"}, tags=["line:smoke"]),
+    )
+
+
+def _tagged(p: dict, tag: str, gate: dict) -> None:
+    p["data/rules.json"] = _TWO_ACTS
+    _put(p, _two_stage_main(), _tq("q_x", gate=gate, tags=[tag]))
+
+
+def case_time_act_tag_disagrees(p: dict) -> None:
+    """TIME-3: tagged act1, gated into act 2."""
+    _tagged(p, "act1", _AT_STAGE_TWO)
+
+
+def case_time_act_tag_agrees(p: dict) -> None:
+    """Tagged act2, gated into act 2: silent."""
+    _tagged(p, "act2", _AT_STAGE_TWO)
+
+
+_OPAQUE = {"of": [{"flag": "f_a", "type": "flag", "value": True}, {"flag": "f_b", "type": "flag", "value": True}], "type": "any"}
+
+
+def case_time_act_tag_uncertain(p: dict) -> None:
+    """An opaque gate: the derived act (0) differs from the act2 tag, yet silent."""
+    _flags(p, "f_a", "f_b")
+    _tagged(p, "act2", _OPAQUE)
+
+
+def case_time_tagged_opaque_uncertain(p: dict) -> None:
+    """A TAGGED quest with an opaque gate is still uncertain: no TIME-2 for it."""
+    _flags(p, "f_a", "f_b", "f_late")
+    p["data/rules.json"] = _TWO_ACTS
+    _put(
+        p,
+        _two_stage_main(),
+        _tq("q_late", gate=_AT_STAGE_TWO, sets=["f_late"]),
+        _tq("q_x", gate=_OPAQUE, tags=["act1"], complete={"flag": "f_late", "type": "flag", "value": True}),
+    )
+
+
+def case_time_line_disconnected(p: dict) -> None:
+    """TIME-4: q_z sits on line smoke with no requires-path from its first stop."""
+    _flags(p, "f_a")
+    _put(
+        p,
+        _tq("q_a", sets=["f_a"], tags=["line:smoke"]),
+        _tq("q_b", gate={"flag": "f_a", "type": "flag", "value": True}, tags=["line:smoke"]),
+        _tq("q_z", tags=["line:smoke"]),
+    )
+
+
+def case_time_line_connected(p: dict) -> None:
+    """Every member reachable from the first stop: silent."""
+    _flags(p, "f_a")
+    _put(
+        p,
+        _tq("q_a", sets=["f_a"], tags=["line:smoke"]),
+        _tq("q_b", gate={"flag": "f_a", "type": "flag", "value": True}, tags=["line:smoke"]),
+    )
+
+
+def case_time_line_false_gate_connects(p: dict) -> None:
+    """A gate on f_a being FALSE still draws an edge from f_a's setter (the TS
+    flag edges ignore a read's value, and the mirror must too): connected."""
+    _flags(p, "f_a")
+    _put(
+        p,
+        _tq("q_a", sets=["f_a"], tags=["line:smoke"]),
+        _tq("q_b", gate={"flag": "f_a", "type": "flag", "value": False}, tags=["line:smoke"]),
+    )
+
+
+def case_time_line_order_by_day(p: dict) -> None:
+    """Stops sort by (act, day, id): q_b (day 2) is the first stop, so q_a is the gap."""
+    p["data/variables.json"]["variables"].append(
+        {"default": 1, "description": "Which day it is.", "id": "ct_day", "kind": "counter"})
+    p["data/rules.json"] = {"time": {"clock": [{"counter": "ct_day", "label": "Day"}]}}
+    _put(
+        p,
+        _tq("q_a", gate={"counter": "ct_day", "op": ">=", "type": "counter", "value": 5}, tags=["line:smoke"],
+            effects=[{"counter": "ct_day", "delta": 1, "type": "adjust_counter"}]),
+        _tq("q_b", gate={"counter": "ct_day", "op": ">=", "type": "counter", "value": 2}, tags=["line:smoke"]),
+    )
+
+
+def case_time_acts_duplicate_id(p: dict) -> None:
+    """TIME-5: two acts named act2."""
+    _with_time_base(p)
+    p["data/rules.json"] = _time_rules(acts=[
+        {"id": "act1"},
+        {"id": "act2", "startsWhen": {"flag": "met_keeper", "type": "flag", "value": True}},
+        {"id": "act2", "startsWhen": {"flag": "heard_story", "type": "flag", "value": True}},
+    ])
+
+
+# ---------------------------------------------------------------------------
 # Cases for issue-code families that had no shared case at all.
 # ---------------------------------------------------------------------------
 
@@ -1975,6 +2527,114 @@ CASE_BUILDERS = {
     "project-rules-bad-dice": (
         case_project_rules_bad_dice,
         {"must": [{"code": "RULES", "contains": "2x6", "severity": "error"}]},
+    ),
+    # ws 18 — rules.time
+    # ws 18 phase 2 — the TIME family
+    "time-family-absent-silent": (case_time_family_absent_silent, {"noErrors": True, "mustNot": [{"code": "TIME"}]}),
+    "time-family-clean": (case_time_family_clean, {"noErrors": True, "mustNot": [{"code": "TIME"}]}),
+    "time-clock-never-advanced": (
+        case_time_clock_never_advanced,
+        {"must": [{"code": "TIME", "contains": "'ct_day' is never advanced", "severity": "warning"}]},
+    ),
+    "time-clock-engine-written": (case_time_clock_engine_written, {"mustNot": [{"code": "TIME"}]}),
+    "time-clock-advanced-by-dialogue": (case_time_clock_advanced_by_dialogue, {"mustNot": [{"code": "TIME"}]}),
+    "time-stage-needs-later-act-flag": (
+        case_time_stage_needs_later_act_flag,
+        {"must": [{"code": "TIME", "contains": "quest 'q_early' stage 'stg_one' needs flag 'f_late', which is only set in act2", "severity": "warning"}]},
+    ),
+    "time-stage-flag-also-set-by-dialogue": (case_time_stage_flag_also_set_by_dialogue, {"mustNot": [{"code": "TIME", "contains": "f_late"}]}),
+    "time-stage-same-act": (case_time_stage_same_act, {"mustNot": [{"code": "TIME", "contains": "f_late"}]}),
+    "time-stage-any-silent": (case_time_stage_any_silent, {"mustNot": [{"code": "TIME", "contains": "q_early"}]}),
+    "time-stage-false-writer": (
+        case_time_stage_false_writer,
+        {"must": [{"code": "TIME", "contains": "quest 'q_early' stage 'stg_one' needs flag 'f_late'", "severity": "warning"}]},
+    ),
+    "time-act-tag-disagrees": (
+        case_time_act_tag_disagrees,
+        {"must": [{"code": "TIME", "contains": "quest 'q_x' is tagged 'act1' but its gates place it in 'act2'", "severity": "warning"}]},
+    ),
+    "time-act-earliest-setter-agrees": (case_time_act_earliest_setter_agrees, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-act-earliest-setter-disagrees": (
+        case_time_act_earliest_setter_disagrees,
+        {"must": [{"code": "TIME", "contains": "quest 'q_x' is tagged 'act2' but its gates place it in 'act1'", "severity": "warning"}]},
+    ),
+    "time-act-all-setters-later": (
+        case_time_act_all_setters_later,
+        {"must": [{"code": "TIME", "contains": "quest 'q_x' is tagged 'act1' but its gates place it in 'act2'", "severity": "warning"}]},
+    ),
+    "time-act-any-all-late": (
+        case_time_act_any_all_late,
+        {"must": [{"code": "TIME", "contains": "quest 'q_y' is tagged 'act1' but its gates place it in 'act2'", "severity": "warning"}]},
+    ),
+    "time-act-any-one-early-silent": (case_time_act_any_one_early_silent, {"mustNot": [{"code": "TIME", "contains": "q_y"}]}),
+    "time-act-any-other-disjunct-silent": (case_time_act_any_other_disjunct_silent, {"mustNot": [{"code": "TIME", "contains": "q_y"}]}),
+    "time-act-false-read-silent": (case_time_act_false_read_silent, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-stage-earliest-setter-silent": (case_time_stage_earliest_setter_silent, {"mustNot": [{"code": "TIME", "contains": "q_y"}]}),
+    "time-stage-all-setters-later": (
+        case_time_stage_all_setters_later,
+        {"must": [{"code": "TIME", "contains": "quest 'q_y' stage 'stg_one' needs flag 'f_next', which is only set in act2", "severity": "warning"}]},
+    ),
+    "time-line-first-stop-earliest-setter": (
+        case_time_line_first_stop_earliest_setter,
+        {"must": [{"code": "TIME", "contains": "line 'smoke': quest 'q_c' has no requires-path from the line's first stop 'q_a'", "severity": "warning"}]},
+    ),
+    # openspec/changes/temporal-derivation-gaps
+    "time-effects-before-open": (
+        case_time_effects_before_open,
+        {"must": [{"code": "TIME", "contains": "quest 'q_x' stage 'stg_one' completes on flag 'f_early', set in act1 by quest 'q_early', but the quest opens in act2", "severity": "warning"}]},
+    ),
+    "time-effects-dialogue-flag-silent": (case_time_effects_dialogue_flag_silent, {"mustNot": [{"code": "TIME", "contains": "stg_one"}]}),
+    "time-effects-self-chain-silent": (case_time_effects_self_chain_silent, {"mustNot": [{"code": "TIME", "contains": "stg_two"}]}),
+    "time-effects-counter-silent": (case_time_effects_counter_silent, {"mustNot": [{"code": "TIME", "contains": "stg_one"}]}),
+    "time-effects-same-act-silent": (case_time_effects_same_act_silent, {"mustNot": [{"code": "TIME", "contains": "stg_one"}]}),
+    "time-act-tag-dialogue-push-silent": (case_time_act_tag_dialogue_push_silent, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-stage-tainted-setter-silent": (case_time_stage_tainted_setter_silent, {"mustNot": [{"code": "TIME", "contains": "q_y"}]}),
+    "time-act-before-stage-silent": (case_time_act_before_stage_silent, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-act-at-stage-pushes": (
+        case_time_act_at_stage_pushes,
+        {"must": [{"code": "TIME", "contains": "quest 'q_x' is tagged 'act1' but its gates place it in 'act2'", "severity": "warning"}]},
+    ),
+    "time-line-before-stage-gap": (
+        case_time_line_before_stage_gap,
+        {"must": [{"code": "TIME", "contains": "line 'smoke': quest 'q_b' has no requires-path from the line's first stop 'q_a'", "severity": "warning"}]},
+    ),
+    "time-act-tag-agrees": (case_time_act_tag_agrees, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-act-tag-uncertain": (case_time_act_tag_uncertain, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-tagged-opaque-uncertain": (case_time_tagged_opaque_uncertain, {"mustNot": [{"code": "TIME", "contains": "q_x"}]}),
+    "time-line-disconnected": (
+        case_time_line_disconnected,
+        {"must": [{"code": "TIME", "contains": "line 'smoke': quest 'q_z' has no requires-path from the line's first stop 'q_a'", "severity": "warning"}]},
+    ),
+    "time-line-connected": (case_time_line_connected, {"mustNot": [{"code": "TIME", "contains": "smoke"}]}),
+    "time-line-false-gate-connects": (case_time_line_false_gate_connects, {"mustNot": [{"code": "TIME", "contains": "smoke"}]}),
+    "time-line-order-by-day": (
+        case_time_line_order_by_day,
+        {"must": [{"code": "TIME", "contains": "quest 'q_a' has no requires-path from the line's first stop 'q_b'", "severity": "warning"}]},
+    ),
+    "time-acts-duplicate-id": (
+        case_time_acts_duplicate_id,
+        {"must": [{"code": "TIME", "contains": "duplicate id 'act2'", "severity": "error"}]},
+    ),
+    "time-rules-clean": (
+        case_time_rules_clean,
+        {"noErrors": True,
+         "mustNot": [{"code": "SCHEMA"}, {"code": "RULES"}, {"code": "OBJ"}, {"code": "REF"}, {"code": "FLAG"}]},
+    ),
+    "time-act-no-starts-when": (
+        case_time_act_no_starts_when,
+        {"must": [{"code": "RULES", "contains": "act2", "severity": "error"}]},
+    ),
+    "time-act-starts-when-dangling": (
+        case_time_act_starts_when_dangling,
+        {"must": [{"code": "REF", "contains": "no_such_flag", "severity": "error"}]},
+    ),
+    "time-clock-not-a-counter": (
+        case_time_clock_not_a_counter,
+        {"must": [{"code": "REF", "contains": "'met_keeper' is a flag, used as counter", "severity": "error"}]},
+    ),
+    "time-starts-when-read-counts": (
+        case_time_starts_when_read_counts,
+        {"noErrors": True, "mustNot": [{"code": "FLAG", "contains": "act2_begun"}]},
     ),
     "advance-quest-unknown": (
         case_advance_quest_unknown,

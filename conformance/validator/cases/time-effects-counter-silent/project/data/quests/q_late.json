@@ -1,0 +1,48 @@
+{
+  "availableWhen": {
+    "op": ">=",
+    "quest": "q_main",
+    "stage": "stg_two",
+    "type": "quest"
+  },
+  "id": "q_late",
+  "name": "q_late",
+  "outcomes": [
+    {
+      "description": "Done.",
+      "effects": [
+        {
+          "counter": "ct_prog",
+          "delta": 1,
+          "type": "adjust_counter"
+        }
+      ],
+      "id": "out_done",
+      "kind": "success",
+      "reachedWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      }
+    }
+  ],
+  "stages": [
+    {
+      "completeWhen": {
+        "flag": "heard_story",
+        "type": "flag",
+        "value": true
+      },
+      "description": "Done.",
+      "id": "stg_one",
+      "objectives": [
+        {
+          "id": "ob_one",
+          "text": "Do it."
+        }
+      ],
+      "order": 1
+    }
+  ],
+  "summary": "s"
+}
